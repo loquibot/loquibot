@@ -1,0 +1,14 @@
+b!addcom
+b!delcom
+b!editcom
+b!addpoint
+b!delpoint
+b!editpoint
+!clear
+!block
+!blockuser
+!unblock
+!unblockuser
+!toggle
+!top
+!move

@@ -1,0 +1,22 @@
+{
+  "title": "BOT_SECTION_TITLE",
+  "accounts_settings" : {
+    "title" : "ACCOUNTS_SETTINGS",
+    "icon" : "",
+    "geometry_dash_profile" : {
+      "type" : "profile",
+      "title" : "GEOMETRY_DASH",
+      "more_button_function" : ""
+    },
+    "twitch_profile" : {
+      "type" : "profile",
+      "title" : "TWITCH",
+      "icon" : "",
+      "more_button_function" : ""
+    }
+  },
+  "personalization_settings" : {
+    "title" : "PERSONALIZATION_SETTINGS",
+    "icon" : ""
+  }
+}

@@ -1,0 +1,287 @@
+{
+
+  "GENERAL_SETTINGS" : {
+
+    "GD_MODE" : {
+      "type" : "checkbox",
+      "setting" : "gdMode"
+    },
+    "FOLLOWERS_ONLY" : {
+      "type" : "checkbox",
+      "setting" : "followers"
+    },
+    "SUBSCRIBERS_ONLY" : {
+      "type" : "checkbox",
+      "setting" : "subscribers"
+    },
+    "DISABLE_NOW_PLAYING" : {
+      "type" : "checkbox",
+      "setting" : "disableNP"
+    },
+    "DISABLE_QUEUE_FULL" : {
+      "type" : "checkbox",
+      "setting" : "disableQF"
+    },
+    "WHISPER_CONFIRMATION" : {
+      "type" : "checkbox",
+      "setting" : "whisperConfirm"
+    },
+    "DISABLE_CONFIRMATION" : {
+      "type" : "checkbox",
+      "setting" : "disableConfirm"
+    },
+    "DISABLE_SHOW_POSITION" : {
+      "type" : "checkbox",
+      "setting" : "disableShowPosition"
+    },
+    "DISABLE_REPEATED" : {
+      "type" : "checkbox",
+      "setting" : "repeatedRequests"
+    },
+    "DISABLE_REPEATED_ALL" : {
+      "type" : "checkbox",
+      "setting" : "repeatedRequestsAll"
+    },
+    "ALLOW_UPDATED_REPEATED" : {
+      "type" : "checkbox",
+      "setting" : "updatedRepeated"
+    },
+    "AUTOMATIC_SONG_DOWNLOADS" : {
+      "type" : "checkbox",
+      "setting" : "autoDL"
+    },
+    "LOW_CPU_MODE" : {
+      "type" : "checkbox",
+      "setting" : "lowCPUMode"
+    },
+    "STREAMER_BYPASS" : {
+      "type" : "checkbox",
+      "setting" : "streamerBypass"
+    },
+    "MODS_BYPASS" : {
+      "type" : "checkbox",
+      "setting" : "modsBypass",
+      "input_setting" : ""
+    },
+    "MAX_QUEUE_SIZE" : {
+      "type" : "checkbox_input",
+      "setting" : "queueLimitEnabled",
+      "input_setting" : "queueLimit"
+    },
+    "REQUEST_LIMIT_QUEUE" : {
+      "type" : "checkbox_input",
+      "setting" : "userLimitStreamEnabled",
+      "input_setting" : "userLimit"
+    },
+    "STREAM_REQUEST_LIMIT" : {
+      "type" : "checkbox_input",
+      "setting" : "userLimitStreamEnabled",
+      "input_setting" : "userLimitStream"
+    },
+    "QUEUE_COMMAND_LABEL" : {
+      "type" : "input",
+      "input_setting" : "queueLevelLength"
+    },
+    "DEATH_MESSAGES" : {
+      "type" : "checkbox",
+      "setting" : "SendDeathMessages"
+    }
+  },
+  "CHAOS_SETTINGS" : {
+
+    "ENABLE_CHAOS_MODE" : {
+      "type" : "checkbox",
+      "setting" : "isChaos"
+    },
+    "MOD_ONLY_CHAOS" : {
+      "type" : "checkbox",
+      "setting" : "isModChaos"
+    },
+    "SUB_ONLY_CHAOS" : {
+      "type" : "checkbox",
+      "setting" : "isSubChaos"
+    },
+    "SPACER": {
+      "height" : 10
+    },
+    "DISABLE_KILL" : {
+      "type" : "checkbox",
+      "setting" : "disableKill"
+    },
+    "MINIMUM_X" : {
+      "type" : "checkbox_input",
+      "setting" : "minXOption",
+      "input_setting" : "minX"
+    },
+    "MAXIMUM_X" : {
+      "type" : "checkbox_input",
+      "setting" : "maxXOption",
+      "input_setting" : "maxX"
+    },
+    "MINIMUM_Y" : {
+      "type" : "checkbox_input",
+      "setting" : "minYOption",
+      "input_setting" : "minY"
+    },
+    "MAXIMUM_Y" : {
+      "type" : "checkbox_input",
+      "setting" : "maxYOption",
+      "input_setting" : "maxY"
+    },
+    "MINIMUM_SIZE" : {
+      "type" : "checkbox_input",
+      "setting" : "minSizeOption",
+      "input_setting" : "minSize"
+    },
+    "MAXIMUM_SIZE" : {
+      "type" : "checkbox_input",
+      "setting" : "maxSizeOption",
+      "input_setting" : "maxSize"
+    },
+    "MINIMUM_SPEED" : {
+      "type" : "checkbox_input",
+      "setting" : "minSpeedOption",
+      "input_setting" : "minSpeed"
+    },
+    "MAXIMUM_SPEED" : {
+      "type" : "checkbox_input",
+      "setting" : "maxSpeedOption",
+      "input_setting" : "maxSpeed"
+    }
+  },
+  "OUTPUTS_SETTINGS" : {
+
+    "OUTPUTS_TEXT" : {
+      "type" : "input",
+      "input_setting" : "outputString",
+      "height" : 150
+    },
+    "NO_LEVELS_TEXT" : {
+      "type" : "input",
+      "input_setting" : "noLevelsString",
+      "height" : 150
+    },
+    "FILE_LOCATION" : {
+      "type" : "input",
+      "input_setting" : "outputFileLocation",
+      "height" : 70
+    }
+  },
+  "REQUESTS_SETTINGS" : {
+    "RATED_LEVELS_ONLY" : {
+      "type" : "checkbox",
+      "setting" : "rated"
+    },
+    "UNRATED_LEVELS_ONLY" : {
+      "type" : "checkbox",
+      "setting" : "unrated"
+    },
+    "DISABLE_SELECTED_DIFFICULTIES" : {
+      "type" : "checkbox",
+      "setting" : "disableDifficulties"
+    },
+    "DifficultyMenu" : {
+      "GD_NA" : {
+        "type" : "checkbox",
+        "name" : "na"
+      },
+      "GD_AUTO" : {
+        "type" : "checkbox",
+        "name" : "auto"
+      },
+      "GD_EASY" : {
+        "type" : "checkbox",
+        "name" : "easy"
+      },
+      "GD_NORMAL" : {
+        "type" : "checkbox",
+        "name" : "normal"
+      },
+      "GD_HARD" : {
+        "type" : "checkbox",
+        "name" : "hard"
+      },
+      "GD_HARDER" : {
+        "type" : "checkbox",
+        "name" : "harder"
+      },
+      "GD_INSANE" : {
+        "type" : "checkbox",
+        "name" : "insane"
+      },
+      "GD_EASY_DEMON" : {
+        "type" : "checkbox",
+        "name" : "easy demon"
+      },
+      "GD_MEDIUM_DEMON" : {
+        "type" : "checkbox",
+        "name" : "medium demon"
+      },
+      "GD_HARD_DEMON" : {
+        "type" : "checkbox",
+        "name" : "hard demon"
+      },
+      "GD_INSANE_DEMON" : {
+        "type" : "checkbox",
+        "name" : "insane demon"
+      },
+      "GD_EXTREME_DEMON" : {
+        "type" : "checkbox",
+        "name" : "extreme demon"
+      },
+      "type": "arrayMenu",
+      "setting" : "difficultyFilter"
+    },
+    "DISABLE_SELECTED_LENGTHS" : {
+      "type" : "checkbox",
+      "setting" : ""
+    },
+    "LengthMenu" : {
+      "GD_TINY" : {
+        "type" : "checkbox",
+        "name" : "tiny"
+      },
+      "GD_SHORT" : {
+        "type" : "checkbox",
+        "name" : "short"
+      },
+      "GD_MEDIUM" : {
+        "type" : "checkbox",
+        "name" : "medium"
+      },
+      "GD_LONG" : {
+        "type" : "checkbox",
+        "name" : "long"
+      },
+      "GD_XL" : {
+        "type" : "checkbox",
+        "name" : "xl"
+      },
+      "type": "arrayMenu",
+      "setting" : "lengthFilter"
+    }
+  },
+  "SHORTCUTS_SETTINGS" : {
+
+  },
+  "BLOCKED_IDS_SETTINGS" : {
+
+    "list_view" : true,
+    "list_type" : "blocked_ids"
+  },
+  "BLOCKED_USERS_SETTINGS" : {
+
+    "list_view" : true,
+    "list_type" : "blocked_users"
+  },
+  "BLOCKED_CREATORS_SETTINGS" : {
+
+    "list_view" : true,
+    "list_type" : "blocked_creators"
+  },
+  "LOGGED_IDS_SETTINGS" : {
+
+    "list_view" : true,
+    "list_type" : "logged_ids"
+  }
+}

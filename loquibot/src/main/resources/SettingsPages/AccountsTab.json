@@ -1,0 +1,21 @@
+{
+
+  "ACCOUNTS_SETTINGS" : {
+
+    "GEOMETRY_DASH" : {
+
+      "type" : "function_button",
+      "button_type" : "refresh",
+      "function" : "openGDLogin"
+
+    },
+
+    "TWITCH" : {
+
+      "type" : "function_button",
+      "button_type" : "refresh",
+      "function" : "openTwitchLogin"
+
+    }
+  }
+}

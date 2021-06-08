@@ -1,0 +1,55 @@
+{
+  "title" : "BOT_SECTION_TITLE",
+  "chat_bot_settings" : {
+    "title" : "CHATBOT_SETTINGS",
+    "icon" : "",
+    "loquibot_version" : {
+      "type" : "label",
+      "text" : "LOQUIBOT_VERSION",
+      "arguments" : {
+        "int" : "$version_number$"
+      }
+    },
+    "silent_mode" : {
+      "type" : "checkbox",
+      "text" : "SILENT_MODE",
+      "setting" : ""
+    },
+    "multi_thread" : {
+      "type" : "checkbox",
+      "text" : "MULTI_THREAD",
+      "info" : "MULTI_THREAD_INFO",
+      "setting" : ""
+    },
+    "anti_dox" : {
+      "type" : "checkbox",
+      "text" : "ANTI_DOX",
+      "info" : "ANTI_DOX_INFO",
+      "setting" : ""
+    },
+    "global_countdown" : {
+      "type" : "input",
+      "text" : "GLOBAL_COOLDOWN_LABEL",
+      "setting" : ""
+    }
+  },
+  "command_settings" : {
+    "title" : "COMMAND_SETTINGS",
+    "icon" : "",
+    "type" : "list_view",
+    "columns" : 3,
+    "index_location" : "/CommandIndex.txt",
+    "separator" : ",",
+    "item_click_function" : "com.alphalaneous.Windows.CommandEditor.showEditor()",
+    "add_command" : {
+      "type" : "button",
+      "icon" : "",
+      "click_function" : "com.alphalaneous.Windows.CommandEditor.showEditor()"
+    }
+  },
+  "channel_points_settings" : {
+    "title" : "CHANNEL_POINTS_SETTINGS",
+    "icon" : "",
+    "type" : "channel_points_list_view"
+  }
+}
