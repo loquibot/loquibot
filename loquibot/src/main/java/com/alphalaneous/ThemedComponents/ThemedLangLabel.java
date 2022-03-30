@@ -21,6 +21,6 @@ public class ThemedLangLabel extends LangLabel {
 	}
 
 	public void refresh() {
-		setForeground(Defaults.FOREGROUND);
+		setForeground(Defaults.FOREGROUND_A);
 	}
 }

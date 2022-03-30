@@ -1,7 +1,6 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Windows.DialogBox;
-import com.alphalaneous.Windows.Window;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -16,24 +15,11 @@ import java.util.Scanner;
 
 public class Settings {
 
-	private static HashMap<String, String> settings = new HashMap<>();
-	private static Point windowWLoc = new Point(0, 0);
-
-	public static void setWindowSettings(String key, String setting) {
-		if (key.equalsIgnoreCase("Window")) {
-			int x = Integer.parseInt(setting.split(",")[0]);
-			int y = Integer.parseInt(setting.split(",")[1]);
-			windowWLoc = new Point(x, y);
-		}
-	}
-
-	static void writeLocation() {
-		writeSettings("window", windowWLoc.x + "," + windowWLoc.y);
-	}
+	private static final HashMap<String, String> settings = new HashMap<>();
 
 	@SuppressWarnings("rawtypes")
 	static void saveSettings() {
-		Path file = Paths.get(Defaults.saveDirectory + "/GDBoard/config.properties");
+		Path file = Paths.get(Defaults.saveDirectory + "/loquibot/config.properties");
 
 		try {
 			if (!Files.exists(file)) {
@@ -59,18 +45,18 @@ public class Settings {
 	}
 
 	public static void writeSettings(String key, String setting) {
-		settings.put(key, setting);
+		settings.put(key, setting.replace("\n", "\\n"));
 	}
 
 	public static Setting getSettings(String key) {
 		if (settings.containsKey(key)) {
-			return new Setting(settings.get(key));
+			return new Setting(settings.get(key).replace("\\n", "\n"));
 		}
 		return new Setting(true);
 	}
 
 	static void loadSettings() {
-		Path path = Paths.get(Defaults.saveDirectory + "/GDBoard/config.properties");
+		Path path = Paths.get(Defaults.saveDirectory + "/loquibot/config.properties");
 		if (Files.exists(path)) {
 			Scanner sc = null;
 			try {

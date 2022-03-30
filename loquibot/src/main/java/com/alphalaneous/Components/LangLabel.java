@@ -1,8 +1,10 @@
 package com.alphalaneous.Components;
 
+import com.alphalaneous.Defaults;
 import com.alphalaneous.Language;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.MissingFormatArgumentException;
 
@@ -17,6 +19,14 @@ public class LangLabel extends JLabel {
 		String newText = Language.setLocale(text);
 		setText(newText);
 		labelList.add(this);
+	}
+	/*@Override
+	public void setFont(Font font){
+		super.setFont(Defaults.getPreferredFontForText(getText()).deriveFont(14f));
+	}*/
+
+	public void setAvailableFont(float size){
+		super.setFont(Defaults.getPreferredFontForText(getText()).deriveFont(size));
 	}
 	public void setTextLang(String text){
 		this.text = text;
@@ -50,12 +60,5 @@ public class LangLabel extends JLabel {
 	}
 	public String getIdentifier(){
 		return text.replace("$", "");
-	}
-
-
-	public static void refreshAllLocale(){
-		for(LangLabel label : labelList){
-			label.refreshLocale();
-		}
 	}
 }

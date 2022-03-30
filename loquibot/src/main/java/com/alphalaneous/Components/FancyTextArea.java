@@ -1,49 +1,79 @@
 package com.alphalaneous.Components;
 
 import com.alphalaneous.Defaults;
-import com.alphalaneous.SilentDeletePrevCharAction;
+import com.alphalaneous.Panels.LevelContextMenu;
+import com.alphalaneous.SilentDeletePrevCharacter;
+import com.alphalaneous.TextContextMenu;
+import com.alphalaneous.ThemedColor;
 
 import javax.swing.*;
+import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.*;
+import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class FancyTextArea extends JTextArea {
-
+public class FancyTextArea extends JPanel {
 
 	private final UndoManager undoManager = new UndoManager();
+	private static final ArrayList<FancyTextArea> textAreas = new ArrayList<>();
+	private final JTextArea textArea = new JTextArea(){
+		@Override
+		public Dimension getPreferredSize(){
+			Dimension d = super.getPreferredSize();
+			d = (d == null) ? new Dimension(400,400) : d;
+			Insets insets = getInsets();
 
-	private static ArrayList<FancyTextArea> textAreas = new ArrayList<>();
+			if (getColumns() != 0) {
+				d.width = Math.max(d.width, getColumns() * getColumnWidth() +
+						insets.left + insets.right);
+			}
+			if (getRows() != 0) {
+				d.height = Math.max(d.height, getRows() * getRowHeight() +
+						insets.top + insets.bottom);
+			}
+			d.height -= 4;
+			return d;
+		}
+	};
+	private final SmoothScrollPane smoothScrollPane = new SmoothScrollPane(textArea);
 
+
+	public FancyTextArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, int numLimit) {
+		createArea(intFilter, allowNegative, allowDecimal, numLimit);
+	}
 
 	public FancyTextArea(boolean intFilter, boolean allowNegative, boolean allowDecimal) {
-		createArea(intFilter, allowNegative, allowDecimal);
+		createArea(intFilter, allowNegative, allowDecimal, -1);
 	}
 
 	public FancyTextArea(boolean intFilter, boolean allowNegative) {
-		createArea(intFilter, allowNegative, false);
+		createArea(intFilter, allowNegative, false, -1);
 	}
 
-	private void createArea(boolean intFilter, boolean allowNegative, boolean allowDecimal){
-		setOpaque(false);
-		setBackground(Defaults.TEXT_BOX);
-		setForeground(Defaults.FOREGROUND);
-		setCaret(new MyCaret());
-		setCaretColor(Defaults.FOREGROUND);
-		setFont(Defaults.MAIN_FONT.deriveFont(14f));
-		setSelectionColor(Defaults.ACCENT);
-		getActionMap().put(DefaultEditorKit.deletePrevCharAction, new SilentDeletePrevCharAction());
+	private void createArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, int numLimit){
 
+		setBackground(new ThemedColor("color2", this, ThemedColor.BACKGROUND));
+		setOpaque(false);
+		textArea.setOpaque(false);
+		smoothScrollPane.getViewport().setBackground(new ThemedColor("color2", smoothScrollPane.getViewport(), ThemedColor.BACKGROUND));
+		smoothScrollPane.setOpaque(false);
+		smoothScrollPane.getViewport().setOpaque(false);
+		textArea.setBackground(new ThemedColor("color2", textArea, ThemedColor.BACKGROUND));
+		textArea.setOpaque(false);
+		textArea.setForeground(Defaults.FOREGROUND_A);
+		textArea.setCaret(new MyCaret());
+		textArea.setCaretColor(Defaults.FOREGROUND_A);
+		textArea.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+		textArea.setSelectionColor(Defaults.ACCENT);
+		textArea.getActionMap().put(DefaultEditorKit.deletePrevCharAction, new SilentDeletePrevCharacter());
 		if(intFilter) {
-			PlainDocument doc = (PlainDocument) getDocument();
+			PlainDocument doc = (PlainDocument) textArea.getDocument();
 			if(allowDecimal){
 				doc.setDocumentFilter(new MyNegIntDecFilter());
 			}
@@ -51,10 +81,12 @@ public class FancyTextArea extends JTextArea {
 				doc.setDocumentFilter(new MyNegIntFilter());
 			}
 			else {
-				doc.setDocumentFilter(new MyIntFilter());
+				MyIntFilter myIntFilter = new MyIntFilter();
+				myIntFilter.setNumLimit(numLimit);
+				doc.setDocumentFilter(myIntFilter);
 			}
 		}
-		addFocusListener(new FocusListener() {
+		textArea.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
 				borderColor = Defaults.ACCENT;
@@ -63,48 +95,88 @@ public class FancyTextArea extends JTextArea {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				borderColor = new Color(102, 102, 102);
+				borderColor = Defaults.COLOR5;
 				repaint();
 			}
 		});
-
-		Document doc = getDocument();
-		UndoableEditListener undoableEditListener = e -> undoManager.addEdit(e.getEdit());
-		doc.addUndoableEditListener(undoableEditListener);
-
-		InputMap im = getInputMap(JComponent.WHEN_FOCUSED);
-		ActionMap am = getActionMap();
-
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()), "Undo");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()), "Redo");
-		//noinspection MagicConstant
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | Event.SHIFT_MASK), "Redo");
-
-		am.put("Undo", new AbstractAction() {
+		textArea.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mouseReleased(MouseEvent e) {
+				super.mouseReleased(e);
+				if(SwingUtilities.isRightMouseButton(e) && textArea.isEditable()){
+					textArea.requestFocus();
+					com.alphalaneous.Windows.Window.addContextMenu(new TextContextMenu(textArea));
+				}
+			}
+		});
+		textArea.getDocument().addUndoableEditListener(evt -> undoManager.addEdit(evt.getEdit()));
+
+		textArea.getActionMap().put("Undo", new AbstractAction("Undo") {
+			public void actionPerformed(ActionEvent evt) {
 				try {
 					if (undoManager.canUndo()) {
 						undoManager.undo();
 					}
-				} catch (CannotUndoException exp) {
-					exp.printStackTrace();
+				} catch (CannotUndoException e) {
+					e.printStackTrace();
 				}
 			}
 		});
-		am.put("Redo", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		textArea.getActionMap().put("Redo", new AbstractAction("Redo") {
+			public void actionPerformed(ActionEvent evt) {
 				try {
 					if (undoManager.canRedo()) {
 						undoManager.redo();
 					}
-				} catch (CannotUndoException exp) {
-					exp.printStackTrace();
+				} catch (CannotRedoException e) {
+					e.printStackTrace();
 				}
 			}
 		});
+
+		// Create keyboard accelerators for undo/redo actions (Ctrl+Z/Ctrl+Y)
+		textArea.getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "Undo");
+		textArea.getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "Redo");
+		textArea.getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "Redo");
+		setLayout(null);
+		add(smoothScrollPane);
 		textAreas.add(this);
+	}
+
+	public void setBounds(int x, int y, int width, int height){
+		super.setBounds(x, y, width, height);
+		smoothScrollPane.setBounds(4, 4, width-8, height-8);
+	}
+
+	public JTextArea getTextInput(){
+		return textArea;
+	}
+
+
+	public Document getDocument(){
+		return textArea.getDocument();
+	}
+	public void setDocument(Document document){
+		textArea.setDocument(document);
+	}
+
+	public String getText(){
+		return textArea.getText();
+	}
+	public void setLineWrap(boolean lineWrap){
+		textArea.setLineWrap(lineWrap);
+	}
+	public void setWrapStyleWord(boolean wrap){
+		textArea.setWrapStyleWord(wrap);
+	}
+	public void setText(String text){
+		textArea.setText(text);
+	}
+	public void setEditable(boolean editable){
+		textArea.setEditable(editable);
 	}
 
 	@Override
@@ -116,19 +188,18 @@ public class FancyTextArea extends JTextArea {
 		RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.setRenderingHints(qualityHints);
-		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+		g2.fillRoundRect(0, 0, getWidth(), getHeight(), Defaults.globalArc, Defaults.globalArc);
 		super.paintComponent(g);
 	}
 
-	private Color borderColor = new Color(102, 102, 102);
+	private Color borderColor = Defaults.COLOR5;
 
 	@Override
 	protected void paintBorder(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(borderColor);
-		g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, getRadius(), getRadius());
-
+		g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, getRadius()+3, getRadius()+3);
 	}
 
 	public int getRadius() {
@@ -146,9 +217,9 @@ public class FancyTextArea extends JTextArea {
 	}
 
 	public void refresh_(){
-		setBackground(Defaults.TEXT_BOX);
-		setForeground(Defaults.FOREGROUND);
-		setCaretColor(Defaults.FOREGROUND);
+		textArea.setForeground(Defaults.FOREGROUND_A);
+		textArea.setCaretColor(Defaults.FOREGROUND_A);
+		borderColor = Defaults.COLOR5;
 	}
 
 	public static void refreshAll(){
@@ -238,7 +309,10 @@ public class FancyTextArea extends JTextArea {
 				if(text.contains("-")){
 					return false;
 				}
-				Integer.parseInt(text);
+				int value = Integer.parseInt(text);
+				if(numLimit != -1){
+					return value <= numLimit;
+				}
 				return true;
 			} catch (NumberFormatException e) {
 				return false;
@@ -257,7 +331,6 @@ public class FancyTextArea extends JTextArea {
 			if (test(sb.toString())) {
 				super.replace(fb, offset, length, text, attrs);
 			}
-
 		}
 
 		@Override
@@ -276,6 +349,10 @@ public class FancyTextArea extends JTextArea {
 					super.remove(fb, offset, length);
 				}
 			}
+		}
+		private int numLimit = -1;
+		public void setNumLimit(int numLimit){
+			this.numLimit = numLimit;
 		}
 	}
 	static class MyNegIntFilter extends DocumentFilter {
@@ -406,6 +483,4 @@ public class FancyTextArea extends JTextArea {
 			}
 		}
 	}
-
-
 }

@@ -8,14 +8,14 @@ import jdash.common.IconType;
 import jdash.common.LevelBrowseMode;
 import jdash.common.LevelSearchFilter;
 import jdash.common.entity.*;
-import jdash.graphics.GDUserIconSet;
 import jdash.graphics.SpriteFactory;
+import org.imgscalr.Scalr;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.time.Duration;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class GDAPI {
@@ -42,16 +42,18 @@ public class GDAPI {
 	        return null;
 	    }
 	}
-    public static ImageIcon getIcon(IconType type, int id, int color1Id, int color2Id, boolean withGlowOutline){
+    public static ImageIcon getIcon(IconType type, int id, int color1Id, int color2Id, boolean withGlowOutline, int scale){
 
         try {
-            BufferedImage icon = spriteFactory.makeSprite(type, id, color1Id, color2Id, withGlowOutline);
-            Image imgScaled = icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-            return new ImageIcon(imgScaled);
+            BufferedImage icon = Scalr.resize(spriteFactory.makeSprite(type, id, color1Id, color2Id, withGlowOutline), Scalr.Method.BALANCED,scale, Scalr.OP_ANTIALIAS);
+            //Image imgScaled = icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            icon.flush();
+            return new ImageIcon(icon);
         } catch (Exception e) {
-            BufferedImage icon = spriteFactory.makeSprite(IconType.CUBE, 1, 1, 1, false);
-            Image imgScaled = icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-            return new ImageIcon(imgScaled);
+            BufferedImage icon = Scalr.resize(spriteFactory.makeSprite(IconType.CUBE, 1, 1, 1, false),Scalr.Method.BALANCED,scale,Scalr.OP_ANTIALIAS);
+            //Image imgScaled = icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            icon.flush();
+            return new ImageIcon(icon);
         }
     }
 
@@ -72,8 +74,6 @@ public class GDAPI {
             return false;
         }
     }
-
-
 
     public static GDSong getSong(long songID){
         return client.getSongInfo(songID).block();
@@ -112,7 +112,7 @@ public class GDAPI {
         CommentSortMode commentSortMode = CommentSortMode.RECENT;
         if(mostLiked) commentSortMode = CommentSortMode.MOST_LIKED;
 
-        return client.getCommentsForLevel(ID, commentSortMode, page, 40).collectList().block();
+        return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofMillis(2500));
     }
 
     public static GDUserProfile getGDUserProfile(long accountID){

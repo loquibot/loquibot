@@ -1,0 +1,53 @@
+{
+  "name": "$USER_SECTION_TITLE$",
+  "tabs" : [
+    {
+      "name" : "$ACCOUNTS_SETTINGS$",
+      "icon" : ""
+    },
+    {
+      "name" : "$PERSONALIZATION_SETTINGS$",
+      "icon" : "",
+      "settings" : [
+        {
+          "type" : "radio_option",
+          "arguments" : {
+            "text" : "$THEME_TEXT$",
+            "description" : "",
+            "options" : [
+              "$LIGHT_MODE$",
+              "$DARK_MODE$",
+              "$SYSTEM_MODE$"
+            ],
+            "setting" : "theme",
+            "default_option" : "SYSTEM_MODE",
+            "call" : {
+              "class" : "com.alphalaneous.SettingsPanels.PersonalizationSettings",
+              "method" : "setTheme"
+            }
+          }
+        },
+        {
+          "type" : "checkbox",
+          "arguments" : {
+            "text" : "$ALWAYS_ON_TOP$",
+            "description" : "$ON_TOP_DESCRIPITON$",
+            "setting" : "onTop",
+            "call" : {
+              "class" : "com.alphalaneous.SettingsPanels.PersonalizationSettings",
+              "method" : "setOnTop"
+            }
+          }
+        },
+        {
+          "type" : "checkbox",
+          "arguments" : {
+            "text" : "$DISABLE_NOTIFICATIONS$",
+            "description" : "$DISABLE_NOTIFICATIONS_DESCRIPTION$",
+            "setting" : "disableNotifications"
+          }
+        }
+      ]
+    }
+  ]
+}

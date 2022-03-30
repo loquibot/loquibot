@@ -2,7 +2,6 @@ package com.alphalaneous.SettingsPanels;
 
 import com.alphalaneous.Components.FancyTextArea;
 import com.alphalaneous.Defaults;
-import com.alphalaneous.ThemedComponents.ThemedCheckbox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,23 +14,23 @@ public class LanguageSettings {
 
 		panel.setLayout(null);
 		panel.setDoubleBuffered(true);
-		panel.setBounds(0, 0, 415, 622);
-		panel.setBackground(Defaults.SUB_MAIN);
+		panel.setBounds(0, 0, 524, 622);
+		panel.setBackground(Defaults.COLOR3);
 
 		return panel;
 	}
 
 	public static void refreshUI() {
 
-		panel.setBackground(Defaults.SUB_MAIN);
+		panel.setBackground(Defaults.COLOR3);
 		for (Component component : panel.getComponents()) {
 			if (component instanceof JButton) {
 				for (Component component2 : ((JButton) component).getComponents()) {
 					if (component2 instanceof JLabel) {
-						component2.setForeground(Defaults.FOREGROUND);
+						component2.setForeground(Defaults.FOREGROUND_A);
 					}
 				}
-				component.setBackground(Defaults.BUTTON);
+				component.setBackground(Defaults.COLOR2);
 			}
 			if (component instanceof JTextArea) {
 				((FancyTextArea) component).refresh_();

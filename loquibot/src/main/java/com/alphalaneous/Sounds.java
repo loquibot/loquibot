@@ -29,7 +29,7 @@ public class Sounds {
 		if (sounds.size() <= 5 && (!sounds.containsKey(location) || overlap)) {
 			new Sound(location, isFile, isURL).playSound();
 		} else if (sounds.containsKey(location) && restart) {
-
+			System.out.println(restart);
 			sounds.get(location).stopSound();
 			new Sound(location, isFile, isURL).playSound();
 		}
@@ -90,7 +90,9 @@ public class Sounds {
 		}
 
 		public void stopSound() {
-			mp3player.close();
+			if(mp3player != null) {
+				mp3player.close();
+			}
 			complete = true;
 		}
 	}

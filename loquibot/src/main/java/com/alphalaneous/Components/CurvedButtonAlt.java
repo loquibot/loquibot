@@ -1,5 +1,6 @@
 package com.alphalaneous.Components;
 
+import com.alphalaneous.Defaults;
 import com.alphalaneous.Language;
 import com.alphalaneous.ThemedComponents.ThemedJButton;
 
@@ -21,7 +22,14 @@ public class CurvedButtonAlt extends ThemedJButton {
 		size.width = size.height = Math.max(size.width, size.height);
 		setPreferredSize(size);
 		setContentAreaFilled(false);
+		setOpaque(false);
 		buttonList.add(this);
+	}
+
+	private int curve = 10;
+	public void setCurve(int curve){
+		this.curve = curve;
+		repaint();
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -32,7 +40,7 @@ public class CurvedButtonAlt extends ThemedJButton {
 		RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.setRenderingHints(qualityHints);
-		g2.fillRoundRect(0, 0, getSize().width, getSize().height, 10, 10);
+		g2.fillRoundRect(0, 0, getSize().width, getSize().height, curve, curve);
 
 
 		super.paintComponent(g);
@@ -45,9 +53,13 @@ public class CurvedButtonAlt extends ThemedJButton {
 
 	private Shape shape;
 
+	public String getIdentifier(){
+		return text.replace("$", "");
+	}
+
 	public boolean contains(int x, int y) {
 		if (shape == null || !shape.getBounds().equals(getBounds())) {
-			shape = new RoundRectangle2D.Float(0,0,getWidth(),getHeight(),10,10);
+			shape = new RoundRectangle2D.Float(0,0,getWidth(),getHeight(), Defaults.globalArc,Defaults.globalArc);
 		}
 		return shape.contains(x, y);
 	}
@@ -58,12 +70,4 @@ public class CurvedButtonAlt extends ThemedJButton {
 		this.text = text;
 		setText(Language.setLocale(text));
 	}
-
-
-	public static void refreshAllLocale(){
-		for(CurvedButtonAlt button : buttonList){
-			button.refreshLocale();
-		}
-	}
-
 }

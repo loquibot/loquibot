@@ -1,0 +1,155 @@
+{
+  "name" : "Geometry Dash",
+  "commands" : [
+    {
+      "name" : "!block",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "Blocks a level ID | Usage: \"!block <Level ID>\" to block a specific ID",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$BLOCK_NO_ID_MESSAGE$\", user);\n        }\n\t    return ReqUtils.block(user, args);\n\t}\n}"
+    },
+    {
+      "name" : "!blockuser",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!blockUser = Blocks a user | Usage: \"!blockuser <Username>\" to block a specific user",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$BLOCK_NO_USER_MESSAGE$\", user);\n        }\n\t    return ReqUtils.blockUser(user, args);\n\t}\n}"
+    },
+    {
+      "name" : "!clear",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!clear = Clears the queue | Usage: \"!clear\"",
+      "command" : "function command(){\n    if(isMod){\n\t\tReqUtils.clear();\n\t    return Utilities.format('$CLEAR_MESSAGE$', user);\n\t}\n}\n\n"
+    },
+    {
+      "name" : "!gdping",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!gdping = Pings the Geometry Dash servers | Usage: \"!gdping\"",
+      "command" : "function command(){\n    return \"GD ping: \" + Board.testSearchPing() + \" ms\";\n}"
+    },
+    {
+      "name" : "!info",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!info = Gets the specified level's information, default is current selected level | Usage: \"!info\" | \"!info <Position>\"",
+      "command" : "function command(){\n\tvar intArg = parseInt(args[1]);\n\tif(isNaN(intArg) || args.length <= 1 || args.length >= ReqUtils.getSize()){\n\t\tintArg = ReqUtils.getSelection()+1;\n\t}\n\tif(ReqUtils.getSize() > 0 && intArg <= ReqUtils.getSize()){\n\t    return Utilities.format(\"$INFO_COMMAND_MESSAGE$\", user,\n\t\t\tReqUtils.getLevel(intArg-1, 'name'),\n\t\t\tReqUtils.getLevel(intArg-1, 'id'),\n\t\t\tReqUtils.getLevel(intArg-1, 'author'),\n\t\t\tReqUtils.getLevel(intArg-1, 'requester'),\n\t\t\tReqUtils.getLevel(intArg-1, 'downloads'),\n\t\t\tReqUtils.getLevel(intArg-1, 'likes'),\n\t\t\tReqUtils.getLevel(intArg-1, 'objects'),\n\t\t\tReqUtils.getLevel(intArg-1, 'difficulty'));\n\t}\n}"
+    },
+    {
+      "name" : "!move",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!move = Moves the specified level from one position to another | Usage: \"!move <Level ID> <Position>\"",
+      "command" : "function command(){\n\tif(isMod){\n\t    if(xArgs.length === 0){\n    \t    return Utilities.format(\"$MOVE_NO_ID_MESSAGE$\", user);\n    \t}\n    \tif(xArgs.length === 1){\n            return Utilities.format(\"$MOVE_NO_POS_MESSAGE$\", user);\n         }\n\t\tif(ReqUtils.getPosFromID(xArgs[0]) !== -1){\n\t\t    var newPos = xArgs[1]-1;\n\t\t    if(newPos <= 0 || isNaN(newPos)){\n\t\t        newPos = 0;\n\t\t    }\n\t\t\tReqUtils.movePosition(ReqUtils.getPosFromID(xArgs[0]), newPos);\n        \treturn Utilities.format(\"$MOVE_MESSAGE$\", user, xArgs[0].toString(), (newPos + 1).toString())\n        }\n        else{\n        \treturn Utilities.format(\"$MOVE_FAILED_MESSAGE$\", user, xArgs[0].toString());\n        }\n\t}\n}"
+    },
+    {
+      "name" : "!next",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!next = Gets basic information about the next level in the queue | Usage: \"!next\"",
+      "command" : "function command(){\n\tif(ReqUtils.getSize() > 1){\n\n\t    return Utilities.format(\"$NEXT_MESSAGE$\", user,\n\t\t\tReqUtils.getLevel(1, 'name'),\n\t\t\tReqUtils.getLevel(1, 'author'),\n\t\t\tReqUtils.getLevel(1, 'id'),\n\t\t\tReqUtils.getLevel(1, 'requester'));\n\t}\n}",
+      "aliases" : ["!nextlevel"]
+    },
+    {
+      "name" : "!position",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!position = Finds your position in the queue | Usage: \"!position\" | \"!position <Number of Requested Level>\"",
+      "command" : "function command(){\nvar intArg = parseInt(args[1]);\n    if(isNaN(intArg) || args.length === 1){\n    \tintArg = 1;\n    }\n    if(intArg < 1){\n        intArg = 1;\n    }\n    var userPosition = [];\n    for(var i = 0; i < ReqUtils.getSize(); i++){\n        if(ReqUtils.getLevel(i, 'requester') === user){\n            userPosition.push(i);\n        }\n    }\n    if(userPosition.length === 0){\n        return Utilities.format(\"$POSITION_NONE_MESSAGE$\", user);\n    }\n    if(intArg > userPosition.length){\n        return Utilities.format(\"$POSITION_WRONG_MESSAGE$\", user, userPosition.length);\n    }\n    var pos = userPosition[intArg-1]+1;\n    return Utilities.format(\"$POSITION_MESSAGE$\", user,\n        ReqUtils.getLevel(userPosition[intArg-1], 'name'), pos);\n}",
+      "aliases" : ["!p", "!where"]
+    },
+    {
+      "name" : "!queue",
+      "editable" : false,
+      "cooldown" : 200,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!queue = Gets the current level request queue | Usage: \"!queue\" | \"!queue <Page>\"",
+      "command" : "function command(){\n    var intArg = parseInt(args[1]);\n    if(isNaN(intArg) || args.length === 1){\n    \tintArg = 1;\n    }\n    var pages = (((ReqUtils.getSize()-1)/queueLength) + 1)|0;\n    if(ReqUtils.getSize() === 0){\n        return Utilities.format(\"$QUEUE_NO_LEVELS_MESSAGE$\", user);\n    }\n    if(intArg > pages){\n        return Utilities.format(\"$QUEUE_NO_PAGE_MESSAGE$\", user, intArg|0);\n    }\n    if(intArg < 1){\n        intArg = 1;\n    }\n    var message = Utilities.format(\"$QUEUE_MESSAGE$\", user, intArg|0, pages|0) + ' | ';\n    for(var i = (intArg - 1)*queueLength; i < intArg * queueLength; i++){\n        if(i < ReqUtils.getSize()){\n            if(i % queueLength !== 0){\n                message = message.concat(\", \")\n            }\n            message = message.concat(i+1 + ': ' + ReqUtils.getLevel(i, 'name') + ' (' + ReqUtils.getLevel(i, 'id') + ')');\n        }\n    }\n    return message;\n}",
+      "aliases" : ["!q", "!levels", "!levellist", "!requests", "!page", "!list"]
+    },
+    {
+      "name" : "!remove",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!remove = Removes a level from the queue | Usage: \"!remove <Position>\"",
+      "command" : "function command(){\n    var intArg = parseInt(args[1]);\n\tif(isNaN(intArg) || args.length === 1){\n\t\tintArg = 1;\n\t}\n\tif(isMod){\n\t    if(isNaN(parseInt(args[1]))){\n\t        return;\n\t    }\n\t}\n\treturn ReqUtils.remove(user, isMod, intArg);\n}"
+    },
+    {
+      "name" : "!request",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!request = Sends requests | Usage: \"!request <Level ID>\" | \"!request <Level Name> by <User>\" (Use quotation marks to search by exact name) | \"!request <Level Name>\"",
+      "command" : "function command(){\n    if(xArgs.length === 0){\n        return Utilities.format(\"$SPECIFY_ID_MESSAGE$\", user);\n    }\n\treturn Requests.request(user, isMod, isSub, message, messageID, userID);\n}",
+      "aliases" : ["!r", "!req", "!add", "!play", "!send", "!join"]
+    },
+    {
+      "name" : "!song",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!song = Finds the current level's song information | Usage: \"!song\" | \"!song <Position>\"",
+      "command" : "function command(){\n\tvar intArg = parseInt(args[1]);\n\tif(isNaN(intArg) || args.length === 1){\n\t\tintArg = ReqUtils.getSelection() +1;\n\t}\n\tif(ReqUtils.getSize() > 0 && intArg <= ReqUtils.getSize()){\n\t    return Utilities.format(\"$SONG_MESSAGE$\", user,\n\t\t\tReqUtils.getLevel(intArg-1, 'songName'),\n\t\t\tReqUtils.getLevel(intArg-1, 'songAuthor'),\n\t\t\tReqUtils.getLevel(intArg-1, 'songID'))\n\t}\n\telse {\n\t    return '';\n\t}\n}"
+    },
+    {
+      "name" : "!toggle",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!toggle = Toggles requests | Usage: \"!toggle\"",
+      "command" : "function command(){\n    if(isMod){\n        return ReqUtils.toggleRequests();\n    }\n}"
+    },
+    {
+      "name" : "!top",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!top = Moves a specified level to the top of the queue | Usage: \"!top <Level ID>\"",
+      "command" : "function command(){\n\tif(isMod){\n\t    var pos = ReqUtils.getPosFromID(xArgs[0]);\n\t    if(xArgs.length === 0){\n\t        return Utilities.format(\"$TOP_NO_ID_MESSAGE$\", user);\n\t    }\n\t    if(pos !== -1 && xArgs.length > 0){\n\t\t    Levels.movePosition(pos, 1);\n        \treturn Utilities.format(\"$TOP_MESSAGE$\", user, xArgs[0].toString())\n\t\t}\n\t\telse{\n        \treturn Utilities.format(\"$TOP_FAILED_MESSAGE$\", user, xArgs[0].toString());\n\t\t}\n\t}\n}"
+    },
+    {
+      "name" : "!unblock",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!unblock = Unblocks a level ID | Usage: \"!unblock <Level ID>\" to unblock a specific ID",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$BLOCK_NO_ID_MESSAGE$\", user);\n        }\n\t    return ReqUtils.unblock(user, args);\n\t}\n}"
+    },
+    {
+      "name" : "!unblockuser",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!unblockUser = Unblocks a user | Usage: \"!unblockuser <Username>\" to unblock a specific user",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$BLOCK_NO_USER_MESSAGE$\", user);\n        }\n\t    return ReqUtils.unblockUser(user, args);\n\t}\n}"
+    },
+    {
+      "name" : "!wronglevel",
+      "editable" : false,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "!wronglevel = Removes the latest sent level by you | Usage: \"!wronglevel\"",
+      "command" : "function command(){\n\treturn ReqUtils.removeLatest(user);\n}",
+      "aliases" : ["!oops", "!wrongid", "!wrong"]
+    }
+  ]
+}

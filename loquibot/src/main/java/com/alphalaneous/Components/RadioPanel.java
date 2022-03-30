@@ -22,7 +22,7 @@ public class RadioPanel extends JPanel {
 		setLayout(null);
 		for (String label : labels) {
 			RadioButton radioButton = new RadioButton(label);
-			radioButton.setBounds(0, pos, 490, 30);
+			radioButton.setBounds(0, pos, 475, 30);
 			radioButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 			radioButton.setBorder(BorderFactory.createEmptyBorder());
 			radioButton.refresh();
@@ -39,12 +39,17 @@ public class RadioPanel extends JPanel {
 							button.setChecked(false);
 						}
 					}
+					changeFired(radioButton.getIdentifier());
 				}
 			});
 			buttons.add(radioButton);
 			add(radioButton);
 		}
 		setPreferredSize(new Dimension(getWidth(), pos + 30));
+		panels.add(this);
+	}
+
+	public void changeFired(String identifier){
 	}
 
 	public void setChecked(String option) {

@@ -1,7 +1,8 @@
 package com.alphalaneous;
 
-import com.alphalaneous.SettingsPanels.PersonalizationSettings;
-import com.alphalaneous.SettingsPanels.ShortcutSettings;
+import com.alphalaneous.Components.KeybindButton;
+import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.SwingKeyAdapter;
@@ -14,53 +15,20 @@ import java.util.Scanner;
 
 
 public class KeyListener extends SwingKeyAdapter {
-	static boolean usePlatformer = false;
-	static boolean goingLeft = false;
-	static boolean goingRight = false;
 	private static boolean keyReleased = false;
 	private static boolean ctrlPressed = false;
-	private static boolean goLeft = true;
-	private static boolean goRight = true;
 
 	public static boolean isCtrlPressed() {
 		return ctrlPressed;
 	}
 
 	public void nativeKeyPressed(NativeKeyEvent e) {
-		if (usePlatformer) {
-			if (e.getRawCode() == 65) {
-				if (goLeft) {
-					if (!(GDHelper.getX() <= 0)) {
-						GDMod.runNew("speed", String.valueOf(GDHelper.platSpeed * -1));
-						goLeft = false;
-						goingLeft = true;
-					} else {
-						GDMod.runNew("speed", "0");
-					}
-				}
-			}
-			if (e.getRawCode() == 68) {
-				if (goRight) {
-					GDMod.runNew("speed", String.valueOf(GDHelper.platSpeed));
-					goRight = false;
-					goingRight = true;
-				}
-			}
-		}
-		if (e.getRawCode() == 81 && ctrlPressed) {
-			usePlatformer = true;
-			GDMod.runNew("speed", "0");
-		}
-		if (e.getRawCode() == 69) {
-			usePlatformer = false;
-		}
+
 		if (e.getRawCode() == 162 || e.getRawCode() == 163) {
 			ctrlPressed = true;
 		}
-		//System.out.println(e.getRawCode());
 
-
-		if (keyReleased) {
+		if (keyReleased || ctrlPressed) {
 
 			int key = e.getRawCode();
 
@@ -87,34 +55,33 @@ public class KeyListener extends SwingKeyAdapter {
 			} else if (key == 45) {
 				key = 155;
 			}
-			if (!ShortcutSettings.focused) {
-				if (key == ShortcutSettings.openKeybind) {
-					Window.windowFrame.setAlwaysOnTop(true);
-					Window.windowFrame.setAlwaysOnTop(PersonalizationSettings.onTopOption);
+			if (!KeybindButton.getInFocus()) {
+				if (key == Settings.getSettings("openKeybind").asInteger()) {
+					Window.focus();
 				}
-				if (key == ShortcutSettings.skipKeybind) {
+				if (key == Settings.getSettings("skipKeybind").asInteger()) {
 					RequestFunctions.skipFunction();
 				}
-				if (key == ShortcutSettings.undoKeybind) {
+				if (key == Settings.getSettings("undoKeybind").asInteger()) {
 					RequestFunctions.undoFunction();
 				}
-				if (key == ShortcutSettings.randKeybind) {
+				if (key == Settings.getSettings("randomKeybind").asInteger()) {
 					RequestFunctions.randomFunction();
 				}
-				if (key == ShortcutSettings.copyKeybind) {
+				if (key == Settings.getSettings("copyKeybind").asInteger()) {
 					RequestFunctions.copyFunction();
 				}
-				if (key == ShortcutSettings.blockKeybind) {
+				if (key == Settings.getSettings("blockKeybind").asInteger()) {
 					RequestFunctions.blockFunction();
 				}
-				if (key == ShortcutSettings.clearKeybind) {
+				if (key == Settings.getSettings("clearKeybind").asInteger()) {
 					RequestFunctions.clearFunction();
 				}
 			}
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/actions/keybinds.txt"))) {
+			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {
 				Scanner sc3 = null;
 				try {
-					sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/actions/keybinds.txt").toFile());
+					sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt").toFile());
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -122,35 +89,29 @@ public class KeyListener extends SwingKeyAdapter {
 				while (sc3.hasNextLine()) {
 					String line = sc3.nextLine();
 					if (line.split("=")[0].replace(" ", "").equalsIgnoreCase(String.valueOf(e.getRawCode()))) {
-						Path path = Paths.get(Defaults.saveDirectory + "/GDBoard/actions/" + line.split("=")[1] + ".js");
+						Path path = Paths.get(Defaults.saveDirectory + "/loquibot/actions/" + line.split("=")[1] + ".js");
 						if (Files.exists(path))
-                            Window.sendCommandResponse(path);
+                            RequestsTab.sendCommandResponse(path);
                         break;
 					}
 				}
 				sc3.close();
 			}
-
+			if(Window.getWindow().isFocused()
+					|| LogWindow.getWindow().isFocused()
+					|| Main.getStartingFrame().isFocused()){
+				if(ctrlPressed && key == 123){
+					LogWindow.toggleLogWindow();
+				}
+			}
 			keyReleased = false;
 		}
 	}
 
 	public void nativeKeyReleased(NativeKeyEvent e) {
 		keyReleased = true;
-		if (usePlatformer) {
-			if (e.getRawCode() == 65) {
-				GDMod.runNew("speed", "0");
-				goLeft = true;
-			}
-			if (e.getRawCode() == 68) {
-				GDMod.runNew("speed", "0");
-				goRight = true;
-			}
-		}
 		if (e.getRawCode() == 162 || e.getRawCode() == 163) {
 			ctrlPressed = false;
 		}
-		goingLeft = false;
-		goingRight = false;
 	}
 }

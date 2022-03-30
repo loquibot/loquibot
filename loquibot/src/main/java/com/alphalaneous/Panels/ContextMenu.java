@@ -4,9 +4,10 @@ import com.alphalaneous.Defaults;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 
 //JButton because for some reason you can click through the JPanel
-public class ContextMenu extends JButton {
+public class ContextMenu extends JPanel {
 
     private final GridBagConstraints gbc = new GridBagConstraints();
 
@@ -22,10 +23,9 @@ public class ContextMenu extends JButton {
 
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createEmptyBorder(5,5,0,5));
-
+        addMouseListener(new MouseAdapter() {});
         setOpaque(false);
-        setBackground(Defaults.SUB_MAIN.darker());
-        setEnabled(false);
+        setBackground(new Color(Defaults.COLOR6.getRed(), Defaults.COLOR6.getGreen(), Defaults.COLOR6.getBlue(), 200));
 
     }
     public void addButton(ContextButton button){

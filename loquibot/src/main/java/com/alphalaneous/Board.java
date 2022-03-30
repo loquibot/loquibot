@@ -1,11 +1,7 @@
 package com.alphalaneous;
 
-import com.alphalaneous.SettingsPanels.RequestsSettings;
 import com.alphalaneous.Windows.DialogBox;
-import delight.nashornsandbox.NashornSandbox;
-import delight.nashornsandbox.NashornSandboxes;
 import jdash.client.exception.GDClientException;
-import org.json.JSONObject;
 
 import java.time.ZonedDateTime;
 
@@ -14,12 +10,6 @@ import java.time.ZonedDateTime;
 public class Board {
 
 	private static boolean bwomp = false;
-	private static final NashornSandbox sandbox = NashornSandboxes.create();
-
-	public static void sendDeathMessagesToggle() {
-		Settings.writeSettings("SendDeathMessages", String.valueOf(!Settings.getSettings("SendDeathMessages").asBoolean()));
-		RequestsSettings.deathMessage.setChecked(Settings.getSettings("SendDeathMessages").asBoolean());
-	}
 
 	public static void playSound(String location) {
 		Sounds.playSound(location, true, false, true, false);
@@ -58,11 +48,8 @@ public class Board {
 	}
 
 	public static void showPopup(String title, String text) {
-		new Thread(() -> {
-			DialogBox.showDialogBox(title, "<html>" + text + "</html>", "", new String[]{"OK"});
-		}).start();
+		new Thread(() -> DialogBox.showDialogBox(title, "<html>" + text + "</html>", "", new String[]{"OK"})).start();
 	}
-
 
 	public static String getenv(String name) {
 		return System.getenv(name);
@@ -72,34 +59,8 @@ public class Board {
 		bwomp = !bwomp;
 	}
 
-	public static void endGDBoard() {
+	public static void endloquibot() {
 		Main.close();
-	}
-
-	public static void signal() {
-		JSONObject messageObj = new JSONObject();
-		messageObj.put("request_type", "get_blocked_ids");
-		Main.sendBotMessage(messageObj.toString());
-	}
-
-	public static void rick() {
-		if (Sounds.sounds.containsKey("/rick.mp3")) {
-			Sounds.stopSound("/rick.mp3");
-		}
-		Sounds.playSound("/rick.mp3", true, false, false, false);
-	}
-
-	public static void stopRick() {
-		Sounds.stopSound("/rick.mp3");
-	}
-
-	public static void knock() {
-		Sounds.playSound("/knock.mp3", true, true, false, false);
-	}
-
-	public static void stopKnock() {
-		Sounds.stopSound("/knock.mp3");
-
 	}
 
 	public static void bwomp() {

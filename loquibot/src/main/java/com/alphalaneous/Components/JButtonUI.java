@@ -13,18 +13,13 @@ import java.awt.event.MouseListener;
 
 public class JButtonUI extends BasicButtonUI implements java.io.Serializable, MouseListener, KeyListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	private final Border m_borderRaised = UIManager.getBorder("Button.border");
 
 	private boolean mouseHover = false;
 
-	private Color bgColor = Defaults.TOP;
-	private Color hoverColor = Defaults.HOVER;
-	private Color selectColor = Defaults.SELECT;
+	private Color bgColor = Defaults.COLOR6;
+	private Color hoverColor = Defaults.COLOR3;
+	private Color selectColor = Defaults.COLOR4;
 
 
 	public void installUI(JComponent c) {

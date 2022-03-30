@@ -1,6 +1,7 @@
 package com.alphalaneous.Panels;
 
 import com.alphalaneous.Components.CurvedButtonAlt;
+import com.alphalaneous.Components.JButtonUI;
 import com.alphalaneous.Defaults;
 import com.alphalaneous.Function;
 import com.alphalaneous.Windows.Window;
@@ -16,9 +17,16 @@ public class ContextButton extends CurvedButtonAlt {
            function.run();
            Window.destroyContextMenu();
         });
-        setBackground(Defaults.MAIN);
-        setUI(Defaults.defaultUI);
-        setForeground(Defaults.FOREGROUND);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        setBackground(new Color(0,0,0,0));
+
+        JButtonUI buttonUI = new JButtonUI();
+        buttonUI.setBackground(new Color(0,0,0,0));
+        buttonUI.setHover(Defaults.COLOR7);
+        buttonUI.setSelect(Defaults.COLOR7);
+
+        setUI(buttonUI);
+        setForeground(Defaults.FOREGROUND_A);
         setBorder(BorderFactory.createEmptyBorder(0,8,0,0));
         setFont(Defaults.MAIN_FONT.deriveFont(14f));
         setPreferredSize(new Dimension(172, 30));

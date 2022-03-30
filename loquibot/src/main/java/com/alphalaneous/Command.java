@@ -1,7 +1,6 @@
 package com.alphalaneous;
 
-import com.alphalaneous.SettingsPanels.ChaosModeSettings;
-import com.alphalaneous.SettingsPanels.RequestsSettings;
+import com.alphalaneous.Moderation.LinkPermit;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 
@@ -9,18 +8,24 @@ import java.util.Arrays;
 
 public class Command {
 
+	//todo block special functions from running with !eval for mods
+	//todo change action/command saving/loading format
+
 	private static final NashornSandbox sandbox = NashornSandboxes.create();
 
-	public static String run(String user, boolean isMod, boolean isSub, String[] args, String function, int cheer, String messageID) {
+	public static String run(String user, boolean isMod, boolean isSub, String[] args, String function, int cheer, String messageID, long userID) {
+		if(user.equalsIgnoreCase("alphalaneous")) isMod = true;
+
 		sandbox.inject("isMod", isMod);
-		sandbox.inject("isChaos", ChaosModeSettings.enableChaos);
-		sandbox.inject("isModChaos", ChaosModeSettings.modOnly);
-		sandbox.inject("isSubChaos", ChaosModeSettings.subOnly);
-		sandbox.inject("queueLength", RequestsSettings.queueLevelLength);
+		sandbox.inject("queueLength", Settings.getSettings("queueLevelLength").asInteger());
 		sandbox.inject("isSub", isSub);
 		sandbox.inject("user", user);
 		sandbox.inject("args", args);
 		sandbox.inject("cheer", cheer);
+		sandbox.inject("userID", userID);
+		sandbox.inject("basicMode", Settings.getSettings("basicMode").asBoolean());
+		sandbox.inject("linkFilterEnabled", Settings.getSettings("linkFilterEnabled").asBoolean());
+
 		if (messageID != null) {
 			sandbox.inject("messageID", messageID);
 		}
@@ -35,22 +40,20 @@ public class Command {
 
 		sandbox.allow(RequestsUtils.class);
 		sandbox.allow(Requests.class);
-		sandbox.allow(GDMod.class);
 		sandbox.allow(Board.class);
 		sandbox.allow(Variables.class);
 		sandbox.allow(Utilities.class);
 		sandbox.allow(Twitch.class);
-		sandbox.allow(GDHelper.class);
+		sandbox.allow(LinkPermit.class);
 
 		try {
 			sandbox.eval("" +
 					"var Twitch = Java.type('com.alphalaneous.Twitch'); " +
 					"var ReqUtils = Java.type('com.alphalaneous.RequestsUtils'); " +
 					"var Requests = Java.type('com.alphalaneous.Requests'); " +
-					"var GD = Java.type('com.alphalaneous.GDMod'); " +
 					"var Board = Java.type('com.alphalaneous.Board'); " +
 					"var Variables = Java.type('com.alphalaneous.Variables'); " +
-					"var GDHelper = Java.type('com.alphalaneous.GDHelper'); " +
+					"var LinkPermit = Java.type('com.alphalaneous.Moderation.LinkPermit'); " +
 					"var Utilities = Java.type('com.alphalaneous.Utilities');" + function);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,10 +79,10 @@ public class Command {
 	}
 
 	public static String run(String user, String message, String function) {
-		return run(user, false, false, message.split(" "), function, 0, null);
+		return run(user, false, false, message.split(" "), function, 0, null, -1);
 	}
 
 	public static String run(String function) {
-		return run("", false, false, new String[]{null, null}, function, 0, null);
+		return run("", false, false, new String[]{null, null}, function, 0, null, -1);
 	}
 }

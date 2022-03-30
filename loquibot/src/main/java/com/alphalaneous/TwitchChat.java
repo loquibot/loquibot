@@ -1,5 +1,7 @@
 package com.alphalaneous;
 
+import com.alphalaneous.TwitchBot.ChatMessage;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -39,7 +41,7 @@ public class TwitchChat {
 		textArea.setOpaque(false);
 		textArea.setBackground(new Color(0, 0, 0, 0));
 		textArea.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-		textArea.setForeground(Defaults.FOREGROUND);
+		textArea.setForeground(Defaults.FOREGROUND_A);
 		int height = getJTextPaneHeight(textArea);
 		textArea.setPreferredSize(new Dimension(400, height));
 		textArea.setMinimumSize(new Dimension(400, height));
@@ -56,7 +58,6 @@ public class TwitchChat {
 		tempFrame.add(textArea);
 		tempFrame.revalidate();
 		tempFrame.pack();
-		System.out.println(tempFrame.getPreferredSize().height - 39);
 		return tempFrame.getPreferredSize().height - 39;
 	}
 }

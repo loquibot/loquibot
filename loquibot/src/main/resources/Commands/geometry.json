@@ -1,0 +1,121 @@
+{
+  "name" : "Geometry Dash",
+  "commands" : [
+    {
+      "name" : "block",
+      "level" : "moderator",
+      "description" : "Blocks a level ID | Usage: \"%pblock <Level ID>\" to block a specific ID",
+      "runMethod" : true,
+      "message" : "runBlock"
+    },
+    {
+      "name" : "blockuser",
+      "level" : "moderator",
+      "description" : "Blocks a user | Usage: \"%pblockuser <Username>\" to block a specific user",
+      "runMethod" : true,
+      "message" : "runBlockUser"
+    },
+    {
+      "name" : "clear",
+      "level" : "moderator",
+      "description" : "Clears the queue | Usage: \"%pclear\"",
+      "runMethod" : true,
+      "message" : "runClear"
+    },
+    {
+      "name" : "gdping",
+      "description" : "Pings the Geometry Dash servers | Usage: \"%pgdping\"",
+      "runMethod" : true,
+      "message" : "runGDPing"
+    },
+    {
+      "name" : "info",
+      "description" : "Gets the specified level's information, default is current selected level | Usage: \"%pinfo\" | \"%pinfo <Position>\"",
+      "runMethod" : true,
+      "message" : "runInfo"
+    },
+    {
+      "name" : "move",
+      "level" : "moderator",
+      "description" : "Moves the specified level from one position to another | Usage: \"%pmove <Level ID> <Position>\"",
+      "runMethod" : true,
+      "message" : "runMove"
+    },
+    {
+      "name" : "next",
+      "description" : "Gets basic information about the next level in the queue | Usage: \"%pnext\"",
+      "runMethod" : true,
+      "message" : "runNext",
+      "aliases" : ["nextlevel"]
+    },
+    {
+      "name" : "position",
+      "description" : "Finds your position in the queue | Usage: \"%pposition\" | \"%pposition <Number of Requested Level>\"",
+      "runMethod" : true,
+      "message" : "runPosition",
+      "aliases" : ["p", "where"]
+    },
+    {
+      "name" : "queue",
+      "cooldown" : 200,
+      "description" : "Gets the current level request queue | Usage: \"%pqueue\" | \"%pqueue <Page>\"",
+      "runMethod" : true,
+      "message" : "runQueue",
+      "aliases" : ["q", "levels", "levellist", "requests", "page", "list"]
+    },
+    {
+      "name" : "remove",
+      "description" : "Removes a level from the queue (only works on your own levels, unless mod) | Usage: \"%premove <Position>\"",
+      "runMethod" : true,
+      "message" : "runRemove"
+    },
+    {
+      "name" : "request",
+      "description" : "Sends requests | Usage: \"%prequest <Level ID>\" | \"%prequest <Level Name> by <User>\" (Use quotation marks to search by exact name) | \"%prequest <Level Name>\"",
+      "runMethod" : true,
+      "message" : "runRequest",
+      "aliases" : ["r", "req", "add", "play", "send", "join"]
+    },
+    {
+      "name" : "song",
+      "description" : "Finds the current level's song information | Usage: \"%psong\" | \"%psong <Position>\"",
+      "runMethod" : true,
+      "message" : "runSong"
+    },
+    {
+      "name" : "toggle",
+      "level" : "moderator",
+      "description" : "Toggles requests | Usage: \"%ptoggle\"",
+      "runMethod" : true,
+      "message" : "runToggle"
+    },
+    {
+      "name" : "top",
+      "level" : "moderator",
+      "description" : "Moves a specified level to the top of the queue | Usage: \"%ptop <Level ID>\"",
+      "runMethod" : true,
+      "message" : "runTop"
+    },
+    {
+      "name" : "unblock",
+      "level" : "moderator",
+      "description" : "Unblocks a level ID | Usage: \"%punblock <Level ID>\" to unblock a specific ID",
+      "runMethod" : true,
+      "message" : "runUnblock"
+    },
+    {
+      "name" : "unblockuser",
+      "level" : "moderator",
+      "description" : "Unblocks a user | Usage: \"%punblockuser <Username>\" to unblock a specific user",
+      "runMethod" : true,
+      "message" : "runUnblockUser"
+    },
+    {
+      "name" : "wronglevel",
+      "description" : "Removes the latest sent level by you | Usage: \"%pwronglevel\"",
+      "runMethod" : true,
+      "message" : "runWrongLevel",
+      "aliases" : ["oops", "wrongid", "wrong"]
+    }
+  ]
+}

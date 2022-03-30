@@ -1,0 +1,11 @@
+b!addcom
+b!delcom
+b!editcom
+!clear
+!block
+!blockuser
+!unblock
+!unblockuser
+!toggle
+!top
+!move

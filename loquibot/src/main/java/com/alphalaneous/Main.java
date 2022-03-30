@@ -1,28 +1,22 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.CommentsPanel;
-import com.alphalaneous.Panels.InfoPanel;
-import com.alphalaneous.Panels.LevelsPanel;
+import com.alphalaneous.Panels.LevelDetailsPanel;
 import com.alphalaneous.SettingsPanels.*;
-import com.alphalaneous.Windows.CommandEditor;
-import com.alphalaneous.Windows.DialogBox;
-import com.alphalaneous.Windows.SettingsWindow;
+import com.alphalaneous.Tabs.*;
+import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
-import org.apache.commons.io.FileUtils;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,27 +24,46 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class Main {
 
+    static {
+        BackwardsCompatibilityLayer.setNewLocation();
+    }
 
-    public static volatile boolean programLoaded = false;
-    static volatile boolean sendMessages = false;
-    static volatile boolean allowRequests = false;
-    static Thread thread;
-    private static ChatListener chatReader;
-    private static boolean keepConnecting = true;
+    public static boolean programLoaded = false;
+    public static boolean sendMessages = false;
+    public static boolean allowRequests = false;
+    public static Thread keyboardHookThread;
+
     private static ChannelPointListener channelPointListener;
-    private static ServerBot serverBot = new ServerBot();
-    private static boolean onCool = false;
-    private static boolean cooldown = false;
+    private static ChatListener chatReader;
+    private static ServerBot2 serverBot = null;
+    private static boolean keepConnecting = true;
     private static boolean failed = false;
+    private static final ArrayList<Image> iconImages = new ArrayList<>();
+    private static final ImageIcon icon = Assets.loquibot;
+    private static final Image newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+    private static final Image newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+    private static final JFrame starting = new JFrame("loquibot");
+    private static StreamDeckSocket streamDeckSocket;
 
     public static void main(String[] args) {
 
-        JFrame starting = new JFrame("loquibot");
+        iconImages.add(newIcon16);
+        iconImages.add(newIcon32);
+
+        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        logger.setLevel(Level.OFF);
+        logger.setUseParentHandlers(false);
+        LogWindow.createWindow();
+        new Thread(Main::runKeyboardHook).start();
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         starting.setSize(200, 200);
         starting.setResizable(false);
@@ -59,7 +72,6 @@ public class Main {
         starting.setBackground(new Color(0, 0, 0, 0));
         starting.add(new JLabel(Assets.loquibotLarge));
         starting.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        ArrayList<Image> iconImages = getIconImages();
         starting.setIconImages(iconImages);
         starting.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         starting.addWindowListener(new WindowAdapter() {
@@ -71,21 +83,17 @@ public class Main {
         starting.setVisible(true);
 
         System.out.println("> Start");
-		/*
-		  Saves defaults of UI Elements before switching to Nimbus
-		  Sets to Nimbus, then sets defaults back
-		 */
+
+        //Saves defaults of UI Elements before switching to Nimbus
+        //Sets to Nimbus, then sets defaults back
         setUI();
         Settings.loadSettings();
-        System.out.println("> Settings Loaded");
-		/*
-		  Places config files in JRE folder in the GDBoard AppData as I forgot to
-		  include them in the bundled JRE
-		 */
-        createConfFiles();
-        System.out.println("> Config Files Created");
+        LoadGD.load();
+        Themes.loadTheme();
 
-        if (!Settings.getSettings("onboarding").asBoolean()) {
+        System.out.println("> Settings Loaded");
+
+        if (Settings.getSettings("onboarding").exists()) {
             try {
                 TwitchAccount.setInfo();
                 new Thread(ChannelPointSettings::refresh).start();
@@ -97,45 +105,66 @@ public class Main {
             }
         }
         System.out.println("> Twitch Loaded");
-
-        Defaults.programLoaded.set(false);
         try {
-
-            Language.startFileChangeListener();
-
-            Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-            logger.setLevel(Level.OFF);
-            logger.setUseParentHandlers(false);
+            try {
+                Language.loadLanguage();
+                Language.startFileChangeListener();
+            }
+            catch (IllegalArgumentException e){
+                System.out.println("> Language Change Listener Failed");
+            }
 
             new Thread(Assets::loadAssets).start();
-            Defaults.initializeThemeInfo();
-            new Thread(Main::addMissingFiles).start();
+            new Thread(Defaults::initializeThemeInfo).start();
             new Thread(Defaults::startMainThread).start();
-            System.out.println("> Main Thread Started");
-			/*
-			  If first time launch, the user has to go through onboarding
-			  Show it and wait until finished
-			 */
-            if (Settings.getSettings("onboarding").asBoolean()) {
+            new Thread(streamDeckSocket = new StreamDeckSocket()).start();
+
+            System.out.println("> Main Threads Started");
+
+            Window.initFrame();
+            CommandEditor.createPanel();
+            RequestsTab.createPanel();
+            ChatbotTab.createPanel();
+            SettingsTab.createPanel();
+            OfficerWindow.create();
+            Window.loadTopComponent();
+            LoadCommands.loadCommands();
+            LoadTimers.loadTimers();
+            LoggedID.loadLoggedIDs();
+            TimerHandler.startTimerHandler();
+
+            LevelDetailsPanel.setPanel(null);
+
+
+            System.out.println("> Panels Created");
+
+            Window.loadSettings();
+            Themes.refreshUI();
+            starting.setVisible(false);
+
+            //If first time launch, the user has to go through onboarding
+            //Show it and wait until finished
+
+            if (!Settings.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();
+                Window.setVisible(true);
+                System.out.println("> Window Visible");
+
                 Onboarding.refreshUI();
-                Onboarding.frame.setVisible(true);
                 Onboarding.isLoading = true;
                 while (Onboarding.isLoading) {
-                    Thread.sleep(100);
+                    Utilities.sleep(100);
                 }
                 TwitchAccount.setInfo();
                 new Thread(ChannelPointSettings::refresh).start();
             }
-
-            LoadGD.load();
-            System.out.println("> LoadGD Loaded");
-
-            new Thread(GDHelper::start).start();
-            System.out.println("> GDHelper Started");
+            else {
+                Window.setVisible(true);
+                System.out.println("> Window Visible");
+            }
 
             new Thread(Variables::loadVars).start();
-            System.out.println("> Variables Loaded");
+            System.out.println("> Command Variables Loaded");
 
             new Thread(() -> {
                 while (keepConnecting) {
@@ -149,102 +178,55 @@ public class Main {
                         chatReader = new ChatListener(TwitchAccount.login);
                         chatReader.connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
                         while (!chatReader.isClosed()) {
-                            Thread.sleep(100);
+                            Utilities.sleep(100);
                         }
                     } catch (Exception ignored) {
                     }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Utilities.sleep(1000);
                 }
             }).start();
             new Thread(() -> {
                 while (keepConnecting) {
-                    serverBot = new ServerBot();
+                    serverBot = new ServerBot2();
                     serverBot.connect();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignored) {
-                    }
+                    Utilities.sleep(1000);
                 }
             }).start();
 
 
-            /* If there is no monitor setting, default to 0 */
-            if (!Settings.getSettings("monitor").asString().equalsIgnoreCase("")) {
-                Settings.writeSettings("monitor", "0");
-            }
+            //Reads channel point redemptions for channel point triggers
 
-            CommentsPanel.createPanel();
-            LevelsPanel.createPanel();
-            InfoPanel.createPanel();
-            Window.createPanel();
-            CommandEditor.createPanel();
-            SettingsWindow.createPanel();
-
-			System.out.println("> Panels Created");
-
-            /*
-				Load Settings panels and Settings
-				Uses reflection to easily loop when more are added
-			*/
-            PersonalizationSettings.loadSettings();
-            ChatbotSettings.loadSettings();
-            RequestsSettings.loadSettings();
-            OutputSettings.loadSettings();
-            FiltersSettings.loadSettings();
-            ChaosModeSettings.loadSettings();
-            ShortcutSettings.loadSettings();
-
-            /*
-				Runs keyboard and Controller hook for global keybinds
-				Runs on separate Threads
-			*/
-
-            new Thread(Main::runKeyboardHook).start();
-
-            /* Reads channel point redemptions for channel point triggers */
             new Thread(() -> {
                 try {
-                    while(true) {
+                    while (true) {
                         channelPointListener = new ChannelPointListener(new URI("wss://pubsub-edge.twitch.tv"));
                         channelPointListener.connectBlocking();
-                        while (channelPointListener.isOpen()){
-                            Thread.sleep(10);
+                        while (channelPointListener.isOpen()) {
+                            Utilities.sleep(10);
                         }
-                        Thread.sleep(2000);
+                        Utilities.sleep(2000);
                     }
                 } catch (URISyntaxException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
 
-            /* Refresh GD Username in Account Settings */
-            AccountSettings.refreshGD(LoadGD.username);
 
-            Window.resetCommentSize();
-            Window.loadSettings();
-
-            starting.setVisible(false);
-
-            Window.windowFrame.setVisible(true);
-
-			System.out.println("> Window Visible");
 
             Window.setOnTop(Settings.getSettings("onTop").asBoolean());
-
-            OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(OutputSettings.outputString, 0));
-
-
-            Path initialJS = Paths.get(Defaults.saveDirectory + "\\GDBoard\\initial.js");
-
+            try {
+                OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+            }
+            catch (Exception e){
+                Settings.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
+                //OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+            }
+            Path initialJS = Paths.get(Defaults.saveDirectory + "\\loquibot\\initial.js");
             if (Files.exists(initialJS)) {
                 new Thread(() -> {
                     try {
                         if (!Files.readString(initialJS, StandardCharsets.UTF_8).equalsIgnoreCase("")) {
-                            Command.run(TwitchAccount.display_name, true, true, new String[]{"dummy"}, Files.readString(initialJS, StandardCharsets.UTF_8), 0, null);
+                            Command.run(TwitchAccount.display_name, true, true, new String[]{"dummy"}, Files.readString(initialJS, StandardCharsets.UTF_8), 0, null, -1);
                         }
                     } catch (Exception ignored) {
                     }
@@ -253,107 +235,71 @@ public class Main {
                 Files.createFile(initialJS);
             }
 
-            Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\saved.txt");
-
+            Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\saved.json");
             if (Files.exists(file)) {
-                Scanner sc = null;
-                try {
-                    sc = new Scanner(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                String levelsJson = Files.readString(file, StandardCharsets.UTF_8);
+                JSONObject object = new JSONObject(levelsJson);
+                JSONArray levelsArray = object.getJSONArray("levels");
+                for(Object object1 : levelsArray){
+                    JSONObject level = (JSONObject) object1;
+                    RequestsUtils.forceAdd(
+                            level.getString("name"),
+                            level.getString("creator_name"),
+                            level.getLong("id"),
+                            level.getString("difficulty"),
+                            level.getString("demon_difficulty"),
+                            level.getBoolean("is_demon"),
+                            level.getBoolean("is_auto"),
+                            level.getBoolean("is_epic"),
+                            level.getInt("featured_score"),
+                            level.getInt("stars"),
+                            level.getInt("requested_stars"),
+                            level.getString("requester"),
+                            level.getInt("game_version"),
+                            level.getInt("coin_count"),
+                            level.getString("description"),
+                            level.getInt("likes"),
+                            level.getInt("downloads"),
+                            level.getString("length"),
+                            level.getInt("level_version"),
+                            level.getLong("song_id"),
+                            level.getString("song_title"),
+                            level.getString("song_artist"),
+                            level.getInt("object_count"),
+                            level.getLong("original_id"),
+                            false, false,
+                            level.getBoolean("has_verified_coins")
+                    );
                 }
-                assert sc != null;
-
-
-                while (sc.hasNextLine()) {
-                    Thread.sleep(100);
-                    String[] level = sc.nextLine().split(",");
-                    try {
-						/*if (level.length < 26) {
-							RequestsOld.forceAdd(level[0], level[1], Long.parseLong(level[2]), level[3], Boolean.parseBoolean(level[4]),
-									Boolean.parseBoolean(level[5]), Integer.parseInt(level[6]), level[7], Integer.parseInt(level[8]),
-									Integer.parseInt(level[9]), new String(Base64.getDecoder().decode(level[10])), Integer.parseInt(level[11]), Integer.parseInt(level[12]),
-									level[13], Integer.parseInt(level[14]), Integer.parseInt(level[15]), new String(Base64.getDecoder().decode(level[16])), level[17],
-									Integer.parseInt(level[18]), Long.parseLong(level[19]), Boolean.parseBoolean(level[20]), Boolean.parseBoolean(level[21]),
-									-1, null, null, false);
-						}
-						if (level.length == 26) {
-							RequestsOld.forceAdd(level[0], level[1], Long.parseLong(level[2]), level[3], Boolean.parseBoolean(level[4]),
-									Boolean.parseBoolean(level[5]), Integer.parseInt(level[6]), level[7], Integer.parseInt(level[8]),
-									Integer.parseInt(level[9]), new String(Base64.getDecoder().decode(level[10])), Integer.parseInt(level[11]), Integer.parseInt(level[12]),
-									level[13], Integer.parseInt(level[14]), Integer.parseInt(level[15]), new String(Base64.getDecoder().decode(level[16])), level[17],
-									Integer.parseInt(level[18]), Long.parseLong(level[19]), Boolean.parseBoolean(level[20]), Boolean.parseBoolean(level[21]),
-									Integer.parseInt(level[22]), level[23], level[24], Boolean.parseBoolean(level[25]));
-						}*/
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                sc.close();
             }
             allowRequests = true;
             RequestFunctions.saveFunction();
-            LevelsPanel.setSelect(0);
+            RequestsTab.getLevelsPanel().setSelect(0);
             new Thread(APIs::checkViewers).start();
-            new Thread(() -> CommentsPanel.loadComments(0, false)).start();
 
             sendMessages = true;
+            APIs.setAllViewers();
 
-            if (Settings.getSettings("isHigher").asBoolean()) {
-                sendMessage(Utilities.format("🔷 | $STARTUP_MESSAGE_MOD_VIP$"));
-            } else {
-                sendMessage(Utilities.format("🔷 | $STARTUP_MESSAGE$"));
+            if(!Settings.getSettings("isHigher").exists()) {
+                if (APIs.allMods.contains("loquibot") || APIs.allVIPs.contains("loquibot")) Settings.writeSettings("isHigher", "true");
+                else Settings.writeSettings("isHigher", "false");
             }
-
-            new Thread(() -> {
-                while (true) {
-                    try {
-                        Thread.sleep(120000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Main.sendMessage(" ");
-                }
-            }).start();
-            new Thread(() -> {
-                while (true) {
-                    Board.signal();
-                    APIs.setAllViewers();
-                    if (APIs.allMods.contains("gdboard") || APIs.allVIPs.contains("gdboard")) {
-                        Settings.writeSettings("isHigher", "true");
-                    } else {
-                        Settings.writeSettings("isHigher", "false");
-                    }
-                    try {
-                        Thread.sleep(120000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
+            System.gc();
             programLoaded = true;
-			/*new Thread(() -> {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				DialogBox.showDialogBox("Level Analysis Disabled", "Level analysis has been disabled due to rate limiting", "", new String[]{"Okay"});
-			}).start();*/
+
         } catch (Exception e) {
             e.printStackTrace();
-            DialogBox.showDialogBox("Error!", "<html>" + e + ": " + e.getStackTrace()[0], "Please report to Alphalaneous#9687 on Discord.", new String[]{"Close"});
+            DialogBox.showDialogBox("Error!", e + ": " + e.getStackTrace()[0], "Please report to Alphalaneous#9687 on Discord.", new String[]{"Close"});
             close(true, false);
         }
     }
-    private static final ArrayList<Image> iconImages = new ArrayList<>();
-    private static final ImageIcon icon = Assets.loquibot;
-    private static final Image newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-    private static final Image newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-    static {
-        iconImages.add(newIcon16);
-        iconImages.add(newIcon32);
+
+    public static void sendMessageToStreamDeck(String message){
+        streamDeckSocket.sendMessage(message);
+    }
+
+    private static void updateTree(){
+        ComponentTree.updateTree(Window.getWindow().getRootPane());
     }
 
     public static ArrayList<Image> getIconImages() {
@@ -362,7 +308,7 @@ public class Main {
 
     static void refreshBot() {
         try {
-            GDBoardBot.start(true);
+            serverBot.connect();
             if (channelPointListener != null) {
                 channelPointListener.disconnectBot();
             }
@@ -379,62 +325,28 @@ public class Main {
         chatReader.sendMessage(message);
     }
 
-    private static void addMissingFiles() {
-        try {
-            Path path = Paths.get(Defaults.saveDirectory + "\\GDBoard\\bin\\gdmod.exe");
-            if (!Files.exists(path)) {
-                URL inputUrl = Main.class.getResource("/gdmod.exe");
-                assert inputUrl != null;
-                FileUtils.copyURLToFile(inputUrl, path.toFile());
-            }
-            Path pathA = Paths.get(Defaults.saveDirectory + "\\GDBoard\\bin\\ChaosMode.exe");
-            if (!Files.exists(pathA)) {
-                URL inputUrlA = Main.class.getResource("/ChaosMode.exe");
-                assert inputUrlA != null;
-                FileUtils.copyURLToFile(inputUrlA, pathA.toFile());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    static void sendBotMessage(String message) {
+    public static void sendToServer(String message) {
         try {
             serverBot.sendMessage(message);
         } catch (Exception ignored) {
         }
     }
 
+    public static void sendMessageWithoutCooldown(String message){
+        JSONObject messageObj = new JSONObject();
+        messageObj.put("request_type", "send_message");
+        messageObj.put("message", message);
+        serverBot.sendMessage(messageObj.toString());
+    }
+
     static void sendMessage(String message, boolean whisper, String user) {
-        if (cooldown) {
-            return;
-        }
-        cooldown = true;
-        new Thread(() -> {
-            try {
-                Thread.sleep(ChatbotSettings.cooldown);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            cooldown = false;
-        }).start();
-        if (!ChatbotSettings.silentOption || message.equalsIgnoreCase(" ")) {
+        if (!Settings.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
             if (!message.equalsIgnoreCase("")) {
 
-                while (onCool) {
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                onCool = true;
                 JSONObject messageObj = new JSONObject();
                 messageObj.put("request_type", "send_message");
-                if (ChatbotSettings.antiDox) {
-                    message = message.replaceAll(System.getProperty("user.name"), "*****");
+                if (Settings.getSettings("antiDox").asBoolean()) {
+                    message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
                 }
                 if (whisper) {
                     messageObj.put("message", "/w " + user + " " + message);
@@ -446,20 +358,12 @@ public class Main {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(100);
-                        onCool = false;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
             }
         } else if (whisper) {
             if (!message.equalsIgnoreCase("")) {
                 JSONObject messageObj = new JSONObject();
                 messageObj.put("request_type", "send_message");
-                if (ChatbotSettings.antiDox) {
+                if (Settings.getSettings("antiDox").asBoolean()) {
                     message = message.replaceAll(System.getProperty("user.name"), "*****");
                 }
                 messageObj.put("message", "/w " + user + " " + message);
@@ -480,8 +384,8 @@ public class Main {
         var runHookRef = new Object() {
             boolean runHook = true;
         };
-        if (thread != null) {
-            if (thread.isAlive()) {
+        if (keyboardHookThread != null) {
+            if (keyboardHookThread.isAlive()) {
                 runHookRef.runHook = false;
             }
         }
@@ -492,7 +396,7 @@ public class Main {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new KeyListener());
             while (GlobalScreen.isNativeHookRegistered()) {
-                Thread.sleep(100);
+                Utilities.sleep(100);
             }
         } catch (Exception e) {
             try {
@@ -502,24 +406,20 @@ public class Main {
             }
             failed = true;
         }
-        thread = new Thread(() -> {
+        keyboardHookThread = new Thread(() -> {
             while (runHookRef.runHook) {
                 if (failed) {
                     runKeyboardHook();
                 }
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Utilities.sleep(100);
             }
         });
-        thread.start();
+        keyboardHookThread.start();
     }
 
     public static void close(boolean forceLoaded, boolean load) {
         boolean loaded = Main.programLoaded;
-        GDHelper.close();
+
         if (forceLoaded) {
             loaded = load;
         }
@@ -531,13 +431,18 @@ public class Main {
             }
             Variables.saveVars();
             Settings.saveSettings();
+            Themes.saveTheme();
+            CommandData.saveCustomCommands();
+            CommandData.saveDefaultCommands();
+            CommandData.saveGeometryDashCommands();
+            TimerData.saveCustomTimers();
+            LoggedID.saveLoggedIDs();
             System.exit(0);
         }).start();
         Utilities.disposeTray();
         if (!Settings.getSettings("onboarding").asBoolean() && loaded) {
-            Window.windowFrame.setVisible(false);
+            Window.setVisible(false);
             Window.setSettings();
-            Settings.writeLocation();
             keepConnecting = false;
             try {
                 channelPointListener.disconnectBot();
@@ -547,11 +452,13 @@ public class Main {
             } catch (Exception ignored) {
             }
             Variables.saveVars();
-            RequestsSettings.setSettings();
-            FiltersSettings.setSettings();
-            ChaosModeSettings.setSettings();
+            Themes.saveTheme();
             Settings.saveSettings();
-
+            CommandData.saveCustomCommands();
+            CommandData.saveDefaultCommands();
+            CommandData.saveGeometryDashCommands();
+            TimerData.saveCustomTimers();
+            LoggedID.saveLoggedIDs();
         }
         System.exit(0);
     }
@@ -595,43 +502,8 @@ public class Main {
 
     }
 
-    private static void createConfFiles() {
-        Path conf = Paths.get(Defaults.saveDirectory + "\\GDBoard\\jre\\conf");
-        Path confzip = Paths.get(Defaults.saveDirectory + "\\GDBoard\\jre\\conf.zip");
-
-        if (!Files.exists(conf)) {
-            URL inputUrl = Main.class.getResource("/conf.zip");
-            try {
-                assert inputUrl != null;
-                FileUtils.copyURLToFile(inputUrl, confzip.toFile());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (Files.exists(Paths.get(Defaults.saveDirectory + "\\GDBoard\\jre\\conf.zip"))) {
-                Path decryptTo = Paths.get(Defaults.saveDirectory + "\\GDBoard\\jre\\conf");
-                try {
-                    Files.createDirectory(decryptTo);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(Paths.get(Defaults.saveDirectory + "\\GDBoard\\jre\\conf.zip")))) {
-                    ZipEntry entry;
-                    while ((entry = zipInputStream.getNextEntry()) != null) {
-
-                        final Path toPath = decryptTo.resolve(entry.getName());
-                        if (entry.isDirectory()) {
-                            Files.createDirectory(toPath);
-                        } else {
-                            Files.copy(zipInputStream, toPath);
-                        }
-                    }
-                    Files.delete(confzip);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
+    public static JFrame getStartingFrame(){
+        return starting;
     }
 
     public static void close() {

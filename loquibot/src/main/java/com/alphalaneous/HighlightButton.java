@@ -14,12 +14,12 @@ public class HighlightButton extends JButton {
 	private final JButtonUI highlightUI = new JButtonUI();
 
 	public HighlightButton(Image image) {
-		highlightUI.setSelect(Defaults.TOP);
-		highlightUI.setHover(Defaults.TOP);
-		highlightUI.setBackground(Defaults.TOP);
+		highlightUI.setSelect(Defaults.COLOR6);
+		highlightUI.setHover(Defaults.COLOR6);
+		highlightUI.setBackground(Defaults.COLOR6);
 		ImageIcon icon = new ImageIcon(image);
-		setIcon(new ImageIcon(colorImage(convertToBufferedImage(icon), Defaults.FOREGROUND)));
-		setBackground(Defaults.TOP);
+		setIcon(new ImageIcon(colorImage(convertToBufferedImage(icon), Defaults.FOREGROUND_A)));
+		setBackground(Defaults.COLOR6);
 		setUI(highlightUI);
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -29,11 +29,11 @@ public class HighlightButton extends JButton {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setIcon(new ImageIcon(colorImage(convertToBufferedImage(getIcon()), Defaults.FOREGROUND)));
+				setIcon(new ImageIcon(colorImage(convertToBufferedImage(getIcon()), Defaults.FOREGROUND_A)));
 			}
 		});
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		setForeground(Defaults.FOREGROUND);
+		setForeground(Defaults.FOREGROUND_A);
 		setBorder(BorderFactory.createEmptyBorder());
 		setOpaque(true);
 		setPreferredSize(new Dimension(30, 25));
@@ -42,10 +42,10 @@ public class HighlightButton extends JButton {
 	public HighlightButton(String text) {
 		setText(text);
 		setFont(Defaults.SYMBOLS.deriveFont(20f));
-		highlightUI.setSelect(Defaults.TOP);
-		highlightUI.setHover(Defaults.TOP);
-		highlightUI.setBackground(Defaults.TOP);
-		setBackground(Defaults.TOP);
+		highlightUI.setSelect(Defaults.COLOR6);
+		highlightUI.setHover(Defaults.COLOR6);
+		highlightUI.setBackground(Defaults.COLOR6);
+		setBackground(Defaults.COLOR6);
 		setUI(highlightUI);
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -55,11 +55,11 @@ public class HighlightButton extends JButton {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setForeground(Defaults.FOREGROUND);
+				setForeground(Defaults.FOREGROUND_A);
 			}
 		});
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		setForeground(Defaults.FOREGROUND);
+		setForeground(Defaults.FOREGROUND_A);
 		setBorder(BorderFactory.createEmptyBorder());
 		setOpaque(true);
 		setPreferredSize(new Dimension(getPreferredSize().width + 14, 25));
@@ -94,13 +94,13 @@ public class HighlightButton extends JButton {
 	}
 
 	public void refresh() {
-		setForeground(Defaults.FOREGROUND);
-		setBackground(Defaults.TOP);
-		highlightUI.setSelect(Defaults.TOP);
-		highlightUI.setHover(Defaults.TOP);
-		highlightUI.setBackground(Defaults.TOP);
+		setForeground(Defaults.FOREGROUND_A);
+		setBackground(Defaults.COLOR6);
+		highlightUI.setSelect(Defaults.COLOR6);
+		highlightUI.setHover(Defaults.COLOR6);
+		highlightUI.setBackground(Defaults.COLOR6);
 		if (getIcon() != null) {
-			setIcon(new ImageIcon(colorImage(convertToBufferedImage(getIcon()), Defaults.FOREGROUND)));
+			setIcon(new ImageIcon(colorImage(convertToBufferedImage(getIcon()), Defaults.FOREGROUND_A)));
 		}
 	}
 }

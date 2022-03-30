@@ -1,0 +1,47 @@
+<component name="libraryTable">
+  <library name="slf4j-api-1.7.30">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-api-1.7.30.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-nop-1.7.30.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jna-platform-5.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/imgscalr-lib-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/reactive-streams-1.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jnativehook-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/swingx-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/okio-1.13.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/system-hook-3.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jregistry-1.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jna-5.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/json-20140107.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jdash-3.3.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/rsyntaxtextarea-3.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jsoup-1.14.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/okhttp-3.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jlayer-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jide-common.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/javassist.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/hystrix-core-1.5.18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/TwitchIRC_v1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/reflections-0.9.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/j2v8_win32_x86_64-4.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Jamepad.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Java-WebSocket-1.5.1-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Java-WebSocket-1.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Filters.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/emoji-java-5.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/EasyTwitchIRC.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/discord-rpc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/delight-nashorn-sandbox-0.0.6-distribution.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/commons-io-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/commons-lang3-3.8.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/commons-text-1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/credentialmanager-0.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />
+    </SOURCES>
+  </library>
+</component>

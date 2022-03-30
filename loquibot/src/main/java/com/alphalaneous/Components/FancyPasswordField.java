@@ -1,7 +1,7 @@
 package com.alphalaneous.Components;
 
 import com.alphalaneous.Defaults;
-import com.alphalaneous.SilentDeletePrevCharAction;
+import com.alphalaneous.SilentDeletePrevCharacter;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -16,13 +16,13 @@ public class FancyPasswordField extends JPasswordField {
 	public static ArrayList<FancyPasswordField> fields = new ArrayList<>();
 
 	public FancyPasswordField() {
-
-		setBackground(Defaults.TEXT_BOX);
-		setForeground(Defaults.FOREGROUND);
+		setOpaque(false);
+		setBackground(Defaults.COLOR2);
+		setForeground(Defaults.FOREGROUND_A);
 		setCaret(new MyCaret());
-		setCaretColor(Defaults.FOREGROUND);
+		setCaretColor(Defaults.FOREGROUND_A);
 		setFont(Defaults.SEGOE_FONT.deriveFont(14f));
-		getActionMap().put(DefaultEditorKit.deletePrevCharAction, new SilentDeletePrevCharAction());
+		getActionMap().put(DefaultEditorKit.deletePrevCharAction, new SilentDeletePrevCharacter());
 		setSelectionColor(Defaults.ACCENT);
 
 		addFocusListener(new FocusListener() {
@@ -34,17 +34,18 @@ public class FancyPasswordField extends JPasswordField {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				borderColor = new Color(102, 102, 102);
+				borderColor = Defaults.COLOR5;
 				repaint();
 			}
 		});
-
+		fields.add(this);
 	}
 
 	public void refresh_(){
-		setBackground(Defaults.TEXT_BOX);
-		setForeground(Defaults.FOREGROUND);
-		setCaretColor(Defaults.FOREGROUND);
+		setBackground(Defaults.COLOR2);
+		setForeground(Defaults.FOREGROUND_A);
+		setCaretColor(Defaults.FOREGROUND_A);
+		borderColor = Defaults.COLOR5;
 	}
 
 	public static void refreshAll(){
@@ -61,18 +62,18 @@ public class FancyPasswordField extends JPasswordField {
 		RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.setRenderingHints(qualityHints);
-		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 		super.paintComponent(g);
 	}
 
-	private Color borderColor = new Color(102, 102, 102);
+	private Color borderColor = Defaults.COLOR5;
 
 	@Override
 	protected void paintBorder(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(borderColor);
-		g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, getRadius(), getRadius());
+		g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, getRadius()+3, getRadius()+3);
 
 	}
 

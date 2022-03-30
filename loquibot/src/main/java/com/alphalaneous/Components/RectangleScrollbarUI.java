@@ -18,18 +18,18 @@ public class RectangleScrollbarUI extends BasicScrollBarUI {
 
 
     public RectangleScrollbarUI() {
-        buttonUI.setBackground(Defaults.BUTTON);
-        buttonUI.setHover(Defaults.BUTTON_HOVER);
-        buttonUI.setSelect(Defaults.SELECT);
-        imageThumb = FauxImage.create(32, 30, Defaults.BUTTON_HOVER);
-        imageTrack = FauxImage.create(32, 30, Defaults.BUTTON);
+        buttonUI.setBackground(Defaults.COLOR2);
+        buttonUI.setHover(Defaults.COLOR5);
+        buttonUI.setSelect(Defaults.COLOR4);
+        imageThumb = FauxImage.create(32, 30, Defaults.COLOR5);
+        imageTrack = FauxImage.create(32, 30, Defaults.COLOR2);
 
     }
 
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
 
-        g.setColor(Defaults.BUTTON_HOVER);
+        g.setColor(Defaults.COLOR5);
         g.drawImage(imageThumb,
                 r.x, r.y, r.width, r.height, null);
 
@@ -52,10 +52,10 @@ public class RectangleScrollbarUI extends BasicScrollBarUI {
         }
         down.setUI(buttonUI);
         down.setBorder(BorderFactory.createEmptyBorder());
-        down.setBackground(Defaults.BUTTON);
+        down.setBackground(Defaults.COLOR2);
         down.setPreferredSize(new Dimension(15, 15));
         down.setFont(Defaults.SYMBOLS.deriveFont(10f));
-        down.setForeground(Defaults.FOREGROUND2);
+        down.setForeground(Defaults.FOREGROUND_B);
         return down;
     }
 
@@ -69,10 +69,10 @@ public class RectangleScrollbarUI extends BasicScrollBarUI {
         }
         up.setUI(buttonUI);
         up.setBorder(BorderFactory.createEmptyBorder());
-        up.setBackground(Defaults.BUTTON);
+        up.setBackground(Defaults.COLOR2);
         up.setPreferredSize(new Dimension(15, 15));
         up.setFont(Defaults.SYMBOLS.deriveFont(10f));
-        up.setForeground(Defaults.FOREGROUND2);
+        up.setForeground(Defaults.FOREGROUND_B);
         return up;
     }
 

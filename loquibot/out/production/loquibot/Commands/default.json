@@ -1,0 +1,42 @@
+{
+  "name" : "Default",
+  "commands" : [
+    {
+      "name" : "!help",
+      "editable" : false,
+      "cooldown" : 100,
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "Gets help | Usage: \"!help\" to get help | \"!help <command>\" to get command help",
+      "command" : "function command(){\n    if(args.length > 1){\n        return ReqUtils.getHelp(user, isMod, args[1]);\n    }\n    else{\n\t    return ReqUtils.getHelp(user, isMod);\n\t}\n}",
+      "aliases" : ["!commands"]
+    },
+    {
+      "name" : "l!addcom",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "Adds a command to GDBoard | Usage: \"b!addcom <Command Name> <Response> | \"b!addcom <Command Name> eval:<JavaScript Code>\"",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$ADD_COMMAND_NO_ARGS_MESSAGE$\", user);\n        }\n        if(xArgs.length === 1){\n            return Utilities.format(\"$ADD_COMMAND_NO_RESPONSE_MESSAGE$\", user);\n        }\n        Utilities.addCommand(user, xArgs);\n    }\n}"
+    },
+    {
+      "name" : "l!editcom",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "Edits a command in GDBoard | Usage: \"b!editcom <Command Name> <Response> | \"b!editcom <Command Name> eval:<JavaScript Code>\"",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$EDIT_COMMAND_NO_ARGS_MESSAGE$\", user);\n        }\n        Utilities.editCommand(user, xArgs);\n    }\n}"
+    },
+    {
+      "name" : "l!delcom",
+      "editable" : false,
+      "level" : "$MODERATOR$",
+      "type" : "JavaScript",
+      "detection" : "$STARTS_WITH$",
+      "description" : "Deletes a command from GDBoard | Usage: \"b!delcom <Command Name>\"",
+      "command" : "function command(){\n    if(isMod){\n        if(xArgs.length === 0){\n        \treturn Utilities.format(\"$DELETE_COMMAND_NO_ARGS_MESSAGE$\", user);\n        }\n        Utilities.deleteCommand(user, xArgs[0]);\n    }\n}"
+    }
+  ]
+}

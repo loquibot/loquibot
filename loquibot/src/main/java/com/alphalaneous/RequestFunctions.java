@@ -1,390 +1,445 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Panels.*;
-import com.alphalaneous.SettingsPanels.BlockedSettings;
-import com.alphalaneous.SettingsPanels.RequestsSettings;
+import com.alphalaneous.SettingsPanels.BlockedIDSettings;
 import com.alphalaneous.SettingsPanels.OutputSettings;
 import com.alphalaneous.Windows.DialogBox;
-import com.alphalaneous.Windows.SettingsWindow;
+import com.alphalaneous.Tabs.RequestsTab;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.BufferedInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class RequestFunctions {
 
-	private static final LinkedHashMap<LevelData, Integer> undoQueue = new LinkedHashMap<>(5) {
-		protected boolean removeEldestEntry(Map.Entry<LevelData, Integer> eldest) {
-			return size() > 5;
-		}
-	};
-	private static boolean didUndo = false;
+    //todo make spamming the next button only show the last request in chat rather than the first. (Check if spamming, wait until stop and send current selected level)
 
-	private static boolean onCool = false;
+    private static final LinkedHashMap<LevelButton, Integer> undoQueue = new LinkedHashMap<>(5) {
+        protected boolean removeEldestEntry(Map.Entry<LevelButton, Integer> eldest) {
+            return size() > 5;
+        }
+    };
+    private static boolean didUndo = false;
 
-	public static void openGDViewer(int pos){
-		try {
-			Runtime rt = Runtime.getRuntime();
-			rt.exec("rundll32 url.dll,FileProtocolHandler " + "http://gdviewers.tk/embed?levelid=" + Requests.levels.get(pos).getLevelData().id());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+    public static void openGDBrowser(int pos) {
+        try {
+            Utilities.openURL(new URI("http://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
+        } catch (URISyntaxException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	public static void openGDBrowser(int pos){
-		try {
-			Runtime rt = Runtime.getRuntime();
-			rt.exec("rundll32 url.dll,FileProtocolHandler " + "http://www.gdbrowser.com/" + Requests.levels.get(pos).getLevelData().id());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+    public static void skipFunction() {
+        if (!Settings.getSettings("basicMode").asBoolean()) skipFunction(LevelButton.selectedID);
+        else skipFunction(BasicLevelButton.selectedID);
+    }
 
-	public static void skipFunction(){
-		skipFunction(LevelButton.selectedID);
-	}
+    public static void skipFunction(boolean setPos) {
+        if (!Settings.getSettings("basicMode").asBoolean()) skipFunction(LevelButton.selectedID, setPos);
+        else skipFunction(BasicLevelButton.selectedID, setPos);
+
+    }
+
+    public static void skipFunction(int pos) {
+        skipFunction(pos, true);
+    }
+    public static void skipFunction(int pos, boolean setPos) {
+
+        if (RequestsUtils.bwomp) {
+            new Thread(() -> {
+                try {
+                    BufferedInputStream inp = new BufferedInputStream(Objects.requireNonNull(BotHandler.class
+                            .getResource("bwomp.mp3")).openStream());
+                    Player mp3player = new Player(inp);
+                    mp3player.play();
+                } catch (JavaLayerException | NullPointerException | IOException f) {
+                    f.printStackTrace();
+                    DialogBox.showDialogBox("Error!", f.toString(), "There was an error playing the sound!", new String[]{"OK"});
+                }
+            }).start();
+        }
+        boolean wasSelected = false;
+
+        if (Main.programLoaded) {
+            if (RequestsTab.getQueueSize() != 0) {
+                if (didUndo) {
+                    undoQueue.clear();
+                    didUndo = false;
+                }
+                if (!Settings.getSettings("basicMode").asBoolean()) {
+                    undoQueue.put(RequestsTab.getRequest(pos), pos);
+                    wasSelected = RequestsTab.getRequest(pos).selected;
+                }
+                else{
+                    wasSelected = RequestsTab.getRequestBasic(pos).selected;
+                }
+                new LoggedID((int) RequestsTab.getRequest(pos).getID(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().levelVersion());
+                RequestsTab.removeRequest(pos);
+
+                if(setPos || wasSelected) {
+                    if (RequestsTab.getQueueSize() <= pos) RequestsTab.setRequestSelect(RequestsTab.getQueueSize() - 1);
+                    else RequestsTab.setRequestSelect(pos);
+                }
+
+                if (RequestsTab.getQueueSize() > 0) {
+                    if (!Settings.getSettings("basicMode").asBoolean()) {
+                        StringSelection selection = new StringSelection(
+                                String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents(selection, selection);
+                    } else {
+                        StringSelection selection = new StringSelection(
+                                String.valueOf(RequestsTab.getRequestBasic(0).getID()));
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents(selection, selection);
+                    }
+                }
+                if (pos == 0 && RequestsTab.getQueueSize() > 0) {
+                    if (!Settings.getSettings("disableNP").asBoolean()) {
+                        new Thread(() -> {
+                            if (!Settings.getSettings("basicMode").asBoolean()) {
+                                if (RequestsTab.getRequest(0).getLevelData().getContainsImage()) {
+                                    Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                            RequestsTab.getRequest(0).getLevelData().getRequester()) + " " + Utilities.format("$IMAGE_HACK$"));
+                                } else if (RequestsTab.getRequest(0).getLevelData().getContainsVulgar()) {
+                                    Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                            RequestsTab.getRequest(0).getLevelData().getRequester()) + " " + Utilities.format("$VULGAR_LANGUAGE$"));
+                                } else {
+                                    Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                            RequestsTab.getRequest(0).getLevelData().getRequester()));
+                                }
+                            } else {
+                                Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_BASIC$",
+                                        RequestsTab.getRequestBasic(0).getID(),
+                                        RequestsTab.getRequestBasic(0).getRequester()));
+
+                            }
+                        }).start();
+                    }
+                }
+            }
+        }
+        if (!Settings.getSettings("basicMode").asBoolean()) {
+            OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+        }
+        if(wasSelected) {
+            //RequestsTab.unloadComments(true);
+            if (RequestsTab.getQueueSize() != 0) {
+                if (!Settings.getSettings("basicMode").asBoolean()) {
+                    if (RequestsTab.getQueueSize() != 0) {
+                        //new Thread(() -> RequestsTab.loadComments(0, false)).start();
+                    }
+                }
+            }
+        }
+        RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
+        if(RequestsTab.getQueueSize() == 0) LevelDetailsPanel.setPanel(null);
+        else LevelDetailsPanel.setPanel(RequestsTab.getRequest(RequestsUtils.getSelection()).getLevelData());
+
+        RequestFunctions.saveFunction();
+    }
+
+    static void containsBadStuffCheck() {
+        if (RequestsTab.getRequest(0).getLevelData().getContainsImage()) {
+            Utilities.notify("Image Hack", RequestsTab.getRequest(0).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(0).getLevelData().getGDLevel().id() + ") possibly contains the image hack!");
+        } else if (RequestsTab.getRequest(0).getLevelData().getContainsVulgar()) {
+            Utilities.notify("Vulgar Language", RequestsTab.getRequest(0).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(0).getLevelData().getGDLevel().id() + ") contains vulgar language!");
+        }
+    }
+
+    public static void undoFunction() {
+        if (undoQueue.size() != 0) {
+            didUndo = true;
+            int selectPosition = LevelButton.selectedID;
+            LevelButton levelButton = (LevelButton) undoQueue.keySet().toArray()[undoQueue.size() - 1];
+            int position = (int) undoQueue.values().toArray()[undoQueue.size() - 1];
+            if (position >= RequestsTab.getQueueSize()) {
+                position = RequestsTab.getQueueSize();
+            }
+            RequestsTab.addRequest(levelButton, position);
+            //Requests.levels.add(position, data);
+            //com.alphalaneous.Tabs.Window.getLevelsPanel().refreshButtons();
+            if (RequestsTab.getLevelPosition(levelButton) > selectPosition) {
+                RequestsTab.getLevelsPanel().setSelect(selectPosition);
+            } else if (RequestsTab.getQueueSize() == 1) {
+                RequestsTab.getLevelsPanel().setSelect(selectPosition);
+                LevelDetailsPanel.setPanel(RequestsTab.getRequest(selectPosition).getLevelData());
+
+                new Thread(() -> {
+                    //RequestsTab.unloadComments(true);
+                    //RequestsTab.loadComments(0, false);
+                }).start();
+            } else {
+                RequestsTab.getLevelsPanel().setSelect(selectPosition + 1);
+                //LevelDetailsPanel.setPanel(RequestsTab.getRequest(selectPosition+1).getLevelData());
+
+            }
+            undoQueue.remove(levelButton);
+        }
+        RequestFunctions.saveFunction();
+    }
+
+    public static void randomFunction() {
+        if (Main.programLoaded) {
+            Random random = new Random();
+            int num = 0;
+            if (RequestsTab.getQueueSize() != 0) {
+                if (didUndo) {
+                    undoQueue.clear();
+                    didUndo = false;
+                }
+
+                if (!Settings.getSettings("basicMode").asBoolean()) {
+                    undoQueue.put(RequestsTab.getRequest(LevelButton.selectedID), LevelButton.selectedID);
+                    new LoggedID((int) RequestsTab.getRequest(LevelButton.selectedID).getID(), RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().levelVersion());
+                    RequestsTab.removeRequest(LevelButton.selectedID);
+                }
+                else{
+                    new LoggedID((int) RequestsTab.getRequest(BasicLevelButton.selectedID).getID(), RequestsTab.getRequest(BasicLevelButton.selectedID).getLevelData().getGDLevel().levelVersion());
+                    RequestsTab.removeRequest(BasicLevelButton.selectedID);
+                }
+
+                RequestFunctions.saveFunction();
+
+                //RequestsTab.unloadComments(true);
+
+                if (RequestsTab.getQueueSize() != 0) {
+                    while (true) {
+                        try {
+                            num = random.nextInt(RequestsTab.getQueueSize());
+                            break;
+                        } catch (Exception ignored) {
+                        }
+                    }
+
+                    RequestsTab.getLevelsPanel().setSelect(num);
+                    if (!Settings.getSettings("basicMode").asBoolean()) {
+                        //new Thread(() -> RequestsTab.loadComments(0, false)).start();
+                        StringSelection selection = new StringSelection(
+                                String.valueOf(RequestsTab.getRequest(num).getLevelData().getGDLevel().id()));
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents(selection, selection);
+                        if (!Settings.getSettings("disableNP").asBoolean()) {
+                            Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                    RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
+                                    RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
+                                    RequestsTab.getRequest(num).getLevelData().getRequester()));
+
+                        }
+                        if (RequestsTab.getRequest(num).getLevelData().getContainsImage()) {
+                            Utilities.notify("Image Hack", RequestsTab.getRequest(num).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(num).getLevelData().getGDLevel().id() + ") possibly contains the image hack!");
+                        } else if (RequestsTab.getRequest(num).getLevelData().getContainsVulgar()) {
+                            Utilities.notify("Vulgar Language", RequestsTab.getRequest(num).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(num).getLevelData().getGDLevel().id() + ") contains vulgar language!");
+                        }
+                        OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), num));
+                        LevelDetailsPanel.setPanel(RequestsTab.getRequest(num).getLevelData());
+                    } else {
+                        StringSelection selection = new StringSelection(
+                                String.valueOf(RequestsTab.getRequestBasic(num).getID()));
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents(selection, selection);
+                        if (!Settings.getSettings("disableNP").asBoolean()) {
+                            int finalNum = num;
+                            new Thread(() -> Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_BASIC$",
+                                    RequestsTab.getRequestBasic(finalNum).getID(),
+                                    RequestsTab.getRequestBasic(finalNum).getRequester()))).start();
+
+                        }
+                    }
+                }
+            }
+            RequestFunctions.saveFunction();
+            RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
+        }
+    }
+
+    public static void copyFunction() {
+        copyFunction(LevelButton.selectedID);
+    }
+
+    public static void copyFunction(int pos) {
+        if (RequestsTab.getQueueSize() != 0) {
+            StringSelection selection = new StringSelection(
+                    String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, selection);
+        }
+    }
+
+    public static void saveFunction() {
+        new Thread(() -> {
+            try {
+                Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\saved.json");
+                if (!Files.exists(file)) {
+                    Files.createFile(file);
+                }
+
+                JSONObject levels = new JSONObject();
+                JSONArray levelsArray = new JSONArray();
+
+                for (int i = 0; i < RequestsUtils.getSize(); i++) {
+
+                    String creatorName = "Unknown";
+                    String songTitle = "Unknown";
+                    String songArtist = "Unknown";
+                    long originalID = 0;
+                    long songID = 0;
+
+                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().creatorName().isPresent()) {
+                        creatorName = RequestsTab.getRequest(i).getLevelData().getGDLevel().creatorName().get();
+                    }
+                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().song().isPresent()) {
+                        songTitle = RequestsTab.getRequest(i).getLevelData().getGDLevel().song().get().title();
+                        songArtist = RequestsTab.getRequest(i).getLevelData().getGDLevel().song().get().artist();
+                        songID = RequestsTab.getRequest(i).getLevelData().getGDLevel().song().get().id();
+                    }
+                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().originalLevelId().isPresent()) {
+                        originalID = RequestsTab.getRequest(i).getLevelData().getGDLevel().originalLevelId().get();
+                    }
+
+                    JSONObject level = new JSONObject();
+
+                    level.put("creator_name", creatorName);
+                    level.put("song_title", songTitle);
+                    level.put("song_artist", songArtist);
+                    level.put("original_id", originalID);
+                    level.put("song_id", songID);
+                    level.put("id", RequestsTab.getRequest(i).getLevelData().getGDLevel().id());
+                    level.put("name", RequestsTab.getRequest(i).getLevelData().getGDLevel().name());
+                    level.put("difficulty", RequestsTab.getRequest(i).getLevelData().getGDLevel().difficulty());
+                    level.put("demon_difficulty", RequestsTab.getRequest(i).getLevelData().getGDLevel().demonDifficulty());
+                    level.put("is_auto", RequestsTab.getRequest(i).getLevelData().getGDLevel().isAuto());
+                    level.put("is_demon", RequestsTab.getRequest(i).getLevelData().getGDLevel().isDemon());
+                    level.put("is_epic", RequestsTab.getRequest(i).getLevelData().getGDLevel().isEpic());
+                    level.put("featured_score", RequestsTab.getRequest(i).getLevelData().getGDLevel().featuredScore());
+                    level.put("stars", RequestsTab.getRequest(i).getLevelData().getGDLevel().stars());
+                    level.put("requested_stars", RequestsTab.getRequest(i).getLevelData().getGDLevel().requestedStars());
+                    level.put("requester", RequestsTab.getRequest(i).getRequester());
+                    level.put("game_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().gameVersion());
+                    level.put("description", RequestsTab.getRequest(i).getLevelData().getGDLevel().description());
+                    level.put("coin_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().coinCount());
+                    level.put("likes", RequestsTab.getRequest(i).getLevelData().getGDLevel().likes());
+                    level.put("downloads", RequestsTab.getRequest(i).getLevelData().getGDLevel().downloads());
+                    level.put("length", RequestsTab.getRequest(i).getLevelData().getGDLevel().length().toString());
+                    level.put("level_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().levelVersion());
+                    level.put("object_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().objectCount());
+                    level.put("has_verified_coins", RequestsTab.getRequest(i).getLevelData().getGDLevel().hasCoinsVerified());
+
+                    levelsArray.put(level);
+                }
+
+                levels.put("levels", levelsArray);
+
+                Files.writeString(file, levels.toString(3), StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public static void blockFunction() {
+        blockFunction(LevelButton.selectedID);
+    }
 
 
-	public static void skipFunction(int pos) {
-		if (RequestsUtils.bwomp) {
-			Thread bwompThread;
-			bwompThread = new Thread(() -> {
-				try {
-					BufferedInputStream inp = new BufferedInputStream(BotHandler.class
-							.getResource("/Resources/bwomp.mp3").openStream());
-					Player mp3player = new Player(inp);
-					mp3player.play();
-				} catch (JavaLayerException | NullPointerException | IOException f) {
-					f.printStackTrace();
-					DialogBox.showDialogBox("Error!", f.toString(), "There was an error playing the sound!", new String[]{"OK"});
+    public static void blockFunction(int pos) {
+        if (Main.programLoaded) {
+            if (pos == 0 && RequestsTab.getQueueSize() > 1) {
+                StringSelection selection = new StringSelection(
+                        String.valueOf(RequestsTab.getRequest(1).getLevelData().getGDLevel().id()));
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(selection, selection);
+            }
+            if (RequestsTab.getQueueSize() != 0) {
 
-				}
-			});
-			bwompThread.start();
-		}
-		if (Main.programLoaded) {
-			if (Requests.levels.size() != 0) {
-				if (didUndo) {
-					undoQueue.clear();
-					didUndo = false;
-				}
-				undoQueue.put(Requests.levels.get(pos), pos);
+                new Thread(() -> {
+                    String option;
+                    if (!Settings.getSettings("basicMode").asBoolean()) {
+                        option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{RequestsTab.getRequest(pos).getLevelData().getGDLevel().name(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()});
+                    } else {
+                        option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{"Unknown", RequestsTab.getRequestBasic(pos).getID()});
 
-				Requests.levels.get(pos).remove();
+                    }
+                    if (option.equalsIgnoreCase("YES")) {
+                        BlockedIDSettings.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
+                        Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blocked.txt");
 
-				if (Requests.levels.size() > 0) {
-					StringSelection selection = new StringSelection(
-							String.valueOf(Requests.levels.get(0).getLevelData().id()));
-					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					clipboard.setContents(selection, selection);
-				}
-				if (pos == 0 && Requests.levels.size() > 0) {
-					if (!RequestsSettings.nowPlayingOption) {
+                        try {
+                            if (!Files.exists(file)) {
+                                Files.createFile(file);
+                            }
+                            Files.write(
+                                    file,
+                                    (RequestsTab.getRequest(pos).getLevelData().getGDLevel().id() + "\n").getBytes(),
+                                    StandardOpenOption.APPEND);
+                        } catch (IOException e1) {
+                            DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
 
-						if (!onCool) {
-							new Thread(() -> {
-								onCool = true;
-								try {
-									Thread.sleep(500);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-								onCool = false;
-							}).start();
-							new Thread(() -> {
-								if (Requests.levels.get(0).getContainsImage()) {
-									Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-											Requests.levels.get(0).getLevelData().name(),
-											Requests.levels.get(0).getLevelData().id(),
-											Requests.levels.get(0).getRequester()) + " " + Utilities.format("$IMAGE_HACK$"));
-								} else if (Requests.levels.get(0).getContainsVulgar()) {
-									Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-											Requests.levels.get(0).getLevelData().name(),
-											Requests.levels.get(0).getLevelData().id(),
-											Requests.levels.get(0).getRequester()) + " " + Utilities.format("$VULGAR_LANGUAGE$"));
-								} else {
-									Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-											Requests.levels.get(0).getLevelData().name(),
-											Requests.levels.get(0).getLevelData().id(),
-											Requests.levels.get(0).getRequester()));
-								}
-							}).start();
-						}
-					}
-					containsBadStuffCheck();
-				}
+                        }
+                        RequestsTab.removeRequest(pos);
+                        RequestFunctions.saveFunction();
+                        RequestsTab.getLevelsPanel().setSelect(0);
+                        new Thread(() -> {
+                            //RequestsTab.unloadComments(true);
+                            if (RequestsTab.getQueueSize() > 0) {
+                                //RequestsTab.loadComments(0, false);
+                            }
+                        }).start();
+                        RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
 
-				RequestFunctions.saveFunction();
-			}
-			OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(OutputSettings.outputString, 0));
-
-			new Thread(() -> {
-				CommentsPanel.unloadComments(true);
-				if (Requests.levels.size() != 0) {
-					CommentsPanel.loadComments(0, false);
-				}
-			}).start();
-
-			InfoPanel.refreshInfo();
-			LevelsPanel.setName(Requests.levels.size());
-
-		}
-	}
-
-	static void containsBadStuffCheck() {
-		if (Requests.levels.get(0).getContainsImage()) {
-			Utilities.notify("Image Hack", Requests.levels.get(0).getLevelData().name() + " (" + Requests.levels.get(0).getLevelData().id() + ") possibly contains the image hack!");
-		} else if (Requests.levels.get(0).getContainsVulgar()) {
-			Utilities.notify("Vulgar Language", Requests.levels.get(0).getLevelData().name() + " (" + Requests.levels.get(0).getLevelData().id() + ") contains vulgar language!");
-		}
-	}
-
-	public static void undoFunction() {
-		if (undoQueue.size() != 0) {
-			didUndo = true;
-			int selectPosition = LevelButton.selectedID;
-			LevelData data = (LevelData) undoQueue.keySet().toArray()[undoQueue.size()-1];
-			int position = (int) undoQueue.values().toArray()[undoQueue.size()-1];
-			if(position >= Requests.levels.size()){
-				position = Requests.levels.size();
-			}
-			Requests.levels.add(position, data);
-			LevelsPanel.refreshButtons();
-			if(data.getPosition() > selectPosition){
-				LevelsPanel.setSelect(selectPosition);
-			}
-			else if (Requests.levels.size() == 1){
-				LevelsPanel.setSelect(selectPosition);
-				InfoPanel.refreshInfo();
-				new Thread(() -> {
-					CommentsPanel.unloadComments(true);
-					CommentsPanel.loadComments(0, false);
-				}).start();
-			}
-			else{
-				LevelsPanel.setSelect(selectPosition+1);
-				InfoPanel.refreshInfo();
-				new Thread(() -> {
-					CommentsPanel.unloadComments(true);
-					CommentsPanel.loadComments(0, false, selectPosition+1);
-				}).start();
-			}
-			undoQueue.remove(data);
-		}
-	}
-
-	public static void randomFunction() {
-		if (Main.programLoaded) {
-			Random random = new Random();
-			int num = 0;
-			if (Requests.levels.size() != 0) {
-				if (didUndo) {
-					undoQueue.clear();
-					didUndo = false;
-				}
-				undoQueue.put(Requests.levels.get(LevelButton.selectedID), LevelButton.selectedID);
-				Requests.levels.get(LevelButton.selectedID).remove();
-
-				RequestFunctions.saveFunction();
-
-				CommentsPanel.unloadComments(true);
-
-				if (Requests.levels.size() != 0) {
-					while (true) {
-						try {
-							num = random.nextInt(Requests.levels.size());
-							break;
-						} catch (Exception ignored) {
-						}
-					}
-
-					LevelsPanel.setSelect(num);
-
-					new Thread(() -> CommentsPanel.loadComments(0, false)).start();
-					StringSelection selection = new StringSelection(
-							String.valueOf(Requests.levels.get(num).getLevelData().id()));
-					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					clipboard.setContents(selection, selection);
-					if (!RequestsSettings.nowPlayingOption) {
-						int finalNum = num;
-						new Thread(() -> Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-								Requests.levels.get(finalNum).getLevelData().name(),
-								Requests.levels.get(finalNum).getLevelData().id(),
-								Requests.levels.get(finalNum).getRequester()))).start();
-
-					}
-					if (Requests.levels.get(num).getContainsImage()) {
-						Utilities.notify("Image Hack", Requests.levels.get(num).getLevelData().name() + " (" + Requests.levels.get(num).getLevelData().id() + ") possibly contains the image hack!");
-					} else if (Requests.levels.get(num).getContainsVulgar()) {
-						Utilities.notify("Vulgar Language", Requests.levels.get(num).getLevelData().name() + " (" + Requests.levels.get(num).getLevelData().id() + ") contains vulgar language!");
-					}
-				}
-			}
-			OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(OutputSettings.outputString, num));
-			InfoPanel.refreshInfo();
-			RequestFunctions.saveFunction();
-			LevelsPanel.setName(Requests.levels.size());
-		}
-	}
-
-	public static void copyFunction() {
-		copyFunction(LevelButton.selectedID);
-	}
-
-	public static void copyFunction(int pos) {
-		if (Requests.levels.size() != 0) {
-			StringSelection selection = new StringSelection(
-					String.valueOf(Requests.levels.get(pos).getLevelData().id()));
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(selection, selection);
-		}
-	}
-
-	public static void saveFunction() {
-		//public static void forceAdd(String name, String author, long levelID, String difficulty, boolean epic, boolean featured, int stars, String requester,
-		// int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, int songID, String songName, String songAuthor, int objects, long original){
-		/*try {
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\saved.txt");
-			if (!Files.exists(file)) {
-				Files.createFile(file);
-			}
-			FileWriter fooWriter = new FileWriter(file.toFile(), false);
-			StringBuilder message = new StringBuilder();
-			for (int i = 0; i < Requests.levels.size(); i++) {
-				message.append(Requests.levels.get(i).getLevelData().name())
-						.append(",").append(Requests.levels.get(i).getLevelData().creatorName().get())
-						.append(",").append(Requests.levels.get(i).getLevelData().id())
-						.append(",").append(Requests.levels.get(i).getDifficulty())
-						.append(",").append(Requests.levels.get(i).getEpic())
-						.append(",").append(Requests.levels.get(i).getFeatured())
-						.append(",").append(Requests.levels.get(i).getLevelData().stars())
-						.append(",").append(Requests.levels.get(i).getRequester())
-						.append(",").append(Requests.levels.get(i).getVersion())
-						.append(",").append(Requests.levels.get(i).getCoins())
-						.append(",").append(new String(Base64.getEncoder().encode(Requests.levels.get(i).getDescription().getBytes())))
-						.append(",").append(Requests.levels.get(i).getLikes())
-						.append(",").append(Requests.levels.get(i).getDownloads())
-						.append(",").append(Requests.levels.get(i).getLength())
-						.append(",").append(Requests.levels.get(i).getLevelVersion())
-						.append(",").append(Requests.levels.get(i).getSongID())
-						.append(",").append(new String(Base64.getEncoder().encode(Requests.levels.get(i).getSongName().getBytes())))
-						.append(",").append(Requests.levels.get(i).getSongAuthor())
-						.append(",").append(Requests.levels.get(i).getObjects())
-						.append(",").append(Requests.levels.get(i).getOriginal())
-						.append(",").append(Requests.levels.get(i).getContainsVulgar())
-						.append(",").append(Requests.levels.get(i).getContainsImage())
-						.append(",").append(Requests.levels.get(i).getPassword())
-						.append(",").append(Requests.levels.get(i).getUpload())
-						.append(",").append(Requests.levels.get(i).getUpdate())
-						.append(",").append(Requests.levels.get(i).getVerifiedCoins())
-						.append("\n");
-			}
-			fooWriter.write(message.toString());
-			fooWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-	}
-	public static void blockFunction() {
-		blockFunction(LevelButton.selectedID);
-	}
+                    }
+                    LevelDetailsPanel.setPanel(RequestsTab.getRequest(pos).getLevelData());
+                }).start();
+            }
+        }
+    }
 
 
-	public static void blockFunction(int pos) {
-		if (Main.programLoaded) {
-			if (pos == 0 && Requests.levels.size() > 1) {
-				StringSelection selection = new StringSelection(
-						String.valueOf(Requests.levels.get(1).getLevelData().id()));
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				clipboard.setContents(selection, selection);
-			}
-			if (Requests.levels.size() != 0) {
 
-				new Thread(() -> {
+    public static void clearFunction() {
+        if (Main.programLoaded) {
 
-					String option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{Requests.levels.get(pos).getLevelData().name(), Requests.levels.get(pos).getLevelData().id()});
+                new Thread(() -> {
+                    String option = DialogBox.showDialogBox("$CLEAR_QUEUE_TITLE$", "$CLEAR_QUEUE_INFO$", "$CLEAR_QUEUE_SUBINFO$", new String[]{"$CLEAR_ALL$", "$CANCEL$"});
+                    if (option.equalsIgnoreCase("CLEAR_ALL")) {
+                        if (RequestsTab.getQueueSize() != 0) {
+                            RequestsTab.clearRequests();
+                            undoQueue.clear();
+                            RequestFunctions.saveFunction();
+                            //RequestsTab.unloadComments(true);
+                        }
+                        RequestsTab.getLevelsPanel().setSelect(0);
+                        LevelDetailsPanel.setPanel(null);
+                    }
+                }).start();
+        }
+    }
 
-					if (option.equalsIgnoreCase("YES")) {
-						BlockedSettings.addButton(Requests.levels.get(pos).getLevelData().id());
-						Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\blocked.txt");
-
-						try {
-							if (!Files.exists(file)) {
-								Files.createFile(file);
-							}
-							Files.write(
-									file,
-									(Requests.levels.get(pos).getLevelData().id() + "\n").getBytes(),
-									StandardOpenOption.APPEND);
-						} catch (IOException e1) {
-							DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
-
-						}
-						Requests.levels.get(pos).remove();
-						RequestFunctions.saveFunction();
-						LevelsPanel.setSelect(0);
-						new Thread(() -> {
-							CommentsPanel.unloadComments(true);
-							if (Requests.levels.size() > 0) {
-								CommentsPanel.loadComments(0, false);
-							}
-						}).start();
-						LevelsPanel.setName(Requests.levels.size());
-
-					}
-					InfoPanel.refreshInfo();
-					SettingsWindow.run = true;
-				}).start();
-			}
-		}
-	}
-
-	public static void clearFunction() {
-		if (Main.programLoaded) {
-			new Thread(() -> {
-				String option = DialogBox.showDialogBox("$CLEAR_QUEUE_TITLE$", "$CLEAR_QUEUE_INFO$", "$CLEAR_QUEUE_SUBINFO$", new String[]{"$CLEAR_ALL$", "$CANCEL$"});
-				if (option.equalsIgnoreCase("CLEAR_ALL")) {
-					if (Requests.levels.size() != 0) {
-						/*for (int i = 0; i < Requests.levels.size(); i++) {
-							LevelsPanel.removeButton();
-						}*/
-						Requests.levels.clear();
-						LevelsPanel.refreshButtons();
-						undoQueue.clear();
-						RequestFunctions.saveFunction();
-						InfoPanel.refreshInfo();
-						CommentsPanel.unloadComments(true);
-					}
-					LevelsPanel.setSelect(0);
-					SettingsWindow.run = true;
-				}
-			}).start();
-
-		}
-
-	}
-
-	public static void requestsToggleFunction() {
-		if (Main.programLoaded) {
-			if (Requests.requestsEnabled) {
-				Requests.requestsEnabled = false;
-				Main.sendMessage(Utilities.format("/me 🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"));
-
-			} else {
-				Requests.requestsEnabled = true;
-				Main.sendMessage(Utilities.format("/me 🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"));
-			}
-		}
-	}
+    public static void requestsToggleFunction() {
+        RequestsTab.toggle();
+    }
 }

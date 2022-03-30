@@ -17,7 +17,7 @@ public class Variables {
 	private static final HashMap<String, Object> vars = new HashMap<>();
 
 	static void loadVars() {
-		Path path = Paths.get(Defaults.saveDirectory + "/GDBoard/vars.board");
+		Path path = Paths.get(Defaults.saveDirectory + "/loquibot/vars.board");
 		if (Files.exists(path)) {
 
 			Scanner sc = null;
@@ -38,7 +38,7 @@ public class Variables {
 	}
 
 	static void saveVars() {
-		Path file = Paths.get(Defaults.saveDirectory + "/GDBoard/vars.board");
+		Path file = Paths.get(Defaults.saveDirectory + "/loquibot/vars.board");
 
 		try {
 			if (!Files.exists(file)) {
@@ -68,7 +68,10 @@ public class Variables {
 	}
 
 	public static String getVar(String name) {
-		return String.valueOf(vars.get(name));
+		if(vars.containsKey(name)) {
+			return String.valueOf(vars.get(name));
+		}
+		else return "";
 	}
 
 	public static void clearVars(){

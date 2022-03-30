@@ -1,9 +1,8 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.LevelsPanel;
 import com.alphalaneous.SettingsPanels.CommandSettings;
-import com.alphalaneous.SettingsPanels.PersonalizationSettings;
 import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.Window;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,8 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,7 @@ public class Utilities {
 
 	static {
 		try {
-			image = ImageIO.read(Objects.requireNonNull(LevelsPanel.class.getClassLoader()
+			image = ImageIO.read(Objects.requireNonNull(Main.class.getClassLoader()
 					.getResource("Icons/windowIcon.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -38,11 +39,11 @@ public class Utilities {
 
 	private static Image image;
 	private static final SystemTray tray = SystemTray.getSystemTray();
-	private static final TrayIcon trayIcon = new TrayIcon(image, "GDBoard");
+	private static final TrayIcon trayIcon = new TrayIcon(image, "loquibot");
 
 	static {
 		trayIcon.setImageAutoSize(true);
-		trayIcon.setToolTip("GDBoard");
+		trayIcon.setToolTip("loquibot");
 		try {
 			tray.add(trayIcon);
 		} catch (AWTException e) {
@@ -62,34 +63,48 @@ public class Utilities {
 
 		forceExitItem.addActionListener(e -> System.exit(0));
 		exitItem.addActionListener(e -> Main.close());
-		aboutItem.addActionListener(e -> Window.showAttributions());
+		aboutItem.addActionListener(e -> RequestsTab.showAttributions());
 		popup.add(aboutItem);
 		popup.addSeparator();
 		popup.add(exitItem);
 		popup.add(forceExitItem);
 		trayIcon.setPopupMenu(popup);
 	}
-
+	public static void openURL(URI uri){
+		try {
+			Runtime rt = Runtime.getRuntime();
+			rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
+		}
+		catch (Exception e){
+			try {
+				Desktop.getDesktop().browse(uri);
+			} catch (IOException ignored) {
+			}
+		}
+	}
 
 	public static void addCommand(String username, String... args) {
-		String newCommandName = args[0].replace("\\\\", "").replace("/", "");
+		String newCommandName = args[1].replace("\\\\", "").replace("/", "");
 		StringBuilder message = new StringBuilder();
-
+		boolean i = false;
 		for (String msg : args) {
-			message.append(" ").append(msg);
+			if(!i) {
+				message.append(" ").append(msg);
+				i = true;
+			}
 		}
-		message = new StringBuilder(StringUtils.replaceOnce(message.toString(), args[0], "").trim());
+		message = new StringBuilder(StringUtils.replaceOnce(message.toString(), args[1], "").trim());
 		String command;
 		if (message.toString().startsWith("eval:")) {
 			command = "function command(){" + message.toString().replace("eval:", "").trim() + "}";
 		} else {
 			command = "function command() { return \"" + message.toString() + "\";}";
 		}
-		Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\Commands\\" + newCommandName + ".js");
+		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\" + newCommandName + ".js");
 		if (!Files.exists(file)) {
 			try {
-				if (!Files.exists(Paths.get(Defaults.saveDirectory + "\\GDBoard\\Commands\\"))) {
-					Files.createDirectory(Paths.get(Defaults.saveDirectory + "\\GDBoard\\Commands\\"));
+				if (!Files.exists(Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\"))) {
+					Files.createDirectory(Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\"));
 				}
 				Files.createFile(file);
 				Files.write(file, command.getBytes());
@@ -105,20 +120,23 @@ public class Utilities {
 	}
 
 	public static void editCommand(String username, String... args) {
-		String newCommandName = args[0];
+		String newCommandName = args[1];
 		StringBuilder message = new StringBuilder();
-
+		boolean i = false;
 		for (String msg : args) {
-			message.append(" ").append(msg);
+			if(!i) {
+				message.append(" ").append(msg);
+				i = true;
+			}
 		}
-		message = new StringBuilder(StringUtils.replaceOnce(message.toString(), args[0], "").trim());
+		message = new StringBuilder(StringUtils.replaceOnce(message.toString(), args[1], "").trim());
 		String command;
 		if (message.toString().startsWith("eval:")) {
 			command = "function command(){" + message.toString().replace("eval:", "").trim() + "}";
 		} else {
 			command = "function command() { return \"" + message + "\";}";
 		}
-		Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\Commands\\" + newCommandName + ".js");
+		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\" + newCommandName + ".js");
 		if (Files.exists(file)) {
 			try {
 				Files.write(file, command.getBytes());
@@ -134,7 +152,7 @@ public class Utilities {
 	}
 
 	public static void deleteCommand(String username, String command) {
-		Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\Commands\\" + command + ".js");
+		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\" + command + ".js");
 		if (Files.exists(file)) {
 			try {
 				Files.delete(file);
@@ -173,15 +191,6 @@ public class Utilities {
 			}
 		}
 		return format;
-	}
-
-	public static void openLink(String link) {
-		Runtime rt = Runtime.getRuntime();
-		try {
-			rt.exec("rundll32 url.dll,FileProtocolHandler " + link);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static void openSteamApp(int id) {
@@ -230,7 +239,7 @@ public class Utilities {
 	private static void delStuff(String command, String identifier) {
 
 		boolean exists = false;
-		Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + identifier + ".txt");
+		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt");
 		try {
 			if (Files.exists(file)) {
 				Scanner sc = new Scanner(file);
@@ -242,7 +251,7 @@ public class Utilities {
 				}
 				sc.close();
 				if (exists) {
-					Path temp = Paths.get(Defaults.saveDirectory + "\\GDBoard\\_temp" + identifier + "_");
+					Path temp = Paths.get(Defaults.saveDirectory + "\\loquibot\\_temp" + identifier + "_");
 					PrintWriter out = new PrintWriter(new FileWriter(temp.toFile()));
 					Files.lines(file)
 							.filter(line -> !line.contains(command))
@@ -250,7 +259,7 @@ public class Utilities {
 					out.flush();
 					out.close();
 					Files.delete(file);
-					Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\GDBoard\\" + identifier + ".txt"), StandardCopyOption.REPLACE_EXISTING);
+					Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt"), StandardCopyOption.REPLACE_EXISTING);
 				}
 			}
 		} catch (Exception f) {
@@ -264,7 +273,7 @@ public class Utilities {
 	}
 
 	public static void notify(String title, String message) {
-		if (!PersonalizationSettings.disableNotifOption) {
+		if (!Settings.getSettings("disableNotifications").asBoolean()) {
 			trayIcon.displayMessage(title, message, TrayIcon.MessageType.NONE);
 		}
 
@@ -273,8 +282,8 @@ public class Utilities {
 	private static void saveOption(String command, String optionType) {
 		try {
 			String typeA = null;
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/" + "commands" + "/options.txt"))) {
-				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/" + "commands" + "/options.txt").toFile());
+			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt"))) {
+				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt").toFile());
 				while (sc3.hasNextLine()) {
 					String line = sc3.nextLine();
 					if (line.split("=").length > 1) {
@@ -286,10 +295,10 @@ public class Utilities {
 				}
 				sc3.close();
 			} else {
-				Files.createFile(Paths.get(Defaults.saveDirectory + "/GDBoard/" + "commands" + "/options.txt"));
+				Files.createFile(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt"));
 			}
 			if (typeA != null) {
-				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/GDBoard/" + "commands" + "/options.txt"));
+				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt"));
 				StringBuilder inputBuffer = new StringBuilder();
 				String line;
 				while ((line = file.readLine()) != null) {
@@ -298,11 +307,11 @@ public class Utilities {
 				}
 				file.close();
 
-				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/GDBoard/" + "commands" + "/options.txt");
+				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt");
 				fileOut.write(inputBuffer.toString().replace(command + " = " + typeA, command + " = " + optionType).getBytes());
 				fileOut.close();
 			} else {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/GDBoard/" + "commands" + "/options.txt").toFile(), true));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt").toFile(), true));
 				writer.newLine();
 				writer.write(command + " = " + optionType);
 				writer.close();
@@ -315,8 +324,8 @@ public class Utilities {
 	private static void delCooldown(String command) {
 		try {
 			int cooldown = -1;
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt"))) {
-				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt").toFile());
+			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"))) {
+				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile());
 				while (sc3.hasNextLine()) {
 					String line = sc3.nextLine();
 					if (line.split("=").length > 1) {
@@ -328,10 +337,10 @@ public class Utilities {
 				}
 				sc3.close();
 			} else {
-				Files.createFile(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt"));
+				Files.createFile(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"));
 			}
 			if (cooldown != -1) {
-				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/GDBoard/cooldown.txt"));
+				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/loquibot/cooldown.txt"));
 				StringBuilder inputBuffer = new StringBuilder();
 				String line;
 				while ((line = file.readLine()) != null) {
@@ -340,11 +349,11 @@ public class Utilities {
 				}
 				file.close();
 
-				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/GDBoard/cooldown.txt");
+				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/loquibot/cooldown.txt");
 				fileOut.write(inputBuffer.toString().replace(command + " = " + cooldown, command + " = " + 0).getBytes());
 				fileOut.close();
 			} else {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt").toFile(), true));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile(), true));
 				writer.newLine();
 				writer.write(command + " = " + 0);
 				writer.close();
@@ -385,5 +394,51 @@ public class Utilities {
 		if (caught == null) return false;
 		else if (isOfOrCausedBy.isAssignableFrom(caught.getClass())) return true;
 		else return isCausedBy(caught.getCause(), isOfOrCausedBy);
+	}
+
+	public static void sleep(int milliseconds){
+		sleep(milliseconds, 0);
+	}
+	public static void sleep(int milliseconds, int nano){
+		try {
+			TimeUnit.MILLISECONDS.sleep(milliseconds);
+			TimeUnit.NANOSECONDS.sleep(nano);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	public static ArrayList<CommandData> alphabetizeCommandData(ArrayList<CommandData> commandDataArrayList){
+		ArrayList<String> commandNames = new ArrayList<>();
+		for(CommandData data : commandDataArrayList){
+			commandNames.add(data.getCommand());
+		}
+		commandNames.sort(String.CASE_INSENSITIVE_ORDER);
+		ArrayList<CommandData> newCommandDataArrayList = new ArrayList<>();
+		for(String commandName : commandNames){
+			for(CommandData commandData : commandDataArrayList){
+				if(commandData.getCommand().equalsIgnoreCase(commandName)){
+					newCommandDataArrayList.add(commandData);
+					break;
+				}
+			}
+		}
+		return newCommandDataArrayList;
+	}
+	public static ArrayList<TimerData> alphabetizeTimerData(ArrayList<TimerData> timerDataArrayList){
+		ArrayList<String> timerNames = new ArrayList<>();
+		for(TimerData data : timerDataArrayList){
+			timerNames.add(data.getName());
+		}
+		timerNames.sort(String.CASE_INSENSITIVE_ORDER);
+		ArrayList<TimerData> newTimerArrayList = new ArrayList<>();
+		for(String timerName : timerNames){
+			for(TimerData timerData : timerDataArrayList){
+				if(timerData.getName().equalsIgnoreCase(timerName)){
+					newTimerArrayList.add(timerData);
+					break;
+				}
+			}
+		}
+		return newTimerArrayList;
 	}
 }

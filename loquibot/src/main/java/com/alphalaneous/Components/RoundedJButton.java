@@ -1,6 +1,5 @@
 package com.alphalaneous.Components;
 
-import com.alphalaneous.Defaults;
 import com.alphalaneous.Language;
 import com.alphalaneous.ThemedComponents.ThemedJButton;
 
@@ -25,9 +24,6 @@ public class RoundedJButton extends ThemedJButton {
 	private String tooltipText;
 	private final String text;
 	private final JToolTip tooltip = new FancyTooltip(this);
-
-	private String colorChoiceF;
-	private String colorChoiceB;
 
 	public RoundedJButton(String label, String tooltip) {
 		super(label);
@@ -96,14 +92,12 @@ public class RoundedJButton extends ThemedJButton {
 	}
 
 	public void setColorB(String color){
-		colorChoiceB = color;
 	}
 	public void setColorF(String color){
-		colorChoiceF = color;
 	}
 	public void refresh_(){
-		setForeground(Defaults.colors.get(colorChoiceF));
-		setBackground(Defaults.colors.get(colorChoiceB));
+		setForeground(getForeground());
+		setBackground(getBackground());
 	}
 
 	public static void refreshAll(){

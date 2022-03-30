@@ -1,0 +1,61 @@
+{
+  "name" : "Default",
+  "commands" : [
+    {
+      "name" : "help",
+      "cooldown" : 10,
+      "description" : "Gets help | Usage: \"%phelp\" to get help | \"%phelp <Command>\" for command help",
+      "message" : "runHelp",
+      "runMethod" : true
+    },
+    {
+      "name" : "commands",
+      "cooldown" : 10,
+      "description" : "Gets Command List | Usage: \"%pcommands <Page>\" to get commands",
+      "message" : "runCommandList",
+      "runMethod" : true
+    },
+    {
+      "name" : "addcom",
+      "level" : "moderator",
+      "description" : "Adds a command | Usage: \"%paddcom <Command Name> <Response>\"",
+      "runMethod" : true,
+      "message" : "runAddcom"
+    },
+    {
+      "name" : "editcom",
+      "level" : "moderator",
+      "description" : "Edits a command | Usage: \"%peditcom <Command Name> <Response>\"",
+      "runMethod" : true,
+      "message" : "runEditcom"
+    },
+    {
+      "name" : "delcom",
+      "level" : "moderator",
+      "description" : "Deletes a command | Usage: \"%pdelcom <Command Name>\"",
+      "runMethod" : true,
+      "message" : "runDelcom"
+    },
+    {
+      "name" : "permit",
+      "level" : "moderator",
+      "description" : "Allows a user to send links for 1 minute | Usage: \"%ppermit <Username>\"",
+      "runMethod" : true,
+      "message" : "runPermit"
+    },
+    {
+      "name" : "title",
+      "level" : "moderator",
+      "description" : "View the title, change the title if mod | Usage: \"%ptitle\" | \"%ptitle <New Title>\"",
+      "runMethod" : true,
+      "message" : "runTitle"
+    },
+    {
+      "name" : "game",
+      "level" : "moderator",
+      "description" : "View the game, change the game if mod | Usage: \"%pgame\" | \"%pgame <New Game>\"",
+      "runMethod" : true,
+      "message" : "runGame"
+    }
+  ]
+}

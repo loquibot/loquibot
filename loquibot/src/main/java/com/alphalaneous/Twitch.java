@@ -38,7 +38,7 @@ public class Twitch {
 		APIs.setAllViewers();
 	}
 
-	public static void checkGDBoard() {
+	public static void checkloquibot() {
 
 	}
 }

@@ -1,13 +1,10 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Panels.LevelButton;
-import com.alphalaneous.Panels.LevelsPanel;
 import jdash.common.entity.GDLevel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * @noinspection WeakerAccess
@@ -21,6 +18,7 @@ public class LevelData {
 	private int password;
 	private String message;
 	private String messageID;
+	private String youtubeURL;
 	private boolean viewership = true;
 	private boolean featured;
 	private boolean epic;
@@ -32,48 +30,17 @@ public class LevelData {
 	private LevelButton levelButton;
 
 	public String getSimpleDifficulty(){
-		if(getLevelData().isAuto()){
+		if(getGDLevel().isAuto()){
 			return "AUTO";
 		}
-		if(getLevelData().isDemon()){
-			return getLevelData().demonDifficulty().name().toUpperCase() + " DEMON";
+		if(getGDLevel().isDemon()){
+			return getGDLevel().demonDifficulty().name().toUpperCase() + " DEMON";
 		}
-		return getLevelData().difficulty().name().toUpperCase();
+		return getGDLevel().difficulty().name().toUpperCase();
 	}
 
-	public int getPosition(){
-		int pos = 0;
-		for(Component component : levelButton.getParent().getComponents()){
-			if(component.equals(levelButton)){
-				return pos;
-			}
-			pos++;
-		}
-		return -1;
-	}
-
-	public void remove(){
-
-		int selected = LevelButton.selectedID;
-		if(selected > getPosition() || selected == Requests.levels.size()-1){
-			selected = selected - 1;
-		}
-		new Thread(() -> {
-			while(savingLogs){
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			savingLogs = true;
-			Requests.saveLogs(this);
-			savingLogs = false;
-		}).start();
-		//LevelsPanel.removeButton(levelButton);
-		Requests.levels.remove(this);
-		LevelsPanel.refreshButtons();
-		LevelsPanel.setSelect(selected);
+	public void setYoutubeURL(String url){
+		this.youtubeURL = url;
 	}
 
 	public void setLevelButton(LevelButton levelButton){
@@ -84,7 +51,7 @@ public class LevelData {
 		return levelButton;
 	}
 
-	public GDLevel getLevelData(){
+	public GDLevel getGDLevel(){
 		return levelData;
 	}
 
@@ -158,6 +125,10 @@ public class LevelData {
 
 	public boolean getNotPersist() {
 		return !persist;
+	}
+
+	public String getYoutubeURL(){
+		return youtubeURL;
 	}
 
 	public ImageIcon getPlayerIcon() {

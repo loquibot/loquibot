@@ -1,9 +1,11 @@
 package com.alphalaneous.Windows;
 
+import com.alphalaneous.ChatbotTab.CustomCommands;
 import com.alphalaneous.Components.*;
 import com.alphalaneous.Defaults;
 import com.alphalaneous.Main;
 import com.alphalaneous.SettingsPanels.CommandSettings;
+import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.ThemedComponents.ThemedCheckbox;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -22,6 +24,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static com.alphalaneous.Defaults.defaultUI;
@@ -66,12 +69,12 @@ public class CommandEditor {
 	private static final LangLabel sliderValue = new LangLabel("");
 
 	public static void createPanel() {
-		URL iconURL = Window.class.getResource("/Icons/windowIcon.png");
-		ImageIcon icon = new ImageIcon(iconURL);
+		URL iconURL = RequestsTab.class.getResource("/Icons/windowIcon.png");
+		ImageIcon icon = new ImageIcon(Objects.requireNonNull(iconURL));
 		Image newIcon = icon.getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH);
-		editor.setTitle("GDBoard - Editor");
+		editor.setTitle("loquibot - Editor");
 		editor.setSize(new Dimension(650, 530));
-		editor.setLocation(Defaults.screenSize.x + Defaults.screenSize.width / 2 - editor.getWidth() / 2, Defaults.screenSize.y + Defaults.screenSize.height / 2 - editor.getHeight() / 2);
+		editor.setLocationRelativeTo(com.alphalaneous.Windows.Window.getWindow());
 		editor.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		editor.setResizable(false);
 		editor.addWindowListener(new WindowAdapter() {
@@ -79,10 +82,9 @@ public class CommandEditor {
 			public void windowClosing(WindowEvent e) {
 				new Thread(() -> {
 					String option;
+					editor.setVisible(false);
 					try {
-
-
-						Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + type + "\\" + commandNameText.getText() + ".js");
+						Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + type + "\\" + commandNameText.getText() + ".js");
 						if (Files.exists(file)) {
 							option = DialogBox.showDialogBox("$OVERRIDE_TITLE$", "$SAVE_INFO$", "", new String[]{"$YES$", "$NO$", "$CANCEL$"}, new Object[]{commandNameText.getText()});
 						} else {
@@ -94,16 +96,17 @@ public class CommandEditor {
 							} else {
 								save();
 								if (type.equalsIgnoreCase("commands")) {
-									CommandSettings.refresh();
+									CustomCommands.loadCommands();
 								}
 								active = false;
-								editor.setVisible(false);
 							}
 						}
-						if (option.equals("NO")) {
+						else if (option.equals("NO")) {
 							//don't save
 							active = false;
-							editor.setVisible(false);
+						}
+						else{
+							editor.setVisible(true);
 						}
 					} catch (Exception f) {
 						active = false;
@@ -112,21 +115,21 @@ public class CommandEditor {
 				}).start();
 			}
 		});
-		editor.getContentPane().setBackground(Defaults.TOP);
+		editor.getContentPane().setBackground(Defaults.COLOR6);
 		editor.setIconImage(newIcon);
 		editor.setLayout(null);
 		codeInput.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
 
-		codeInput.setCurrentLineHighlightColor(Defaults.BUTTON);
+		codeInput.setCurrentLineHighlightColor(Defaults.COLOR2);
 
 		codePanel.getVerticalScrollBar().setUI(new RectangleScrollbarUI());
 		codePanel.getHorizontalScrollBar().setUI(new RectangleScrollbarUI());
 		codePanel.getVerticalScrollBar().setOpaque(false);
 		codePanel.getHorizontalScrollBar().setOpaque(false);
 		codeInput.setTabSize(4);
-		codeInput.setBackground(Defaults.MAIN);
+		codeInput.setBackground(Defaults.COLOR);
 		codeInput.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		codeInput.setForeground(Defaults.FOREGROUND);
+		codeInput.setForeground(Defaults.FOREGROUND_A);
 		codePanel.setBorder(BorderFactory.createEmptyBorder());
 		codeInput.setText("function command(){\n\n}");
 		codePanel.setBounds(10, 10, 615, 180);
@@ -151,10 +154,10 @@ public class CommandEditor {
 		}
 
 
-		basicPanel.setBackground(Defaults.SUB_MAIN);
+		basicPanel.setBackground(Defaults.COLOR3);
 		basicPanel.setBounds(0, 100, 650, 200);
 
-		advancedPanel.setBackground(Defaults.SUB_MAIN);
+		advancedPanel.setBackground(Defaults.COLOR3);
 		advancedPanel.setBounds(0, 100, 650, 200);
 
 		soundFileLocation.setDropTarget(new DropTarget() {
@@ -205,10 +208,9 @@ public class CommandEditor {
 		InputMap im = codeInput.getInputMap(JComponent.WHEN_FOCUSED);
 		ActionMap am = codeInput.getActionMap();
 
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "Undo");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "Redo");
-		//noinspection MagicConstant
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() | Event.SHIFT_MASK), "Redo");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()), "Undo");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()), "Redo");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK), "Redo");
 
 		am.put("Undo", new AbstractAction() {
 			@Override
@@ -236,8 +238,8 @@ public class CommandEditor {
 		});
 		fileExplorerButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
 		fileExplorerButton.setUI(defaultUI);
-		fileExplorerButton.setForeground(Defaults.FOREGROUND);
-		fileExplorerButton.setBackground(Defaults.MAIN);
+		fileExplorerButton.setForeground(Defaults.FOREGROUND_A);
+		fileExplorerButton.setBackground(Defaults.COLOR);
 		fileExplorerButton.setBounds(585, 80, 32, 32);
 		/*fileExplorerButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -259,20 +261,24 @@ public class CommandEditor {
 
 		deleteButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
 		deleteButton.setUI(defaultUI);
-		deleteButton.setForeground(Defaults.FOREGROUND);
-		deleteButton.setBackground(Defaults.MAIN);
+		deleteButton.setForeground(Defaults.FOREGROUND_A);
+		deleteButton.setBackground(Defaults.COLOR);
 		deleteButton.setBounds(270, 50, 32, 32);
 		deleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				new Thread(() -> {
+					editor.setVisible(false);
 					String option = DialogBox.showDialogBox("$DELETE_COMMAND_TITLE$", "$DELETE_COMMAND_INFO$", "", new String[]{"$YES$", "$NO$"}, new Object[]{command});
 					if (option.equalsIgnoreCase("YES")) {
 						deleteCommand();
 						if (type.equalsIgnoreCase("commands")) {
-							CommandSettings.refresh();
+							CustomCommands.loadCommands();
 						}
+					}
+					else{
+						editor.setVisible(true);
 					}
 				}).start();
 			}
@@ -289,11 +295,11 @@ public class CommandEditor {
 
 		commandName.setBounds(20, 20, 300, 30);
 		commandName.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-		commandName.setForeground(Defaults.FOREGROUND);
+		commandName.setForeground(Defaults.FOREGROUND_A);
 
 		messageLabel.setBounds(20, 45, 300, 30);
 		messageLabel.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-		messageLabel.setForeground(Defaults.FOREGROUND2);
+		messageLabel.setForeground(Defaults.FOREGROUND_B);
 
 		commandNameText.setBounds(20, 50, 240, 32);
 		commandNameText.getDocument().putProperty("filterNewlines", Boolean.TRUE);
@@ -329,42 +335,14 @@ public class CommandEditor {
 
 		sliderValue.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 		sliderValue.setTextLangFormat("$COOLDOWN$", 0);
-		sliderValue.setForeground(Defaults.FOREGROUND);
+		sliderValue.setForeground(Defaults.FOREGROUND_A);
 		sliderValue.setBounds(25, 410, 585, sliderValue.getPreferredSize().height + 5);
 
-		UIDefaults sliderDefaults = new UIDefaults();
 
-		sliderDefaults.put("Slider.thumbWidth", 20);
-		sliderDefaults.put("Slider.thumbHeight", 20);
-		sliderDefaults.put("Slider:SliderThumb.backgroundPainter", (Painter<JComponent>) (g, c, w, h) -> {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setStroke(new BasicStroke(2f));
-			g.setColor(Defaults.ACCENT);
-			g.fillOval(1, 1, w - 3, h - 3);
-			g.setColor(Defaults.MAIN);
-			g.drawOval(1, 1, w - 4, h - 4);
-		});
-		sliderDefaults.put("Slider:SliderTrack.backgroundPainter", (Painter<JComponent>) (g, c, w, h) -> {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setStroke(new BasicStroke(2f));
-			g.setColor(Defaults.BUTTON);
-			g.fillRoundRect(0, 6, w - 1, 8, 8, 8);
-		});
-		sliderDefaults.put("Slider:SliderThumb[MouseOver].backgroundPainter", (Painter<JComponent>) (g, c, w, h) -> {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setStroke(new BasicStroke(2f));
-			g.setColor(Defaults.ACCENT);
-			g.fillOval(1, 1, w - 3, h - 3);
-			g.setColor(Defaults.TOP);
-			g.drawOval(1, 1, w - 4, h - 4);
-		});
 
-		slider.setMinorTickSpacing(5);
-		slider.setMinorTickSpacing(100);
-		slider.putClientProperty("Nimbus.Overrides", sliderDefaults);
-		slider.putClientProperty("Nimbus.Overrides.InheritDefaults", false);
+		slider.setUI(new LightSliderUI(slider));
 		slider.setBounds(25, 440, 585, 30);
-		slider.setBackground(Defaults.SUB_MAIN);
+		slider.setBackground(Defaults.COLOR6);
 		slider.setBorder(BorderFactory.createEmptyBorder());
 		slider.addChangeListener(e -> {
 			if (slider.getValue() == 10) {
@@ -397,9 +375,9 @@ public class CommandEditor {
 	}
 
 	private static void save() {
-		if (!Files.exists(Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + type + "\\"))) {
+		if (!Files.exists(Paths.get(Defaults.saveDirectory + "\\loquibot\\" + type + "\\"))) {
 			try {
-				Files.createDirectory(Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + type + "\\"));
+				Files.createDirectory(Paths.get(Defaults.saveDirectory + "\\loquibot\\" + type + "\\"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -411,10 +389,10 @@ public class CommandEditor {
 			if (basicChoices.currentSelect.equals("SEND_MESSAGE")) {
 				function = "function command() { return \"" + commandResponse.getText() + "\";}";
 			} else {
-				function = "function command() { Board.playSound(\"" + soundFileLocation.getText().replace("\\", "\\\\") + "\");}";
+				function = "function command() { Board.playSound(\"" + soundFileLocation.getText().replace("\\", "\\\\") + "\", false, true, false);}";
 			}
 		}
-		Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + type + "\\" + commandNameText.getText().replace("\\\\", "").replace("/", "") + ".js");
+		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + type + "\\" + commandNameText.getText().replace("\\\\", "").replace("/", "") + ".js");
 		if (!Files.exists(file)) {
 			try {
 				Files.createFile(file);
@@ -479,7 +457,7 @@ public class CommandEditor {
 						optionType = "SEND_MESSAGE";
 						basicChoices.setChecked("SEND_MESSAGE");
 					} else if (getOption().equalsIgnoreCase("PLAY_SOUND")) {
-						soundFileLocation.setText(replaceLast(getCommand().replaceFirst("function command\\(\\) \\{ Board.playSound\\(\"", ""), "\");}", ""));
+						soundFileLocation.setText(replaceLast(getCommand().replaceFirst("function command\\(\\) \\{ Board.playSound\\(\"", ""), "\", false, true, false);}", "").replace("\\\\", "\\"));
 						editorChoices.setChecked("BASIC_EDITOR");
 						basicChoices.setChecked("PLAY_SOUND");
 						optionType = "PLAY_SOUND";
@@ -517,8 +495,7 @@ public class CommandEditor {
 			whisper.setVisible(commands);
 			slider.setVisible(commands);
 			sliderValue.setVisible(commands);
-
-			editor.setLocation(Defaults.screenSize.x + Defaults.screenSize.width / 2 - editor.getWidth() / 2, Defaults.screenSize.y + Defaults.screenSize.height / 2 - editor.getHeight() / 2);
+			editor.setLocationRelativeTo(com.alphalaneous.Windows.Window.getWindow());
 		}
 		commandNameText.clearUndo();
 		commandResponse.clearUndo();
@@ -529,7 +506,7 @@ public class CommandEditor {
 	private static ThemedCheckbox createButton(String text, int y) {
 		ThemedCheckbox button = new ThemedCheckbox(text);
 		button.setBounds(25, y, 585, 30);
-		button.setForeground(Defaults.FOREGROUND);
+		button.setForeground(Defaults.FOREGROUND_A);
 		button.setBorder(BorderFactory.createEmptyBorder());
 		button.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 		button.refresh();
@@ -538,7 +515,7 @@ public class CommandEditor {
 
 	private static void saveStuff(String identifier, boolean state) {
 		if (state) {
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + identifier + ".txt");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt");
 			try {
 				if (!Files.exists(file)) {
 					Files.createFile(file);
@@ -552,7 +529,7 @@ public class CommandEditor {
 			}
 		} else {
 			boolean exists = false;
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + identifier + ".txt");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt");
 			try {
 				if (Files.exists(file)) {
 					Scanner sc = new Scanner(file);
@@ -564,7 +541,7 @@ public class CommandEditor {
 					}
 					sc.close();
 					if (exists) {
-						Path temp = Paths.get(Defaults.saveDirectory + "\\GDBoard\\_temp" + identifier + "_");
+						Path temp = Paths.get(Defaults.saveDirectory + "\\loquibot\\_temp" + identifier + "_");
 						PrintWriter out = new PrintWriter(new FileWriter(temp.toFile()));
 						Files.lines(file)
 								.filter(line -> !line.contains(commandNameText.getText()))
@@ -572,7 +549,7 @@ public class CommandEditor {
 						out.flush();
 						out.close();
 						Files.delete(file);
-						Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\GDBoard\\" + identifier + ".txt"), StandardCopyOption.REPLACE_EXISTING);
+						Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt"), StandardCopyOption.REPLACE_EXISTING);
 					}
 				}
 			} catch (Exception f) {
@@ -582,7 +559,7 @@ public class CommandEditor {
 	}
 
 	private static boolean getStuff(String identifier) {
-		Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\" + identifier + ".txt");
+		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt");
 		if (Files.exists(file)) {
 			Scanner sc = null;
 			try {
@@ -604,8 +581,8 @@ public class CommandEditor {
 	public static String getCommand() {
 		try {
 
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/" + commandNameText.getText() + ".js"))) {
-				return String.valueOf(Files.readString(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/" + commandNameText.getText() + ".js"), StandardCharsets.UTF_8));
+			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/" + commandNameText.getText() + ".js"))) {
+				return String.valueOf(Files.readString(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/" + commandNameText.getText() + ".js"), StandardCharsets.UTF_8));
 			}
 
 			if (type.equalsIgnoreCase("commands")) {
@@ -633,10 +610,10 @@ public class CommandEditor {
 
 	private static int getCooldown() {
 		int cooldown = 0;
-		if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt"))) {
+		if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"))) {
 			Scanner sc3 = null;
 			try {
-				sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt").toFile());
+				sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -655,10 +632,10 @@ public class CommandEditor {
 
 	public static String getOption() {
 		String option = "SEND_MESSAGE";
-		if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt"))) {
+		if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt"))) {
 			Scanner sc3 = null;
 			try {
-				sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt").toFile());
+				sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt").toFile());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -678,8 +655,8 @@ public class CommandEditor {
 	private static void saveCooldown() {
 		try {
 			int cooldown = -1;
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt"))) {
-				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt").toFile());
+			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"))) {
+				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile());
 				while (sc3.hasNextLine()) {
 					String line = sc3.nextLine();
 					if (line.split("=").length > 1) {
@@ -691,10 +668,10 @@ public class CommandEditor {
 				}
 				sc3.close();
 			} else {
-				Files.createFile(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt"));
+				Files.createFile(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"));
 			}
 			if (cooldown != -1) {
-				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/GDBoard/cooldown.txt"));
+				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/loquibot/cooldown.txt"));
 				StringBuilder inputBuffer = new StringBuilder();
 				String line;
 				while ((line = file.readLine()) != null) {
@@ -703,11 +680,11 @@ public class CommandEditor {
 				}
 				file.close();
 
-				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/GDBoard/cooldown.txt");
+				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/loquibot/cooldown.txt");
 				fileOut.write(inputBuffer.toString().replace(commandNameText.getText() + " = " + cooldown, commandNameText.getText() + " = " + slider.getValue()).getBytes());
 				fileOut.close();
 			} else {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/GDBoard/cooldown.txt").toFile(), true));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile(), true));
 				writer.newLine();
 				writer.write(commandNameText.getText() + " = " + slider.getValue());
 				writer.close();
@@ -722,8 +699,8 @@ public class CommandEditor {
 		try {
 
 			String typeA = null;
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt"))) {
-				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt").toFile());
+			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt"))) {
+				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt").toFile());
 				while (sc3.hasNextLine()) {
 					String line = sc3.nextLine();
 					if (line.split("=").length > 1) {
@@ -735,10 +712,10 @@ public class CommandEditor {
 				}
 				sc3.close();
 			} else {
-				Files.createFile(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt"));
+				Files.createFile(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt"));
 			}
 			if (typeA != null) {
-				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt"));
+				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt"));
 				StringBuilder inputBuffer = new StringBuilder();
 				String line;
 				while ((line = file.readLine()) != null) {
@@ -747,11 +724,11 @@ public class CommandEditor {
 				}
 				file.close();
 
-				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt");
+				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt");
 				fileOut.write(inputBuffer.toString().replace(commandNameText.getText() + " = " + typeA, commandNameText.getText() + " = " + optionType).getBytes());
 				fileOut.close();
 			} else {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/options.txt").toFile(), true));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/options.txt").toFile(), true));
 				writer.newLine();
 				writer.write(commandNameText.getText() + " = " + optionType);
 				writer.close();
@@ -769,7 +746,7 @@ public class CommandEditor {
 		optionType = "SEND_MESSAGE";
 		save();
 		try {
-			Files.delete(Paths.get(Defaults.saveDirectory + "/GDBoard/" + type + "/" + commandNameText.getText() + ".js"));
+			Files.delete(Paths.get(Defaults.saveDirectory + "/loquibot/" + type + "/" + commandNameText.getText() + ".js"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -789,23 +766,23 @@ public class CommandEditor {
 	}
 
 	public static void refreshUI() {
-		editor.getContentPane().setBackground(Defaults.TOP);
-		codeInput.setCurrentLineHighlightColor(Defaults.BUTTON);
-		codeInput.setBackground(Defaults.MAIN);
-		codeInput.setForeground(Defaults.FOREGROUND);
+		editor.getContentPane().setBackground(Defaults.COLOR6);
+		codeInput.setCurrentLineHighlightColor(Defaults.COLOR2);
+		codeInput.setBackground(Defaults.COLOR);
+		codeInput.setForeground(Defaults.FOREGROUND_A);
 		editorChoices.refreshUI();
 		basicChoices.refreshUI();
-		basicPanel.setBackground(Defaults.SUB_MAIN);
-		advancedPanel.setBackground(Defaults.SUB_MAIN);
+		basicPanel.setBackground(Defaults.COLOR3);
+		advancedPanel.setBackground(Defaults.COLOR3);
 		fileExplorerButton.setUI(defaultUI);
-		fileExplorerButton.setForeground(Defaults.FOREGROUND);
-		fileExplorerButton.setBackground(Defaults.MAIN);
+		fileExplorerButton.setForeground(Defaults.FOREGROUND_A);
+		fileExplorerButton.setBackground(Defaults.COLOR);
 		deleteButton.setUI(defaultUI);
-		deleteButton.setForeground(Defaults.FOREGROUND);
-		deleteButton.setBackground(Defaults.MAIN);
-		commandName.setForeground(Defaults.FOREGROUND);
-		messageLabel.setForeground(Defaults.FOREGROUND2);
-		sliderValue.setForeground(Defaults.FOREGROUND);
-		slider.setBackground(Defaults.SUB_MAIN);
+		deleteButton.setForeground(Defaults.FOREGROUND_A);
+		deleteButton.setBackground(Defaults.COLOR);
+		commandName.setForeground(Defaults.FOREGROUND_A);
+		messageLabel.setForeground(Defaults.FOREGROUND_B);
+		sliderValue.setForeground(Defaults.FOREGROUND_A);
+		slider.setBackground(Defaults.COLOR6);
 	}
 }

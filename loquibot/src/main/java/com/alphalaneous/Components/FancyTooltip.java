@@ -12,16 +12,16 @@ public class FancyTooltip extends JToolTip {
 	public FancyTooltip(JComponent component) {
 		super();
 		setComponent(component);
-		setBackground(Defaults.TOP);
-		setForeground(Defaults.FOREGROUND);
+		setBackground(Defaults.COLOR6);
+		setForeground(Defaults.FOREGROUND_A);
 		setFont(Defaults.MAIN_FONT.deriveFont(14f));
 		setBorder(BorderFactory.createEmptyBorder());
 		tooltips.add(this);
 	}
 
 	public void refresh() {
-		setBackground(Defaults.TOP);
-		setForeground(Defaults.FOREGROUND);
+		setBackground(Defaults.COLOR6);
+		setForeground(Defaults.FOREGROUND_A);
 	}
 
 	public static void refreshAll(){

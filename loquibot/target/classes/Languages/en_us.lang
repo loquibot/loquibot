@@ -6,8 +6,18 @@ YES = Yes
 NO = No
 OKAY = Okay
 CANCEL = Cancel
-STARTUP_MESSAGE = Thank you for using loquibot by Alphalaneous and EncodedLua! It is suggested to VIP or Mod loquibot to prevent chat limits from occurring.
-STARTUP_MESSAGE_MOD_VIP = Thank you for using loquibot by Alphalaneous and EncodedLua!
+SAVE = Save
+STARTUP_MESSAGE = Thank you for using loquibot by Alphalaneous! It is suggested to VIP or Mod loquibot to prevent chat limits from occurring.
+STARTUP_MESSAGE_MOD_VIP = Thank you for using loquibot by Alphalaneous!
+
+//SuperOP Window
+
+ENTER_ID = Enter ID:
+GLOBALLY_BLOCK_ID = Block
+GLOBALLY_UNBLOCK_ID = Unblock
+ENTER_GLOBALLY_BLOCK_REASON = Enter Reason:
+SURE_GLOBALLY_UNBLOCK = Are you sure?
+GLOBALLY_SUBMIT = Submit
 
 //Commands Editor
 
@@ -95,11 +105,14 @@ UNBLOCK_USER_DOESNT_EXISTS_MESSAGE = @%s, User isn't blocked.
 UNBLOCK_USER_FAILED_MESSAGE = @%s, Failed to unblock, try again.
 
 HELP_NO_INFO = There is no info for this command.
+HELP_NO_COMMAND = Please specify a command.
+
 DEFAULT_MENTION = @%s,
 LIST_COMMANDS_START_MESSAGE = List of Commands | Type !help <command> for more help.
 REQUESTS_SUBSCRIBE_MESSAGE = @%s, Please subscribe to request levels.
 LEVEL_USER_DOESNT_EXIST_MESSAGE = @%s, That level or user doesn't exist.
 LEVEL_DOESNT_EXIST_MESSAGE = @%s, That level doesn't exist.
+LEVEL_COMMAND_FORMAT_MESSAGE = @%s, Incorrectly formatted request, type "!help !request" for how to format it.
 REQUEST_ERROR = @%s, An unknown error occured.
 SPECIFY_ID_MESSAGE = @%s, Please specifiy an ID or level name.
 TOO_FEW_OBJECTS_MESSAGE = @%s, Your level has been removed for containing too few objects.
@@ -130,6 +143,7 @@ MANY_OBJECTS_MESSAGE = @%s, That level has too many objects.
 FEW_LIKES_MESSAGE = @%s, That level has too few likes.
 MANY_LIKES_MESSAGE = @%s, That level has too many likes.
 DIFFICULTY_MESSAGE = @%s, That difficulty is disabled.
+REQ_DIFFICULTY_MESSAGE = @%s, That requested difficulty is disabled.
 LENGTH_MESSAGE = @%s, That length is disabled.
 CONFIRMATION_MESSAGE = @%s, %s (%s) has been added at position %s.
 CONFIRMATION_MESSAGE_ALT = @%s, %s (%s) has been added.
@@ -140,19 +154,47 @@ VULGAR_LANGUAGE = (Vulgar Language)
 IMAGE_HACK = (Image Hack)
 REQUESTS_OFF_TOGGLE_MESSAGE = Requests are now off!
 REQUESTS_ON_TOGGLE_MESSAGE = Requests are now on!
-GLOBALLY_BLOCKED_LEVEL_MESSAGE = @%s, That level has been globally blocked! Reason: %s
+GLOBALLY_BLOCKED_LEVEL_MESSAGE = @%s, That level is globally blocked! Reason: %s
+
+//Command Responses
+
+NO_USER_MESSAGE = @%s, Please specify a user to permit.
+PERMIT_SUCCESS_MESSAGE = @%s, Successfully permitted @%s to send links for 1 minute.
+STREAM_TITLE_COMMAND_MESSAGE = @%s, The current stream title is %s
+STREAM_TITLE_CHANGE_MESSAGE = @%s, Successfully updated the title to %s
+STREAM_GAME_COMMAND_MESSAGE = @%s, The current game is %s
+STREAM_GAME_CHANGE_MESSAGE = @%s, Successfully updated the game to %s
+GAME_NOT_FOUND_MESSAGE = @%s, Could not find game: %s
+ADD_COMMAND_NO_ARGS_MESSAGE = @%s, Please specify a command name and message.
+ADD_COMMAND_INVALID_COOLDOWN_MESSAGE = @%s, Failed to add command, invalid cooldown parameter.
+ADD_COMMAND_INVALID_ARGS_MESSAGE = @%s, Failed to add command, invalid parameters.
+ADD_COMMAND_INVALID_USERLEVEL_MESSAGE = @%s, Failed to add command, invalid userlevel.
+ADD_COMMAND_NO_MESSAGE_MESSAGE = @%s, Failed to add command, no message given.
+ADD_COMMAND_SUCCESS_MESSAGE = @%s, Successfully added command: %s
+DELETE_COMMAND_NO_ARGS_MESSAGE = @%s, Please specify a command to delete.
+DELETE_COMMAND_SUCCESS_MESSAGE = @%s, Successfully deleted: %s
+DELETE_COMMAND_DOESNT_EXIST_MESSAGE = @%s, Failed to delete %s, command doesn't exist.
+EDIT_COMMAND_NO_ARGS_MESSAGE = @%s, Please specify a command to edit.
+EDIT_COMMAND_INVALID_COOLDOWN_MESSAGE = @%s, Failed to edit command, invalid cooldown parameter.
+EDIT_COMMAND_INVALID_ARGS_MESSAGE = @%s, Failed to edit command, invalid parameters.
+EDIT_COMMAND_INVALID_USERLEVEL_MESSAGE = @%s, Failed to edit command, invalid userlevel.
+
+EDIT_COMMAND_SUCCESS_MESSAGE = @%s, Successfully edited command: %s
+INVALID_ACTION_MESSAGE = @%s, Please enter a valid action (add, edit, delete).
 
 //Title Separators
 
 BOT_SECTION_TITLE = BOT SETTINGS
 GD_SECTION_TITLE = GD SETTINGS
 USER_SECTION_TITLE = USER SETTINGS
+COMMANDS_SECTION_TITLE = COMMANDS
+CHAT_SECTION_TITLE = CHAT
 
 //Settings
 
 GENERAL_SETTINGS = Requests
 CHAOS_SETTINGS = Chaos Mode
-CHATBOT_SETTINGS = Chat Bot
+CHATBOT_SETTINGS = General
 OUTPUTS_SETTINGS = Outputs
 ACCOUNTS_SETTINGS = Accounts
 COMMANDS_SETTINGS = Commands
@@ -167,14 +209,22 @@ BLOCKED_USERS_SETTINGS = Blocked Users
 BLOCKED_CREATORS_SETTINGS =Blocked Creators
 LOGGED_IDS_SETTINGS = Logged IDs
 WINDOWED_SETTINGS = Switch to Windowed
+CUSTOM_COMMANDS_SETTINGS = Custom
+DEFAULT_COMMANDS_SETTINGS = Default
+CUSTOM_KEYWORDS_SETTINGS = Keywords
+GEOMETRY_DASH_COMMANDS_SETTINGS = Geometry Dash
+TIMERS_SETTINGS = Timers
+SPAM_PROTECTION_SETTINGS = Spam Protection
+MESSAGE_SETTINGS = Messages
+BLOCKED_KEYWORDS_SETTINGS = Blocked Phrases
 
 //General Bot Settings
 
 MULTI_THREAD = Multithreaded Commands
-MULTI_THREAD_INFO = If loquibot is acting slow in chat, enable this. May cause duplicate requests.
 ANTI_DOX = Dox Prevention Mode
-ANTI_DOX_INFO = Replaces your PCs name with asterisks if it somehow shows in chat with a custom command.
-GLOBAL_COOLDOWN_LABEL = Global Message Cooldown (ms)
+GLOBAL_COOLDOWN = Global Message Cooldown (ms)
+DEFAULT_COMMAND_PREFIX = Default Command Prefix
+GEOMETRY_DASH_COMMAND_PREFIX = Geometry Dash Command Prefix
 
 //General Settings
 
@@ -200,6 +250,7 @@ LOQUIBOT_VERSION = loquibot version: %s
 STREAMER_BYPASS = Bypass your Filters
 MODS_BYPASS = Mods Bypass Filters
 QUEUE_COMMAND_LABEL = Queue Command Level Count:
+BASIC_MODE = Basic Mode
 
 //Chaos Mode Settings
 
@@ -228,7 +279,7 @@ GEOMETRY_DASH = Geometry Dash: %s
 TWITCH = Twitch: %s
 REFRESH_TWITCH = Refresh Twitch
 REFRESH_GD = Refresh GD
-DISCLAIMER = Your login information is sent only to Geometry Dash and saved locally.
+DISCLAIMER = Your login is sent only to Geometry Dash and saved locally.
 USERNAME = Username:
 PASSWORD = Password:
 LOGIN = Log In
@@ -238,16 +289,16 @@ LOGIN = Log In
 CHANNEL_POINTS_UNAVAILABLE = Channel Points are unavailable at the moment.
 ADD_CHANNEL_POINTS_TOOLTIP = Add Channel Point Action
 REFRESH_CHANNEL_POINTS_TOOLTIP = Refresh Channel Point Rewards
-POINTS_LIST = Channel Point Actions:
+POINTS_LIST = Channel Point Actions
 
 //Commands Settings
 
 DISABLE_COMMAND = Disable Command
 MOD_ONLY = Mod Only
 SEND_AS_WHISPER = Send as Whisper
-COOLDOWN_SINGULAR = Cooldown: %s second
-COOLDOWN = Cooldown: %s seconds
-COMMANDS_LIST = Commands:
+COOLDOWN_SINGULAR = %s second
+COOLDOWN = %s seconds
+COMMANDS_LIST = Commands
 ADD_COMMAND_TOOLTIP = Add Command
 
 //Requests Settings
@@ -255,6 +306,8 @@ ADD_COMMAND_TOOLTIP = Add Command
 RATED_LEVELS_ONLY = Rated Levels Only
 UNRATED_LEVELS_ONLY = Unrated Levels Only
 DISABLE_SELECTED_DIFFICULTIES = Disable selected difficulties
+DISABLE_SELECTED_REQUESTED_DIFFICULTIES = Disable selected requested difficulties
+
 GD_NA = NA
 GD_AUTO = Auto
 GD_EASY = Easy
@@ -299,52 +352,52 @@ CLEAR_SHORTCUT = Clear
 
 //Personalization Settings
 
-SWITCH_WINDOWED = Switch to Windowed Mode
-SWITCH_OVERLAY = Switch to Overlay Mode
+ALWAYS_ON_TOP = Always On Top
+ON_TOP_DESCRIPTION = Forces the window to be above everything.
+DISABLE_FOCUS = Disable Window Focus
+DISABLE_FOCUS_DESCRIPTION = Disables the ability to focus into the window.
 LIGHT_MODE = Light
 DARK_MODE = Dark
+CUSTOM_MODE = Custom
 SYSTEM_MODE = System
 THEME_TEXT = Theme:
 DISABLE_NOTIFICATIONS = Disable notifications
+DISABLE_NOTIFICATIONS_DESCRIPTION = Disables notifications sent by loquibot.
 
 //Blocked IDs Settings
 
-BLOCKED_IDS = Blocked IDs:
+BLOCKED_IDS = Blocked IDs
 ADD_ID_TOOLTIP = Add ID
 UNBLOCK_ID_DIALOG_TITLE = Unblock %s?
 UNBLOCK_ID_DIALOG_INFO = This will unblock the ID and allow it to be requested again.
 
-
 //Blocked Users Settings
 
-BLOCKED_USERS = Blocked Users:
+BLOCKED_USERS = Blocked Users
 ADD_USER_TOOLTIP = Add User
 UNBLOCK_USER_DIALOG_TITLE = Unblock %s?
 UNBLOCK_USER_DIALOG_INFO = This will unblock the ID and allow it to be requested again.
 
 //Blocked Creators Settings
 
-BLOCKED_CREATORS = Blocked Creators:
+BLOCKED_CREATORS = Blocked Creators
 ADD_CREATOR_TOOLTIP = Add Creator
 UNBLOCK_CREATOR_DIALOG_TITLE = Unblock %s?
 UNBLOCK_CREATOR_DIALOG_INFO = This will unblock the creator and allow their levels again.
 
 //Logged IDs Settings
 
-LOGGED_IDS = Logged IDs:
+LOGGED_IDS = Logged IDs
 REMOVE_LOG_DIALOG_TITLE = Remove %s from logs?
 REMOVE_LOG_DIALOG_INFO = This will allow it to be sent again if "Disable Repeated Requests All Time" is on.
 CLEAR_LOGS_DIALOG_TITLE = Clear Logs?
 CLEAR_LOGS_DIALOG_INFO = This will remove all logged levels and allow them to be requested again if "Disable Repeated Requests All Time" is on.
 CLEAR_LOGS_TOOLTIP = Clear Logs
 
-//Windowed Settings
-
-ALWAYS_ON_TOP = Always On Top
 
 //Windowed Interface
 
-DELETE = Delete Message
+DELETE = Delete
 BAN = Ban User
 TIMEOUT = Timeout (10min)
 PURGE = Purge (1s)
@@ -368,6 +421,7 @@ TOGGLE_REQUESTS_TOOLTIP = Toggle Requests
 SHOW_COMMENTS_TOOLTIP = Show Comments
 HIDE_COMMENTS_TOOLTIP = Hide Comments
 MODERATE_TOOLTIP = Message and Moderation
+SUPEROP_TOOLTIP = SuperOP Actions
 
 //Comments Tooltips
 
@@ -389,4 +443,117 @@ BLOCK_ID_INFO = This will block the selected level from being added.
 BLOCK_ID_SUBINFO = This can be undone in settings.
 
 //Settings Main
+
 HOME_BUTTON = Home
+
+//Window Titles
+
+COMMENTS_TITLE = Comments
+
+//Settings Descriptions
+
+GD_MODE_DESC = Enables Geometry Dash related features.
+FOLLOWERS_ONLY_DESC = Only followers can request levels.
+SUBSCRIBERS_ONLY_DESC = Only subscribers can request levels.
+DISABLE_NOW_PLAYING_DESC = Disables the now playing messages in chat.
+DISABLE_QUEUE_FULL_DESC = Disables the queue is full messages in chat.
+WHISPER_CONFIRMATION_DESC = Sends level added confirmations in whispers.
+DISABLE_CONFIRMATION_DESC = Disables the level added confirmation message in chat.
+DISABLE_SHOW_POSITION_DESC = Disables the level position being shown in messages.
+DISABLE_REPEATED_DESC = Disables requests that have been sent this stream.
+DISABLE_REPEATED_ALL_DESC = Disables requests that have been sent ever.
+ALLOW_UPDATED_REPEATED_DESC = Allows repeated requests if they have been updated.
+AUTOMATIC_SONG_DOWNLOADS_DESC = Automatically downloads songs from requested levels to Geometry Dash.
+STREAMER_BYPASS_DESC = Allows you to bypass all the filters.
+MODS_BYPASS_DESC = Allows mods to bypass all the filters.
+MAX_QUEUE_SIZE_DESC = Maximum amount of levels allowed in the queue.
+REQUEST_LIMIT_QUEUE_DESC = Maximum amount of levels someone can have in the queue at a time.
+STREAM_REQUEST_LIMIT_DESC = Maximum amount of levels someone can have in an entire stream.
+QUEUE_COMMAND_LABEL_DESC = Amount of levels shown in the !queue command.
+CAPITAL_LETTER_SPAM_DESC = Filters excessive capital letters.
+SYMBOL_SPAM_DESC = Filters excessive symbols.
+EMOTE_SPAM_DESC = Filters excessive emotes.
+LINK_SPAM_DESC = Filters unwanted links.
+GIBBERISH_SPAM_DESC = Filters random letter spam.
+SILENT_MODE_DESC = Disables chat messages from loquibot.
+MULTI_THREAD_DESC = Processes commands asynchronously.
+ANTI_DOX_DESC = Replaces your PCs name with asterisks if it shows in chat with a custom command.
+GLOBAL_COOLDOWN_DESC = Sets a cooldown for all messages sent by the bot.
+BASIC_MODE_DESC = Disables all GD server connectivity for requests.
+
+//Spam Protection Settings
+
+CAPITAL_LETTER_SPAM = Capital Letter Filter
+CAPITAL_LETTERS = Capital Letters
+SYMBOL_SPAM = Symbol Filter
+SYMBOLS = Symbols
+EMOTE_SPAM = Emote Filter
+EMOTES = Emotes
+LINK_SPAM = Link Filter
+GIBBERISH_SPAM = Gibberish Filter
+BIG_FOLLOWS_SPAM = Auto Delete Big Follows Spam
+AUTO_DELETE_GD_LEVEL_IDS = Auto Delete GD Level IDs
+
+//Basic Mode
+
+NEXT_MESSAGE_BASIC = @%s, The next level is %s.
+NOW_PLAYING_TOP_MESSAGE_BASIC = @%s, %s is now being played!
+CONFIRMATION_MESSAGE_BASIC = @%s, %s has been added to the queue at position %s!
+CONFIRMATION_MESSAGE_BASIC_ALT = @%s, %s has been added to the queue!
+NOW_PLAYING_MESSAGE_BASIC = Now playing %s, requested by %s!
+
+//Antispam
+
+ANTISPAM_COUNT_INPUT = Count:
+ANTISPAM_COUNT_INPUT_DESC = Minimum %s before percentage check.
+ANTISPAM_PERCENT_INPUT = Percentage:
+ANTISPAM_PERCENT_INPUT_DESC = Percentage of %s in message allowed.
+ANTISPAM_WARNINGS_INPUT = Warnings:
+ANTISPAM_WARNINGS_INPUT_DESC = Number of Warnings until user is timed out.
+ANTISPAM_TIMEOUT_DURATION_INPUT = Timeout Duration (seconds):
+ANTISPAM_TIMEOUT_DURATION_INPUT_DESC = Amount of time the user will be timed out for.
+GIBBERISH_THRESHOLD_INPUT = Gibberish Detection Threshold
+GIBBERISH_THRESHOLD_INPUT_DESC = Gibberish detection accuracy (very finicky).
+
+//Custom Theme Settings
+
+BACKGROUND_MAIN = Background
+BACKGROUND_SECONDARY = Background Secondary
+BACKGROUND_SPECIAL = Background Special
+BUTTONS_MAIN = Buttons
+BUTTONS_SECONDARY = Buttons Secondary
+BUTTONS_SELECT = Button Select
+BUTTONS_HOVER = Button Hover
+FOREGROUND_MAIN = Foreground
+FOREGROUND_SECONDARY = Foreground Secondary
+IS_LIGHT_SETTING = Dark Icons
+
+//Command Editor New
+
+EDIT_COMMAND = Edit Command
+ADD_COMMAND = Add Command
+COMMAND_NAME_INPUT = Command:
+COMMAND_NAME_INPUT_DESC = The command name, what must be typed in chat to run the command.
+MESSAGE_INPUT = Message:
+MESSAGE_INPUT_DESC = The response sent in chat after the command is entered.
+USER_LEVEL_SETTING = User Level:
+COOLDOWN_LABEL = Cooldown:
+ALIAS_INPUT = Aliases:
+ALIAS_INPUT_DESC = Other command names that will activate this command (comma separated).
+
+//Timer Editor
+
+EDIT_TIMER = Edit Timer
+ADD_TIMER= Add Timer
+TIMER_NAME_INPUT = Timer Name:
+TIMER_NAME_INPUT_DESC = The timer name, used to identify the timer.
+TIMER_MESSAGE_INPUT = Message:
+TIMER_MESSAGE_INPUT_DESC = The response sent in chat after the timer executes.
+INTERVAL_LABEL = Interval:
+LINES_LABEL = Messages:
+RUN_COMMAND_INPUT = Command:
+RUN_COMMAND_INPUT_DESC = A command that will activate when the timer executes, overrides message.
+INTERVAL = Every %s minutes
+LINES_TEXT = %s messages
+INTERVAL_DESCRIPTION = Interval where timer repeats. (Exact per hour, example: 15 minutes is 2:00, 2:15, 2:30...)
+LINES_DESCRIPTION = Amount of messages within 5 minutes for a timer to execute.

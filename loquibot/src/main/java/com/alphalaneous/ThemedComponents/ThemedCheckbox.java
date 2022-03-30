@@ -22,11 +22,11 @@ public class ThemedCheckbox extends JPanel {
 	public ThemedCheckbox(String label) {
 		setLayout(null);
 		text.setTextLang(label);
-		text.setForeground(Defaults.FOREGROUND);
+		text.setForeground(Defaults.FOREGROUND_A);
 		check.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
 		checkSymbol.setForeground(Color.WHITE);
 		checkSymbol.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
-		hover.setForeground(Defaults.FOREGROUND);
+		hover.setForeground(Defaults.FOREGROUND_A);
 		hover.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
 		checkSymbol.setVisible(false);
 		hover.setVisible(false);
@@ -36,12 +36,14 @@ public class ThemedCheckbox extends JPanel {
 		add(text);
 		setBackground(new Color(0, 0, 0, 0));
 		setOpaque(false);
-		check.setForeground(Color.LIGHT_GRAY);
+		check.setForeground(Defaults.FOREGROUND_B);
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					check.setText("\uE73B");
-					check.setForeground(Color.LIGHT_GRAY);
+					check.setBounds(0, 1, 30, 30);
+					check.setFont(check.getFont().deriveFont(16f));
+					check.setForeground(Defaults.FOREGROUND_B);
 					hover.setVisible(false);
 				}
 			}
@@ -50,11 +52,14 @@ public class ThemedCheckbox extends JPanel {
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					if (isChecked) {
 						check.setText("\uE922");
-						check.setForeground(Color.LIGHT_GRAY);
+						check.setBounds(0, 1, 30, 30);
+						check.setForeground(Defaults.FOREGROUND_B);
 						checkSymbol.setVisible(false);
 						isChecked = false;
 					} else {
 						check.setText("\uE73B");
+						check.setBounds(-1, 1, 30, 30);
+						check.setFont(check.getFont().deriveFont(18f));
 						check.setForeground(Defaults.ACCENT);
 						checkSymbol.setVisible(true);
 						isChecked = true;
@@ -70,10 +75,14 @@ public class ThemedCheckbox extends JPanel {
 			public void mouseExited(MouseEvent e) {
 				if (!isChecked) {
 					check.setText("\uE922");
-					check.setForeground(Color.LIGHT_GRAY);
+					check.setBounds(0, 1, 30, 30);
+					check.setFont(check.getFont().deriveFont(16f));
+					check.setForeground(Defaults.FOREGROUND_B);
 					checkSymbol.setVisible(false);
 				} else {
 					check.setText("\uE73B");
+					check.setBounds(-1, 1, 30, 30);
+					check.setFont(check.getFont().deriveFont(18f));
 					check.setForeground(Defaults.ACCENT);
 					checkSymbol.setVisible(true);
 				}
@@ -90,7 +99,7 @@ public class ThemedCheckbox extends JPanel {
 	}
 
 	public void setText(String textA) {
-		text.setText(textA);
+		text.setTextLang(textA);
 	}
 
 	public boolean getSelectedState() {
@@ -101,10 +110,14 @@ public class ThemedCheckbox extends JPanel {
 		this.isChecked = checked;
 		if (!isChecked) {
 			check.setText("\uE922");
-			check.setForeground(Color.LIGHT_GRAY);
+			check.setBounds(0, 1, 30, 30);
+			check.setFont(check.getFont().deriveFont(16f));
+			check.setForeground(Defaults.FOREGROUND_B);
 			checkSymbol.setVisible(false);
 		} else {
 			check.setText("\uE73B");
+			check.setBounds(-1, 1, 30, 30);
+			check.setFont(check.getFont().deriveFont(18f));
 			check.setForeground(Defaults.ACCENT);
 			checkSymbol.setVisible(true);
 		}
@@ -112,20 +125,17 @@ public class ThemedCheckbox extends JPanel {
 
 	public void refresh() {
 		if (!isChecked) {
-			check.setForeground(Color.LIGHT_GRAY);
+			check.setForeground(Defaults.FOREGROUND_B);
 		} else {
 			check.setForeground(Defaults.ACCENT);
 		}
-		text.setForeground(Defaults.FOREGROUND);
+		text.setForeground(Defaults.FOREGROUND_A);
 		text.setFont(getFont());
-		if (getFont().getName().equalsIgnoreCase("bahnschrift")) {
-			text.setBounds(0, (getHeight() / 2) - (text.getPreferredSize().height / 2) + 1, getWidth(), text.getPreferredSize().height + 5);
-		} else {
-			text.setBounds(0, (getHeight() / 2) - (text.getPreferredSize().height / 2) - 2, getWidth(), text.getPreferredSize().height + 5);
-		}
-		check.setBounds(getWidth() - 20, 0, 30, 30);
-		checkSymbol.setBounds(getWidth() - 20, 0, 30, 30);
-		hover.setForeground(Defaults.FOREGROUND);
-		hover.setBounds(getWidth() - 20, 0, 30, 30);
+		text.setBounds(30, (getHeight() / 2) - (text.getPreferredSize().height / 2), getWidth(), text.getPreferredSize().height + 5);
+
+		check.setBounds(0, 1, 30, 30);
+		checkSymbol.setBounds(0, 1, 30, 30);
+		hover.setForeground(Defaults.FOREGROUND_A);
+		hover.setBounds(0, 1, 30, 30);
 	}
 }

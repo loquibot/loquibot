@@ -1,9 +1,16 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.LevelsPanel;
 import com.alphalaneous.SettingsPanels.AccountSettings;
+import com.alphalaneous.Tabs.RequestsTab;
 import com.mb3364.twitch.api.Twitch;
 import com.mb3364.twitch.api.auth.Scopes;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,17 +22,14 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.OutputStream;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static io.netty.buffer.Unpooled.wrappedBuffer;
 
 public class APIs {
 
@@ -35,6 +39,7 @@ public class APIs {
 	static AtomicBoolean success = new AtomicBoolean(false);
 
 	static void setAllViewers() {
+
 		try {
 			URL url = new URL("https://tmi.twitch.tv/group/user/" + Settings.getSettings("channel").asString().toLowerCase() + "/chatters");
 			URLConnection conn = url.openConnection();
@@ -108,6 +113,7 @@ public class APIs {
 		return rewards;
 	}
 
+	@SuppressWarnings("InfiniteLoopStatement")
 	static void checkViewers() {
 			while (true) {
 				try {
@@ -121,8 +127,14 @@ public class APIs {
 					}
 					JSONObject viewers = new JSONObject(builder.toString());
 					String[] types = {"broadcaster", "vips", "staff", "moderators", "admins", "global_mods", "viewers"};
-					for (int i = 0; i < Requests.levels.size(); i++) {
-						LevelsPanel.getButton(i).setViewership(false);
+					for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+						if(!Settings.getSettings("basicMode").asBoolean()) {
+							RequestsTab.getLevelsPanel().getButton(i).setViewership(false);
+						}
+						else{
+							RequestsTab.getLevelsPanel().getButtonBasic(i).setViewership(false);
+
+						}
 					}
 
 					for (String type : types) {
@@ -130,9 +142,16 @@ public class APIs {
 							JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
 							for (int i = 0; i < viewerList.length(); i++) {
 								String viewer = viewerList.get(i).toString().replaceAll("\"", "");
-								for (int k = 0; k < Requests.levels.size(); k++) {
-									if (LevelsPanel.getButton(k).getRequester().equalsIgnoreCase(viewer)) {
-										LevelsPanel.getButton(k).setViewership(true);
+								for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+									if(!Settings.getSettings("basicMode").asBoolean()) {
+										if (RequestsTab.getLevelsPanel().getButton(k).getRequester().equalsIgnoreCase(viewer)) {
+											RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
+										}
+									}
+									else {
+										if (RequestsTab.getLevelsPanel().getButtonBasic(k).getRequester().equalsIgnoreCase(viewer)) {
+											RequestsTab.getLevelsPanel().getButtonBasic(k).setViewership(true);
+										}
 									}
 								}
 							}
@@ -141,40 +160,36 @@ public class APIs {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				try {
-					Thread.sleep(120000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				Utilities.sleep(120000);
 			}
 	}
 
-	private static final ArrayList<String> isFollowingCache = new ArrayList<>();
+	private static final ArrayList<Long> isFollowingCache = new ArrayList<>();
 	private static final HashMap<String, String> userIDCache = new HashMap<>();
 
-	static boolean isFollowing(String user) {
-		if(isFollowingCache.contains(user)){
-			return true;
+	static boolean isNotFollowing(String user, long ID) {
+		if(isFollowingCache.contains(ID)){
+			return false;
 		}
+		if(ID == -1) return false;
 		else {
 			try {
-				JSONObject isFollowing = twitchAPI("https://api.twitch.tv/helix/users/follows?from_id=" + getIDs(user) + "&to_id=" + getUserID());
+				JSONObject isFollowing = twitchAPI("https://api.twitch.tv/helix/users/follows?from_id=" + ID + "&to_id=" + getUserID());
 				if (user.equalsIgnoreCase(Settings.getSettings("channel").asString())) {
-					return true;
+					return false;
 				}
 				if (isFollowing != null) {
 					String str = isFollowing.get("total").toString();
-					System.out.println(str);
 					if (str.equalsIgnoreCase("1")) {
-						isFollowingCache.add(user);
-						return true;
+						isFollowingCache.add(ID);
+						return false;
 					}
 				}
 			} catch (Exception e) {
 				Main.sendMessage("🔴 | @" + user + " failed to check following status.");
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public static String fetchURL(String url) {
@@ -204,9 +219,8 @@ public class APIs {
 
 		JSONObject nameObj = twitchAPI("https://api.twitch.tv/helix/users");
 		assert nameObj != null;
-		System.out.println(nameObj);
 		try {
-			return nameObj.getJSONArray("data").getJSONObject(0).get("display_name").toString().replaceAll("\"", "");
+			return nameObj.getJSONArray("data").getJSONObject(0).get("login").toString().replaceAll("\"", "");
 		}
 		catch (JSONException e){
 			e.printStackTrace();
@@ -215,15 +229,33 @@ public class APIs {
 
 	}
 
-	public static String getPFP() {
+	public static JSONObject getChannelInfo(){
+		return twitchAPI("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id);
+	}
 
-		JSONObject nameObj = twitchAPI("https://api.twitch.tv/helix/users");
-		assert nameObj != null;
-
-		//String url = String.valueOf(nameObj.asObject().get("data").asArray().get(0).asObject().get("profile_image_url")).replaceAll("\"", "");
-
-		return nameObj.getJSONArray("data").getJSONObject(0).get("profile_image_url").toString().replaceAll("\"", "");
-
+	private static String sendTwitchRequest(String URL, String data){
+		try {
+			CloseableHttpClient http = HttpClientBuilder.create().build();
+			HttpPatch updateRequest = new HttpPatch(URL);
+			updateRequest.setHeader("Authorization", "Bearer " + Settings.getSettings("oauth").asString());
+			updateRequest.setHeader("Client-ID", "fzwze6vc6d2f7qodgkpq2w8nnsz3rl");
+			updateRequest.setHeader("Content-Type", "application/json");
+			updateRequest.setEntity(new StringEntity(data));
+			HttpResponse response = http.execute(updateRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if(statusCode != 204) {
+				if(statusCode >= 500 && statusCode < 600){
+					return "Internal Twitch Error";
+				}
+				else if(statusCode >= 400 && statusCode < 500 ) {
+					return "Please refresh your Twitch account in Settings > Accounts to use this.";
+				}
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private static JSONObject twitchAPI(String URL) {
@@ -238,6 +270,7 @@ public class APIs {
 			return new JSONObject(br.readLine());
 		}
 		catch (Exception e){
+			setOauth();
 			e.printStackTrace();
 			return null;
 		}
@@ -250,7 +283,7 @@ public class APIs {
 			userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + Settings.getSettings("channel").asString());
 		} catch (JSONException e) {
 			e.printStackTrace();
-			Settings.writeSettings("channel", getChannel());
+			Settings.writeSettings("channel", Objects.requireNonNull(getChannel()));
 			userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + Settings.getSettings("channel").asString());
 		}
 		assert userID != null;
@@ -313,30 +346,47 @@ public class APIs {
 		success.set(false);
 		try {
 			Twitch twitch = new Twitch();
-			URI callbackUri = new URI("http://127.0.0.1:23522");
+			URI callbackUri = new URI("http://localhost:23522");
 
 			twitch.setClientId("fzwze6vc6d2f7qodgkpq2w8nnsz3rl");
+
 			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
 					twitch.getClientId(), callbackUri, Scopes.USER_READ
-			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+chat:read+user_read&force_verify=true");
-			Runtime rt = Runtime.getRuntime();
-			rt.exec("rundll32 url.dll,FileProtocolHandler " + authUrl);
+			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+channel:manage:broadcast+chat:read+user_read&force_verify=true");
+			Utilities.openURL(authUrl);
 			if (twitch.auth().awaitAccessToken()) {
 				Settings.writeSettings("oauth", twitch.auth().getAccessToken());
-				Settings.writeSettings("channel", getChannel());
+				Settings.writeSettings("channel", Objects.requireNonNull(getChannel()));
+				TwitchAccount.setInfo();
 				AccountSettings.refreshTwitch(Settings.getSettings("channel").asString());
 				Main.refreshBot();
-				TwitchAccount.setInfo();
 				success.set(true);
 			} else {
 				System.out.println(twitch.auth().getAuthenticationError());
 
 			}
-			if (!GDBoardBot.initialConnect) {
-				GDBoardBot.initialConnect = true;
+			if (!loquibotBot.initialConnect) {
+				loquibotBot.initialConnect = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public static String setTitle(String title){
+		JSONObject newChannelInfo = new JSONObject();
+		newChannelInfo.put("title", title);
+		return sendTwitchRequest("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id, newChannelInfo.toString());
+	}
+	public static String setGame(String game){
+		JSONObject newChannelInfo = new JSONObject();
+		JSONObject gameInfo = twitchAPI("https://api.twitch.tv/helix/games?name=" + game);
+		assert gameInfo != null;
+		if(gameInfo.getJSONArray("data").length() == 0){
+			return "no_game";
+		}
+		String gameID = gameInfo.getJSONArray("data").getJSONObject(0).getString("id");
+
+		newChannelInfo.put("game_id", gameID);
+		return sendTwitchRequest("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id, newChannelInfo.toString());
 	}
 }

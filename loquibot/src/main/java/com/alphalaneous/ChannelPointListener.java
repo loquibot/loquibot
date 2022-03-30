@@ -1,5 +1,8 @@
 package com.alphalaneous;
 
+import com.alphalaneous.FileUtils.FileList;
+import com.alphalaneous.FileUtils.GetInternalFiles;
+import com.alphalaneous.FileUtils.InternalFile;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
@@ -19,25 +22,6 @@ import java.util.stream.Stream;
 
 public class ChannelPointListener extends WebSocketClient {
 
-	private static URI uri;
-	private static final Path myPath;
-
-	static {
-		try {
-			uri = Main.class.getResource("/points/").toURI();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	static {
-		if (uri.getScheme().equals("jar")) {
-			myPath = BotHandler.fileSystem.getPath("/points/");
-		} else {
-			myPath = Paths.get(uri);
-		}
-
-	}
 
 	private boolean pingSuccess = false;
 
@@ -62,11 +46,7 @@ public class ChannelPointListener extends WebSocketClient {
 			} catch (NullPointerException e) {
 				e.printStackTrace();
 			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Utilities.sleep(1000);
 		}
 		new Thread(() -> {
 			while (true) {
@@ -74,11 +54,7 @@ public class ChannelPointListener extends WebSocketClient {
 						"  \"type\": \"PING\"\n" +
 						"}");
 				pingSuccess = false;
-				try {
-					Thread.sleep(300000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				Utilities.sleep(300000);
 				if (!pingSuccess) {
 					send("{\n" +
 							"  \"type\": \"RECONNECT\"\n" +
@@ -113,7 +89,7 @@ public class ChannelPointListener extends WebSocketClient {
 				boolean isUserinput = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("reward").getBoolean("is_user_input_required");
 				String userInput = "";
 				if (isUserinput) {
-					userInput = new JSONObject().getJSONObject("data").getJSONObject("redemption").get("user_input").toString().replaceAll("\"", "");
+					userInput = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").get("user_input").toString().replaceAll("\"", "");
 					System.out.println(redemption + " redeemed by " + username + " with " + userInput);
 				} else {
 					System.out.println(redemption + " redeemed by " + username);
@@ -121,7 +97,7 @@ public class ChannelPointListener extends WebSocketClient {
 				String finalUserInput = userInput;
 				try {
 					boolean comExists = false;
-					Path comPath = Paths.get(Defaults.saveDirectory + "/GDBoard/points/");
+					Path comPath = Paths.get(Defaults.saveDirectory + "/loquibot/points/");
 					if (Files.exists(comPath)) {
 						Stream<Path> walk1 = Files.walk(comPath, 1);
 						for (Iterator<Path> it = walk1.iterator(); it.hasNext(); ) {
@@ -133,7 +109,7 @@ public class ChannelPointListener extends WebSocketClient {
 								new Thread(() -> {
 									try {
 										while (BotHandler.processing) {
-											Thread.sleep(50);
+											Utilities.sleep(50);
 										}
 										Main.sendMessage(Command.run(username, finalUserInput, Files.readString(path, StandardCharsets.UTF_8)));
 									} catch (Exception e) {
@@ -143,34 +119,12 @@ public class ChannelPointListener extends WebSocketClient {
 							}
 						}
 					}
-
 					if (!comExists) {
-
-						Stream<Path> walk = Files.walk(myPath, 1);
-						for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
-							Path path = it.next();
-							String[] file = path.toString().split("/");
-							String fileName = file[file.length - 1];
-							System.out.println(path.toString());
-							if (fileName.equalsIgnoreCase(redemption + ".js")) {
-
-								InputStream is = Main.class
-										.getClassLoader().getResourceAsStream(path.toString().substring(1));
-								assert is != null;
-								InputStreamReader isr = new InputStreamReader(is);
-								BufferedReader br = new BufferedReader(isr);
-								StringBuilder function = new StringBuilder();
-								String line;
-
-								while ((line = br.readLine()) != null) {
-									function.append(line);
-								}
-								is.close();
-								isr.close();
-								br.close();
-
-
-								Main.sendMessage(Command.run(username, finalUserInput, function.toString()));
+						GetInternalFiles getInternalFiles = new GetInternalFiles("points/");
+						FileList files = getInternalFiles.getFiles();
+						for (InternalFile file : files) {
+							if (file.getName().equalsIgnoreCase(redemption + ".js")) {
+								Main.sendMessage(Command.run(username, finalUserInput, file.getString()));
 								break;
 							}
 						}

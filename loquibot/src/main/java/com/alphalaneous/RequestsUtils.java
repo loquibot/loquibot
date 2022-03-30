@@ -2,17 +2,19 @@ package com.alphalaneous;
 
 import com.alphalaneous.Panels.*;
 import com.alphalaneous.SettingsPanels.*;
+import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.TwitchBot.ChatMessage;
 import jdash.common.DemonDifficulty;
 import jdash.common.Difficulty;
 import jdash.common.Length;
 import jdash.common.entity.GDLevel;
 import jdash.common.entity.GDSong;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
-import java.net.URI;
 import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -23,13 +25,25 @@ import java.util.stream.Stream;
 public class RequestsUtils {
 
 	static boolean bwomp = false;
-	private static final String[] gdCommands = {"!gd", "!kill", "!block", "!blockuser", "!unblock", "!unblockuser", "!clear", "!info", "!move", "!next", "!position", "!queue", "!remove", "!request", "!song", "!stop", "!toggle", "!top", "!wronglevel"};
 
-	static void forceAdd(LevelData data) {
-		Requests.levels.add(data);
+	public static JSONObject getInfoObject(LevelData data){
+		JSONObject object = new JSONObject();
+		if(data != null) {
+			object.put("type", "level");
+			object.put("difficulty", data.getSimpleDifficulty());
+			object.put("stars", data.getGDLevel().stars());
+			object.put("likes", data.getGDLevel().likes());
+			object.put("downloads", data.getGDLevel().downloads());
+			object.put("length", data.getGDLevel().length());
+		}
+		else {
+			object.put("type", "level");
+			object.put("status", "empty");
+		}
+		return object;
 	}
 
-	static void forceAdd(String name, String author, long levelID, String difficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, int songID, String songName, String songAuthor, int objects, long original, boolean vulgar, boolean image, int password, String upload, String update, boolean verifiedCoins) {
+	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean vulgar, boolean image, boolean verifiedCoins) {
 
 		GDLevel level = new GDLevel() {
 			@Override
@@ -59,7 +73,7 @@ public class RequestsUtils {
 
 			@Override
 			public DemonDifficulty demonDifficulty() {
-				return null;
+				return DemonDifficulty.valueOf(demonDifficulty);
 			}
 
 			@Override
@@ -89,7 +103,15 @@ public class RequestsUtils {
 
 			@Override
 			public Length length() {
-				return Length.parse(length);
+				Length length1;
+				switch (length){
+					case "SHORT": length1 = Length.SHORT; break;
+					case "MEDIUM": length1 = Length.MEDIUM; break;
+					case "LONG": length1 = Length.LONG; break;
+					case "XL": length1 = Length.XL; break;
+					default: length1 = Length.TINY; break;
+				}
+				return length1;
 			}
 
 			@Override
@@ -139,7 +161,7 @@ public class RequestsUtils {
 
 			@Override
 			public Optional<Long> songId() {
-				return Optional.of((long)songID);
+				return Optional.of(songID);
 			}
 
 			@Override
@@ -178,7 +200,7 @@ public class RequestsUtils {
 			}
 		};
 		LevelData levelData = new LevelData();
-
+		levelData.setLevelData(level);
 		levelData.setEpic(epic);
 		if (featuredScore > 0) {
 			levelData.setFeatured();
@@ -186,99 +208,93 @@ public class RequestsUtils {
 		levelData.setMessage("Reloaded");
 		levelData.setRequester(requester);
 
-		levelData.setPassword(password);
+		RequestsTab.addRequest(new LevelButton(levelData));
 
-		if (vulgar) {
-			levelData.setContainsVulgar();
+		if (RequestsTab.getQueueSize() == 1) {
+			LevelDetailsPanel.setPanel(levelData);
 		}
-		if (image) {
-			levelData.setContainsImage();
-		}
-
-		Requests.levels.add(levelData);
-		//LevelsPanel.addButton(levelData);
-		if (Requests.levels.size() == 1) {
-			RequestFunctions.containsBadStuffCheck();
-		}
-		LevelsPanel.setName(Requests.levels.size());
-		levelData.setAnalyzed();
-		LevelsPanel.updateUI(levelID, vulgar, image, true);
-		OutputSettings.setOutputStringFile(parseInfoString(OutputSettings.outputString, 0));
-		InfoPanel.refreshInfo();
+		RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
 	}
 
 	@SuppressWarnings("unused")
 	public static String getLevel(int level, String attribute) {
 
-		String result = "";
+		String result;
 		try {
-			switch (attribute) {
-				case "name":
-					result = Requests.levels.get(level).getLevelData().name();
-					break;
-				case "id":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().id());
-					break;
-				case "author":
-					result = Requests.levels.get(level).getLevelData().creatorName().get();
-					break;
-				case "requester":
-					result = Requests.levels.get(level).getRequester();
-					break;
-				case "difficulty":
-					result = Requests.levels.get(level).getLevelData().difficulty().toString();
-					break;
-				case "likes":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().likes());
-					break;
-				case "downloads":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().downloads());
-					break;
-				case "description":
-					result = Requests.levels.get(level).getLevelData().description();
-					break;
-				case "songName":
-					result = Requests.levels.get(level).getLevelData().song().get().title();
-					break;
-				case "songID":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().song().get().id());
-					break;
-				case "songArtist":
-					result = Requests.levels.get(level).getLevelData().song().get().artist();
-					break;
-				case "songURL":
-					result = Requests.levels.get(level).getLevelData().song().get().downloadUrl().get();
-					break;
-				case "stars":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().stars());
-					break;
-				case "epic":
-					result = String.valueOf(Requests.levels.get(level).getEpic());
-					break;
-				case "version":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().levelVersion());
-					break;
-				case "length":
-					result = Requests.levels.get(level).getLevelData().length().toString();
-					break;
-				case "coins":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().coinCount());
-					break;
-				case "objects":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().objectCount());
-					break;
-				case "original":
-					result = String.valueOf(Requests.levels.get(level).getLevelData().originalLevelId());
-					break;
-				case "image":
-					result = String.valueOf(Requests.levels.get(level).getContainsImage());
-					break;
-				case "vulgar":
-					result = String.valueOf(Requests.levels.get(level).getContainsVulgar());
-					break;
-				case "password":
-					result = String.valueOf(Requests.levels.get(level).getPassword());
-					break;
+			if(!Settings.getSettings("basicMode").asBoolean()) {
+				switch (attribute) {
+					case "name":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().name();
+						break;
+					case "id":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().id());
+						break;
+					case "author":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().get();
+						break;
+					case "requester":
+						result = RequestsTab.getRequest(level).getLevelData().getRequester();
+						break;
+					case "difficulty":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().difficulty().toString();
+						break;
+					case "likes":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().likes());
+						break;
+					case "downloads":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().downloads());
+						break;
+					case "description":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().description();
+						break;
+					case "songName":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().title();
+						break;
+					case "songID":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().id());
+						break;
+					case "songArtist":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().artist();
+						break;
+					case "songURL":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().downloadUrl().get();
+						break;
+					case "stars":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().stars());
+						break;
+					case "epic":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getEpic());
+						break;
+					case "version":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().levelVersion());
+						break;
+					case "length":
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().length().toString();
+						break;
+					case "coins":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().coinCount());
+						break;
+					case "objects":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount());
+						break;
+					case "original":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().originalLevelId());
+						break;
+					case "image":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getContainsImage());
+						break;
+					case "vulgar":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getContainsVulgar());
+						break;
+					case "password":
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getPassword());
+						break;
+					default:
+						result = "Error: Invalid type.";
+				}
+			}
+			else{
+				result = String.valueOf(RequestsTab.getRequestBasic(level).ID);
 			}
 		} catch (Exception e) {
 			result = "Exception: " + e;
@@ -292,23 +308,7 @@ public class RequestsUtils {
 	}
 
 	public static int getSize() {
-		return Requests.levels.size();
-	}
-
-	@SuppressWarnings("unused")
-	public static void kill() {
-		GDMod.run("kill");
-	}
-
-	@SuppressWarnings("unused")
-	public static void crash() {
-		try {
-			ProcessBuilder pb = new ProcessBuilder("taskkill", "/IM", "GeometryDash.exe", "/F").redirectErrorStream(true);
-			pb.start();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return RequestsTab.getQueueSize();
 	}
 
 	@SuppressWarnings("unused")
@@ -318,16 +318,10 @@ public class RequestsUtils {
 
 	@SuppressWarnings("unused")
 	public static void clear() {
-		/*for (int i = 0; i < Requests.levels.size(); i++) {
-			LevelsPanel.removeButton();
-		}*/
-		Requests.levels.clear();
-		LevelsPanel.refreshButtons();
+		RequestsTab.clearRequests();
 		RequestFunctions.saveFunction();
-
-		InfoPanel.refreshInfo();
-		CommentsPanel.unloadComments(true);
-		LevelsPanel.setName(Requests.levels.size());
+		LevelDetailsPanel.setPanel(null);
+		RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
 	}
 
 	public static String remove(String user, boolean isMod, int intArg) {
@@ -335,25 +329,23 @@ public class RequestsUtils {
 			return "";
 		}
 		String response = "";
-		for (int i = 0; i < Requests.levels.size(); i++) {
+		for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
 			try {
-				if (Requests.levels.get(i).getLevelData().id() == Requests.levels.get(intArg - 1).getLevelData().id()
-						&& (isMod || String.valueOf(user).equalsIgnoreCase(Requests.levels.get(i).getRequester()))) {
-					response = "@" + user + ", " + Requests.levels.get(i).getLevelData().name() + " (" + Requests.levels.get(i).getLevelData().id() + ") has been removed!";
+				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().id() == RequestsTab.getRequest(intArg - 1).getLevelData().getGDLevel().id()
+						&& (isMod || String.valueOf(user).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester()))) {
+					response = "@" + user + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
 					int sel = LevelButton.selectedID-1;
-
-					Requests.levels.get(i).remove();
+					RequestsTab.removeRequest(i);
 
 					RequestFunctions.saveFunction();
-					LevelsPanel.setSelect(sel);
-					InfoPanel.refreshInfo();
+					RequestsTab.getLevelsPanel().setSelect(sel);
 					new Thread(() -> {
-						CommentsPanel.unloadComments(true);
-						CommentsPanel.loadComments(0, false);
+						//RequestsTab.unloadComments(true);
+						//RequestsTab.loadComments(0, false);
 					}).start();
 					if (i == 0) {
 						StringSelection selection = new StringSelection(
-								String.valueOf(Requests.levels.get(0).getLevelData().id()));
+								String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
 						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 						clipboard.setContents(selection, selection);
 					}
@@ -361,28 +353,28 @@ public class RequestsUtils {
 			} catch (Exception ignored) {
 			}
 		}
-		LevelsPanel.setName(Requests.levels.size());
+		RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
 		return response;
 	}
 
 	@SuppressWarnings("unused")
 	public static String removeLatest(String user) {
 		String response = "";
-		for (int i = Requests.levels.size() - 1; i >= 0; i--) {
+		for (int i = RequestsTab.getQueueSize() - 1; i >= 0; i--) {
 			try {
-				if (String.valueOf(user).equalsIgnoreCase(Requests.levels.get(i).getRequester())) {
+				if (String.valueOf(user).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester())) {
 					if (i == LevelButton.selectedID) {
 						return "";
 					}
-					response = "@" + user + ", " + Requests.levels.get(i).getLevelData().name() + " (" + Requests.levels.get(i).getLevelData().id() + ") has been removed!";
-					Requests.levels.get(i).remove();
+					response = "@" + user + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
+					RequestsTab.removeRequest(i);
 					RequestFunctions.saveFunction();
 					break;
 				}
 			} catch (Exception ignored) {
 			}
 		}
-		LevelsPanel.setName(Requests.levels.size());
+		RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
 		return response;
 	}
 
@@ -391,9 +383,9 @@ public class RequestsUtils {
 		Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(message);
 		if (m.find()) {
 			try {
-				String[] msgs = message.split(" ");
+				String[] messages = message.split(" ");
 				String mention = "";
-				for (String s : msgs) {
+				for (String s : messages) {
 					if (s.contains("@")) {
 						mention = s;
 						break;
@@ -411,28 +403,8 @@ public class RequestsUtils {
 	}
 
 	@SuppressWarnings("unused")
-	public static void rick() {
-		Board.rick();
-	}
-
-	@SuppressWarnings("unused")
-	public static void stopRick() {
-		Board.stopRick();
-	}
-
-	@SuppressWarnings("unused")
 	public static void toggleBwomp() {
 		bwomp = !bwomp;
-	}
-
-	@SuppressWarnings("unused")
-	public static void knock() {
-		Board.knock();
-	}
-
-	@SuppressWarnings("unused")
-	public static void stopKnock() {
-		Board.stopKnock();
 	}
 
 	@SuppressWarnings("unused")
@@ -448,13 +420,20 @@ public class RequestsUtils {
 	@SuppressWarnings("unused")
 	public static void movePosition(int position, int newPosition) {
 		System.out.println(newPosition);
-		LevelsPanel.movePosition(position, newPosition);
+		RequestsTab.getLevelsPanel().movePosition(position, newPosition);
 	}
 
 	public static int getPosFromID(long ID) {
-		for (int i = 0; i < LevelsPanel.getSize(); i++) {
-			if (LevelsPanel.getButton(i).getID() == ID) {
-				return i;
+		for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+			if(!Settings.getSettings("basicMode").asBoolean()) {
+				if (RequestsTab.getLevelsPanel().getButton(i).getID() == ID) {
+					return i;
+				}
+			}
+			else {
+				if (RequestsTab.getLevelsPanel().getButtonBasic(i).getID() == ID) {
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -466,27 +445,25 @@ public class RequestsUtils {
 		try {
 			boolean start = false;
 			int blockedID = Integer.parseInt(arguments[1]);
-			if (blockedID == Requests.levels.get(0).getLevelData().id() && Requests.levels.size() > 1) {
+			if (blockedID == RequestsTab.getRequest(0).getLevelData().getGDLevel().id() && RequestsTab.getQueueSize() > 1) {
 				StringSelection selection = new StringSelection(
-						String.valueOf(Requests.levels.get(1).getLevelData().id()));
+						String.valueOf(RequestsTab.getRequest(1).getLevelData().getGDLevel().id()));
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				clipboard.setContents(selection, selection);
 				start = true;
 			}
-			for (int i = 0; i < Requests.levels.size(); i++) {
-				if (Requests.levels.get(i).getLevelData().id() == blockedID) {
-					//LevelsPanel.removeButton(i);
-					Requests.levels.remove(i);
-					InfoPanel.refreshInfo();
+			for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().id() == blockedID) {
+					RequestsTab.removeRequest(i);
 					new Thread(() -> {
-						CommentsPanel.unloadComments(true);
-						CommentsPanel.loadComments(0, false);
+						//RequestsTab.unloadComments(true);
+						//RequestsTab.loadComments(0, false);
 					}).start();
 					RequestFunctions.saveFunction();
 					break;
 				}
 			}
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\blocked.txt");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blocked.txt");
 			if (!Files.exists(file)) {
 				Files.createFile(file);
 			}
@@ -499,15 +476,10 @@ public class RequestsUtils {
 			}
 			sc.close();
 
-			try {
-				Files.write(file, (blockedID + "\n").getBytes(), StandardOpenOption.APPEND);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
 			response = Utilities.format("$BLOCK_MESSAGE$", user, arguments[1]);
-			BlockedSettings.addButton(Long.parseLong(arguments[1]));
+			BlockedIDSettings.addBlockedLevel(arguments[1]);
 			if (start) {
-				LevelsPanel.setSelect(0);
+				RequestsTab.getLevelsPanel().setSelect(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -522,7 +494,7 @@ public class RequestsUtils {
 		String response = "";
 		try {
 			boolean exists = false;
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\blocked.txt");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blocked.txt");
 			if (Files.exists(file)) {
 				Scanner sc = new Scanner(file);
 				while (sc.hasNextLine()) {
@@ -534,18 +506,8 @@ public class RequestsUtils {
 				sc.close();
 
 				if (exists) {
-					Path temp = Paths.get(Defaults.saveDirectory + "\\GDBoard\\_temp_");
-					PrintWriter out = new PrintWriter(new FileWriter(temp.toFile()));
-					Files.lines(file)
-							.filter(line -> !line.contains(unblocked))
-							.forEach(out::println);
-					out.flush();
-					out.close();
-					Files.delete(file);
-					Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\GDBoard\\blocked.txt"), StandardCopyOption.REPLACE_EXISTING);
-					BlockedSettings.removeID(arguments[1]);
+					BlockedIDSettings.removeBlockedLevel(arguments[1]);
 					response = Utilities.format("$UNBLOCK_MESSAGE$", user, arguments[1]);
-					BlockedSettings.removeID(unblocked);
 				} else {
 					response = Utilities.format("$UNBLOCK_DOESNT_EXISTS_MESSAGE$", user);
 				}
@@ -562,7 +524,7 @@ public class RequestsUtils {
 		String response;
 		try {
 			String blockedUser = arguments[1];
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\blockedUsers.txt");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blockedUsers.txt");
 			if (!Files.exists(file)) {
 				Files.createFile(file);
 			}
@@ -574,13 +536,9 @@ public class RequestsUtils {
 				}
 			}
 			sc.close();
-			try {
-				Files.write(file, (blockedUser + "\n").getBytes(), StandardOpenOption.APPEND);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+
 			response = Utilities.format("$BLOCK_USER_MESSAGE$", user, arguments[1]);
-			BlockedUserSettings.addButton(arguments[1]);
+			BlockedUserSettings.addBlockedUser(arguments[1]);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -596,7 +554,7 @@ public class RequestsUtils {
 
 		try {
 			boolean exists = false;
-			Path file = Paths.get(Defaults.saveDirectory + "\\GDBoard\\blockedUsers.txt");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blockedUsers.txt");
 			if (Files.exists(file)) {
 				Scanner sc = new Scanner(file);
 				while (sc.hasNextLine()) {
@@ -607,18 +565,9 @@ public class RequestsUtils {
 				}
 				sc.close();
 				if (exists) {
-					Path temp = Paths.get(Defaults.saveDirectory + "\\GDBoard\\_temp_");
-					PrintWriter out = new PrintWriter(new FileWriter(temp.toFile()));
-					Files.lines(file)
-							.filter(line -> !line.contains(unblocked))
-							.forEach(out::println);
-					out.flush();
-					out.close();
-					Files.delete(file);
-					Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\GDBoard\\blockedUsers.txt"), StandardCopyOption.REPLACE_EXISTING);
-					BlockedSettings.removeID(arguments[1]);
+
 					response = Utilities.format("$UNBLOCK_USER_MESSAGE$", user, arguments[1]);
-					BlockedUserSettings.removeUser(unblocked);
+					BlockedUserSettings.removeBlockedUser(unblocked);
 				} else {
 					response = Utilities.format("$UNBLOCK_USER_DOESNT_EXISTS_MESSAGE$", user);
 
@@ -633,157 +582,147 @@ public class RequestsUtils {
 
 	@SuppressWarnings("unused")
 
-	public static String getHelp(String user, boolean isMod, String command) {
+	public static String getHelp(ChatMessage message) {
+
+		String command = null;
+		if(message.getArgs().length > 1){
+			command = message.getArgs()[1];
+		}
+		String defaultCommandPrefix = "!";
+		String geometryDashCommandPrefix = "!";
+
+		if(Settings.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = Settings.getSettings("defaultCommandPrefix").asString();
+		if(Settings.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = Settings.getSettings("geometryDashCommandPrefix").asString();
+
 		String info = null;
-		boolean infoExists = false;
-		try {
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/commands/info.txt"))) {
-				Scanner sc2 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/commands/info.txt").toFile());
-				while (sc2.hasNextLine()) {
-					String line = sc2.nextLine();
-					if (line.split("=")[0].replace(" ", "").equalsIgnoreCase(command)) {
-						infoExists = true;
-						info = line.split("=")[1];
-						break;
-					}
+		if(command != null) {
+			for (CommandData commandData : CommandData.getRegisteredCommands()) {
+				String prefix = "";
+				if(commandData.isGD()) prefix = geometryDashCommandPrefix;
+				else if(commandData.isDefault()) prefix = defaultCommandPrefix;
+				if ((prefix + commandData.getCommand()).equalsIgnoreCase(command) && commandData.hasDescription()) {
+					if(commandData.isGD()) info = commandData.getDescription().replace("%p", geometryDashCommandPrefix);
+					else if(commandData.isDefault()) info = commandData.getDescription().replace("%p", defaultCommandPrefix);
+					else info = commandData.getDescription();
 				}
-				sc2.close();
 			}
-			if (!infoExists) {
-				InputStream is = Main.class
-						.getClassLoader().getResourceAsStream("Resources/Commands/info.txt");
-				assert is != null;
-				InputStreamReader isr = new InputStreamReader(is);
-				BufferedReader br = new BufferedReader(isr);
-				String line;
-				while ((line = br.readLine()) != null) {
-					if (line.split("=")[0].replace(" ", "").equalsIgnoreCase(command)) {
-						info = line.split("=")[1];
-						break;
-					}
-				}
-				is.close();
-				isr.close();
-				br.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			if (info == null) info = "$HELP_NO_INFO$";
 		}
-		if (info == null) {
-			info = "$HELP_NO_INFO$";
-		}
-		return Utilities.format("$DEFAULT_MENTION$", user) + " " + info;
+		else info = "$HELP_NO_COMMAND$";
+		return Utilities.format("$DEFAULT_MENTION$", message.getSender()) + " " + Utilities.format(info);
 	}
 
-	@SuppressWarnings("unused")
-	public static String getHelp(String user, boolean isMod) {
-
-		ArrayList<String> existingCommands = new ArrayList<>();
-		ArrayList<String> disabledCommands = new ArrayList<>();
-		ArrayList<String> modCommands = new ArrayList<>();
-
+	public static String getCommand(ChatMessage message) {
+		int page = 1;
+		boolean isPage = true;
 		try {
-			URI uri = Objects.requireNonNull(Main.class.getResource("/Commands/")).toURI();
-			Path myPath;
-			if (uri.getScheme().equals("jar")) {
-				myPath = BotHandler.fileSystem.getPath("/Commands/");
-			} else {
-				myPath = Paths.get(uri);
+			if(message.getArgs().length > 1) page = Integer.parseInt(message.getArgs()[1]);
+		}
+		catch (NumberFormatException ignored){
+			isPage = false;
+		}
+		if(isPage || !message.isMod()) {
+			ArrayList<String> existingCommands = new ArrayList<>();
+
+			StringBuilder response = new StringBuilder();
+
+			String defaultCommandPrefix = "!";
+			String geometryDashCommandPrefix = "!";
+
+			if(Settings.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = Settings.getSettings("defaultCommandPrefix").asString();
+			if(Settings.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = Settings.getSettings("geometryDashCommandPrefix").asString();
+
+
+			for (CommandData commandData : LoadCommands.getDefaultCommands()) {
+				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+					existingCommands.add(defaultCommandPrefix + commandData.getCommand());
+				}
 			}
-			Stream<Path> walk = Files.walk(myPath, 1);
-			Path comPath = Paths.get(Defaults.saveDirectory + "/GDBoard/commands/");
+			for (CommandData commandData : LoadCommands.getGeometryDashCommands()) {
+				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand()) && Settings.getSettings("gdMode").asBoolean()) {
+					existingCommands.add(geometryDashCommandPrefix + commandData.getCommand());
+				}
+			}
+			for (CommandData commandData : LoadCommands.getCustomCommands()) {
+				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+					existingCommands.add(commandData.getCommand());
+				}
+			}
+			Path comPath = Paths.get(Defaults.saveDirectory + "/loquibot/commands/");
 			if (Files.exists(comPath)) {
-				Stream<Path> walk1 = Files.walk(comPath, 1);
+				Stream<Path> walk1 = null;
+				try {
+					walk1 = Files.walk(comPath, 1);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				assert walk1 != null;
 				for (Iterator<Path> it = walk1.iterator(); it.hasNext(); ) {
 					Path path = it.next();
 					String[] file = path.toString().split("\\\\");
 					String fileName = file[file.length - 1];
+
 					if (fileName.endsWith(".js")) {
-						existingCommands.add(fileName.substring(0, fileName.length() - 3).toLowerCase());
-					}
-				}
-			}
-			for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
-				Path path = it.next();
-				String[] file;
-				if (uri.getScheme().equals("jar")) {
-					file = path.toString().split("/");
-				} else {
-					file = path.toString().split("\\\\");
-				}
-				String fileName = file[file.length - 1];
-				if (fileName.endsWith(".js")) {
-					if (!fileName.equalsIgnoreCase("!rick.js") &&
-							!fileName.equalsIgnoreCase("!stoprick.js") &&
-							!fileName.equalsIgnoreCase("!kill.js") &&
-							!fileName.equalsIgnoreCase("!eval.js") &&
-							!fileName.equalsIgnoreCase("!stop.js") &&
-							!fileName.equalsIgnoreCase("!end.js") &&
-							!fileName.equalsIgnoreCase("!kill.js") &&
-							!fileName.equalsIgnoreCase("!popup.js") &&
-							!fileName.equalsIgnoreCase("!gd.js") &&
-							!fileName.equalsIgnoreCase("!what.js")) {
-						String substring = fileName.substring(0, fileName.length() - 3);
-						if (!existingCommands.contains(substring)) {
-							existingCommands.add(substring.toLowerCase());
+						boolean exists = false;
+						String commandName = fileName.substring(0, fileName.length() - 3);
+						for (CommandData data : LoadCommands.getDefaultCommands()) {
+							String prefix = "";
+							if(data.isDefault()) prefix = defaultCommandPrefix;
+							if(data.isGD()) prefix = geometryDashCommandPrefix;
+
+							if ((prefix + data.getCommand()).equalsIgnoreCase(commandName)) {
+								exists = true;
+								break;
+							}
 						}
+						if (!exists) existingCommands.add(commandName);
 					}
 				}
 			}
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/disable.txt"))) {
-				Scanner sc2 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/disable.txt").toFile());
-				while (sc2.hasNextLine()) {
-					String line = sc2.nextLine();
-					disabledCommands.add(line.toLowerCase());
-				}
-				if (!RequestsSettings.gdModeOption) {
-					for (String command : gdCommands) {
-						disabledCommands.add(command.toLowerCase());
+
+			existingCommands.sort(String.CASE_INSENSITIVE_ORDER);
+
+			int pages = ((existingCommands.size() - 1) / 20) + 1;
+
+			if (page > pages) return "@" + message.getSender() + ", No commands on page " + page;
+			if (page < 1) page = 1;
+			response.append(Utilities.format("@%s, Command List Page %s of %s | Type !help <command> for command help.", message.getSender(), page, pages)).append(" | ");
+
+			for (int i = (page - 1) * 20; i < page * 20; i++) {
+				if (i < existingCommands.size()) {
+					if (i % 20 != 0) {
+						response.append(" | ");
 					}
+					response.append(existingCommands.get(i));
 				}
-				sc2.close();
 			}
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/GDBoard/mod.txt"))) {
-				Scanner sc2 = new Scanner(Paths.get(Defaults.saveDirectory + "/GDBoard/mod.txt").toFile());
-				while (sc2.hasNextLine()) {
-					String line = sc2.nextLine();
-					modCommands.add(line.toLowerCase());
+			return response.toString();
+		}
+		else {
+			String action = null;
+			if(message.getArgs().length > 1) action = message.getArgs()[1];
+
+			String[] newArgs = Arrays.copyOfRange(message.getArgs(), 1, message.getArgs().length);
+
+			message.setArgs(newArgs);
+			message.setMessage(message.getMessage().substring(message.getMessage().split(" ")[0].length()+1));
+			if (action != null) {
+				switch (action.trim()){
+					case "add":
+						DefaultCommandFunctions.runAddcom(message);
+						break;
+					case "edit":
+						DefaultCommandFunctions.runEditcom(message);
+						break;
+					case "delete" :
+						DefaultCommandFunctions.runDelcom(message);
+						break;
+					default :
+						return Utilities.format("$INVALID_ACTION_MESSAGE$", message.getSender());
 				}
-				sc2.close();
 			}
-			InputStream is = Main.class
-					.getClassLoader().getResourceAsStream("Commands/mod.txt");
-			assert is != null;
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			String line;
-			while ((line = br.readLine()) != null) {
-				modCommands.add(line.toLowerCase());
-			}
-			is.close();
-			isr.close();
-			br.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
+			return "";
 		}
-		existingCommands.sort(String.CASE_INSENSITIVE_ORDER);
-
-		StringBuilder message = new StringBuilder();
-		message.append("$LIST_COMMANDS_START_MESSAGE$");
-
-
-		for (String command : existingCommands) {
-			if (!isMod && modCommands.contains(command)) {
-				continue;
-			}
-			if (disabledCommands.contains(command)) {
-				continue;
-			}
-			message.append(" | ").append(command);
-
-		}
-		return message.toString();
 	}
 
 	@SuppressWarnings("unused")
@@ -793,24 +732,25 @@ public class RequestsUtils {
 
 	@SuppressWarnings("unused")
 	public static String getClientID() {
+		//noinspection SpellCheckingInspection
 		return "fzwze6vc6d2f7qodgkpq2w8nnsz3rl";
 	}
 
 	@SuppressWarnings("unused")
-	public static void endGDBoard() {
+	public static void endLoquibot() {
 		Main.close();
 	}
 
 	static String parseInfoString(String text, int level) {
 
-		if (Requests.levels.size() != 0) {
+		if (RequestsTab.getQueueSize() != 0) {
 
-			Optional<String> creatorNameOptional = Requests.levels.get(level).getLevelData().creatorName();
+			Optional<String> creatorNameOptional = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName();
 			String creatorName = "";
 			if(creatorNameOptional.isPresent()){
 				creatorName = creatorNameOptional.get();
 			}
-			Optional<GDSong> songOptional = Requests.levels.get(level).getLevelData().song();
+			Optional<GDSong> songOptional = RequestsTab.getRequest(level).getLevelData().getGDLevel().song();
 			String songTitle = "";
 			String songArtist = "";
 			String songID = "";
@@ -821,23 +761,23 @@ public class RequestsUtils {
 				songID = String.valueOf(songOptional.get().id());
 			}
 
-			text = text.replaceAll("(?i)%levelName%", Requests.levels.get(level).getLevelData().name())
-					.replaceAll("(?i)%levelID%", String.valueOf(Requests.levels.get(level).getLevelData().name()))
+			text = text.replaceAll("(?i)%levelName%", RequestsTab.getRequest(level).getLevelData().getGDLevel().name())
+					.replaceAll("(?i)%levelID%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().name()))
 					.replaceAll("(?i)%levelAuthor%", creatorName)
-					.replaceAll("(?i)%requester%", Requests.levels.get(level).getRequester())
+					.replaceAll("(?i)%requester%", RequestsTab.getRequest(level).getLevelData().getRequester())
 					.replaceAll("(?i)%songName%", songTitle)
 					.replaceAll("(?i)%songID%", songID)
 					.replaceAll("(?i)%songArtist%", songArtist)
-					.replaceAll("(?i)%likes%", String.valueOf(Requests.levels.get(level).getLevelData().likes()))
-					.replaceAll("(?i)%downloads%", String.valueOf(Requests.levels.get(level).getLevelData().downloads()))
-					.replaceAll("(?i)%description%", Requests.levels.get(level).getLevelData().description())
-					.replaceAll("(?i)%coins%", String.valueOf(Requests.levels.get(level).getLevelData().coinCount()))
-					.replaceAll("(?i)%objects%", String.valueOf(Requests.levels.get(level).getLevelData().objectCount()))
-					.replaceAll("(?i)%queueSize%", String.valueOf(Requests.levels.size()))
+					.replaceAll("(?i)%likes%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().likes()))
+					.replaceAll("(?i)%downloads%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().downloads()))
+					.replaceAll("(?i)%description%", RequestsTab.getRequest(level).getLevelData().getGDLevel().description())
+					.replaceAll("(?i)%coins%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().coinCount()))
+					.replaceAll("(?i)%objects%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount()))
+					.replaceAll("(?i)%queueSize%", String.valueOf(RequestsTab.getQueueSize()))
 					.replaceAll("(?i)%s%", "");
 			return text;
 		} else {
-			return OutputSettings.noLevelString.replaceAll("(?i)%s%", "");
+			return Settings.getSettings("noLevelsString").asString().replaceAll("(?i)%s%", "");
 		}
 	}
 }

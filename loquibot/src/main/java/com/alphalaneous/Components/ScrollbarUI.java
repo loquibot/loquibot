@@ -2,7 +2,6 @@ package com.alphalaneous.Components;
 
 
 import com.alphalaneous.Defaults;
-import sun.swing.DefaultLookup;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -22,16 +21,17 @@ public class ScrollbarUI extends BasicScrollBarUI {
         Color color;
         JScrollBar sb = (JScrollBar) c;
         if (!sb.isEnabled() || r.width > r.height) {
+
             return;
         } else if (isDragging) {
-            color = Defaults.BUTTON; // change color
+            color = Defaults.COLOR2; // change color
         } else if (isThumbRollover()) {
-            color = Defaults.BUTTON_HOVER; // change color
+            color = Defaults.COLOR5; // change color
         } else {
-            color = Defaults.HOVER; // change color
+            color = Defaults.COLOR2; // change color
         }
         g2.setPaint(color);
-        g2.fillRoundRect(r.x, r.y + 5, r.width - 2, r.height - 10, 10, 10);
+        g2.fillRoundRect(r.x, r.y + 5, r.width - 2, r.height - 10, 5, 5);
         g2.dispose();
     }
 
@@ -45,7 +45,7 @@ public class ScrollbarUI extends BasicScrollBarUI {
     @Override
     protected void paintTrack(Graphics g, JComponent c, Rectangle r) {
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setPaint(scrollbar.getParent().getBackground());
+        g2.setPaint(new Color(0,0,0,0));
         g2.fillRect(r.x, r.y, r.width, r.height);
         g2.dispose();
     }
@@ -78,27 +78,16 @@ public class ScrollbarUI extends BasicScrollBarUI {
         /* Nominal locations of the buttons, assuming their preferred
          * size will fit.
          */
-        boolean squareButtons = DefaultLookup.getBoolean(
-                scrollbar, this, "ScrollBar.squareButtons", false);
+
 
         int decrButtonH = 0;
         int incrButtonH = 0;
 
-        try {
-            if (decrButton != null && incrButton != null) {
-                decrButtonH = squareButtons ? itemW :
-                        decrButton.getPreferredSize().height;
-                incrButtonH = squareButtons ? itemW :
-                        incrButton.getPreferredSize().height;
-            }
-        }
+
         /*
          *  If somehow it still throws a NullPointerException,
          *  catch it.
          */
-        catch (NullPointerException ignored){
-            //do nothing
-        }
 
 
         int decrButtonY = sbInsets.top;
@@ -110,7 +99,7 @@ public class ScrollbarUI extends BasicScrollBarUI {
          * and the gaps
          */
         int sbInsetsH = sbInsets.top + sbInsets.bottom;
-        int sbButtonsH = decrButtonH + incrButtonH;
+        int sbButtonsH = 0;
         int gaps = decrGap + incrGap;
         float trackH = sbSize.height - (sbInsetsH + sbButtonsH) - gaps;
 
@@ -159,7 +148,7 @@ public class ScrollbarUI extends BasicScrollBarUI {
         int itrackH = incrButtonY - incrGap - itrackY;
         trackRect.setBounds(itemX, itrackY, itemW, itrackH);
 
-        /* If the thumb isn't going to fit, zero it's bounds.  Otherwise
+        /* If the thumb isn't going to fit, zero its bounds, otherwise
          * make sure it fits between the buttons.  Note that setting the
          * thumbs bounds will cause a repaint.
          */

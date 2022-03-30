@@ -1,0 +1,159 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="loquibot:jar">
+    <output-path>$PROJECT_DIR$/loquibot/out/artifacts/loquibot_jar</output-path>
+    <root id="archive" name="loquibot.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/loquibot/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="loquibot" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/netty/reactor-netty-http-brave/1.0.13/reactor-netty-http-brave-1.0.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-codec/4.1.70.Final/netty-codec-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/incubator/netty-incubator-codec-quic/0.0.20.Final/netty-incubator-codec-quic-0.0.20.Final-linux-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-codec-socks/4.1.70.Final/netty-codec-socks-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/zipkin/zipkin2/zipkin/2.23.2/zipkin-2.23.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.9/commons-lang3-3.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/addons/reactor-extra/3.4.5/reactor-extra-3.4.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/zipkin/reporter2/zipkin-reporter/2.16.3/zipkin-reporter-2.16.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-codec-http/4.1.70.Final/netty-codec-http-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.6/commons-codec-1.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-codec-dns/4.1.70.Final/netty-codec-dns-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-common/4.1.70.Final/netty-common-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-resolver-dns-classes-macos/4.1.70.Final/netty-resolver-dns-classes-macos-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_annotations/2.9.0/error_prone_annotations-2.9.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.1.70.Final/netty-buffer-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-handler-proxy/4.1.70.Final/netty-handler-proxy-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-resolver-dns/4.1.70.Final/netty-resolver-dns-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/reactor-core/3.4.10/reactor-core-3.4.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-configuration2/2.7/commons-configuration2-2.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-handler/4.1.70.Final/netty-handler-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/zipkin/brave/brave-instrumentation-http/5.13.3/brave-instrumentation-http-5.13.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-resolver-dns-native-macos/4.1.70.Final/netty-resolver-dns-native-macos-4.1.70.Final-osx-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-text/1.8/commons-text-1.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/netty/reactor-netty-core/1.0.13/reactor-netty-core-1.0.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/checkerframework/checker-qual/3.18.0/checker-qual-3.18.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/alex1304/jdash/jdash-graphics/4.0.4/jdash-graphics-4.0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-resolver/4.1.70.Final/netty-resolver-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/netty/reactor-netty-http/1.0.13/reactor-netty-http-1.0.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-transport-native-unix-common/4.1.70.Final/netty-transport-native-unix-common-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-transport/4.1.70.Final/netty-transport-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-transport-classes-epoll/4.1.70.Final/netty-transport-classes-epoll-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/alex1304/jdash/jdash-common/4.0.4/jdash-common-4.0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/zipkin/brave/brave/5.13.3/brave-5.13.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/ben-manes/caffeine/caffeine/3.0.4/caffeine-3.0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/netty/reactor-netty/1.0.13/reactor-netty-1.0.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/projectreactor/netty/incubator/reactor-netty-incubator-quic/0.0.2/reactor-netty-incubator-quic-0.0.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-transport-native-epoll/4.1.70.Final/netty-transport-native-epoll-4.1.70.Final-linux-x86_64.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/delight-nashorn-sandbox-0.0.6-distribution.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/Filters.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/Java-WebSocket-1.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/javassist.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/jlayer-1.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/jnativehook-2.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/json-20140107.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/okhttp-3.9.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/okio-1.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/reflections-0.9.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/rsyntaxtextarea-3.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-api-1.7.30.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-nop-1.7.30.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/swingx-1.6.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/system-hook-3.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/TwitchIRC_v1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/commons-io-2.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/emoji-java-5.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/imgscalr-lib-4.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/j2v8_win32_x86_64-4.6.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/discord-rpc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/jsoup-1.14.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/framework/marvin_1.5.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/lib/junit-4.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.ml.kmeans.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.subtract.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.edge.sobel.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.sepia.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.convolution.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.render.text.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.emboss.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.invert.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.corner.susan.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.edge.prewitt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.edge.roberts.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.blur.pixelize.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.corner.harris.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.interfaceTest.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.steganography.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.corner.moravec.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.transform.flip.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.transform.skew.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.artistic.mosaic.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.grayScale.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.render.juliaSet.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.transform.scale.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.halftone.circles.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.statistical.mode.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.transform.rotate.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.blur.gaussianBlur.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.edge.edgeDetector.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.fill.boundaryFill.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.render.mandelbrot.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.segmentation.crop.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.colorChannel.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.thresholding.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.halftone.dithering.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.halftone.rylanders.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.render.lindenmayer.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.statistical.median.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.artistic.television.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.alphaBoundary.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.blackAndWhite.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.combine.mergePhotos.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.pattern.correlation.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.render.grayGradient.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.statistical.maximum.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.statistical.minimum.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.texture.tileTexture.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.transform.watershed.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.pattern.findSubimage.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.combine.combineByMask.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.morphological.closing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.morphological.erosion.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.morphological.opening.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.pattern.harrisPlessey.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.morphological.boundary.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.morphological.dilation.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.halftone.errorDiffusion.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.histogram.grayHistogram.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.pattern.findTextRegions.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.skinColorDetection.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.histogram.colorHistogram.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.pattern.findColorPattern.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.segmentation.imageSlicer.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.difference.differenceGray.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.difference.differenceColor.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.pattern.patternRecognition.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.restoration.noiseReduction.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.brightnessAndContrast.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.difference.differentRegions.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.combine.combineByTransparency.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.render.iteratedFunctionSystem.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.color.thresholdingNeighborhood.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.quantization.colorQuantization.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.equalization.histogramEqualization.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.quantization.grayScaleQuantization.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.segmentation.floodfillSegmentation.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.background.determineSceneBackground.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image/org.marvinproject.image.background.determineFixedCameraBackground.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/netty/netty-codec-http2/4.1.70.Final/netty-codec-http2-4.1.70.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/zipkin/reporter2/zipkin-reporter-brave/2.16.3/zipkin-reporter-brave-2.16.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/alex1304/jdash/jdash-client/4.0.4/jdash-client-4.0.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

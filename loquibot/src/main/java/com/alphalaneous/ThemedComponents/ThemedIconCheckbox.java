@@ -24,7 +24,7 @@ public class ThemedIconCheckbox extends JPanel {
 		check.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
 		checkSymbol.setForeground(Color.WHITE);
 		checkSymbol.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
-		hover.setForeground(Defaults.FOREGROUND);
+		hover.setForeground(Defaults.FOREGROUND_A);
 		hover.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
 		checkSymbol.setVisible(false);
 		hover.setVisible(false);
@@ -34,12 +34,12 @@ public class ThemedIconCheckbox extends JPanel {
 		add(text);
 		setBackground(new Color(0, 0, 0, 0));
 		setOpaque(false);
-		check.setForeground(Color.LIGHT_GRAY);
+		check.setForeground(Defaults.FOREGROUND_B);
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					check.setText("\uE73B");
-					check.setForeground(Color.LIGHT_GRAY);
+					check.setForeground(Defaults.FOREGROUND_B);
 					hover.setVisible(false);
 				}
 			}
@@ -48,7 +48,7 @@ public class ThemedIconCheckbox extends JPanel {
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					if (isChecked) {
 						check.setText("\uE922");
-						check.setForeground(Color.LIGHT_GRAY);
+						check.setForeground(Defaults.FOREGROUND_B);
 						checkSymbol.setVisible(false);
 						isChecked = false;
 					} else {
@@ -68,7 +68,7 @@ public class ThemedIconCheckbox extends JPanel {
 			public void mouseExited(MouseEvent e) {
 				if (!isChecked) {
 					check.setText("\uE922");
-					check.setForeground(Color.LIGHT_GRAY);
+					check.setForeground(Defaults.FOREGROUND_B);
 					checkSymbol.setVisible(false);
 				} else {
 					check.setText("\uE73B");
@@ -99,7 +99,7 @@ public class ThemedIconCheckbox extends JPanel {
 		this.isChecked = checked;
 		if (!isChecked) {
 			check.setText("\uE922");
-			check.setForeground(Color.LIGHT_GRAY);
+			check.setForeground(Defaults.FOREGROUND_B);
 			checkSymbol.setVisible(false);
 		} else {
 			check.setText("\uE73B");
@@ -107,18 +107,18 @@ public class ThemedIconCheckbox extends JPanel {
 			checkSymbol.setVisible(true);
 		}
 	}
-	private static final int inset = 3;
+	private static final int inset = -11;
 	public void refresh() {
 		if (!isChecked) {
-			check.setForeground(Color.LIGHT_GRAY);
+			check.setForeground(Defaults.FOREGROUND_B);
 		} else {
 			check.setForeground(Defaults.ACCENT);
 		}
-		text.setBounds(getPreferredSize().width/2-15 + inset,0,60,60);
+		text.setBounds(0,5,text.getPreferredSize().width, text.getPreferredSize().height);
 
-		check.setBounds(getPreferredSize().width/2-8 + inset, 50, 30, 30);
-		checkSymbol.setBounds(getPreferredSize().width/2-8 + inset, 50, 30, 30);
-		hover.setForeground(Defaults.FOREGROUND);
-		hover.setBounds(getPreferredSize().width/2-8 + inset, 50, 30, 30);
+		check.setBounds(getPreferredSize().width/2 + inset, getPreferredSize().height/2, 30, 30);
+		checkSymbol.setBounds(getPreferredSize().width/2 + inset, getPreferredSize().height/2, 30, 30);
+		hover.setForeground(Defaults.FOREGROUND_A);
+		hover.setBounds(getPreferredSize().width/2 + inset, getPreferredSize().height/2, 30, 30);
 	}
 }

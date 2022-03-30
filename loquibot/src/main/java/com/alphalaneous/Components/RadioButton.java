@@ -16,9 +16,9 @@ public class RadioButton extends JPanel {
 
 			setLayout(null);
 			text.setTextLang(label);
-			text.setForeground(Defaults.FOREGROUND);
+			text.setForeground(Defaults.FOREGROUND_A);
 			radio.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
-			radio.setForeground(Color.LIGHT_GRAY);
+			radio.setForeground(Defaults.FOREGROUND_B);
 			add(radio);
 			add(text);
 			setBackground(new Color(0, 0, 0, 0));
@@ -26,7 +26,7 @@ public class RadioButton extends JPanel {
 			addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
 					if (SwingUtilities.isLeftMouseButton(e)) {
-						radio.setForeground(Color.LIGHT_GRAY);
+						radio.setForeground(Defaults.FOREGROUND_B);
 					}
 				}
 
@@ -34,24 +34,24 @@ public class RadioButton extends JPanel {
 					if (SwingUtilities.isLeftMouseButton(e)) {
 						if (isChecked) {
 							radio.setText("\uECCA");
-							radio.setForeground(Defaults.FOREGROUND);
+							radio.setForeground(Defaults.FOREGROUND_A);
 							isChecked = false;
 						} else {
 							radio.setText("\uECCB");
-							radio.setForeground(Defaults.FOREGROUND);
+							radio.setForeground(Defaults.FOREGROUND_A);
 							isChecked = true;
 						}
 					}
 				}
 
 				public void mouseEntered(MouseEvent e) {
-					radio.setForeground(Defaults.FOREGROUND);
+					radio.setForeground(Defaults.FOREGROUND_A);
 				}
 
 				public void mouseExited(MouseEvent e) {
 					if (!isChecked) {
 						radio.setText("\uECCA");
-						radio.setForeground(Color.LIGHT_GRAY);
+						radio.setForeground(Defaults.FOREGROUND_B);
 					} else {
 						radio.setText("\uECCB");
 						radio.setForeground(Defaults.ACCENT);
@@ -73,7 +73,7 @@ public class RadioButton extends JPanel {
 	 	this.isChecked = checked;
 		if (!isChecked) {
 			radio.setText("\uECCA");
-			radio.setForeground(Color.LIGHT_GRAY);
+			radio.setForeground(Defaults.FOREGROUND_B);
 		} else {
 			radio.setText("\uECCB");
 			radio.setForeground(Defaults.ACCENT);
@@ -85,19 +85,14 @@ public class RadioButton extends JPanel {
 	}*/
 	public void refresh(){
 		if(!isChecked){
-			radio.setForeground(Color.LIGHT_GRAY);
+			radio.setForeground(Defaults.FOREGROUND_B);
 		}
 		else{
 			radio.setForeground(Defaults.ACCENT);
 		}
-		text.setForeground(Defaults.FOREGROUND);
+		text.setForeground(Defaults.FOREGROUND_A);
 		text.setFont(getFont());
-		if(getFont().getName().equalsIgnoreCase("bahnschrift")){
-			text.setBounds(0, (getHeight()/2)-(text.getPreferredSize().height/2)+1, getWidth(), text.getPreferredSize().height+5);
-		}
-		else{
-			text.setBounds(0, (getHeight()/2)-(text.getPreferredSize().height/2)-2, getWidth(), text.getPreferredSize().height+5);
-		}
-		radio.setBounds(getWidth()-20, 0, 30,30);
+		text.setBounds(30, (getHeight()/2)-(text.getPreferredSize().height/2), getWidth(), text.getPreferredSize().height+5);
+		radio.setBounds(0, 1, 30,30);
 	}
 }
