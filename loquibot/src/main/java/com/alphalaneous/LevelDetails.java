@@ -29,7 +29,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,30 +38,31 @@ public class LevelDetails extends JPanel {
 
     private YouTubeVideo videoUsed = null;
     private BufferedImage image = null;
-    private JLabel titleLabel;
-    private JLabel infoLabel;
+    private final JLabel titleLabel;
+    private final JLabel infoLabel;
     private JLabel usernameLabel;
-    private JLabel requesterLabel;
+    private final JLabel requesterLabel;
     private JLabel songTitleLabel;
     private JLabel songArtistLabel;
     private JLabel songIDLabel;
-    private JLabel YTTitleLabel;
-    private JLabel YTUploader;
-    private JLabel YTViews;
-    private JLabel commentsLabel = new JLabel("Comments");
-    private JButtonUI clearUI = new JButtonUI();
-    private JTextPane description = new JTextPane();
-    private JLabel songIcon = new JLabel();
-    private CurvedButton youTubeButton = new CurvedButton("");
-    private JPanel commentsPanel = new JPanel();
-    private SmoothScrollPane commentScrollPane = new SmoothScrollPane(commentsPanel);
+    private final JLabel YTTitleLabel;
+    private final JLabel YTUploader;
+    private final JLabel YTViews;
+    private final JLabel commentsLabel = new JLabel("Comments");
+    private final JButtonUI clearUI = new JButtonUI();
+    private final JTextPane description = new JTextPane();
+    private final JLabel songIcon = new JLabel();
+    private final CurvedButton youTubeButton = new CurvedButton("");
+    private final JPanel commentsPanel = new JPanel();
+    private final SmoothScrollPane commentScrollPane = new SmoothScrollPane(commentsPanel);
     private int page = 0;
-    private GridBagConstraints gbc = new GridBagConstraints();
-    private JButton prev = createButton("\uF305", 0, "$PREV_PAGE$");
-    private JButton next = createButton("\uF304", 35, "$NEXT_PAGE$");
-    private JButton topComments = createButton("\uF138", 90, "$TOP_COMMENTS$");
-    private JButton newest = createButton("\uF22B", 125, "$LATEST_COMMENTS$");
-    private LoadingPane loadingPane = new LoadingPane();
+    private final GridBagConstraints gbc = new GridBagConstraints();
+    private final JButton prev = createButton("\uF305", "$PREV_PAGE$");
+    private final JButton next = createButton("\uF304", "$NEXT_PAGE$");
+    private final JButton topComments = createButton("\uF138", "$TOP_COMMENTS$");
+    private final JButton newest = createButton("\uF22B", "$LATEST_COMMENTS$");
+    private final LoadingPane loadingPane = new LoadingPane();
+    private int descHeight = 30;
 
     public LevelDetails(LevelData data){
         setLayout(null);
@@ -95,7 +95,13 @@ public class LevelDetails extends JPanel {
         refreshInfo(description);
 
         description.setSize(460, Short.MAX_VALUE);
-        description.setBounds(20, 75, 460, description.getPreferredSize().height);
+        
+        try {
+            descHeight = description.getPreferredSize().height;
+        }
+        catch (Exception ignored){}
+        
+        description.setBounds(20, 75, 460, descHeight);
 
         JLabel playerIcon = new JLabel();
 
@@ -120,24 +126,24 @@ public class LevelDetails extends JPanel {
 
 
         usernameLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-        usernameLabel.setBounds(80, description.getPreferredSize().height + 85, 170, 30);
+        usernameLabel.setBounds(80, descHeight + 85, 170, 30);
 
         requesterLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-        requesterLabel.setBounds(80, description.getPreferredSize().height + 105, 170, 30);
+        requesterLabel.setBounds(80, descHeight + 105, 170, 30);
 
         if(data.getPlayerIcon() == null) playerIcon.setIcon(GDAPI.getIcon(IconType.CUBE, 1, 1, 3, false, 100));
         else playerIcon.setIcon(data.getPlayerIcon());
 
-        playerIcon.setBounds(-5, description.getPreferredSize().height + 60, 170, 100);
+        playerIcon.setBounds(-5, descHeight + 60, 170, 100);
 
         songTitleLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-        songTitleLabel.setBounds(315, description.getPreferredSize().height + 80, 170, 30);
+        songTitleLabel.setBounds(315, descHeight + 80, 170, 30);
 
         songArtistLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-        songArtistLabel.setBounds(315, description.getPreferredSize().height + 95, 170, 30);
+        songArtistLabel.setBounds(315, descHeight + 95, 170, 30);
 
         songIDLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-        songIDLabel.setBounds(315, description.getPreferredSize().height + 110, 170, 30);
+        songIDLabel.setBounds(315, descHeight + 110, 170, 30);
 
         songIcon.setIcon(Assets.music);
 
@@ -145,7 +151,7 @@ public class LevelDetails extends JPanel {
         else songIcon.setIcon(invertImage(Assets.music));
 
 
-        songIcon.setBounds(260, description.getPreferredSize().height + 60, 100, 100);
+        songIcon.setBounds(260, descHeight + 60, 100, 100);
 
 
         String[] difficulties = {"NA", "easy", "normal", "hard", "harder", "insane"};
@@ -238,7 +244,7 @@ public class LevelDetails extends JPanel {
         youTubeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         youTubeButton.refresh();
 
-        youTubeButton.setBounds(20, description.getPreferredSize().height + 150, 470, 100);
+        youTubeButton.setBounds(20, descHeight + 150, 470, 100);
 
         ThumbnailPanel imagePanel = new ThumbnailPanel();
         imagePanel.setOpaque(false);
@@ -263,13 +269,12 @@ public class LevelDetails extends JPanel {
 
         youTubeButton.add(YTViews);
 
-        commentScrollPane.setBounds(0,description.getPreferredSize().height + 200,510, Window.getWindow().getHeight()-240 - description.getPreferredSize().height);
+        commentScrollPane.setBounds(0,descHeight + 200,510, Window.getWindow().getHeight()-240 - descHeight);
         commentScrollPane.setBackground(new Color(0,0,0,0));
         commentScrollPane.setOpaque(false);
         commentScrollPane.getViewport().setOpaque(false);
         commentsPanel.setBackground(new Color(0,0,0,0));
         commentsPanel.setOpaque(false);
-        commentsPanel.setLayout(new FlowLayout());
         commentsPanel.setLayout(new GridBagLayout());
 
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -350,6 +355,7 @@ public class LevelDetails extends JPanel {
 
         youTubeButton.setVisible(false);
 
+        int finalDescHeight = descHeight;
         new SwingWorker<YouTubeVideo, Object>(){
             @Override
             public YouTubeVideo doInBackground() {
@@ -381,7 +387,7 @@ public class LevelDetails extends JPanel {
                         YTUploader.setText(get().getUsername());
                         YTViews.setText(get().getViewCount() + " views");
                         add(youTubeButton);
-                        commentScrollPane.setBounds(0,description.getPreferredSize().height + 310,510, Window.getWindow().getHeight()-350 - description.getPreferredSize().height);
+                        commentScrollPane.setBounds(0, finalDescHeight + 310,510, Window.getWindow().getHeight()-350 - finalDescHeight);
                         commentsLabel.setBounds(18, commentScrollPane.getY()-45, 200, 40);
                         videoUsed = get();
                         youTubeButton.setVisible(true);
@@ -433,11 +439,11 @@ public class LevelDetails extends JPanel {
     }
 
     public void resizeAll(int height){
-        if(youTubeButton.isVisible()) commentScrollPane.setBounds(0,description.getPreferredSize().height + 310,510, height-350 - description.getPreferredSize().height);
-        else commentScrollPane.setBounds(0,description.getPreferredSize().height + 200,510, height-240 - description.getPreferredSize().height);
+        if(youTubeButton.isVisible()) commentScrollPane.setBounds(0,descHeight + 310,510, height-350 - descHeight);
+        else commentScrollPane.setBounds(0,descHeight + 200,510, height-240 - descHeight);
     }
 
-    private JButton createButton(String icon, int x, String tooltip) {
+    private JButton createButton(String icon, String tooltip) {
         JButton button = new RoundedJButton(icon, tooltip);
         button.setFont(Defaults.SYMBOLS.deriveFont(16f));
         button.setMargin(new Insets(0, 0, 0, 0));
@@ -450,6 +456,8 @@ public class LevelDetails extends JPanel {
 
     public void refreshUI(){
         setBackground(Defaults.COLOR3);
+        blurredImage = null;
+        generateScaledInstance();
         titleLabel.setForeground(Defaults.FOREGROUND_A);
         infoLabel.setForeground(Defaults.FOREGROUND_C);
         usernameLabel.setForeground(Defaults.FOREGROUND_A);
@@ -695,17 +703,13 @@ public class LevelDetails extends JPanel {
     }
 
     public float getScaleFactor(int iMasterSize, int iTargetSize) {
-        float scale = 1;
-        if (iMasterSize > iTargetSize) {
-            scale = (float) iTargetSize / (float) iMasterSize;
-        } else {
-            scale = (float) iTargetSize / (float) iMasterSize;
-        }
+        float scale;
+        scale = (float) iTargetSize / (float) iMasterSize;
         return scale;
     }
 
     public BufferedImage getScaledInstance(BufferedImage img, double dScaleFactor) {
-        BufferedImage imgBuffer = null;
+        BufferedImage imgBuffer;
         imgBuffer = getScaledInstance(img, dScaleFactor, RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
         return imgBuffer;
     }
@@ -733,7 +737,7 @@ public class LevelDetails extends JPanel {
         int type = (img.getTransparency() == Transparency.OPAQUE)
                 ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
 
-        BufferedImage ret = (BufferedImage) img;
+        BufferedImage ret = img;
 
         if (targetHeight > 0 || targetWidth > 0) {
             int w, h;
@@ -784,7 +788,7 @@ public class LevelDetails extends JPanel {
 
         int type = BufferedImage.TYPE_INT_ARGB;
 
-        BufferedImage ret = (BufferedImage) img;
+        BufferedImage ret = img;
         int w, h;
         if (higherQuality) {
 
@@ -829,7 +833,6 @@ public class LevelDetails extends JPanel {
             g2.dispose();
 
             ret = tmp;
-            tmp = null;
 
         } while (w != targetWidth || h != targetHeight);
 

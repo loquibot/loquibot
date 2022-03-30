@@ -461,7 +461,7 @@ public class LevelButton extends CurvedButtonAlt {
 
 			select();
 		} else {
-			setUI(SettingsTab.selectUI);
+			setUI(SettingsTab.settingsUI);
 		}
 	}
 

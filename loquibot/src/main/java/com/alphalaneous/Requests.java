@@ -1,7 +1,6 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Moderation.Moderation;
-import com.alphalaneous.Panels.BasicLevelButton;
 import com.alphalaneous.Panels.LevelButton;
 import com.alphalaneous.SettingsPanels.OutputSettings;
 import com.alphalaneous.SettingsPanels.FiltersSettings;
@@ -37,8 +36,6 @@ public class Requests {
     private static final HashMap<Long, Integer> addedLevels = new HashMap<>();
     private static final HashMap<String, Integer> userStreamLimitMap = new HashMap<>();
     private static final Path logged = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
-    private static final Path disallowed = Paths.get(Defaults.saveDirectory + "\\loquibot\\disallowedStrings.txt");
-    private static final Path allowed = Paths.get(Defaults.saveDirectory + "\\loquibot\\allowedStrings.txt");
 
     public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand) {
         if(IDa == 0 && Settings.getSettings("basicMode").asBoolean()){
@@ -86,448 +83,307 @@ public class Requests {
                     return;
                 }
 
-                if(!Settings.getSettings("basicMode").asBoolean()) {
-                    GDLevel level;
+                GDLevel level;
 
-                    ArrayList<String> arguments = new ArrayList<>();
-                    arguments.add(""); //Accidentally started array at one due to value I thought existed, easier to add dummy value than change everything.
-                    Matcher argMatcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(message);
-                    while (argMatcher.find()) {
-                        arguments.add(argMatcher.group(1).toLowerCase().trim());
-                    }
-                    String levelNameS; //Starting level name for search
-                    String usernameS; //starting username for search
-                    if (isCommand) {
-                        Matcher IDMatcher = Pattern.compile("(\\d+)").matcher(arguments.get(1));
-                        if (IDMatcher.matches() && arguments.size() <= 2) {
-                            long ID = Long.parseLong(IDMatcher.group(1));
-                            level = checkLevelIDAndGetLevel(ID);
-                            if (level == null) return;
-                        } else if (arguments.size() > 2) {
-                            boolean inQuotes = false;
-                            if (arguments.get(2).equalsIgnoreCase("by") || message.contains(" by ")) {
-                                if (arguments.get(2).equalsIgnoreCase("by")) {
-                                    levelNameS = arguments.get(1).trim();
-                                    if (levelNameS.startsWith("\"") && levelNameS.endsWith("\"")) {
-                                        inQuotes = true;
-                                    }
-                                    levelNameS = levelNameS.replace("\"", "");
-                                    usernameS = arguments.get(3).trim().replace("\"", "");
-                                } else if (message.toLowerCase().contains(" by ")) {
-                                    String messageS = message.split(" ", 2)[1];
-                                    String[] argumentsS = messageS.split(" by ", 2);
-
-                                    levelNameS = argumentsS[0];
-                                    if (levelNameS.startsWith("\"") && levelNameS.endsWith("\"")) {
-                                        inQuotes = true;
-                                    }
-                                    levelNameS = levelNameS.replace("\"", "");
-                                    usernameS = argumentsS[1].trim().replace("\"", "");
-                                } else {
-                                    sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$", user));
-                                    return;
+                ArrayList<String> arguments = new ArrayList<>();
+                arguments.add(""); //Accidentally started array at one due to value I thought existed, easier to add dummy value than change everything.
+                Matcher argMatcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(message);
+                while (argMatcher.find()) {
+                    arguments.add(argMatcher.group(1).toLowerCase().trim());
+                }
+                String levelNameS; //Starting level name for search
+                String usernameS; //starting username for search
+                if (isCommand) {
+                    Matcher IDMatcher = Pattern.compile("(\\d+)").matcher(arguments.get(1));
+                    if (IDMatcher.matches() && arguments.size() <= 2) {
+                        long ID = Long.parseLong(IDMatcher.group(1));
+                        level = checkLevelIDAndGetLevel(ID);
+                        if (level == null) return;
+                    } else if (arguments.size() > 2) {
+                        boolean inQuotes = false;
+                        if (arguments.get(2).equalsIgnoreCase("by") || message.contains(" by ")) {
+                            if (arguments.get(2).equalsIgnoreCase("by")) {
+                                levelNameS = arguments.get(1).trim();
+                                if (levelNameS.startsWith("\"") && levelNameS.endsWith("\"")) {
+                                    inQuotes = true;
                                 }
+                                levelNameS = levelNameS.replace("\"", "");
+                                usernameS = arguments.get(3).trim().replace("\"", "");
+                            } else if (message.toLowerCase().contains(" by ")) {
+                                String messageS = message.split(" ", 2)[1];
+                                String[] argumentsS = messageS.split(" by ", 2);
 
-                                level = GDAPI.getLevelByNameByUser(levelNameS, usernameS, inQuotes);
-
-                                if (level == null) {
-                                    sendUnallowed(Utilities.format("$LEVEL_USER_DOESNT_EXIST_MESSAGE$", user));
-                                    return;
+                                levelNameS = argumentsS[0];
+                                if (levelNameS.startsWith("\"") && levelNameS.endsWith("\"")) {
+                                    inQuotes = true;
                                 }
+                                levelNameS = levelNameS.replace("\"", "");
+                                usernameS = argumentsS[1].trim().replace("\"", "");
                             } else {
-                                level = getID(message, user);
-                                if (level == null) return;
+                                sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$", user));
+                                return;
+                            }
+
+                            level = GDAPI.getLevelByNameByUser(levelNameS, usernameS, inQuotes);
+
+                            if (level == null) {
+                                sendUnallowed(Utilities.format("$LEVEL_USER_DOESNT_EXIST_MESSAGE$", user));
+                                return;
                             }
                         } else {
                             level = getID(message, user);
                             if (level == null) return;
                         }
                     } else {
-                        level = checkLevelIDAndGetLevel(finalIDa);
+                        level = getID(message, user);
                         if (level == null) return;
                     }
+                } else {
+                    level = checkLevelIDAndGetLevel(finalIDa);
+                    if (level == null) return;
+                }
 
-                    for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+                for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
 
-                        if (level.id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().id()) {
-                            int j = k + 1;
-                            if (!Settings.getSettings("disableShowPosition").asBoolean()) {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", user, j));
-                            } else {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$", user));
-                            }
-                            return;
+                    if (level.id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().id()) {
+                        int j = k + 1;
+                        if (!Settings.getSettings("disableShowPosition").asBoolean()) {
+                            sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", user, j));
+                        } else {
+                            sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$", user));
                         }
+                        return;
                     }
+                }
 
-                    boolean bypass = (Settings.getSettings("modsBypass").asBoolean() && isMod) || (user.equalsIgnoreCase(TwitchAccount.login) && Settings.getSettings("streamerBypass").asBoolean());
-                    if (!bypass) {
-                        if (checkList(level.id(), "\\loquibot\\blocked.txt")) {
-                            sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$", user));
-                            return;
-                        }
-                        if (Files.exists(logged) && (Settings.getSettings("repeatedRequestsAll").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean()) && Main.programLoaded) {
-                            Scanner sc = new Scanner(logged.toFile());
-                            while (sc.hasNextLine()) {
-                                if (String.valueOf(level.id()).equals(sc.nextLine().split(",")[0])) {
-                                    sc.close();
-                                    sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
-                                    return;
-                                }
-                            }
-                            sc.close();
-                        }
-                        if (globallyBlockedIDs.containsKey(level.id())) {
-                            sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(level.id())));
-                            return;
-                        }
-                        if (Settings.getSettings("subscribers").asBoolean()) {
-                            if (!(isSub || isMod)) {
-                                sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", user));
-                                return;
-                            }
-                        }
-                        if (Settings.getSettings("followers").asBoolean()) {
-                            if (APIs.isNotFollowing(user, userID)) {
-                                sendUnallowed(Utilities.format("$FOLLOW_MESSAGE$", user));
-                                return;
-                            }
-                        }
-                        if (level.id() < Settings.getSettings("minID").asInteger() && Settings.getSettings("minIDOption").asBoolean()) {
-                            sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", user, Settings.getSettings("minID").asInteger()));
-                            return;
-                        }
-                        if (level.id() > Settings.getSettings("maxID").asInteger() && Settings.getSettings("maxIDOption").asBoolean()) {
-                            sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", user, Settings.getSettings("maxID").asInteger()));
-                            return;
-                        }
-                        if (Settings.getSettings("queueLimitEnabled").asBoolean() && (RequestsTab.getQueueSize() >= Settings.getSettings("queueLimit").asInteger())) {
-                            if (!Settings.getSettings("disableQF").asBoolean()) {
-                                sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$", user));
-                            }
-                            return;
-                        }
-                        if (Settings.getSettings("userLimitEnabled").asBoolean()) {
-                            int size = 0;
-                            for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-                                if (RequestsTab.getRequest(i).getLevelData().getRequester().equalsIgnoreCase(user)) {
-                                    size++;
-                                }
-                            }
-                            if (size >= Settings.getSettings("userLimit").asInteger()) {
-                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$", user));
-                                return;
-                            }
-                        }
-                        if (Settings.getSettings("userLimitStreamEnabled").asBoolean()) {
-                            if (userStreamLimitMap.containsKey(user)) {
-                                if (userStreamLimitMap.get(user) >= Settings.getSettings("userLimitStream").asInteger()) {
-                                    sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_STREAM_MESSAGE$", user));
-                                    return;
-                                }
-                            }
-                        }
-                        if (addedLevels.containsKey(level.id()) && (Settings.getSettings("repeatedRequests").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean())) {
-                            sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
-                            return;
-                        }
+                boolean bypass = (Settings.getSettings("modsBypass").asBoolean() && isMod) || (user.equalsIgnoreCase(TwitchAccount.login) && Settings.getSettings("streamerBypass").asBoolean());
+                if (!bypass) {
+                    if (checkList(level.id(), "\\loquibot\\blocked.txt")) {
+                        sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$", user));
+                        return;
                     }
-                    if (userStreamLimitMap.containsKey(user)) {
-                        userStreamLimitMap.put(user, userStreamLimitMap.get(user) + 1);
-                    } else {
-                        userStreamLimitMap.put(user, 1);
-                    }
-
-                    LevelData levelData = new LevelData();
-                    if (!bypass) {
-                        if (checkList(level.creatorName(), "\\loquibot\\blockedGDUsers.txt")) {
-                            sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", user));
-                            return;
-                        }
-                        /*if (FiltersSettings.allowOption && Files.exists(allowed)) {
-
-                            Scanner sc = new Scanner(allowed.toFile());
-                            boolean hasWord = false;
-                            while (sc.hasNextLine()) {
-                                if (level.name().toLowerCase().contains(sc.nextLine().toLowerCase())) {
-                                    hasWord = true;
-                                    sc.close();
-                                    break;
-                                }
-                            }
-                            if (!hasWord) {
-                                sendUnallowed(Utilities.format("$BLOCKED_NAME_MESSAGE$", user));
-                                return;
-                            }
-                            sc.close();
-
-                        }
-                        if (FiltersSettings.disallowOption) {
-                            if (Files.exists(disallowed)) {
-                                Scanner sc = new Scanner(disallowed.toFile());
-                                while (sc.hasNextLine()) {
-                                    if (level.name().toLowerCase().contains(sc.nextLine().toLowerCase())) {
-                                        sc.close();
-                                        sendUnallowed(Utilities.format("$BLOCKED_NAME_MESSAGE$", user));
-                                        return;
-                                    }
-                                }
+                    if (Files.exists(logged) && (Settings.getSettings("repeatedRequestsAll").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean()) && Main.programLoaded) {
+                        Scanner sc = new Scanner(logged.toFile());
+                        while (sc.hasNextLine()) {
+                            if (String.valueOf(level.id()).equals(sc.nextLine().split(",")[0])) {
                                 sc.close();
-                            }
-                        }*/
-                        if (Settings.getSettings("rated").asBoolean() && !(level.stars() > 0)) {
-                            sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", user));
-                            return;
-                        }
-                        if (Settings.getSettings("unrated").asBoolean() && level.stars() > 0) {
-                            sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", user));
-                            return;
-                        }
-                        if (Settings.getSettings("minObjectsOption").asBoolean() && level.objectCount() < Settings.getSettings("minObjects").asInteger()) {
-                            sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$", user));
-                            return;
-                        }
-                        if (Settings.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > Settings.getSettings("maxObjects").asInteger()) {
-                            sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$", user));
-                            return;
-                        }
-                        if (level.objectCount() != 0) {
-                            if (Settings.getSettings("minLikesOption").asBoolean() && level.objectCount() < Settings.getSettings("minLikes").asInteger()) {
-                                sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$", user));
-                                return;
-                            }
-                            if (Settings.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > Settings.getSettings("maxLikes").asInteger()) {
-                                sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$", user));
-                                return;
-                            }
-                        }
-                    }
-                    if (messageID != null) {
-                        levelData.setMessageID(messageID);
-                    }
-
-                    if (level.featuredScore() > 0) {
-                        levelData.setFeatured();
-                    }
-                    levelData.setLevelData(level);
-                    if (!bypass) {
-                        if (Files.exists(logged) && Settings.getSettings("updatedRepeated").asBoolean()) {
-                            Scanner sc = new Scanner(logged.toFile());
-                            while (sc.hasNextLine()) {
-                                String levelLine = sc.nextLine();
-                                if (String.valueOf(level.id()).equals(levelLine.split(",")[0])) {
-                                    int version;
-                                    if (levelLine.split(",").length == 1) {
-                                        version = 1;
-                                    } else {
-                                        version = Integer.parseInt(levelLine.split(",")[1]);
-                                    }
-                                    if (version >= levelData.getGDLevel().levelVersion()) {
-                                        sc.close();
-                                        sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
-                                        return;
-                                    }
-                                }
-                            }
-                            sc.close();
-                        }
-                        if (addedLevels.containsKey(level.id()) && (Settings.getSettings("updatedRepeated").asBoolean())) {
-                            if (addedLevels.get(level.id()) >= levelData.getGDLevel().levelVersion()) {
                                 sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
                                 return;
                             }
                         }
-                        if (FiltersSettings.excludedDifficulties.contains(levelData.getSimpleDifficulty().toLowerCase()) && Settings.getSettings("disableDifficulties").asBoolean()) {
-                            sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$", user));
-                            return;
-                        }
-                        if (FiltersSettings.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().requestedStars())) && Settings.getSettings("disableReqDifficulties").asBoolean()) {
-                            sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$", user));
-                            return;
-                        }
-                        if (FiltersSettings.excludedLengths.contains(level.length().name().toLowerCase()) && Settings.getSettings("disableLengths").asBoolean()) {
-                            sendUnallowed(Utilities.format("$LENGTH_MESSAGE$", user));
+                        sc.close();
+                    }
+                    if (globallyBlockedIDs.containsKey(level.id())) {
+                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(level.id())));
+                        return;
+                    }
+                    if (Settings.getSettings("subscribers").asBoolean()) {
+                        if (!(isSub || isMod)) {
+                            sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", user));
                             return;
                         }
                     }
-
-                    if (Settings.getSettings("autoDL").asBoolean()) {
-                        new Thread(() -> {
-                            Optional<GDSong> song = levelData.getGDLevel().song();
-                            if (song.isPresent()) {
-                                Path songFile = Paths.get(System.getenv("LOCALAPPDATA") + "\\GeometryDash\\" + song.get().id() + ".mp3");
-                                if (!Files.exists(songFile)) {
-                                    try {
-                                        Optional<String> songDL = song.get().downloadUrl();
-                                        if (songDL.isPresent()) {
-                                            FileUtils.copyURLToFile(new URL(songDL.get()), songFile.toFile());
-                                        }
-                                    } catch (IOException ignored) {
-                                    }
-                                }
+                    if (Settings.getSettings("followers").asBoolean()) {
+                        if (APIs.isNotFollowing(user, userID)) {
+                            sendUnallowed(Utilities.format("$FOLLOW_MESSAGE$", user));
+                            return;
+                        }
+                    }
+                    if (level.id() < Settings.getSettings("minID").asInteger() && Settings.getSettings("minIDOption").asBoolean()) {
+                        sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", user, Settings.getSettings("minID").asInteger()));
+                        return;
+                    }
+                    if (level.id() > Settings.getSettings("maxID").asInteger() && Settings.getSettings("maxIDOption").asBoolean()) {
+                        sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", user, Settings.getSettings("maxID").asInteger()));
+                        return;
+                    }
+                    if (Settings.getSettings("queueLimitEnabled").asBoolean() && (RequestsTab.getQueueSize() >= Settings.getSettings("queueLimit").asInteger())) {
+                        if (!Settings.getSettings("disableQF").asBoolean()) {
+                            sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$", user));
+                        }
+                        return;
+                    }
+                    if (Settings.getSettings("userLimitEnabled").asBoolean()) {
+                        int size = 0;
+                        for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+                            if (RequestsTab.getRequest(i).getLevelData().getRequester().equalsIgnoreCase(user)) {
+                                size++;
                             }
-                        }).start();
-                    }
-
-                    levelData.setRequester(user);
-                    levelData.setMessage(message);
-                    levelData.setMessageID(messageID);
-
-                    Optional<String> creatorName = levelData.getGDLevel().creatorName();
-
-                    try {
-                        creatorName.ifPresent(s -> levelData.setPlayerIcon(GDAPI.getIcon(GDAPI.getGDUserProfile(s), 100)));
-                    }
-                    catch (Exception ignored){
-                        //if green user, don't fail
-                    }
-                    LevelButton levelButton = new LevelButton(levelData);
-
-                    RequestsTab.addRequest(levelButton);
-
-                    //com.alphalaneous.Tabs.Window.getLevelsPanel().refreshButtons();
-
-                    try {
-                        RequestsTab.getLevelsPanel().setSelect(LevelButton.selectedID, RequestsTab.getQueueSize() == 1);
-                    } catch (Exception ignored) {
-                    }
-                    RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
-                    RequestFunctions.saveFunction();
-                    if (Main.sendMessages && !Settings.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
-                        if (!Settings.getSettings("disableShowPosition").asBoolean()) {
-                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
-                                    levelData.getRequester(),
-                                    level.name(),
-                                    level.id(),
-                                    RequestsTab.getQueueSize()), Settings.getSettings("whisperConfirm").asBoolean(), user);
-                        } else {
-                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
-                                    levelData.getRequester(),
-                                    level.name(),
-                                    level.id()), Settings.getSettings("whisperConfirm").asBoolean(), user);
+                        }
+                        if (size >= Settings.getSettings("userLimit").asInteger()) {
+                            sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$", user));
+                            return;
                         }
                     }
+                    if (Settings.getSettings("userLimitStreamEnabled").asBoolean()) {
+                        if (userStreamLimitMap.containsKey(user)) {
+                            if (userStreamLimitMap.get(user) >= Settings.getSettings("userLimitStream").asInteger()) {
+                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_STREAM_MESSAGE$", user));
+                                return;
+                            }
+                        }
+                    }
+                    if (addedLevels.containsKey(level.id()) && (Settings.getSettings("repeatedRequests").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean())) {
+                        sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
+                        return;
+                    }
+                }
+                if (userStreamLimitMap.containsKey(user)) {
+                    userStreamLimitMap.put(user, userStreamLimitMap.get(user) + 1);
+                } else {
+                    userStreamLimitMap.put(user, 1);
+                }
 
-                    if (Main.sendMessages && !Settings.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() == 1) {
-                        StringSelection selection = new StringSelection(String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clipboard.setContents(selection, selection);
-                        if (Main.sendMessages && !Settings.getSettings("disableNP").asBoolean()) {
-                            Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
-                                    RequestsTab.getRequest(0).getLevelData().getRequester(),
-                                    RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                    RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
-
+                LevelData levelData = new LevelData();
+                if (!bypass) {
+                    if (checkList(level.creatorName(), "\\loquibot\\blockedGDUsers.txt")) {
+                        sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", user));
+                        return;
+                    }
+                    if (Settings.getSettings("rated").asBoolean() && !(level.stars() > 0)) {
+                        sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", user));
+                        return;
+                    }
+                    if (Settings.getSettings("unrated").asBoolean() && level.stars() > 0) {
+                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", user));
+                        return;
+                    }
+                    if (Settings.getSettings("minObjectsOption").asBoolean() && level.objectCount() < Settings.getSettings("minObjects").asInteger()) {
+                        sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$", user));
+                        return;
+                    }
+                    if (Settings.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > Settings.getSettings("maxObjects").asInteger()) {
+                        sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$", user));
+                        return;
+                    }
+                    if (level.objectCount() != 0) {
+                        if (Settings.getSettings("minLikesOption").asBoolean() && level.objectCount() < Settings.getSettings("minLikes").asInteger()) {
+                            sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$", user));
+                            return;
+                        }
+                        if (Settings.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > Settings.getSettings("maxLikes").asInteger()) {
+                            sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$", user));
+                            return;
                         }
                     }
                 }
-                else {
-                    boolean bypass = (Settings.getSettings("modsBypass").asBoolean() && isMod) || (user.equalsIgnoreCase(TwitchAccount.login) && Settings.getSettings("streamerBypass").asBoolean());
+                if (messageID != null) {
+                    levelData.setMessageID(messageID);
+                }
 
-                    for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-
-                        if (finalIDa == RequestsTab.getRequestBasic(k).getID()) {
-                            int j = k + 1;
-                            if (!Settings.getSettings("disableShowPosition").asBoolean()) {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", user, j));
-                            } else {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$", user));
-                            }
-                            return;
-                        }
-                    }
-                    if (!bypass) {
-                        if (checkList(finalIDa, "\\loquibot\\blocked.txt")) {
-                            sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$", user));
-                            return;
-                        }
-                        if (Files.exists(logged) && (Settings.getSettings("repeatedRequestsAll").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean()) && Main.programLoaded) {
-                            Scanner sc = new Scanner(logged.toFile());
-                            while (sc.hasNextLine()) {
-                                if (String.valueOf(finalIDa).equals(sc.nextLine().split(",")[0])) {
+                if (level.featuredScore() > 0) {
+                    levelData.setFeatured();
+                }
+                levelData.setLevelData(level);
+                if (!bypass) {
+                    if (Files.exists(logged) && Settings.getSettings("updatedRepeated").asBoolean()) {
+                        Scanner sc = new Scanner(logged.toFile());
+                        while (sc.hasNextLine()) {
+                            String levelLine = sc.nextLine();
+                            if (String.valueOf(level.id()).equals(levelLine.split(",")[0])) {
+                                int version;
+                                if (levelLine.split(",").length == 1) {
+                                    version = 1;
+                                } else {
+                                    version = Integer.parseInt(levelLine.split(",")[1]);
+                                }
+                                if (version >= levelData.getGDLevel().levelVersion()) {
                                     sc.close();
                                     sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
                                     return;
                                 }
                             }
-                            sc.close();
                         }
-                        if (globallyBlockedIDs.containsKey(finalIDa)) {
-                            sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(finalIDa)));
+                        sc.close();
+                    }
+                    if (addedLevels.containsKey(level.id()) && (Settings.getSettings("updatedRepeated").asBoolean())) {
+                        if (addedLevels.get(level.id()) >= levelData.getGDLevel().levelVersion()) {
+                            sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
                             return;
                         }
-                        if (Settings.getSettings("subscribers").asBoolean()) {
-                            if (!(isSub || isMod)) {
-                                sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", user));
-                                return;
-                            }
-                        }
-                        if (Settings.getSettings("followers").asBoolean()) {
-                            if (APIs.isNotFollowing(user, userID)) {
-                                sendUnallowed(Utilities.format("$FOLLOW_MESSAGE$", user));
-                                return;
-                            }
-                        }
-                        if (finalIDa < Settings.getSettings("minID").asInteger() && Settings.getSettings("minIDOption").asBoolean()) {
-                            sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", user, Settings.getSettings("minID").asInteger()));
-                            return;
-                        }
-                        if (finalIDa > Settings.getSettings("maxID").asInteger() && Settings.getSettings("maxIDOption").asBoolean()) {
-                            sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", user, Settings.getSettings("maxID").asInteger()));
-                            return;
-                        }
+                    }
+                    if (FiltersSettings.excludedDifficulties.contains(levelData.getSimpleDifficulty().toLowerCase()) && Settings.getSettings("disableDifficulties").asBoolean()) {
+                        sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$", user));
+                        return;
+                    }
+                    if (FiltersSettings.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().requestedStars())) && Settings.getSettings("disableReqDifficulties").asBoolean()) {
+                        sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$", user));
+                        return;
+                    }
+                    if (FiltersSettings.excludedLengths.contains(level.length().name().toLowerCase()) && Settings.getSettings("disableLengths").asBoolean()) {
+                        sendUnallowed(Utilities.format("$LENGTH_MESSAGE$", user));
+                        return;
+                    }
+                }
 
-                        if (Settings.getSettings("queueLimitEnabled").asBoolean() && (RequestsTab.getQueueSize() >= Settings.getSettings("queueLimit").asInteger())) {
-                            if (!Settings.getSettings("disableQF").asBoolean()) {
-                                sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$", user));
-                            }
-                            return;
-                        }
-                        if (Settings.getSettings("userLimitEnabled").asBoolean()) {
-                            int size = 0;
-                            for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-                                if (RequestsTab.getRequestBasic(i).getRequester().equalsIgnoreCase(user)) {
-                                    size++;
+                if (Settings.getSettings("autoDL").asBoolean()) {
+                    new Thread(() -> {
+                        Optional<GDSong> song = levelData.getGDLevel().song();
+                        if (song.isPresent()) {
+                            Path songFile = Paths.get(System.getenv("LOCALAPPDATA") + "\\GeometryDash\\" + song.get().id() + ".mp3");
+                            if (!Files.exists(songFile)) {
+                                try {
+                                    Optional<String> songDL = song.get().downloadUrl();
+                                    if (songDL.isPresent()) {
+                                        FileUtils.copyURLToFile(new URL(songDL.get()), songFile.toFile());
+                                    }
+                                } catch (IOException ignored) {
                                 }
                             }
-                            if (size >= Settings.getSettings("userLimit").asInteger()) {
-                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$", user));
-                                return;
-                            }
                         }
-                    }
-                    BasicLevelButton levelButton = new BasicLevelButton(finalIDa, user);
-                    RequestsTab.addRequest(levelButton);
+                    }).start();
+                }
 
-                    try {
-                        RequestsTab.getLevelsPanel().setSelect(LevelButton.selectedID, RequestsTab.getQueueSize() == 1);
-                    } catch (Exception ignored) {
+                levelData.setRequester(user);
+                levelData.setMessage(message);
+                levelData.setMessageID(messageID);
+
+                Optional<String> creatorName = levelData.getGDLevel().creatorName();
+
+                try {
+                    creatorName.ifPresent(s -> levelData.setPlayerIcon(GDAPI.getIcon(GDAPI.getGDUserProfile(s), 100)));
+                }
+                catch (Exception ignored){
+                    //if green user, don't fail
+                }
+                LevelButton levelButton = new LevelButton(levelData);
+
+                RequestsTab.addRequest(levelButton);
+
+
+                try {
+                    RequestsTab.getLevelsPanel().setSelect(LevelButton.selectedID, RequestsTab.getQueueSize() == 1);
+                } catch (Exception ignored) {
+                }
+                RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
+                RequestFunctions.saveFunction();
+                if (Main.sendMessages && !Settings.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
+                    if (!Settings.getSettings("disableShowPosition").asBoolean()) {
+                        sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
+                                levelData.getRequester(),
+                                level.name(),
+                                level.id(),
+                                RequestsTab.getQueueSize()), Settings.getSettings("whisperConfirm").asBoolean(), user);
+                    } else {
+                        sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
+                                levelData.getRequester(),
+                                level.name(),
+                                level.id()), Settings.getSettings("whisperConfirm").asBoolean(), user);
                     }
-                    RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
-                    RequestFunctions.saveFunction();
-                    if (Main.sendMessages && !Settings.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
-                        if (!Settings.getSettings("disableShowPosition").asBoolean()) {
-                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_BASIC$",
-                                    user,
-                                    finalIDa,
-                                    RequestsTab.getQueueSize()), Settings.getSettings("whisperConfirm").asBoolean(), user);
-                        } else {
-                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_BASIC_ALT$",
-                                    user,
-                                    finalIDa), Settings.getSettings("whisperConfirm").asBoolean(), user);
-                        }
+                }
+
+                if (Main.sendMessages && !Settings.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() == 1) {
+                    StringSelection selection = new StringSelection(String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    clipboard.setContents(selection, selection);
+                    if (Main.sendMessages && !Settings.getSettings("disableNP").asBoolean()) {
+                        Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
+                                RequestsTab.getRequest(0).getLevelData().getRequester(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+
                     }
 
-                    if (Main.sendMessages && !Settings.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() == 1) {
-                        StringSelection selection = new StringSelection(String.valueOf(RequestsTab.getRequestBasic(0).getID()));
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clipboard.setContents(selection, selection);
-                        if (Main.sendMessages && !Settings.getSettings("disableNP").asBoolean()) {
-                            Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE_BASIC$",
-                                    RequestsTab.getRequestBasic(0).getRequester(),
-                                    RequestsTab.getRequestBasic(0).getID()));
-                        }
-                    }
                 }
 
             } catch (GDClientException e) {
@@ -563,8 +419,6 @@ public class Requests {
             case 9:
                 return "insane";
             case 10: return "hard demon";
-
-
         }
         return "NA";
     }
@@ -589,7 +443,7 @@ public class Requests {
                         exists = true;
                         break;
                     }
-                    Thread.sleep(5);
+                    Utilities.sleep(5);
                 }
                 sc.close();
             }

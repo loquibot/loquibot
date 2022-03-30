@@ -22,9 +22,6 @@
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/emoji-java-5.1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/imgscalr-lib-4.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/j2v8_win32_x86_64-4.6.0.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/marvin/framework" />
-      <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/marvin/lib" />
-      <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/discord-rpc.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jsoup-1.14.3.jar!/" />
@@ -37,8 +34,5 @@
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />
       <root url="jar://$USER_HOME$/.ideaLibSources/imgscalr-lib-4.2-sources.jar!/" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/../../GDBoard Dependencies/marvin/framework" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/../../GDBoard Dependencies/marvin/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/../../GDBoard Dependencies/marvin/plugins/image" recursive="false" />
   </library>
 </component>
