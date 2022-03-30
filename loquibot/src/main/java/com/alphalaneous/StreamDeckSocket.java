@@ -49,6 +49,12 @@ public class StreamDeckSocket extends WebSocketServer {
             case "opened":
                 Main.sendMessageToStreamDeck(RequestsUtils.getInfoObject(data).toString());
                 break;
+            case "block_id":
+                RequestFunctions.blockFunction(true);
+                break;
+            case "clear":
+                RequestFunctions.clearFunction(true);
+                break;
             case "youtube":
                 if(data.getYoutubeURL() != null) {
                     try {

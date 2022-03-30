@@ -362,11 +362,16 @@ public class RequestFunctions {
     }
 
     public static void blockFunction() {
-        blockFunction(LevelButton.selectedID);
+        blockFunction(LevelButton.selectedID, false);
+    }
+    public static void blockFunction(int pos) {
+        blockFunction(pos, false);
+    }
+    public static void blockFunction(boolean skip) {
+        blockFunction(LevelButton.selectedID, skip);
     }
 
-
-    public static void blockFunction(int pos) {
+    public static void blockFunction(int pos, boolean skip) {
         if (Main.programLoaded) {
             if (pos == 0 && RequestsTab.getQueueSize() > 1) {
                 StringSelection selection = new StringSelection(
@@ -378,12 +383,9 @@ public class RequestFunctions {
 
                 new Thread(() -> {
                     String option;
-                    if (!Settings.getSettings("basicMode").asBoolean()) {
-                        option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{RequestsTab.getRequest(pos).getLevelData().getGDLevel().name(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()});
-                    } else {
-                        option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{"Unknown", RequestsTab.getRequestBasic(pos).getID()});
+                    if(skip) option = "YES";
+                    else option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{RequestsTab.getRequest(pos).getLevelData().getGDLevel().name(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()});
 
-                    }
                     if (option.equalsIgnoreCase("YES")) {
                         BlockedIDSettings.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
                         Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blocked.txt");
@@ -392,10 +394,7 @@ public class RequestFunctions {
                             if (!Files.exists(file)) {
                                 Files.createFile(file);
                             }
-                            Files.write(
-                                    file,
-                                    (RequestsTab.getRequest(pos).getLevelData().getGDLevel().id() + "\n").getBytes(),
-                                    StandardOpenOption.APPEND);
+                            Files.write(file, (RequestsTab.getRequest(pos).getLevelData().getGDLevel().id() + "\n").getBytes(), StandardOpenOption.APPEND);
                         } catch (IOException e1) {
                             DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
 
@@ -403,12 +402,6 @@ public class RequestFunctions {
                         RequestsTab.removeRequest(pos);
                         RequestFunctions.saveFunction();
                         RequestsTab.getLevelsPanel().setSelect(0);
-                        new Thread(() -> {
-                            //RequestsTab.unloadComments(true);
-                            if (RequestsTab.getQueueSize() > 0) {
-                                //RequestsTab.loadComments(0, false);
-                            }
-                        }).start();
                         RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
 
                     }
@@ -418,24 +411,27 @@ public class RequestFunctions {
         }
     }
 
-
-
     public static void clearFunction() {
-        if (Main.programLoaded) {
+        clearFunction(false);
+    }
 
-                new Thread(() -> {
-                    String option = DialogBox.showDialogBox("$CLEAR_QUEUE_TITLE$", "$CLEAR_QUEUE_INFO$", "$CLEAR_QUEUE_SUBINFO$", new String[]{"$CLEAR_ALL$", "$CANCEL$"});
-                    if (option.equalsIgnoreCase("CLEAR_ALL")) {
-                        if (RequestsTab.getQueueSize() != 0) {
-                            RequestsTab.clearRequests();
-                            undoQueue.clear();
-                            RequestFunctions.saveFunction();
-                            //RequestsTab.unloadComments(true);
-                        }
-                        RequestsTab.getLevelsPanel().setSelect(0);
-                        LevelDetailsPanel.setPanel(null);
+    public static void clearFunction(boolean skip) {
+        if (Main.programLoaded) {
+            new Thread(() -> {
+                String option;
+                if(skip) option = "CLEAR_ALL";
+                else option = DialogBox.showDialogBox("$CLEAR_QUEUE_TITLE$", "$CLEAR_QUEUE_INFO$", "$CLEAR_QUEUE_SUBINFO$", new String[]{"$CLEAR_ALL$", "$CANCEL$"});
+
+                if (option.equalsIgnoreCase("CLEAR_ALL")) {
+                    if (RequestsTab.getQueueSize() != 0) {
+                        RequestsTab.clearRequests();
+                        undoQueue.clear();
+                        RequestFunctions.saveFunction();
                     }
-                }).start();
+                    RequestsTab.getLevelsPanel().setSelect(0);
+                    LevelDetailsPanel.setPanel(null);
+                }
+            }).start();
         }
     }
 

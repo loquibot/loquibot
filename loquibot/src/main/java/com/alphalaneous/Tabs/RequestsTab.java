@@ -359,6 +359,8 @@ public class RequestsTab {
     }
     public static void clearRequests(){
         levelsPanel.clearRequests();
+        levelsPanel.updateUI();
+
     }
     public static int getQueueSize(){
         return levelsPanel.getQueueSize();
