@@ -3,6 +3,7 @@ package com.alphalaneous;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 
 public class ThemedColor extends Color {
@@ -89,6 +90,9 @@ public class ThemedColor extends Color {
     }
 
     public static void setAllThemeColors(){
-        for(ThemedColor themedColor : themedColors) themedColor.setThemeColor();
+        try {
+            for (ThemedColor themedColor : themedColors) themedColor.setThemeColor();
+        }
+        catch (ConcurrentModificationException ignored){}
     }
 }
