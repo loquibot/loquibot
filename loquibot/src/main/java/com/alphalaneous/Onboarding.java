@@ -96,9 +96,7 @@ public class Onboarding {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				try {
-					//moveOn.setVisible(true);
-
-					Thread thread = new Thread(() -> {
+					new Thread(() -> {
 						APIs.setOauth();
 						while (!APIs.success.get()) {
 							try {
@@ -111,8 +109,7 @@ public class Onboarding {
 						Settings.writeSettings("onboarding", "false");
 						Onboarding.isLoading = false;
 						com.alphalaneous.Windows.Window.closeDialog();
-					});
-					thread.start();
+					}).start();
 				} catch (Exception ignored) {
 				}
 			}

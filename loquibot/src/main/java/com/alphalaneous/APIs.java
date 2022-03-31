@@ -355,14 +355,11 @@ public class APIs {
 				Settings.writeSettings("channel", Objects.requireNonNull(getChannel()));
 				TwitchAccount.setInfo();
 				AccountSettings.refreshTwitch(Settings.getSettings("channel").asString());
-				Main.refreshBot();
+				//Main.refreshBot();
 				success.set(true);
 			} else {
 				System.out.println(twitch.auth().getAuthenticationError());
 
-			}
-			if (!loquibotBot.initialConnect) {
-				loquibotBot.initialConnect = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

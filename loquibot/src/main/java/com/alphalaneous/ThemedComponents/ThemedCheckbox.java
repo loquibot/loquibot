@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class ThemedCheckbox extends JPanel {
 
@@ -94,7 +95,10 @@ public class ThemedCheckbox extends JPanel {
 
 	public static void refreshAll() {
 		for (ThemedCheckbox button : buttons) {
-			button.refresh();
+			try {
+				button.refresh();
+			}
+			catch (ConcurrentModificationException ignored){}
 		}
 	}
 

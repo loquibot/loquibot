@@ -139,11 +139,12 @@ public class Main {
             System.out.println("> Panels Created");
 
             Window.loadSettings();
-            Themes.refreshUI();
             starting.setVisible(false);
 
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
+
+            Themes.refreshUI();
 
             if (!Settings.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();

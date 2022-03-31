@@ -125,9 +125,20 @@ public class Defaults {
 		return compatibleFonts.get(firstCompatibleFont);
 	}
 
+	public static void setDark(){
+		setDark(true);
+	}
+	public static void setLight(){
+		setLight(true);
+	}
+	public static void setCustom(){
+		setCustom(true);
+	}
+	public static void setSystem(){
+		setSystem(true);
+	}
 
-
-	public static void setDark() {
+	public static void setDark(boolean refresh) {
 		isLight = false;
 		COLOR = new Color(31, 29, 46);
 		COLOR1 = new Color(47, 44, 66);
@@ -141,10 +152,10 @@ public class Defaults {
 		FOREGROUND_A = Color.WHITE;
 		FOREGROUND_B = new Color(165, 165, 165);
 		FOREGROUND_C = new Color(255,255,255,150);
-		Themes.refreshUI();
+		if(refresh) Themes.refreshUI();
 	}
 
-	public static void setLight() {
+	public static void setLight(boolean refresh) {
 		isLight = true;
 		COLOR = new Color(230, 230, 230);
 		COLOR1 = new Color(205, 205, 205);
@@ -158,9 +169,9 @@ public class Defaults {
 		FOREGROUND_A = Color.BLACK;
 		FOREGROUND_B = new Color(114, 114, 114);
 		FOREGROUND_C = new Color(0,0,0,150);
-		Themes.refreshUI();
+		if(refresh) Themes.refreshUI();
 	}
-	public static void setCustom() {
+	public static void setCustom(boolean refresh) {
 		isLight = Themes.getIsLight();
 		COLOR = Themes.getThemeSetting("color");
 		COLOR1 = Themes.getThemeSetting("color1");
@@ -172,10 +183,10 @@ public class Defaults {
 		COLOR7 = Themes.getThemeSetting("color7");
 		FOREGROUND_A = Themes.getThemeSetting("foreground_a");
 		FOREGROUND_B = Themes.getThemeSetting("foreground_b");
-		Themes.refreshUI();
+		if(refresh) Themes.refreshUI();
 	}
 
-	public static void setSystem() {
+	public static void setSystem(boolean refresh) {
 		final int[] prevTheme = new int[1];
 		try {
 			prevTheme[0] = RegQuery.getTheme();
@@ -194,7 +205,7 @@ public class Defaults {
 		}
 		int color = RegQuery.getColor();
 		ACCENT = Color.decode(String.valueOf(color));
-		Themes.refreshUI();
+		if(refresh) Themes.refreshUI();
 
 	}
 	private static final int[] prevTheme = new int[1];
@@ -233,16 +244,16 @@ public class Defaults {
 						}
 						if(Settings.getSettings("theme").asString().equalsIgnoreCase("SYSTEM_MODE")) {
 							if (theme == 0 && prevTheme[0] == 1) {
-								Defaults.setDark();
+								Defaults.setDark(false);
 								prevTheme[0] = 0;
 							} else if (theme == 1 && prevTheme[0] == 0) {
-								Defaults.setLight();
+								Defaults.setLight(false);
 								prevTheme[0] = 1;
 							}
 						}
 
 					} else {
-						Defaults.setDark();
+						Defaults.setDark(false);
 						prevTheme[0] = 0;
 					}
 
