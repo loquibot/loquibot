@@ -242,6 +242,37 @@ public class CommandNew {
                             Board.bwomp();
                             break;
                         }
+                        case "playsound":
+                        case "sound": {
+                            switch (dataArr[1].trim().toLowerCase()){
+                                case "bwomp": {
+                                    Board.bwomp();
+                                    break;
+                                }
+                                case "boowomp": {
+                                    Sounds.playSound("/sounds/boowomp.mp3", true, true, false, false);
+                                    break;
+                                }
+                                case "fart": {
+                                    Sounds.playSound("/sounds/fart.mp3", true, true, false, false);
+                                    break;
+                                }
+                                case "bonk": {
+                                    Sounds.playSound("/sounds/bonk.mp3", true, true, false, false);
+                                    break;
+                                }
+                                case "honk": {
+                                    Sounds.playSound("/sounds/honk.mp3", true, true, false, false);
+                                    break;
+                                }
+                                default: {
+                                    Sounds.playSound(dataArr[1].trim(), true, true, false, true);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+
                         case "level": {
                             String[] levelArguments = data.split(" ");
                             if (levelArguments.length > 2) {

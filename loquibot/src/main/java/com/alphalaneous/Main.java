@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +37,7 @@ public class Main {
 
     private static ChannelPointListener channelPointListener;
     private static ChatListener chatReader;
-    private static ServerBot2 serverBot = null;
+    private static ServerBot serverBot = null;
     private static boolean keepConnecting = true;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
@@ -188,7 +187,7 @@ public class Main {
             }).start();
             new Thread(() -> {
                 while (keepConnecting) {
-                    serverBot = new ServerBot2();
+                    serverBot = new ServerBot();
                     serverBot.connect();
                     Utilities.sleep(1000);
                 }

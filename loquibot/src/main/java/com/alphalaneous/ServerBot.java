@@ -1,8 +1,8 @@
 package com.alphalaneous;
 
 import com.alphalaneous.SettingsPanels.AccountSettings;
-import com.alphalaneous.SettingsPanels.RequestsSettings;
 import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Tabs.RequestsTab;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-class ServerBot {
+public class ServerBot {
 
 	private Socket clientSocket;
 	private PrintWriter out;
@@ -20,8 +20,10 @@ class ServerBot {
 
 	{
 		try {
-			clientSocket = new Socket("165.227.53.200", 2963);
-			//clientSocket = new Socket("142.93.12.163", 2963); //new server
+			//clientSocket = new Socket("localhost", 2963); //test
+			clientSocket = new Socket("142.93.12.163", 2963); //new server
+			//clientSocket = new Socket("165.227.53.200", 2963); //current server
+			
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
@@ -37,53 +39,65 @@ class ServerBot {
 		sendMessage(authObj.toString());
 
 		String inputLine;
-		while (true) {
+		connect: while (true) {
 			try {
 				if ((inputLine = in.readLine()) == null) break;
 			} catch (Exception e) {
 				break;
 			}
+			//System.out.println(inputLine);
 			String event = "";
 			try {
 				JSONObject object = new JSONObject(inputLine);
-				System.out.println(object.get("event"));
 				if (object.get("event") != null) {
 					event = object.get("event").toString().replaceAll("\"", "");
 				}
-				if (event.equalsIgnoreCase("connected")) {
-					System.out.println("> Connected to loquibot Servers");
+				//System.out.println(event);
 
-					String channel = object.get("username").toString().replaceAll("\"", "").replaceAll("#", "");
-					Settings.writeSettings("channel", channel);
-					AccountSettings.refreshTwitch(channel);
-					APIs.setAllViewers();
-					JSONObject bid = new JSONObject();
-					bid.put("request_type", "get_blocked_ids");
+				switch (event) {
+					case "connected" : {
 
-					sendMessage(bid.toString());
-				} else if (event.equalsIgnoreCase("connect_failed")) {
-					clientSocket.close();
-					break;
-				}
-				if (event.equalsIgnoreCase("blocked_ids_updated") && Settings.getSettings("gdMode").asBoolean()) {
-					System.out.println("> Blocked IDs Updated");
-					DialogBox.closeDialogBox();
-					String[] IDs = object.get("ids").toString().replace("\"", "").replace("{", "").replace("}", "").replace("\\", "").split(",");
-					JSONObject object1 = new JSONObject();
-					JSONArray array = new JSONArray();
-					for (String ID : IDs) {
-						try {
-							Requests.globallyBlockedIDs.put(Long.parseLong(ID.split(":", 2)[0]), ID.split(":", 2)[1]);
-							JSONObject level = new JSONObject();
-							level.put("id", Long.parseLong(ID.split(":", 2)[0]));
-							level.put("reason", ID.split(":", 2)[1]);
-							array.put(level);
+						System.out.println("> Connected to loquibot Servers");
+						String channel = object.getString("username");
+						if(object.optBoolean("is_officer")){
+							RequestsTab.setOfficerVisible();
 						}
-						catch (NumberFormatException ignored){
+						Settings.writeSettings("channel", channel);
+						AccountSettings.refreshTwitch(channel);
+						APIs.setAllViewers();
+						break;
+					}
+					case "connect_failed" : {
+						clientSocket.close();
+						break connect;
+					}
+					case "blocked_ids_updated" : {
+						System.out.println("> Blocked IDs Updated");
+						JSONArray IDs = object.getJSONObject("ids").getJSONArray("globallyBlockedIDs");
+						Requests.globallyBlockedIDs.clear();
+						for (int i = 0; i < IDs.length(); i++) {
+							long ID = IDs.getJSONObject(i).getLong("id");
+							String reason = IDs.getJSONObject(i).getString("reason");
+							Requests.globallyBlockedIDs.put(ID, reason);
+						}
+						break;
+					}
+					case "broadcast" : {
+						String message = object.getString("message");
+						Main.sendMessage("\uD83D\uDCE2 | " + message);
+						break;
+					}
+					case "error" : {
+						String error = object.getString("error");
+						switch (error) {
+							case "invalid_blocked_ID" :
+							case "no_id_block_reason_given" :
+							case "id_already_blocked" :
+							case "invalid_unblocked_ID" :
+							case "id_not_blocked" :
+							default : break;
 						}
 					}
-					object1.put("globallyBlockedIDs", array);
-					System.out.println(object1);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -105,7 +119,7 @@ class ServerBot {
 		}
 	}
 
-	void sendMessage(String message) {
+	public void sendMessage(String message) {
 		out.println(message);
 	}
 
