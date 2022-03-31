@@ -49,28 +49,26 @@ public class DefaultCommandFunctions {
 
 
     public static String runInfo(ChatMessage message){
-        if(!Settings.getSettings("basicMode").asBoolean()) {
-            int intArg;
-            try {
-                intArg = Integer.parseInt(message.getArgs()[1]);
-            }
-            catch (Exception e){
-                intArg = RequestsUtils.getSelection() + 1;
-            }
-            if (message.getArgs().length <= 1 || message.getArgs().length >= RequestsUtils.getSize()) {
-                intArg = RequestsUtils.getSelection() + 1;
-            }
-            if (RequestsUtils.getSize() > 0 && intArg <= RequestsUtils.getSize()) {
-                return Utilities.format("$INFO_COMMAND_MESSAGE$", message.getSender(),
-                        RequestsUtils.getLevel(intArg - 1, "name"),
-                        RequestsUtils.getLevel(intArg - 1, "id"),
-                        RequestsUtils.getLevel(intArg - 1, "author"),
-                        RequestsUtils.getLevel(intArg - 1, "requester"),
-                        RequestsUtils.getLevel(intArg - 1, "downloads"),
-                        RequestsUtils.getLevel(intArg - 1, "likes"),
-                        RequestsUtils.getLevel(intArg - 1, "objects"),
-                        RequestsUtils.getLevel(intArg - 1, "difficulty"));
-            }
+        int intArg;
+        try {
+            intArg = Integer.parseInt(message.getArgs()[1]);
+        }
+        catch (Exception e){
+            intArg = RequestsUtils.getSelection() + 1;
+        }
+        if (message.getArgs().length <= 1 || message.getArgs().length >= RequestsUtils.getSize()) {
+            intArg = RequestsUtils.getSelection() + 1;
+        }
+        if (RequestsUtils.getSize() > 0 && intArg <= RequestsUtils.getSize()) {
+            return Utilities.format("$INFO_COMMAND_MESSAGE$", message.getSender(),
+                    RequestsUtils.getLevel(intArg - 1, "name"),
+                    RequestsUtils.getLevel(intArg - 1, "id"),
+                    RequestsUtils.getLevel(intArg - 1, "author"),
+                    RequestsUtils.getLevel(intArg - 1, "requester"),
+                    RequestsUtils.getLevel(intArg - 1, "downloads"),
+                    RequestsUtils.getLevel(intArg - 1, "likes"),
+                    RequestsUtils.getLevel(intArg - 1, "objects"),
+                    RequestsUtils.getLevel(intArg - 1, "difficulty"));
         }
         return "";
     }

@@ -11,6 +11,8 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
@@ -28,7 +30,6 @@ public class Comment extends JPanel {
     private String creatorName;
     private String commentAuthor;
     private int percent = 0;
-
     public Comment(GDComment comment, int width){
 
         setLayout(null);
@@ -65,8 +66,29 @@ public class Comment extends JPanel {
         commentAuthorLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
         commentAuthorLabel.setForeground(Defaults.FOREGROUND_A);
         commentAuthorLabel.setBounds(30, 2, commentAuthorLabel.getPreferredSize().width, 18);
-        if (commentAuthor.equalsIgnoreCase(creatorName)) commentAuthorLabel.setForeground(new Color(47, 62, 195));
 
+        if (commentAuthor.equalsIgnoreCase("Alphalaneous")){
+
+            new Thread(() -> {
+                int tries = 0;
+                while(tries < 10) {
+                    float hue = 0;
+                    do {
+                        content.setForeground(Color.getHSBColor(hue, 1, 1));
+                        content.invalidate();
+                        content.revalidate();
+                        content.repaint();
+                        hue += 0.01;
+                        if (hue > 1) hue = 0;
+                        Utilities.sleep(30);
+                    } while (content.isShowing());
+                    tries++;
+                }
+            }).start();
+
+        }
+        else if (commentAuthor.equalsIgnoreCase(creatorName)) content.setForeground(new Color(246, 255, 0));
+        else content.setForeground(Defaults.FOREGROUND_C);
         String finalCommentAuthor = commentAuthor;
         commentAuthorLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -133,7 +155,7 @@ public class Comment extends JPanel {
 
 
         content.setFont(Defaults.MAIN_FONT.deriveFont(11.5f));
-        content.setForeground(Defaults.FOREGROUND_C);
+
         content.setBounds(9, 22, width - 15, content.getPreferredSize().height);
         content.setOpaque(false);
 

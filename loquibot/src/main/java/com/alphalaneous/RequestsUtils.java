@@ -16,6 +16,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.nio.file.*;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -219,7 +220,7 @@ public class RequestsUtils {
 	@SuppressWarnings("unused")
 	public static String getLevel(int level, String attribute) {
 
-		String result;
+		String result = "NA";
 		try {
 			if(!Settings.getSettings("basicMode").asBoolean()) {
 				switch (attribute) {
@@ -230,7 +231,8 @@ public class RequestsUtils {
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().id());
 						break;
 					case "author":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().get();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().isPresent())
+							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().get();
 						break;
 					case "requester":
 						result = RequestsTab.getRequest(level).getLevelData().getRequester();
@@ -239,25 +241,30 @@ public class RequestsUtils {
 						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().difficulty().toString();
 						break;
 					case "likes":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().likes());
+						result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().likes());
 						break;
 					case "downloads":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().downloads());
+						result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().downloads());
 						break;
 					case "description":
 						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().description();
 						break;
 					case "songName":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().title();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
+							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().title();
 						break;
 					case "songID":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().id());
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
+							result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().id());
 						break;
 					case "songArtist":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().artist();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
+							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().artist();
 						break;
 					case "songURL":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().downloadUrl().get();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
+							if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().downloadUrl().isPresent())
+								result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().downloadUrl().get();
 						break;
 					case "stars":
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().stars());
@@ -275,7 +282,10 @@ public class RequestsUtils {
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().coinCount());
 						break;
 					case "objects":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount());
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount() > 0)
+							result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount());
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount() == 65535)
+							result = "≥65535";
 						break;
 					case "original":
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().originalLevelId());

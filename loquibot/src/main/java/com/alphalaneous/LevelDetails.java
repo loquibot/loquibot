@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -63,6 +64,8 @@ public class LevelDetails extends JPanel {
     private final JButton newest = createButton("\uF22B", "$LATEST_COMMENTS$");
     private final LoadingPane loadingPane = new LoadingPane();
     private int descHeight = 30;
+    private boolean top = false;
+
 
     public LevelDetails(LevelData data){
         setLayout(null);
@@ -72,7 +75,7 @@ public class LevelDetails extends JPanel {
         String starCount = "";
         if(data.getGDLevel().stars() > 0) starCount = data.getGDLevel().stars() + " stars • ";
 
-        infoLabel = new JLabel(starCount + data.getGDLevel().length() + " • " + data.getGDLevel().downloads() + " downloads • " + data.getGDLevel().likes() + " likes • (" + data.getGDLevel().id() + ")");
+        infoLabel = new JLabel(starCount + data.getGDLevel().length() + " • " + NumberFormat.getInstance().format(data.getGDLevel().downloads()) + " downloads • " + NumberFormat.getInstance().format(data.getGDLevel().likes()) + " likes • (" + data.getGDLevel().id() + ")");
 
 
         titleLabel.setFont(Defaults.MAIN_FONT.deriveFont(24f));
@@ -297,7 +300,7 @@ public class LevelDetails extends JPanel {
         prev.addActionListener(e -> {
             if(page > 0){
                 page--;
-                refreshComments(page, false, data.getGDLevel().id());
+                refreshComments(page, top, data.getGDLevel().id());
             }
         });
 
@@ -306,10 +309,10 @@ public class LevelDetails extends JPanel {
 
         next.addActionListener(e -> {
             page++;
-            boolean success = refreshComments(page, false, data.getGDLevel().id());
+            boolean success = refreshComments(page, top, data.getGDLevel().id());
             if(!success) {
                 page--;
-                refreshComments(page, false, data.getGDLevel().id());
+                refreshComments(page, top, data.getGDLevel().id());
             }
         });
 
@@ -318,6 +321,7 @@ public class LevelDetails extends JPanel {
 
         topComments.addActionListener(e -> {
             page = 0;
+            top = true;
             refreshComments(page, true, data.getGDLevel().id());
         });
 
@@ -326,6 +330,7 @@ public class LevelDetails extends JPanel {
 
         newest.addActionListener(e -> {
             page = 0;
+            top = false;
             refreshComments(page, false, data.getGDLevel().id());
         });
 
