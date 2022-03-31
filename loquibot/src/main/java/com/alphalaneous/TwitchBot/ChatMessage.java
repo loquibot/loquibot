@@ -50,6 +50,7 @@ public class ChatMessage {
     }
 
     public String getUserLevel(){
+
         if(TwitchAccount.login.toLowerCase(Locale.ROOT).equalsIgnoreCase(sender)) return "owner";
         if(isMod) return "moderator";
         if(isVIP) return "twitch_vip";

@@ -55,7 +55,7 @@ public abstract class ChatBot {
 							if(badgeA.split("/", 2)[0].equals("subscriber") || badgeA.split("/", 2)[0].equals("founder")){
 								isSub = true;
 							}
-							if(badgeA.split("/", 2)[0].equals("VIP")){
+							if(badgeA.split("/", 2)[0].equals("vip")){
 								isVIP = true;
 							}
 						}

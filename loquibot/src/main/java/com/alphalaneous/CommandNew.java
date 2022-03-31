@@ -643,6 +643,7 @@ public class CommandNew {
     public static boolean checkUserLevel(CommandData data, ChatMessage message){
         String commandLevel = data.getUserLevel();
         String messageLevel = message.getUserLevel();
+
         ArrayList<String> userLevels = new ArrayList<>();
         userLevels.add("everyone");
         userLevels.add("subscriber");
