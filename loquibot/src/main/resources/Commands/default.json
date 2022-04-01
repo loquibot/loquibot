@@ -56,6 +56,20 @@
       "description" : "View the game, change the game if mod | Usage: \"%pgame\" | \"%pgame <New Game>\"",
       "runMethod" : true,
       "message" : "runGame"
+    },
+    {
+      "name" : "fart",
+      "level" : "moderator",
+      "description" : "???",
+      "runMethod" : true,
+      "message" : "runFart"
+    },
+    {
+      "name" : "ping",
+      "level" : "moderator",
+      "description" : "???",
+      "runMethod" : true,
+      "message" : "runPing"
     }
   ]
 }

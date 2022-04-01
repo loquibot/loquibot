@@ -265,6 +265,9 @@ public class CommandNew {
                                     Sounds.playSound("/sounds/honk.mp3", true, true, false, false);
                                     break;
                                 }
+                                case "ping": {
+                                    Sounds.playSound("/sounds/ping.mp3", true, true, false, false);
+                                }
                                 default: {
                                     Sounds.playSound(dataArr[1].trim(), true, true, false, true);
                                     break;

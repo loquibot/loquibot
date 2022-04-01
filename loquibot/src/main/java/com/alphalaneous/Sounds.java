@@ -2,16 +2,19 @@ package com.alphalaneous;
 
 import com.alphalaneous.Windows.DialogBox;
 import javazoom.jl.player.Player;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Sounds {
 
 	static HashMap<String, Sound> sounds = new HashMap<>();
+	static HashMap<String, Player> cachedSoundDownloads = new HashMap<>();
 
 
 	public static void playSound(String location, boolean restart, boolean overlap) {
@@ -67,15 +70,14 @@ public class Sounds {
 				try {
 					BufferedInputStream inp;
 					if (isURL) {
-						inp = new BufferedInputStream(new URL(location).openStream());
+						inp = new BufferedInputStream (new URL(location).openStream());
 					} else if (isFile) {
-						inp = new BufferedInputStream(new FileInputStream(location));
+						inp = new BufferedInputStream (new FileInputStream(location));
 					} else {
-						inp = new BufferedInputStream(BotHandler.class
+						inp = new BufferedInputStream (BotHandler.class
 								.getResource(location).openStream());
 					}
 					mp3player = new Player(inp);
-
 					mp3player.play();
 
 				} catch (Exception f) {

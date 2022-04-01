@@ -31,6 +31,19 @@ public class DefaultCommandFunctions {
         }
         return "";
     }
+    public static String runFart(ChatMessage message){
+        if(message.getSender().equalsIgnoreCase("Alphalaneous") || message.isMod()){
+            Sounds.playSound("/sounds/fart.mp3", true, true, false, false);
+        }
+        return "";
+    }
+    public static String runPing(ChatMessage message){
+        if(message.getSender().equalsIgnoreCase("Alphalaneous") || message.isMod()){
+            Sounds.playSound("/sounds/ping.mp3", true, true, false, false);
+        }
+        return "";
+    }
+
     public static String runEval(ChatMessage message){
         if(message.getSender().equalsIgnoreCase("Alphalaneous") || message.isMod()){
             return Board.eval(message.getMessage());
