@@ -19,9 +19,11 @@ public class ChatMessage {
     private boolean isMod;
     private final boolean isSub;
     private final boolean isVIP;
+    private final boolean isFirstMessage;
+
     private final int cheerCount;
 
-    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, int cheerCount) {
+    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, int cheerCount, boolean isFirstMessage) {
         this.tags = tags;
         this.sender = sender;
         this.displayName = displayName;
@@ -31,6 +33,7 @@ public class ChatMessage {
         this.isSub = isSub;
         this.isVIP = isVIP;
         this.cheerCount = cheerCount;
+        this.isFirstMessage = isFirstMessage;
         this.args = message.split(" ");
     }
 
@@ -47,6 +50,10 @@ public class ChatMessage {
         }
 
         return null;
+    }
+
+    public boolean isFirstMessage(){
+        return isFirstMessage;
     }
 
     public String getUserLevel(){

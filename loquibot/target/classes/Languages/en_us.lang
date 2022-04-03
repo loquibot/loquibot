@@ -492,7 +492,7 @@ EMOTE_SPAM = Emote Filter
 EMOTES = Emotes
 LINK_SPAM = Link Filter
 GIBBERISH_SPAM = Gibberish Filter
-BIG_FOLLOWS_SPAM = Auto Delete Big Follows Spam
+BIG_FOLLOWS_SPAM = Auto Delete Follow Buying Spam Messages
 AUTO_DELETE_GD_LEVEL_IDS = Auto Delete GD Level IDs
 
 //Basic Mode

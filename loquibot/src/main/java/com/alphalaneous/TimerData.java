@@ -80,9 +80,9 @@ public class TimerData {
         if(minute % interval == 0 && isEnabled && ChatListener.SelfDestructingMessage.getSize() >= lines) {
             if (runCommand != null && !runCommand.equalsIgnoreCase("")) {
                 String[] args = runCommand.split(" ");
-                CommandNew.run(new ChatMessage(args, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0));
+                CommandNew.run(new ChatMessage(args, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false));
             } else {
-                ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0);
+                ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0, false);
                 Main.sendMessage(CommandNew.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
             }
         }

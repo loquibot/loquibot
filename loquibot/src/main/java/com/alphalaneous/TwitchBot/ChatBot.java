@@ -32,6 +32,7 @@ public abstract class ChatBot {
 						String sender = channelPrefix.split(".tmi.twitch.tv")[0];
 						String displayName = sender;
 						String[] badges = {};
+						boolean isFirstMessage = false;
 						boolean isMod = false;
 						boolean isSub = false;
 						boolean isVIP = false;
@@ -47,6 +48,9 @@ public abstract class ChatBot {
 							if(tagA.split("=", 2)[0].equals("display-name")){
 								displayName = tagA.split("=", 2)[1];
 							}
+							if(tagA.split("=", 2)[0].equals("first-msg")){
+								isFirstMessage = !tagA.split("=", 2)[1].equals("0");
+							}
 						}
 						for(String badgeA : badges){
 							if(badgeA.split("/", 2)[0].equals("broadcaster") || badgeA.split("/", 2)[0].equals("moderator")){
@@ -60,7 +64,7 @@ public abstract class ChatBot {
 							}
 						}
 
-						ChatBot.this.onMessage(new ChatMessage(tags, sender, displayName, sentMessage, badges, isMod, isSub, isVIP, cheerCount));
+						ChatBot.this.onMessage(new ChatMessage(tags, sender, displayName, sentMessage, badges, isMod, isSub, isVIP, cheerCount, isFirstMessage));
 					}
 					if (message.equalsIgnoreCase("PING :tmi.twitch.tv")) {
 						send("PONG :tmi.twitch.tv");

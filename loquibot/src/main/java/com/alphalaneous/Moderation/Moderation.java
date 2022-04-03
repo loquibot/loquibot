@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -124,7 +125,7 @@ public class Moderation {
 			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
 			return;
 		}
-		if(isFollowerBot(messageEmoteless) && Settings.getSettings("autoDeleteBigFollows").asBoolean()){
+		if(isFollowerBot(chatMessage) && Settings.getSettings("autoDeleteBigFollows").asBoolean()){
 			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
 		}
 	}
@@ -274,7 +275,19 @@ public class Moderation {
 		}
 		return symbolCount;
 	}
-	public static boolean isFollowerBot(String message) {
-		return message.matches("\\b(b *i *g *f *o *l *l *o *w *s *([.,]) *c *o *m)+");
+	public static boolean isFollowerBot(ChatMessage message) {
+
+		if(message.isFirstMessage()){
+			if(message.getMessage().toLowerCase().contains("(remove the space)")){
+				return true;
+			}
+			if(message.getMessage().toLowerCase().matches("\\b(b *i *g *f *o *l *l *o *w *s *([.,]) *c *o *m)+")){
+				return true;
+			}
+			if(message.getMessage().toLowerCase().contains("mystrm")){
+				return true;
+			}
+		}
+		return false;
 	}
 }

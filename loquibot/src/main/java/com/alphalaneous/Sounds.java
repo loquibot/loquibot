@@ -42,6 +42,8 @@ public class Sounds {
 		sounds.get(location).stopSound();
 	}
 
+
+
 	@SuppressWarnings("rawtypes")
 	public static void stopAllSounds() {
 
