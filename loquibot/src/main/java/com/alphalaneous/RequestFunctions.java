@@ -81,13 +81,10 @@ public class RequestFunctions {
                     undoQueue.clear();
                     didUndo = false;
                 }
-                if (!Settings.getSettings("basicMode").asBoolean()) {
-                    undoQueue.put(RequestsTab.getRequest(pos), pos);
-                    wasSelected = RequestsTab.getRequest(pos).selected;
-                }
-                else{
-                    wasSelected = RequestsTab.getRequestBasic(pos).selected;
-                }
+
+                undoQueue.put(RequestsTab.getRequest(pos), pos);
+                wasSelected = RequestsTab.getRequest(pos).selected;
+
                 new LoggedID((int) RequestsTab.getRequest(pos).getID(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().levelVersion());
                 RequestsTab.removeRequest(pos);
 
@@ -97,62 +94,27 @@ public class RequestFunctions {
                 }
 
                 if (RequestsTab.getQueueSize() > 0) {
-                    if (!Settings.getSettings("basicMode").asBoolean()) {
-                        StringSelection selection = new StringSelection(
-                                String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clipboard.setContents(selection, selection);
-                    } else {
-                        StringSelection selection = new StringSelection(
-                                String.valueOf(RequestsTab.getRequestBasic(0).getID()));
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clipboard.setContents(selection, selection);
-                    }
+                    StringSelection selection = new StringSelection(
+                            String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    clipboard.setContents(selection, selection);
                 }
+
+
                 if (pos == 0 && RequestsTab.getQueueSize() > 0) {
                     if (!Settings.getSettings("disableNP").asBoolean()) {
                         new Thread(() -> {
-                            if (!Settings.getSettings("basicMode").asBoolean()) {
-                                if (RequestsTab.getRequest(0).getLevelData().getContainsImage()) {
-                                    Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                            RequestsTab.getRequest(0).getLevelData().getRequester()) + " " + Utilities.format("$IMAGE_HACK$"));
-                                } else if (RequestsTab.getRequest(0).getLevelData().getContainsVulgar()) {
-                                    Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                            RequestsTab.getRequest(0).getLevelData().getRequester()) + " " + Utilities.format("$VULGAR_LANGUAGE$"));
-                                } else {
-                                    Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                            RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                            RequestsTab.getRequest(0).getLevelData().getRequester()));
-                                }
-                            } else {
-                                Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_BASIC$",
-                                        RequestsTab.getRequestBasic(0).getID(),
-                                        RequestsTab.getRequestBasic(0).getRequester()));
-
-                            }
+                                Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                        RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                        RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                        RequestsTab.getRequest(0).getLevelData().getRequester()), true);
                         }).start();
                     }
                 }
             }
         }
-        if (!Settings.getSettings("basicMode").asBoolean()) {
-            OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
-        }
-        if(wasSelected) {
-            //RequestsTab.unloadComments(true);
-            if (RequestsTab.getQueueSize() != 0) {
-                if (!Settings.getSettings("basicMode").asBoolean()) {
-                    if (RequestsTab.getQueueSize() != 0) {
-                        //new Thread(() -> RequestsTab.loadComments(0, false)).start();
-                    }
-                }
-            }
-        }
+        OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+
         RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
         if(RequestsTab.getQueueSize() == 0) LevelDetailsPanel.setPanel(null);
         else LevelDetailsPanel.setPanel(RequestsTab.getRequest(RequestsUtils.getSelection()).getLevelData());
@@ -178,22 +140,14 @@ public class RequestFunctions {
                 position = RequestsTab.getQueueSize();
             }
             RequestsTab.addRequest(levelButton, position);
-            //Requests.levels.add(position, data);
-            //com.alphalaneous.Tabs.Window.getLevelsPanel().refreshButtons();
             if (RequestsTab.getLevelPosition(levelButton) > selectPosition) {
                 RequestsTab.getLevelsPanel().setSelect(selectPosition);
             } else if (RequestsTab.getQueueSize() == 1) {
                 RequestsTab.getLevelsPanel().setSelect(selectPosition);
                 LevelDetailsPanel.setPanel(RequestsTab.getRequest(selectPosition).getLevelData());
 
-                new Thread(() -> {
-                    //RequestsTab.unloadComments(true);
-                    //RequestsTab.loadComments(0, false);
-                }).start();
             } else {
                 RequestsTab.getLevelsPanel().setSelect(selectPosition + 1);
-                //LevelDetailsPanel.setPanel(RequestsTab.getRequest(selectPosition+1).getLevelData());
-
             }
             undoQueue.remove(levelButton);
         }
@@ -210,19 +164,12 @@ public class RequestFunctions {
                     didUndo = false;
                 }
 
-                if (!Settings.getSettings("basicMode").asBoolean()) {
-                    undoQueue.put(RequestsTab.getRequest(LevelButton.selectedID), LevelButton.selectedID);
-                    new LoggedID((int) RequestsTab.getRequest(LevelButton.selectedID).getID(), RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().levelVersion());
-                    RequestsTab.removeRequest(LevelButton.selectedID);
-                }
-                else{
-                    new LoggedID((int) RequestsTab.getRequest(BasicLevelButton.selectedID).getID(), RequestsTab.getRequest(BasicLevelButton.selectedID).getLevelData().getGDLevel().levelVersion());
-                    RequestsTab.removeRequest(BasicLevelButton.selectedID);
-                }
+                undoQueue.put(RequestsTab.getRequest(LevelButton.selectedID), LevelButton.selectedID);
+                new LoggedID((int) RequestsTab.getRequest(LevelButton.selectedID).getID(), RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().levelVersion());
+                RequestsTab.removeRequest(LevelButton.selectedID);
 
                 RequestFunctions.saveFunction();
 
-                //RequestsTab.unloadComments(true);
 
                 if (RequestsTab.getQueueSize() != 0) {
                     while (true) {
@@ -234,39 +181,22 @@ public class RequestFunctions {
                     }
 
                     RequestsTab.getLevelsPanel().setSelect(num);
-                    if (!Settings.getSettings("basicMode").asBoolean()) {
-                        //new Thread(() -> RequestsTab.loadComments(0, false)).start();
-                        StringSelection selection = new StringSelection(
-                                String.valueOf(RequestsTab.getRequest(num).getLevelData().getGDLevel().id()));
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clipboard.setContents(selection, selection);
-                        if (!Settings.getSettings("disableNP").asBoolean()) {
-                            Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                    RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
-                                    RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
-                                    RequestsTab.getRequest(num).getLevelData().getRequester()));
 
-                        }
-                        if (RequestsTab.getRequest(num).getLevelData().getContainsImage()) {
-                            Utilities.notify("Image Hack", RequestsTab.getRequest(num).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(num).getLevelData().getGDLevel().id() + ") possibly contains the image hack!");
-                        } else if (RequestsTab.getRequest(num).getLevelData().getContainsVulgar()) {
-                            Utilities.notify("Vulgar Language", RequestsTab.getRequest(num).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(num).getLevelData().getGDLevel().id() + ") contains vulgar language!");
-                        }
-                        OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), num));
-                        LevelDetailsPanel.setPanel(RequestsTab.getRequest(num).getLevelData());
-                    } else {
-                        StringSelection selection = new StringSelection(
-                                String.valueOf(RequestsTab.getRequestBasic(num).getID()));
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        clipboard.setContents(selection, selection);
-                        if (!Settings.getSettings("disableNP").asBoolean()) {
-                            int finalNum = num;
-                            new Thread(() -> Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_BASIC$",
-                                    RequestsTab.getRequestBasic(finalNum).getID(),
-                                    RequestsTab.getRequestBasic(finalNum).getRequester()))).start();
 
-                        }
+                    StringSelection selection = new StringSelection(
+                            String.valueOf(RequestsTab.getRequest(num).getLevelData().getGDLevel().id()));
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    clipboard.setContents(selection, selection);
+
+                    if (!Settings.getSettings("disableNP").asBoolean()) {
+                        Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(num).getLevelData().getRequester()), true);
+
                     }
+                    OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), num));
+                    LevelDetailsPanel.setPanel(RequestsTab.getRequest(num).getLevelData());
                 }
             }
             RequestFunctions.saveFunction();

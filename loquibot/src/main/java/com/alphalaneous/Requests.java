@@ -376,11 +376,14 @@ public class Requests {
                     StringSelection selection = new StringSelection(String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
+
+                    boolean doAnnounce = Settings.getSettings("isMod").asBoolean();
+
                     if (Main.sendMessages && !Settings.getSettings("disableNP").asBoolean()) {
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getRequester(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id()), doAnnounce);
 
                     }
 

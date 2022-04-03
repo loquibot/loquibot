@@ -225,6 +225,33 @@ public class APIs {
 
 	}
 
+	public static boolean isLoquiMod(){
+		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&user_id=507396140");
+		if(moderators == null) return false;
+		return moderators.getJSONArray("data").length() > 0;
+	}
+
+	public static JSONArray getModerators(){
+		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&first=100");
+		if(moderators == null) return null;
+		JSONArray initialModArr = moderators.getJSONArray("data");
+
+		boolean hasCursor;
+
+		while(true){
+			hasCursor = moderators.getJSONObject("pagination").has("cursor");
+			if(!hasCursor) break;
+			String cursor = moderators.getJSONObject("pagination").getString("cursor");
+			JSONObject page = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&first=100&after=" + cursor);
+			if(page == null) break;
+			JSONArray newModArr = page.getJSONArray("data");
+			for (int i = 0; i < newModArr.length(); i++) {
+				initialModArr.put(newModArr.getJSONObject(i));
+			}
+		}
+		return initialModArr;
+	}
+
 	public static JSONObject getChannelInfo(){
 		return twitchAPI("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id);
 	}
@@ -348,7 +375,7 @@ public class APIs {
 
 			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
 					twitch.getClientId(), callbackUri, Scopes.USER_READ
-			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+channel:manage:broadcast+chat:read+user_read&force_verify=true");
+			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
 			Utilities.openURL(authUrl);
 			if (twitch.auth().awaitAccessToken()) {
 				Settings.writeSettings("oauth", twitch.auth().getAccessToken());

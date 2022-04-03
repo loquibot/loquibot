@@ -35,7 +35,7 @@ public class Main {
     public static boolean allowRequests = false;
     public static Thread keyboardHookThread;
 
-    private static ChannelPointListener channelPointListener;
+    private static TwitchListener channelPointListener;
     private static ChatListener chatReader;
     private static ServerBot serverBot = null;
     private static boolean keepConnecting = true;
@@ -199,7 +199,7 @@ public class Main {
             new Thread(() -> {
                 try {
                     while (true) {
-                        channelPointListener = new ChannelPointListener(new URI("wss://pubsub-edge.twitch.tv"));
+                        channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
                         channelPointListener.connectBlocking();
                         while (channelPointListener.isOpen()) {
                             Utilities.sleep(10);
@@ -280,6 +280,8 @@ public class Main {
             sendMessages = true;
             APIs.setAllViewers();
 
+            Settings.writeSettings("isMod", String.valueOf(APIs.isLoquiMod()));
+
             if(!Settings.getSettings("isHigher").exists()) {
                 if (APIs.allMods.contains("loquibot") || APIs.allVIPs.contains("loquibot")) Settings.writeSettings("isHigher", "true");
                 else Settings.writeSettings("isHigher", "false");
@@ -312,7 +314,7 @@ public class Main {
             if (channelPointListener != null) {
                 channelPointListener.disconnectBot();
             }
-            channelPointListener = new ChannelPointListener(new URI("wss://pubsub-edge.twitch.tv"));
+            channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
             channelPointListener.connect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -378,6 +380,12 @@ public class Main {
 
     public static void sendMessage(String message) {
         sendMessage(message, false, null);
+    }
+    public static void sendMessage(String message, boolean doAnnounce) {
+        Settings.writeSettings("isMod", String.valueOf(APIs.isLoquiMod()));
+
+        if(doAnnounce && Settings.getSettings("isMod").asBoolean() && !message.startsWith("/")) sendMessage("/announce " + message, false, null);
+        else sendMessage(message, false, null);
     }
 
     private static void runKeyboardHook() {

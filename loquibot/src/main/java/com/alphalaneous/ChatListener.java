@@ -32,6 +32,10 @@ public class ChatListener extends ChatBot {
 	@Override
 	public void onMessage(ChatMessage chatMessage) {
 		//TwitchChat.addMessage(chatMessage);
+		if(chatMessage.getSender().equalsIgnoreCase("loquibot") && chatMessage.isMod()){
+			Settings.writeSettings("isMod", "true");
+		}
+
 		if (!chatMessage.getSender().equalsIgnoreCase("loquibot")) {
 			new SelfDestructingMessage();
 			if (Settings.getSettings("multiMode").asBoolean()) {

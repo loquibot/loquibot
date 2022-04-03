@@ -332,13 +332,16 @@ public class RequestsTab {
 
     public static void toggle(){
         if (Main.programLoaded) {
+
+            boolean doAnnounce = Settings.getSettings("isMod").asBoolean();
+
             if (Requests.requestsEnabled) {
                 Requests.requestsEnabled = false;
-                Main.sendMessage(Utilities.format("/me 🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"));
+                Main.sendMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), doAnnounce);
 
             } else {
                 Requests.requestsEnabled = true;
-                Main.sendMessage(Utilities.format("/me 🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"));
+                Main.sendMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), doAnnounce);
             }
         }
         if (Requests.requestsEnabled) {
