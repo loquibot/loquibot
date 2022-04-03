@@ -178,9 +178,10 @@ EDIT_COMMAND_NO_ARGS_MESSAGE = @%s, Please specify a command to edit.
 EDIT_COMMAND_INVALID_COOLDOWN_MESSAGE = @%s, Failed to edit command, invalid cooldown parameter.
 EDIT_COMMAND_INVALID_ARGS_MESSAGE = @%s, Failed to edit command, invalid parameters.
 EDIT_COMMAND_INVALID_USERLEVEL_MESSAGE = @%s, Failed to edit command, invalid userlevel.
-
 EDIT_COMMAND_SUCCESS_MESSAGE = @%s, Successfully edited command: %s
 INVALID_ACTION_MESSAGE = @%s, Please enter a valid action (add, edit, delete).
+STOP_SOUNDS_MESSAGE = @%s, All playing sounds have been stopped.
+
 
 //Title Separators
 

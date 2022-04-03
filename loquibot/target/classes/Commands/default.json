@@ -44,6 +44,13 @@
       "message" : "runPermit"
     },
     {
+      "name" : "stopallsounds",
+      "level" : "moderator",
+      "description" : "Stops all sounds playing in loquibot | Usage: \"%pstopallsounds\"",
+      "runMethod" : true,
+      "message" : "runStopSounds"
+    },
+    {
       "name" : "title",
       "level" : "moderator",
       "description" : "View the title, change the title if mod | Usage: \"%ptitle\" | \"%ptitle <New Title>\"",

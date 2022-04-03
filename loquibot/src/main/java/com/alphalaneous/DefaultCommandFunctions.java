@@ -31,6 +31,12 @@ public class DefaultCommandFunctions {
         }
         return "";
     }
+
+    public static String runStopSounds(ChatMessage message){
+        Sounds.stopAllSounds();
+        return Utilities.format("$STOP_SOUNDS_MESSAGE$", message.getSender());
+    }
+
     public static String runFart(ChatMessage message){
         if(message.getSender().equalsIgnoreCase("Alphalaneous") || message.isMod()){
             Sounds.playSound("/sounds/fart.mp3", true, true, false, false);
