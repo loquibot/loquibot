@@ -26,10 +26,10 @@ public class TwitchAccount {
 
 
 	public static void setInfo() {
-		JSONObject data = APIs.getInfo();
-
 
 		APIs.setUser(Settings.getSettings("channel").asString());
+
+		JSONObject data = APIs.getInfo();
 
 		broadcaster_type = data.getString("broadcaster_type");
 		offline_image_url = data.getString("offline_image_url");
