@@ -297,7 +297,9 @@ public class Main {
     }
 
     public static void sendMessageToStreamDeck(String message){
-        streamDeckSocket.sendMessage(message);
+        if(streamDeckSocket != null) {
+            streamDeckSocket.sendMessage(message);
+        }
     }
 
     private static void updateTree(){
