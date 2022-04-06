@@ -52,6 +52,8 @@ public class Main {
         iconImages.add(newIcon16);
         iconImages.add(newIcon32);
 
+        Defaults.setSystem(false);
+
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         logger.setUseParentHandlers(false);

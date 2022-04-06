@@ -195,13 +195,13 @@ public class Defaults {
 		}
 		if(Settings.getSettings("theme").asString().equalsIgnoreCase("SYSTEM_MODE")) {
 			if (prevTheme[0] == 0) {
-				Defaults.setDark();
+				Defaults.setDark(refresh);
 			} else if (prevTheme[0] == 1) {
-				Defaults.setLight();
+				Defaults.setLight(refresh);
 			}
 		}
 		else{
-			setDark();
+			setDark(refresh);
 		}
 		int color = RegQuery.getColor();
 		ACCENT = Color.decode(String.valueOf(color));
