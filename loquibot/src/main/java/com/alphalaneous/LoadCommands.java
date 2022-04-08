@@ -155,15 +155,6 @@ public class LoadCommands {
     }
 
     private static String readIntoString(BufferedReader reader){
-        StringBuilder builder = new StringBuilder();
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-            reader.close();
-        }
-        catch (IOException ignored){}
-        return builder.toString();
+        return Utilities.readIntoString(reader);
     }
 }

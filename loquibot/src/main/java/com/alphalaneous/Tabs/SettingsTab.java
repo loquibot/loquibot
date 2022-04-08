@@ -30,6 +30,9 @@ public class SettingsTab {
 	private static final JPanel blockedUsersPage = BlockedUserSettings.createPanel();
 	private static final JPanel blockedCreatorsPage = BlockedCreatorSettings.createPanel();
 	private static final JPanel loggedIDsPage = RequestsLog.createPanel();
+	private static final JPanel legalPage = LegalPage.createPanel();
+	private static final JPanel privacyPage = PrivacyPage.createPanel();
+
 	private static final JPanel languagePage = LanguageSettings.createPanel();
 	private static final LangLabel title = new LangLabel("$SETTINGS_TITLE$");
 	private static final JPanel settingsPanel = new JPanel(null);
@@ -39,6 +42,7 @@ public class SettingsTab {
 
 	private static final JPanel botSection = new TitleSeparator("$BOT_SECTION_TITLE$");
 	private static final JPanel GDSection = new TitleSeparator("$GD_SECTION_TITLE$");
+	private static final JPanel noticesSection = new TitleSeparator("$NOTICES_SECTION_TITLE$");
 	private static final JPanel userSection = new TitleSeparator("$USER_SECTION_TITLE$");
 
 	public static JButtonUI settingsUI = new JButtonUI(){{
@@ -100,6 +104,14 @@ public class SettingsTab {
 	private static final SettingsButton loggedIDs = createButton("$LOGGED_IDS_SETTINGS$", "\uF0D6", () -> {
 		loggedIDsPage.setVisible(true);
 		RequestsLog.loadIDs();
+		return null;
+	});
+	private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
+		legalPage.setVisible(true);
+		return null;
+	});
+	private static final SettingsButton privacy = createButton("$PRIVACY_SETTINGS$", null, () -> {
+		privacyPage.setVisible(true);
 		return null;
 	});
 	private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uE12B", () -> {
@@ -167,6 +179,8 @@ public class SettingsTab {
 		content.add(blockedCreatorsPage);
 		content.add(loggedIDsPage);
 		content.add(languagePage);
+		content.add(legalPage);
+		content.add(privacyPage);
 
 		generalPage.setVisible(true);
 		overlayPage.setVisible(false);
@@ -180,7 +194,9 @@ public class SettingsTab {
 		blockedUsersPage.setVisible(false);
 		blockedCreatorsPage.setVisible(false);
 		loggedIDsPage.setVisible(false);
+		legalPage.setVisible(false);
 		languagePage.setVisible(false);
+		privacyPage.setVisible(false);
 
 		requests.setBackground(Defaults.COLOR4);
 		requests.setUI(selectUI);
@@ -205,6 +221,10 @@ public class SettingsTab {
 		buttons.add(blockedUsers, gbc);
 		buttons.add(blockedCreators, gbc);
 		buttons.add(loggedIDs, gbc);
+		buttons.add(createSeparator(), gbc);
+		buttons.add(noticesSection, gbc);
+		buttons.add(legal, gbc);
+		buttons.add(privacy, gbc);
 
 		buttonsParent.add(buttons);
 		//width 208
@@ -324,7 +344,8 @@ public class SettingsTab {
 			LangLabel label = new LangLabel(text);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			label.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-			label.setBounds(40, 7, 208, 20);
+			if(icon == null) label.setBounds(15, 7, 208, 20);
+			else label.setBounds(40, 7, 208, 20);
 			label.setForeground(Defaults.FOREGROUND_A);
 
 			LangLabel iconLabel = new LangLabel(icon);
@@ -335,7 +356,7 @@ public class SettingsTab {
 
 			setLayout(null);
 			add(label);
-			add(iconLabel);
+			if(icon != null) add(iconLabel);
 			setBackground(new Color(0,0,0,0));
 			setUI(selectUI);
 			setForeground(Defaults.FOREGROUND_A);

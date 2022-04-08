@@ -16,7 +16,6 @@
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-nop-1.7.30.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/swingx-1.6.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/system-hook-3.5.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/TwitchIRC_v1.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/commons-io-2.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/emoji-java-5.1.1.jar!/" />

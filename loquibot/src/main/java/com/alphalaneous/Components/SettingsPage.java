@@ -103,17 +103,20 @@ public class SettingsPage extends JPanel {
     }
 
 
-    public void addInput(String text, String description, int lines, boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting, String defaultInput){
-        settingsPane.add(new TextInput(text, description, lines, intFilter, allowNegative, allowDecimal, setting, defaultInput), gbc,settingsPane.getComponentCount()-1);
+    public void addInput(String text, String description, int lines, boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting, String defaultInput, boolean editable){
+        settingsPane.add(new TextInput(text, description, lines, intFilter, allowNegative, allowDecimal, setting, defaultInput, editable), gbc,settingsPane.getComponentCount()-1);
     }
     public void addInput(String text, String description,int lines, String setting, String defaultInput){
-        addInput(text, description, lines, false, true, true, setting, defaultInput);
+        addInput(text, description, lines, setting, defaultInput, true);
+    }
+    public void addInput(String text, String description,int lines, String setting, String defaultInput, boolean editable){
+        addInput(text, description, lines, false, true, true, setting, defaultInput, editable);
     }
     public void addInput(String text, String description, int lines, boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting){
-        addInput(text, description, lines, intFilter, allowNegative, allowDecimal, setting, "");
+        addInput(text, description, lines, intFilter, allowNegative, allowDecimal, setting, "", true);
     }
     public void addInput(String text, String description, int lines, String setting){
-        addInput(text, description, lines, false, true, true, setting, "");
+        addInput(text, description, lines, false, true, true, setting, "", true);
     }
 
     public void addCheckedInput(String text, String description, int lines, boolean intFilter, boolean allowNegative, boolean allowDecimal, String checkSetting, String inputSetting, boolean defaultOption, String defaultInput){
@@ -395,7 +398,7 @@ public class SettingsPage extends JPanel {
         private final FancyTextArea textArea;
 
 
-        TextInput(String text, String description, int lines, boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting, String defaultInput){
+        TextInput(String text, String description, int lines, boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting, String defaultInput, boolean editable){
             this.description = description;
             int height = lines * 32 - (lines-1) * 10;
 
@@ -427,11 +430,17 @@ public class SettingsPage extends JPanel {
             setLayout(null);
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
-            if (Settings.getSettings(setting).exists()) textArea.setText(Settings.getSettings(setting).asString());
-            else {
-                textArea.setText(defaultInput);
-                Settings.writeSettings(setting, defaultInput);
+            if(setting != null) {
+                if (Settings.getSettings(setting).exists()) textArea.setText(Settings.getSettings(setting).asString());
+                else {
+                    textArea.setText(defaultInput);
+                    Settings.writeSettings(setting, defaultInput);
+                }
             }
+            else textArea.setText(defaultInput);
+
+            textArea.clearUndo();
+            textArea.setEditable(editable);
             setBackground(new Color(0,0,0,0));
             add(textArea);
             add(titleText);

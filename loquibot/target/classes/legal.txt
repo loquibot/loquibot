@@ -1,0 +1,98 @@
+Copyright (c) 2019-2022 Alphalaneous.
+Loquibot, and the Loquibot logo, are trademarks of Alphalaneous.
+
+This product contains the following libraries, the use of which is acknowledged.
+
+ColorPicker
+Project code: https://github.com/chhh/batmass-ext/tree/master/ColorPicker
+Copyright (c) 2012, Jeremy Wood. All rights reserved. 
+License: (Modified BSD) https://github.com/chhh/batmass-ext/blob/master/ColorPicker/License.html
+---------------------------------------------------------------
+Apache Commons IO
+Project code: https://github.com/apache/commons-io
+Copyright (c) 2002-2022 The Apache Software Foundation
+License: (Apache 2.0) https://github.com/apache/commons-io/blob/master/LICENSE.txt
+---------------------------------------------------------------
+Nashorn Sandbox
+Project code: https://github.com/javadelight/delight-nashorn-sandbox
+Copyright (c) 2015 Max Rohde
+License: (MIT) https://github.com/javadelight/delight-nashorn-sandbox/blob/master/LICENSE.TXT
+---------------------------------------------------------------
+emoji-java
+Project code: https://github.com/vdurmont/emoji-java
+Copyright (c) 2014-present Vincent DURMONT vdurmont@gmail.com
+License: (MIT) https://github.com/vdurmont/emoji-java/blob/master/LICENSE.md
+---------------------------------------------------------------
+JH Labs Java Image Filters
+Project code: https://github.com/ajmas/JH-Labs-Java-Image-Filters
+License: (Apache 2.0) https://github.com/ajmas/JH-Labs-Java-Image-Filters/blob/master/LICENSE
+---------------------------------------------------------------
+imgscalr
+Project code: https://github.com/rkalla/imgscalr
+License: (Apache 2.0) https://github.com/rkalla/imgscalr/blob/master/LICENSE
+---------------------------------------------------------------
+J2V8
+Project code: https://github.com/eclipsesource/J2V8
+License: (Eclipse Public License 1.0) http://www.eclipse.org/legal/epl-v10.html
+---------------------------------------------------------------
+Java WebSockets
+Project code: https://github.com/TooTallNate/Java-WebSocket
+Copyright (c) 2010-2020 Nathan Rajlich
+License: (MIT) https://github.com/TooTallNate/Java-WebSocket/blob/master/LICENSE
+---------------------------------------------------------------
+Javaassist
+Project code: https://github.com/jboss-javassist/javassist
+Copyright (c) 1999- Shigeru Chiba. All Rights Reserved.
+License: (MPL) https://github.com/jboss-javassist/javassist/blob/master/License.html
+---------------------------------------------------------------
+JLayer
+Project code: https://github.com/umjammer/jlayer
+License: (LGPL) https://github.com/umjammer/jlayer/blob/master/LICENSE.txt
+---------------------------------------------------------------
+JNativeHook
+Project code: https://github.com/kwhat/jnativehook
+License: (LGPL) https://github.com/kwhat/jnativehook/blob/2.2/COPYING.LESSER.md
+---------------------------------------------------------------
+JSON in Java
+Project code: https://github.com/stleary/JSON-java
+Copyright (c) 2002 JSON.org
+License: https://github.com/stleary/JSON-java/blob/master/LICENSE
+---------------------------------------------------------------
+jsoup
+Project code: https://github.com/jhy/jsoup
+Copyright (c) 2009-2022 Jonathan Hedley <https://jsoup.org/>
+License: (MIT) https://github.com/jhy/jsoup/blob/master/LICENSE
+---------------------------------------------------------------
+okhttp
+Project code: https://github.com/square/okhttp
+Copyright (c) 2019 Square, Inc.
+License: (Apache 2.0) https://github.com/square/okhttp/blob/master/LICENSE.txt
+---------------------------------------------------------------
+okio
+Project code: https://github.com/square/okio
+Copyright (c) 2013 Square, Inc.
+License: (Apache 2.0) https://github.com/square/okio/blob/master/LICENSE.txt
+---------------------------------------------------------------
+Reflections
+Project code: https://github.com/ronmamo/reflections
+Copyright (c) 2004 Sam Hocevar <sam@hocevar.net>
+License: (Apache 2.0) https://github.com/ronmamo/reflections/blob/master/LICENSE-2.0.txt
+---------------------------------------------------------------
+SLF4J
+Project code: https://github.com/qos-ch/slf4j
+Copyright (c) Copyright (c) 2004-2022 QOS.ch Sarl (Switzerland) All rights reserved.
+License: (MIT) https://github.com/qos-ch/slf4j/blob/master/LICENSE.txt
+---------------------------------------------------------------
+SwingX
+Copyright (c) 2005-2006 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara, California 95054, U.S.A. All rights reserved.
+License: (LGPL) https://github.com/arotenberg/swingx/blob/master/LICENSE.txt 
+---------------------------------------------------------------
+System-Hook
+Project code: https://github.com/kristian/system-hook
+Copyright (c) 2015 Kristian Kraljic
+License: (MIT) https://github.com/kristian/system-hook/blob/master/LICENSE
+---------------------------------------------------------------
+Twitch API Wrapper
+Project code: https://github.com/urgrue/Java-Twitch-Api-Wrapper
+Copyright (c) 2015 Matthew J. Bell
+License: (MIT) https://github.com/urgrue/Java-Twitch-Api-Wrapper/blob/master/LICENSE

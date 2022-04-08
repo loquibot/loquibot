@@ -545,7 +545,7 @@ ALIAS_INPUT_DESC = Other command names that will activate this command (comma se
 //Timer Editor
 
 EDIT_TIMER = Edit Timer
-ADD_TIMER= Add Timer
+ADD_TIMER = Add Timer
 TIMER_NAME_INPUT = Timer Name:
 TIMER_NAME_INPUT_DESC = The timer name, used to identify the timer.
 TIMER_MESSAGE_INPUT = Message:
@@ -558,3 +558,9 @@ INTERVAL = Every %s minutes
 LINES_TEXT = %s messages
 INTERVAL_DESCRIPTION = Interval where timer repeats. (Exact per hour, example: 15 minutes is 2:00, 2:15, 2:30...)
 LINES_DESCRIPTION = Amount of messages within 5 minutes for a timer to execute.
+
+//OTHER
+
+PRIVACY_SETTINGS = Privacy Policy
+LEGAL_SETTINGS = Legal
+NOTICES_SECTION_TITLE = LEGAL INFORMATION

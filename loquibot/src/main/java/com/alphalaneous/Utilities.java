@@ -83,6 +83,24 @@ public class Utilities {
 		}
 	}
 
+	public static String readIntoString(BufferedReader reader){
+		return readIntoString(reader, false);
+	}
+
+	public static String readIntoString(BufferedReader reader, boolean includeLineBreaks){
+		StringBuilder builder = new StringBuilder();
+		String line;
+		try {
+			while ((line = reader.readLine()) != null) {
+				if(includeLineBreaks) builder.append(line).append("\n");
+				else builder.append(line);
+			}
+			reader.close();
+		}
+		catch (IOException ignored){}
+		return builder.toString();
+	}
+
 	public static void addCommand(String username, String... args) {
 		String newCommandName = args[1].replace("\\\\", "").replace("/", "");
 		StringBuilder message = new StringBuilder();

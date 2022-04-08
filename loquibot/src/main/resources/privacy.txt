@@ -1,0 +1,16 @@
+Last updated: 04/08/2022
+
+Loquibot's Privacy Policy describes how Loquibot collects, uses, and shares your personal information. 
+
+We do not collect much information, but rather what is necessary to run our software.
+
+What we collect:
+
+- Twitch oauth Token: To be able to log in with Twitch and use related features.
+- Crash logs: To help improve our software in case of any unexpected errors. This includes device OS, version numbers, CPU, and time of crash.
+
+You are not required to provide this information, though chosing not to will not allow for us to provide you this product.
+
+All other data required to operate our software is kept locally on your computer and can be modified and removed at will. 
+
+When there is a change to this Privacy Policy, you will be notified on our software at startup. 
