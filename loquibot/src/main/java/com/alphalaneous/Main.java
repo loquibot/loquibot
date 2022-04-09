@@ -241,38 +241,7 @@ public class Main {
             if (Files.exists(file)) {
                 String levelsJson = Files.readString(file, StandardCharsets.UTF_8);
                 JSONObject object = new JSONObject(levelsJson);
-                JSONArray levelsArray = object.getJSONArray("levels");
-                for(Object object1 : levelsArray){
-                    JSONObject level = (JSONObject) object1;
-                    RequestsUtils.forceAdd(
-                            level.getString("name"),
-                            level.getString("creator_name"),
-                            level.getLong("id"),
-                            level.getString("difficulty"),
-                            level.getString("demon_difficulty"),
-                            level.getBoolean("is_demon"),
-                            level.getBoolean("is_auto"),
-                            level.getBoolean("is_epic"),
-                            level.getInt("featured_score"),
-                            level.getInt("stars"),
-                            level.getInt("requested_stars"),
-                            level.getString("requester"),
-                            level.getInt("game_version"),
-                            level.getInt("coin_count"),
-                            level.getString("description"),
-                            level.getInt("likes"),
-                            level.getInt("downloads"),
-                            level.getString("length"),
-                            level.getInt("level_version"),
-                            level.getLong("song_id"),
-                            level.getString("song_title"),
-                            level.getString("song_artist"),
-                            level.getInt("object_count"),
-                            level.getLong("original_id"),
-                            false, false,
-                            level.getBoolean("has_verified_coins")
-                    );
-                }
+                Requests.loadLevels(object);
             }
             allowRequests = true;
             RequestFunctions.saveFunction();

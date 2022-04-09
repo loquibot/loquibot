@@ -2,6 +2,8 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Components.SmoothScrollPane;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -13,7 +15,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -122,16 +127,20 @@ public class LogWindow {
 
             case "/help" : {
                 System.out.println("List of commands: " +
-                        "\n\t/request | Manually request an ID" +
-                        "\n\t/exit | Exit loquibot" +
-                        "\n\t/command | Run a chat command" +
-                        "\n\t/togglememorygraph | Toggles memory graph");
+                        "\n\t/request | Manually request an ID"+
+                        "\n\t/fill | Fills the queue with levels");
                 break;
             }
+            case "/fill":{
 
+                JSONObject dummyLevels = new JSONObject(Utilities.readIntoString(new BufferedReader(new InputStreamReader(Objects.requireNonNull(
+                        Main.class.getClassLoader().getResourceAsStream("dummyLevelList.json"))))));
+                Requests.loadLevels(dummyLevels);
+                break;
+            }
             case "/request" : {
                 try {
-                    Requests.addRequest(Long.parseLong(argString), TwitchAccount.display_name, true, true, argString, null, -1, true);
+                    Requests.request(TwitchAccount.display_name, true, true, text, null, -1);
                 }
                 catch (Exception e){
                     System.out.println("! Could not add level! Reason: " + e);
@@ -146,6 +155,9 @@ public class LogWindow {
 
         //System.out.println(text);
     }
+
+
+
     public static void setTabs( final JTextPane textPane, int charactersPerTab)
     {
         FontMetrics fm = textPane.getFontMetrics( textPane.getFont() );

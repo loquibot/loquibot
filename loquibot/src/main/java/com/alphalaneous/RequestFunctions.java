@@ -29,9 +29,9 @@ public class RequestFunctions {
 
     //todo make spamming the next button only show the last request in chat rather than the first. (Check if spamming, wait until stop and send current selected level)
 
-    private static final LinkedHashMap<LevelButton, Integer> undoQueue = new LinkedHashMap<>(5) {
+    private static final LinkedHashMap<LevelButton, Integer> undoQueue = new LinkedHashMap<>(15) {
         protected boolean removeEldestEntry(Map.Entry<LevelButton, Integer> eldest) {
-            return size() > 5;
+            return size() > 15;
         }
     };
     private static boolean didUndo = false;

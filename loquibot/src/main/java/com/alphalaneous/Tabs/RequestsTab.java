@@ -387,6 +387,11 @@ public class RequestsTab {
         }
         return -1;
     }
+
+    public static void updateLevelsPanel(){
+        levelsPanel.updateUI();
+    }
+
     public static void removeRequest(int pos){
         levelsPanel.removeRequest(pos);
         levelsPanel.updateUI();

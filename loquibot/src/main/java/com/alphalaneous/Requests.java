@@ -13,6 +13,8 @@ import jdash.client.exception.ResponseDeserializationException;
 import jdash.common.entity.GDLevel;
 import jdash.common.entity.GDSong;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -36,6 +38,17 @@ public class Requests {
     private static final HashMap<Long, Integer> addedLevels = new HashMap<>();
     private static final HashMap<String, Integer> userStreamLimitMap = new HashMap<>();
     private static final Path logged = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
+    private static final ArrayList<LevelButton> removedForOffline = new ArrayList<>();
+
+
+    public static ArrayList<LevelButton> getRemovedForOffline(){
+        return removedForOffline;
+    }
+
+    public static void addRemovedForOffline(LevelButton button){
+        button.resetGonePoints();
+        removedForOffline.add(button);
+    }
 
     public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand) {
         if(IDa == 0 && Settings.getSettings("basicMode").asBoolean()){
@@ -470,6 +483,41 @@ public class Requests {
         }
         catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public static void loadLevels(JSONObject levels) {
+        JSONArray levelsArray = levels.getJSONArray("levels");
+        for(Object object1 : levelsArray){
+            JSONObject level = (JSONObject) object1;
+            RequestsUtils.forceAdd(
+                    level.getString("name"),
+                    level.getString("creator_name"),
+                    level.getLong("id"),
+                    level.getString("difficulty"),
+                    level.getString("demon_difficulty"),
+                    level.getBoolean("is_demon"),
+                    level.getBoolean("is_auto"),
+                    level.getBoolean("is_epic"),
+                    level.getInt("featured_score"),
+                    level.getInt("stars"),
+                    level.getInt("requested_stars"),
+                    level.getString("requester"),
+                    level.getInt("game_version"),
+                    level.getInt("coin_count"),
+                    level.getString("description"),
+                    level.getInt("likes"),
+                    level.getInt("downloads"),
+                    level.getString("length"),
+                    level.getInt("level_version"),
+                    level.getLong("song_id"),
+                    level.getString("song_title"),
+                    level.getString("song_artist"),
+                    level.getInt("object_count"),
+                    level.getLong("original_id"),
+                    false, false,
+                    level.getBoolean("has_verified_coins")
+            );
         }
     }
 

@@ -1,7 +1,11 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Panels.LevelButton;
+import com.alphalaneous.Panels.LevelDetailsPanel;
+import com.alphalaneous.Panels.LevelsPanel;
 import com.alphalaneous.SettingsPanels.AccountSettings;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Windows.Window;
 import com.mb3364.twitch.api.Twitch;
 import com.mb3364.twitch.api.auth.Scopes;
 import org.apache.http.HttpResponse;
@@ -124,13 +128,16 @@ public class APIs {
 					JSONObject viewers = new JSONObject(builder.toString());
 					String[] types = {"broadcaster", "vips", "staff", "moderators", "admins", "global_mods", "viewers"};
 					for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-						if(!Settings.getSettings("basicMode").asBoolean()) {
-							RequestsTab.getLevelsPanel().getButton(i).setViewership(false);
+						RequestsTab.getLevelsPanel().getButton(i).setViewership(false);
+					}
+					if(Settings.getSettings("removeIfOffline").asBoolean()) {
+						for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+							if (RequestsTab.getLevelsPanel().getButton(i).isMarkedForRemoval()) {
+								RequestsTab.getLevelsPanel().getButton(i).removeSelfViewer();
+								i--;
+							}
 						}
-						else{
-							RequestsTab.getLevelsPanel().getButtonBasic(i).setViewership(false);
-
-						}
+						RequestsTab.updateLevelsPanel();
 					}
 
 					for (String type : types) {
@@ -139,24 +146,34 @@ public class APIs {
 							for (int i = 0; i < viewerList.length(); i++) {
 								String viewer = viewerList.get(i).toString().replaceAll("\"", "");
 								for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-									if(!Settings.getSettings("basicMode").asBoolean()) {
-										if (RequestsTab.getLevelsPanel().getButton(k).getRequester().equalsIgnoreCase(viewer)) {
-											RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
-										}
+									if (RequestsTab.getLevelsPanel().getButton(k).getRequester().equalsIgnoreCase(viewer)) {
+										RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
 									}
-									else {
-										if (RequestsTab.getLevelsPanel().getButtonBasic(k).getRequester().equalsIgnoreCase(viewer)) {
-											RequestsTab.getLevelsPanel().getButtonBasic(k).setViewership(true);
+								}
+								if(Settings.getSettings("removeIfOffline").asBoolean()) {
+									for (LevelButton button : Requests.getRemovedForOffline()) {
+										if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
+											RequestsTab.addRequest(button);
+											if (RequestsTab.getQueueSize() == 1) {
+												RequestsTab.getLevelsPanel().setSelect(0);
+												LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
+
+											}
 										}
 									}
 								}
 							}
 						}
 					}
+
+					RequestsTab.updateLevelsPanel();
+					RequestFunctions.saveFunction();
+					Window.setTitle("loquibot - " + RequestsTab.getQueueSize());
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				Utilities.sleep(120000);
+				Utilities.sleep(60000);
 			}
 	}
 

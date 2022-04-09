@@ -15,6 +15,7 @@ public class RequestsSettings {
         SettingsPage settingsPage = new SettingsPage("$REQUESTS_SETTINGS$");
         settingsPage.addCheckbox("$GD_MODE$", "$GD_MODE_DESC$", "gdMode", true, DefaultCommands::loadCommands);
         //settingsPage.addCheckbox("$BASIC_MODE$", "$BASIC_MODE_DESC$", "basicMode", RequestsSettings::setBasicMode);
+        settingsPage.addCheckbox("$REMOVE_IF_OFFLINE$", "$REMOVE_IF_OFFLINE_DESC$", "removeIfOffline");
         settingsPage.addCheckbox("$FOLLOWERS_ONLY$", "", "followers");
         settingsPage.addCheckbox("$SUBSCRIBERS_ONLY$", "", "subscribers");
         settingsPage.addCheckbox("$STREAMER_BYPASS$", "$STREAMER_BYPASS_DESC$", "streamerBypass", true, null);

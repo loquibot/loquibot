@@ -41,7 +41,7 @@ public class LevelButton extends CurvedButtonAlt {
 	private final JLabel lAnalyzed = new JLabel();
 	private final JPanel info = new JPanel(new GridLayout(0, 2, 1, 1));
 	private boolean viewership = false;
-	private int gonePoints = 3;
+	private int gonePoints = 4;
 	private final LevelData levelData;
 
 
@@ -377,21 +377,44 @@ public class LevelButton extends CurvedButtonAlt {
 	}
 
 	public void setViewership(boolean viewer) {
+		RequestsTab.getRequest(Requests.getPosFromID(ID)).getLevelData().setViewership(viewership);
+
 		if (viewer) {
 			lRequester.setForeground(Defaults.FOREGROUND_B);
 			viewership = true;
-			gonePoints = 3;
+			gonePoints = 4;
+			markedForRemoval = false;
 		} else {
 			gonePoints = gonePoints - 1;
-			if (gonePoints == 0) {
+			if (gonePoints <= 0) {
 				lRequester.setForeground(Color.RED);
 				viewership = false;
 				gonePoints = 0;
+				markedForRemoval = true;
 			}
 		}
-		RequestsTab.getRequest(Requests.getPosFromID(ID)).getLevelData().setViewership(viewership);
+	}
+	private boolean markedForRemoval = false;
+
+	public void resetGonePoints(){
+		markedForRemoval = false;
+		gonePoints = 4;
 	}
 
+	public boolean isMarkedForRemoval(){
+		if(selected) return false;
+		else return markedForRemoval;
+	}
+
+	public void removeSelfViewer(){
+		Requests.addRemovedForOffline(this);
+		getParent().remove(this);
+	}
+
+
+	public void removeSelf(){
+		getParent().remove(this);
+	}
 
 	public int getComponentIndex(){
 		int i = 0;

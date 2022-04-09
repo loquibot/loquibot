@@ -231,6 +231,7 @@ GEOMETRY_DASH_COMMAND_PREFIX = Geometry Dash Command Prefix
 
 FOLLOWERS_ONLY = Followers Only
 SUBSCRIBERS_ONLY = Subscribers Only
+REMOVE_IF_OFFLINE = Remove Levels if Viewer is Offline
 SILENT_MODE = Silent Chat Mode
 DISABLE_NOW_PLAYING = Disable Now Playing Message
 DISABLE_QUEUE_FULL = Disable Queue is Full Message
@@ -455,6 +456,7 @@ COMMENTS_TITLE = Comments
 
 GD_MODE_DESC = Enables Geometry Dash related features.
 FOLLOWERS_ONLY_DESC = Only followers can request levels.
+REMOVE_IF_OFFLINE_DESC = Removes an offline viewers level from the queue, will be added back to the end of the queue if they become online again.
 SUBSCRIBERS_ONLY_DESC = Only subscribers can request levels.
 DISABLE_NOW_PLAYING_DESC = Disables the now playing messages in chat.
 DISABLE_QUEUE_FULL_DESC = Disables the queue is full messages in chat.

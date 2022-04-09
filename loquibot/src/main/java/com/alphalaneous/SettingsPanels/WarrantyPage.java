@@ -18,7 +18,6 @@ public class WarrantyPage {
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$WARRANTY_SETTINGS$");
         String text = Utilities.readIntoString(privacyFileReader, true);
-        System.out.println(text);
         settingsPage.addInput("", "", 20, null, text, false);
 
         return settingsPage;
