@@ -563,4 +563,5 @@ LINES_DESCRIPTION = Amount of messages within 5 minutes for a timer to execute.
 
 PRIVACY_SETTINGS = Privacy Policy
 LEGAL_SETTINGS = Legal
+WARRANTY_SETTINGS = Warranty
 NOTICES_SECTION_TITLE = LEGAL INFORMATION
