@@ -96,3 +96,8 @@ Twitch API Wrapper
 Project code: https://github.com/urgrue/Java-Twitch-Api-Wrapper
 Copyright (c) 2015 Matthew J. Bell
 License: (MIT) https://github.com/urgrue/Java-Twitch-Api-Wrapper/blob/master/LICENSE
+---------------------------------------------------------------
+JDash
+Project Code: https://github.com/Alex1304/jdash
+Copyright (c) 2018 Alex1304
+License: (MIT) https://github.com/Alex1304/jdash/blob/master/LICENSE
