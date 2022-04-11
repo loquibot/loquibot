@@ -87,6 +87,22 @@ public class ServerBot {
 						Main.sendMessage("\uD83D\uDCE2 | " + message);
 						break;
 					}
+
+					case "mod_connect_request" : {
+						String user = object.getString("username");
+						if(APIs.isMod(user)){
+
+							JSONObject object1 = new JSONObject();
+							object1.put("type", "mod_connect");
+							object1.put("success", true);
+							object1.put("to", user);
+							object1.put("from", TwitchAccount.login);
+
+							sendMessage(object1.toString());
+						}
+						break;
+					}
+
 					case "error" : {
 						String error = object.getString("error");
 						switch (error) {
@@ -97,7 +113,9 @@ public class ServerBot {
 							case "id_not_blocked" :
 							default : break;
 						}
+						break;
 					}
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

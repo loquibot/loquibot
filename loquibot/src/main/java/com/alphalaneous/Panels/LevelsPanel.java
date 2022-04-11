@@ -204,20 +204,11 @@ public class LevelsPanel extends JPanel {
     }
 
     public void refreshUI(){
-        //int i = 0;
         for (Component component : buttonPanel.getComponents()) {
             if (component instanceof LevelButton) {
-                /*if (LevelButton.selectedID == i) {
-                    ((LevelButton) component).select();
-                } else {
-                    component.setBackground(Defaults.MAIN);
-                }*/
                 ((LevelButton) component).refresh();
             }
-            //i++;
         }
         scrollPane.getVerticalScrollBar().setUI(new ScrollbarUI());
-        //borderPanel.setBackground(Defaults.COLOR3);
-        //buttonPanel.setBackground(Defaults.COLOR3);
     }
 }

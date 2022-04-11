@@ -282,6 +282,8 @@ public class SettingsTab {
 		((TitleSeparator) GDSection).refreshTextColor();
 		((TitleSeparator) userSection).refreshTextColor();
 		((TitleSeparator) botSection).refreshTextColor();
+		((TitleSeparator) noticesSection).refreshTextColor();
+
 	}
 
 

@@ -116,9 +116,10 @@ public class Main {
             }
 
             new Thread(Assets::loadAssets).start();
-            new Thread(Defaults::initializeThemeInfo).start();
             new Thread(Defaults::startMainThread).start();
             new Thread(streamDeckSocket = new StreamDeckSocket()).start();
+
+
 
             System.out.println("> Main Threads Started");
 
@@ -136,16 +137,18 @@ public class Main {
 
             LevelDetailsPanel.setPanel(null);
 
-
             System.out.println("> Panels Created");
 
             Window.loadSettings();
+
+            Defaults.initializeThemeInfo();
+            Themes.refreshUI();
+
             starting.setVisible(false);
 
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
 
-            Themes.refreshUI();
 
             if (!Settings.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();

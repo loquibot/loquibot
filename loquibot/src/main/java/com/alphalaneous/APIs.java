@@ -242,10 +242,17 @@ public class APIs {
 
 	}
 
-	public static boolean isLoquiMod(){
-		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&user_id=507396140");
+	public static boolean isMod(String username){
+
+		String id = getIDs(username);
+
+		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&user_id=" + id);
 		if(moderators == null) return false;
 		return moderators.getJSONArray("data").length() > 0;
+	}
+
+	public static boolean isLoquiMod(){
+		return isMod("loquibot");
 	}
 
 	public static JSONArray getModerators(){
