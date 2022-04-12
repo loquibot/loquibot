@@ -159,11 +159,12 @@ public class APIs {
 									if (Settings.getSettings("removeIfOffline").asBoolean()) {
 										for (LevelButton button : Requests.getRemovedForOffline()) {
 											if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
-												RequestsTab.addRequest(button);
-												if (RequestsTab.getQueueSize() == 1) {
-													RequestsTab.getLevelsPanel().setSelect(0);
-													LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
-
+												if(Requests.getPosFromID(button.getID()) != -1) {
+													RequestsTab.addRequest(button);
+													if (RequestsTab.getQueueSize() == 1) {
+														RequestsTab.getLevelsPanel().setSelect(0);
+														LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
+													}
 												}
 											}
 										}
