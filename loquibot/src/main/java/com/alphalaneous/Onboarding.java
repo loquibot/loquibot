@@ -3,8 +3,6 @@ package com.alphalaneous;
 import com.alphalaneous.Components.CurvedButton;
 import com.alphalaneous.Components.JButtonUI;
 import com.alphalaneous.Components.RoundedJButton;
-import com.alphalaneous.SettingsPanels.ShortcutSettings;
-import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.DialogBox;
 
 import javax.swing.*;
@@ -14,7 +12,6 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 
 public class Onboarding {
 	public static int openKeybind = 36;
@@ -99,13 +96,8 @@ public class Onboarding {
 					new Thread(() -> {
 						APIs.setOauth();
 						while (!APIs.success.get()) {
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
+							Utilities.sleep(100);
 						}
-						System.out.println("here");
 						Settings.writeSettings("onboarding", "false");
 						Onboarding.isLoading = false;
 						com.alphalaneous.Windows.Window.closeDialog();

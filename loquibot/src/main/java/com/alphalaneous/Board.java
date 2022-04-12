@@ -2,6 +2,7 @@ package com.alphalaneous;
 
 import com.alphalaneous.Windows.DialogBox;
 import jdash.client.exception.GDClientException;
+import jdash.common.entity.GDSong;
 
 import java.time.ZonedDateTime;
 
@@ -40,7 +41,8 @@ public class Board {
 	}
 
 	public static void playNewgrounds(String songID) {
-		Sounds.playSound(GDAPI.getSong(Long.parseLong(songID)).downloadUrl().get(), true, false, false, true);
+		GDSong song = GDAPI.getSong(Long.parseLong(songID));
+		if(song.downloadUrl().isPresent()) Sounds.playSound(song.downloadUrl().get(), true, false, false, true);
 	}
 
 	public static String eval(String function) {
@@ -59,7 +61,7 @@ public class Board {
 		bwomp = !bwomp;
 	}
 
-	public static void endloquibot() {
+	public static void endLoquibot() {
 		Main.close();
 	}
 
@@ -75,8 +77,8 @@ public class Board {
 		long time = ZonedDateTime.now().toInstant().toEpochMilli();
 		try {
 			GDAPI.getTopLevelByName("");
-			long timeAffter = ZonedDateTime.now().toInstant().toEpochMilli();
-			return String.valueOf(timeAffter - time);
+			long timeAfter = ZonedDateTime.now().toInstant().toEpochMilli();
+			return String.valueOf(timeAfter - time);
 		} catch (GDClientException e) {
 			if(e.getCause().toString().equals("ActionFailedException") || e.getCause().toString().equals("HttpResponseException"))
 			return "Servers Down!";

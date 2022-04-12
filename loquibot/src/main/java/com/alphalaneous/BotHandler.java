@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 public class BotHandler {
     static boolean processing = false;
     static URI uri;
-    private static final String[] gdCommands = {"!block", "!blockuser", "!unblock", "!unblockuser", "!clear", "!info", "!move", "!next", "!position", "!queue", "!remove", "!request", "!song", "!stop", "!toggle", "!top", "!wronglevel"};
     private static final ArrayList<String> comCooldown = new ArrayList<>();
 
     //todo fix !sudo command
@@ -100,14 +99,6 @@ public class BotHandler {
                     }
                     sc2.close();
                 }
-                if (!Settings.getSettings("gdMode").asBoolean()) {
-                    for (String command : gdCommands) {
-                        if (com.equalsIgnoreCase(command)) {
-                            goThrough = false;
-                            break;
-                        }
-                    }
-                }
                 if (goThrough) {
                     if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/whisper.txt"))) {
                         Scanner sc2 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/whisper.txt").toFile());
@@ -172,9 +163,9 @@ public class BotHandler {
         }
         else {
             try {
-                String[] msgs = message.split(" ");
+                String[] messages = message.split(" ");
                 String mention = "";
-                for (String s : msgs) {
+                for (String s : messages) {
                     if (s.contains("@")) {
                         mention = s;
                         break;

@@ -7,17 +7,15 @@ package com.alphalaneous;
 import com.jhlabs.image.AbstractBufferedImageOp;
 import com.jhlabs.image.ImageMath;
 
-import java.awt.*;
 import java.awt.image.*;
-import java.awt.geom.*;
 
 public class BoxBlurFilter extends AbstractBufferedImageOp {
 
 	private int hRadius;
 	private int vRadius;
-	private int iterations = 1;
-	
-    public BufferedImage filter( BufferedImage src, BufferedImage dst ) {
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public BufferedImage filter(BufferedImage src, BufferedImage dst ) {
         int width = src.getWidth();
         int height = src.getHeight();
 
@@ -28,6 +26,7 @@ public class BoxBlurFilter extends AbstractBufferedImageOp {
         int[] outPixels = new int[width*height];
         getRGB( src, 0, 0, width, height, inPixels );
 
+        int iterations = 1;
         for (int i = 0; i < iterations; i++ ) {
             blur( inPixels, outPixels, width, height, hRadius );
             blur( outPixels, inPixels, height, width, vRadius );
@@ -40,7 +39,7 @@ public class BoxBlurFilter extends AbstractBufferedImageOp {
     public static void blur( int[] in, int[] out, int width, int height, int radius ) {
         int widthMinus1 = width-1;
         int tableSize = 2*radius+1;
-        int divide[] = new int[256*tableSize];
+        int[] divide = new int[256*tableSize];
 
         for ( int i = 0; i < 256*tableSize; i++ )
             divide[i] = i/tableSize;
@@ -82,40 +81,8 @@ public class BoxBlurFilter extends AbstractBufferedImageOp {
             inIndex += width;
         }
     }
-        
-	public void setHRadius(int hRadius) {
-		this.hRadius = hRadius;
-	}
-	
-	public int getHRadius() {
-		return hRadius;
-	}
-	
-	public void setVRadius(int vRadius) {
-		this.vRadius = vRadius;
-	}
-	
-	public int getVRadius() {
-		return vRadius;
-	}
 	
 	public void setRadius(int radius) {
 		this.hRadius = this.vRadius = radius;
-	}
-	
-	public int getRadius() {
-		return hRadius;
-	}
-	
-	public void setIterations(int iterations) {
-		this.iterations = iterations;
-	}
-	
-	public int getIterations() {
-		return iterations;
-	}
-	
-	public String toString() {
-		return "Blur/Box Blur...";
 	}
 }

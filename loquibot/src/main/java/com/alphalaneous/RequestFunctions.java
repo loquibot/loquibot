@@ -1,5 +1,7 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Components.LangLabel;
+import com.alphalaneous.Components.RadioPanel;
 import com.alphalaneous.Panels.*;
 import com.alphalaneous.SettingsPanels.BlockedIDSettings;
 import com.alphalaneous.SettingsPanels.OutputSettings;
@@ -10,6 +12,7 @@ import javazoom.jl.player.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -107,7 +110,7 @@ public class RequestFunctions {
                                 Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                         RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
                                         RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                        RequestsTab.getRequest(0).getLevelData().getRequester()), true);
+                                        RequestsTab.getRequest(0).getLevelData().getRequester()), Settings.getSettings("announceNP").asBoolean());
                         }).start();
                     }
                 }
@@ -192,7 +195,7 @@ public class RequestFunctions {
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
-                                RequestsTab.getRequest(num).getLevelData().getRequester()), true);
+                                RequestsTab.getRequest(num).getLevelData().getRequester()), Settings.getSettings("announceNP").asBoolean());
 
                     }
                     OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), num));
@@ -216,6 +219,31 @@ public class RequestFunctions {
             clipboard.setContents(selection, selection);
         }
     }
+
+    public static void reportFunction(int pos){
+        if (RequestsTab.getQueueSize() != 0) {
+            //NSFW
+            //CRASH
+            //IDENTITY
+            //HARASSMENT
+            JPanel reportPanel = new JPanel();
+            reportPanel.setLayout(null);
+            reportPanel.setBounds(0,0,300,200);
+
+            LangLabel reportLabel = new LangLabel("$REPORT$ " + RequestsTab.getRequest(pos).getLevelData().getGDLevel().name());
+            reportLabel.setBounds(10,0,200,40);
+            reportLabel.setFont(Defaults.MAIN_FONT.deriveFont(20f));
+            reportPanel.add(reportLabel);
+
+            RadioPanel radioPanel = new RadioPanel("NSFW", "Crash", "Harassment");
+            radioPanel.setBounds(10,40,200,150);
+
+            reportPanel.add(radioPanel);
+            DialogBox.showDialogBox(reportPanel);
+
+        }
+    }
+
 
     public static void saveFunction() {
         new Thread(() -> {

@@ -2,7 +2,6 @@ package com.alphalaneous;
 
 import com.alphalaneous.Panels.LevelButton;
 import com.alphalaneous.Panels.LevelDetailsPanel;
-import com.alphalaneous.Panels.LevelsPanel;
 import com.alphalaneous.SettingsPanels.AccountSettings;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.Window;
@@ -37,39 +36,35 @@ public class APIs {
 	static ArrayList<String> allMods = new ArrayList<>();
 	static ArrayList<String> allVIPs = new ArrayList<>();
 	static AtomicBoolean success = new AtomicBoolean(false);
+	@SuppressWarnings("SpellCheckingInspection")
+	static final String clientID = "fzwze6vc6d2f7qodgkpq2w8nnsz3rl";
 
 	static void setAllViewers() {
 
 		try {
-			URL url = new URL("https://tmi.twitch.tv/group/user/" + Settings.getSettings("channel").asString().toLowerCase() + "/chatters");
-			URLConnection conn = url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			StringBuilder builder = new StringBuilder();
-			String x;
-			while ((x = br.readLine()) != null) {
-				builder.append(x).append("\n");
-			}
-			JSONObject viewers = new JSONObject(builder.toString());
+			JSONObject viewers = getViewers();
 			String[] types = {"broadcaster", "vips", "staff", "moderators", "admins", "global_mods", "viewers"};
-			allViewers.clear();
-			for (String type : types) {
-				JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
-				for (int i = 0; i < viewerList.length(); i++) {
-					String viewer = viewerList.get(i).toString().replaceAll("\"", "");
-					allViewers.add(viewer);
+			if(viewers != null) {
+				allViewers.clear();
+				for (String type : types) {
+					JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
+					for (int i = 0; i < viewerList.length(); i++) {
+						String viewer = viewerList.get(i).toString().replaceAll("\"", "");
+						allViewers.add(viewer);
+					}
 				}
-			}
-			allVIPs.clear();
-			allMods.clear();
-			JSONArray viewerListMods = viewers.getJSONObject("chatters").getJSONArray("moderators");
-			for (int i = 0; i < viewerListMods.length(); i++) {
-				String viewer = viewerListMods.get(i).toString().replaceAll("\"", "");
-				allMods.add(viewer);
-			}
-			JSONArray viewerListVIPs = viewers.getJSONObject("chatters").getJSONArray("vips");
-			for (int i = 0; i < viewerListVIPs.length(); i++) {
-				String viewer = viewerListVIPs.get(i).toString().replaceAll("\"", "");
-				allVIPs.add(viewer);
+				allVIPs.clear();
+				allMods.clear();
+				JSONArray viewerListMods = viewers.getJSONObject("chatters").getJSONArray("moderators");
+				for (int i = 0; i < viewerListMods.length(); i++) {
+					String viewer = viewerListMods.get(i).toString().replaceAll("\"", "");
+					allMods.add(viewer);
+				}
+				JSONArray viewerListVIPs = viewers.getJSONObject("chatters").getJSONArray("vips");
+				for (int i = 0; i < viewerListVIPs.length(); i++) {
+					String viewer = viewerListVIPs.get(i).toString().replaceAll("\"", "");
+					allVIPs.add(viewer);
+				}
 			}
 
 		} catch (Exception e) {
@@ -113,63 +108,74 @@ public class APIs {
 		return rewards;
 	}
 
+	private static JSONObject getViewers(){
+		try {
+			URL url = new URL("https://tmi.twitch.tv/group/user/" + Settings.getSettings("channel").asString().toLowerCase() + "/chatters");
+			URLConnection conn = url.openConnection();
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			StringBuilder builder = new StringBuilder();
+			String x;
+			while ((x = br.readLine()) != null) {
+				builder.append(x).append("\n");
+			}
+			return new JSONObject(builder.toString());
+		}
+		catch (Exception e){
+			return null;
+		}
+	}
+
+
 	@SuppressWarnings("InfiniteLoopStatement")
 	static void checkViewers() {
 			while (true) {
 				try {
-					URL url = new URL("https://tmi.twitch.tv/group/user/" + Settings.getSettings("channel").asString().toLowerCase() + "/chatters");
-					URLConnection conn = url.openConnection();
-					BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-					StringBuilder builder = new StringBuilder();
-					String x;
-					while ((x = br.readLine()) != null) {
-						builder.append(x).append("\n");
-					}
-					JSONObject viewers = new JSONObject(builder.toString());
+					JSONObject viewers = getViewers();
 					String[] types = {"broadcaster", "vips", "staff", "moderators", "admins", "global_mods", "viewers"};
-					for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-						RequestsTab.getLevelsPanel().getButton(i).setViewership(false);
-					}
-					if(Settings.getSettings("removeIfOffline").asBoolean()) {
+					if(viewers != null) {
 						for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-							if (RequestsTab.getLevelsPanel().getButton(i).isMarkedForRemoval()) {
-								RequestsTab.getLevelsPanel().getButton(i).removeSelfViewer();
-								i--;
-							}
+							RequestsTab.getLevelsPanel().getButton(i).setViewership(false);
 						}
-						RequestsTab.updateLevelsPanel();
-					}
-
-					for (String type : types) {
-						if (viewers.get("chatters") != null) {
-							JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
-							for (int i = 0; i < viewerList.length(); i++) {
-								String viewer = viewerList.get(i).toString().replaceAll("\"", "");
-								for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-									if (RequestsTab.getLevelsPanel().getButton(k).getRequester().equalsIgnoreCase(viewer)) {
-										RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
-									}
+						if (Settings.getSettings("removeIfOffline").asBoolean()) {
+							for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+								if (RequestsTab.getLevelsPanel().getButton(i).isMarkedForRemoval()) {
+									RequestsTab.getLevelsPanel().getButton(i).removeSelfViewer();
+									i--;
 								}
-								if(Settings.getSettings("removeIfOffline").asBoolean()) {
-									for (LevelButton button : Requests.getRemovedForOffline()) {
-										if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
-											RequestsTab.addRequest(button);
-											if (RequestsTab.getQueueSize() == 1) {
-												RequestsTab.getLevelsPanel().setSelect(0);
-												LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
+							}
+							RequestsTab.updateLevelsPanel();
+						}
 
+						for (String type : types) {
+							if (viewers.get("chatters") != null) {
+								JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
+								for (int i = 0; i < viewerList.length(); i++) {
+									String viewer = viewerList.get(i).toString().replaceAll("\"", "");
+									for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+										if (RequestsTab.getLevelsPanel().getButton(k).getRequester().equalsIgnoreCase(viewer)) {
+											RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
+										}
+									}
+									if (Settings.getSettings("removeIfOffline").asBoolean()) {
+										for (LevelButton button : Requests.getRemovedForOffline()) {
+											if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
+												RequestsTab.addRequest(button);
+												if (RequestsTab.getQueueSize() == 1) {
+													RequestsTab.getLevelsPanel().setSelect(0);
+													LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
+
+												}
 											}
 										}
 									}
 								}
 							}
 						}
+
+						RequestsTab.updateLevelsPanel();
+						RequestFunctions.saveFunction();
+						Window.setTitle("loquibot - " + RequestsTab.getQueueSize());
 					}
-
-					RequestsTab.updateLevelsPanel();
-					RequestFunctions.saveFunction();
-					Window.setTitle("loquibot - " + RequestsTab.getQueueSize());
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -255,27 +261,6 @@ public class APIs {
 		return isMod("loquibot");
 	}
 
-	public static JSONArray getModerators(){
-		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&first=100");
-		if(moderators == null) return null;
-		JSONArray initialModArr = moderators.getJSONArray("data");
-
-		boolean hasCursor;
-
-		while(true){
-			hasCursor = moderators.getJSONObject("pagination").has("cursor");
-			if(!hasCursor) break;
-			String cursor = moderators.getJSONObject("pagination").getString("cursor");
-			JSONObject page = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&first=100&after=" + cursor);
-			if(page == null) break;
-			JSONArray newModArr = page.getJSONArray("data");
-			for (int i = 0; i < newModArr.length(); i++) {
-				initialModArr.put(newModArr.getJSONObject(i));
-			}
-		}
-		return initialModArr;
-	}
-
 	public static JSONObject getChannelInfo(){
 		return twitchAPI("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id);
 	}
@@ -285,7 +270,7 @@ public class APIs {
 			CloseableHttpClient http = HttpClientBuilder.create().build();
 			HttpPatch updateRequest = new HttpPatch(URL);
 			updateRequest.setHeader("Authorization", "Bearer " + Settings.getSettings("oauth").asString());
-			updateRequest.setHeader("Client-ID", "fzwze6vc6d2f7qodgkpq2w8nnsz3rl");
+			updateRequest.setHeader("Client-ID", clientID);
 			updateRequest.setHeader("Content-Type", "application/json");
 			updateRequest.setEntity(new StringEntity(data));
 			HttpResponse response = http.execute(updateRequest);
@@ -311,7 +296,7 @@ public class APIs {
 			URL url = new URL(URL);
 			URLConnection conn = url.openConnection();
 			conn.setRequestProperty("Authorization", "OAuth " + Settings.getSettings("oauth").asString());
-			conn.setRequestProperty("Client-ID", "fzwze6vc6d2f7qodgkpq2w8nnsz3rl");
+			conn.setRequestProperty("Client-ID", clientID);
 			conn.setRequestProperty("Authorization", "Bearer " + Settings.getSettings("oauth").asString());
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			return new JSONObject(br.readLine());
@@ -395,7 +380,7 @@ public class APIs {
 			Twitch twitch = new Twitch();
 			URI callbackUri = new URI("http://localhost:23522");
 
-			twitch.setClientId("fzwze6vc6d2f7qodgkpq2w8nnsz3rl");
+			twitch.setClientId(clientID);
 
 			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
 					twitch.getClientId(), callbackUri, Scopes.USER_READ

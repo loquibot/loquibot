@@ -10,6 +10,7 @@ public class LevelContextMenu extends ContextMenu {
         addButton(new ContextButton("Remove", () -> RequestFunctions.skipFunction(levelPos, false)));
         addButton(new ContextButton("Copy", () -> RequestFunctions.copyFunction(levelPos)));
         addButton(new ContextButton("Block ID", () -> RequestFunctions.blockFunction(levelPos)));
+        //addButton(new ContextButton("Report", () -> RequestFunctions.reportFunction(levelPos)));
         //addButton(new ContextButton("Block User", () -> RequestFunctions.blockFunction(levelPos)));
         //addButton(new ContextButton("Block Creator", () -> RequestFunctions.blockFunction(levelPos)));
         addButton(new ContextButton("Moderation", () -> RequestsTab.showModPane(levelPos)));

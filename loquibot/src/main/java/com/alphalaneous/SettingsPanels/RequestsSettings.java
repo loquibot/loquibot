@@ -21,6 +21,7 @@ public class RequestsSettings {
         settingsPage.addCheckbox("$STREAMER_BYPASS$", "$STREAMER_BYPASS_DESC$", "streamerBypass", true, null);
         settingsPage.addCheckbox("$MODS_BYPASS$", "$MODS_BYPASS_DESC$", "modsBypass");
         settingsPage.addCheckbox("$AUTOMATIC_SONG_DOWNLOADS$", "", "autoDL");
+        settingsPage.addCheckbox("$ANNOUNCE_NOW_PLAYING$", "", "announceNP", true, null);
         settingsPage.addCheckbox("$DISABLE_NOW_PLAYING$", "", "disableNP");
         settingsPage.addCheckbox("$DISABLE_QUEUE_FULL$", "", "disableQF");
         settingsPage.addCheckbox("$DISABLE_CONFIRMATION$", "", "disableConfirm");

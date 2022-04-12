@@ -233,6 +233,7 @@ FOLLOWERS_ONLY = Followers Only
 SUBSCRIBERS_ONLY = Subscribers Only
 REMOVE_IF_OFFLINE = Remove Levels if Viewer is Offline
 SILENT_MODE = Silent Chat Mode
+ANNOUNCE_NOW_PLAYING = Announce Now Playing Message
 DISABLE_NOW_PLAYING = Disable Now Playing Message
 DISABLE_QUEUE_FULL = Disable Queue is Full Message
 WHISPER_CONFIRMATION = Send Confirmation in Whispers

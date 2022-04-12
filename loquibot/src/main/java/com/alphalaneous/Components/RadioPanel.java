@@ -15,7 +15,7 @@ public class RadioPanel extends JPanel {
 	public ArrayList<RadioButton> buttons = new ArrayList<>();
 	public String currentSelect = "";
 
-	public RadioPanel(String[] labels) {
+	public RadioPanel(String... labels) {
 		int pos = 0;
 		setBackground(new Color(0, 0, 0, 0));
 		setOpaque(false);
