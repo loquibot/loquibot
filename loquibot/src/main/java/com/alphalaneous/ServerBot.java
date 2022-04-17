@@ -21,8 +21,7 @@ public class ServerBot {
 	{
 		try {
 			//clientSocket = new Socket("localhost", 2963); //test
-			clientSocket = new Socket("142.93.12.163", 2963); //new server
-			//clientSocket = new Socket("165.227.53.200", 2963); //current server
+			clientSocket = new Socket("142.93.12.163", 2963);
 			
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -102,7 +101,10 @@ public class ServerBot {
 						}
 						break;
 					}
-
+					case "clients" : {
+						JSONArray array = object.getJSONArray("clients");
+						System.out.println(array.toString());
+					}
 					case "error" : {
 						String error = object.getString("error");
 						switch (error) {

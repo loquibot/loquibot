@@ -55,6 +55,7 @@ public class ChatbotTab {
 		return null;
 	});
 	private static final FunctionButton timersButton = createButton("$TIMERS_SETTINGS$", "\uF210", () -> {
+		TimerSettings.loadTimers();
 		timersPage.setVisible(true);
 		return null;
 	});
@@ -63,6 +64,7 @@ public class ChatbotTab {
 		return null;
 	});
 	private static final FunctionButton customKeywordsButton = createButton("$CUSTOM_KEYWORDS_SETTINGS$", "\uF0B3", () -> {
+		CustomKeywords.loadKeywords();
 		customKeywordsPage.setVisible(true);
 		return null;
 	});
@@ -119,7 +121,7 @@ public class ChatbotTab {
 		content.add(pointsPage);
 		content.add(spamProtectionPage);
 		content.add(blockedKeywordsPage);
-		content.add(customKeywordsPage);
+		//content.add(customKeywordsPage);
 
 		buttons.setPreferredSize(new Dimension(208, 400));
 

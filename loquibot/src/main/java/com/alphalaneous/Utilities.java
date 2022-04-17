@@ -442,6 +442,23 @@ public class Utilities {
 		}
 		return newCommandDataArrayList;
 	}
+	public static ArrayList<KeywordData> alphabetizeKeywordData(ArrayList<KeywordData> keywordDataArrayList){
+		ArrayList<String> commandNames = new ArrayList<>();
+		for(KeywordData data : keywordDataArrayList){
+			commandNames.add(data.getKeyword());
+		}
+		commandNames.sort(String.CASE_INSENSITIVE_ORDER);
+		ArrayList<KeywordData> newKeywordDataArrayList = new ArrayList<>();
+		for(String commandName : commandNames){
+			for(KeywordData keywordData : keywordDataArrayList){
+				if(keywordData.getKeyword().equalsIgnoreCase(commandName)){
+					newKeywordDataArrayList.add(keywordData);
+					break;
+				}
+			}
+		}
+		return newKeywordDataArrayList;
+	}
 	public static ArrayList<TimerData> alphabetizeTimerData(ArrayList<TimerData> timerDataArrayList){
 		ArrayList<String> timerNames = new ArrayList<>();
 		for(TimerData data : timerDataArrayList){

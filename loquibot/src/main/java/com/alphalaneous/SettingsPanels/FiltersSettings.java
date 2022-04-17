@@ -302,7 +302,9 @@ public class FiltersSettings {
     }
 
     private static ThemedIconCheckbox createIconCheckbox(ImageIcon imageIcon, int height) {
-
+        if(imageIcon == null){
+            return null;
+        }
         double ratio = imageIcon.getIconWidth()/(double)imageIcon.getIconHeight();
         if(ratio < 0){
             ratio = imageIcon.getIconHeight()/(double)imageIcon.getIconWidth();

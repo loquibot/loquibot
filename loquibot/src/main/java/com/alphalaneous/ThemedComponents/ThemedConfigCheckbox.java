@@ -59,7 +59,11 @@ public class ThemedConfigCheckbox extends JPanel {
     public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand) {
         this(label, description, function, isCommand, null);
     }
-    public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData) {
+
+    public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData){
+        this(label, description, function, isCommand, commandData, null);
+    }
+    public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData, KeywordData keywordData) {
         setLayout(null);
         this.description = description;
         this.isCommand = isCommand;
@@ -79,6 +83,29 @@ public class ThemedConfigCheckbox extends JPanel {
             colorPanel.setBounds(0, 0, 6, 70);
 
             switch (commandData.getUserLevel()) {
+                case "owner": {
+                    colorPanel.setBackground(broadcasterColor);
+                    break;
+                }
+                case "moderator": {
+                    colorPanel.setBackground(modColor);
+                    break;
+                }
+                case "twitch_vip": {
+                    colorPanel.setBackground(vipColor);
+                    break;
+                }
+                case "subscriber": {
+                    colorPanel.setBackground(subColor);
+                    break;
+                }
+                default:
+                    colorPanel.setBackground(Defaults.COLOR5);
+            }
+        }
+        if(keywordData != null){
+            colorPanel.setBounds(0, 0, 6, 70);
+            switch (keywordData.getUserLevel()) {
                 case "owner": {
                     colorPanel.setBackground(broadcasterColor);
                     break;

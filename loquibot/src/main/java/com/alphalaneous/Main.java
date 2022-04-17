@@ -8,7 +8,6 @@ import com.alphalaneous.Windows.Window;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -115,7 +114,7 @@ public class Main {
                 System.out.println("> Language Change Listener Failed");
             }
 
-            new Thread(Assets::loadAssets).start();
+            Assets.loadAssets();
             new Thread(Defaults::startMainThread).start();
             new Thread(streamDeckSocket = new StreamDeckSocket()).start();
 
@@ -132,6 +131,7 @@ public class Main {
             Window.loadTopComponent();
             LoadCommands.loadCommands();
             LoadTimers.loadTimers();
+            //LoadKeywords.loadKeywords();
             LoggedID.loadLoggedIDs();
             TimerHandler.startTimerHandler();
 
@@ -262,6 +262,11 @@ public class Main {
             }
             System.gc();
             programLoaded = true;
+
+            JSONObject messageObj = new JSONObject();
+            messageObj.put("request_type", "get_current_streamers");
+            serverBot.sendMessage(messageObj.toString());
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -420,6 +425,7 @@ public class Main {
             CommandData.saveDefaultCommands();
             CommandData.saveGeometryDashCommands();
             TimerData.saveCustomTimers();
+            //KeywordData.saveCustomKeywords();
             LoggedID.saveLoggedIDs();
             System.exit(0);
         }).start();
@@ -441,6 +447,7 @@ public class Main {
             CommandData.saveCustomCommands();
             CommandData.saveDefaultCommands();
             CommandData.saveGeometryDashCommands();
+            //KeywordData.saveCustomKeywords();
             TimerData.saveCustomTimers();
             LoggedID.saveLoggedIDs();
         }
