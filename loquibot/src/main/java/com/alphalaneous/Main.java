@@ -118,8 +118,6 @@ public class Main {
             new Thread(Defaults::startMainThread).start();
             new Thread(streamDeckSocket = new StreamDeckSocket()).start();
 
-
-
             System.out.println("> Main Threads Started");
 
             Window.initFrame();
@@ -131,7 +129,7 @@ public class Main {
             Window.loadTopComponent();
             LoadCommands.loadCommands();
             LoadTimers.loadTimers();
-            //LoadKeywords.loadKeywords();
+            LoadKeywords.loadKeywords();
             LoggedID.loadLoggedIDs();
             TimerHandler.startTimerHandler();
 
@@ -425,7 +423,7 @@ public class Main {
             CommandData.saveDefaultCommands();
             CommandData.saveGeometryDashCommands();
             TimerData.saveCustomTimers();
-            //KeywordData.saveCustomKeywords();
+            KeywordData.saveCustomKeywords();
             LoggedID.saveLoggedIDs();
             System.exit(0);
         }).start();
@@ -447,7 +445,7 @@ public class Main {
             CommandData.saveCustomCommands();
             CommandData.saveDefaultCommands();
             CommandData.saveGeometryDashCommands();
-            //KeywordData.saveCustomKeywords();
+            KeywordData.saveCustomKeywords();
             TimerData.saveCustomTimers();
             LoggedID.saveLoggedIDs();
         }

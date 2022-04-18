@@ -39,8 +39,8 @@ public class KeywordConfigCheckbox extends JPanel {
         themedCheckbox.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                for(CommandData data : CommandData.getRegisteredCommands()){
-                    if(data.getCommand().equalsIgnoreCase(keywordData.getKeyword())){
+                for(KeywordData data : KeywordData.getRegisteredKeywords()){
+                    if(data.getKeyword().equalsIgnoreCase(keywordData.getKeyword())){
                         data.setEnabled(themedCheckbox.getSelectedState());
                     }
                 }
@@ -100,7 +100,7 @@ public class KeywordConfigCheckbox extends JPanel {
 
         commandSettingsPanel.removeAll();
         commandSettingsPanel.setLayout(null);
-        commandSettingsPanel.setBounds(0,0,600,600);
+        commandSettingsPanel.setBounds(0,0,600,400);
         commandSettingsPanel.setBackground(Defaults.COLOR3);
         LangLabel langLabel;
         if(newCommand) langLabel = new LangLabel("$ADD_KEYWORD$");
@@ -190,7 +190,7 @@ public class KeywordConfigCheckbox extends JPanel {
         String finalCommandName = commandName;
         saveButton.addActionListener(e -> {
 
-            if(data != null  || checkIfNameExists(keywordInput.getText(), finalCommandName)
+            if(checkIfNameExists(keywordInput.getText(), finalCommandName)
                     || keywordInput.getText().equalsIgnoreCase("") || keywordInput.getText().trim().contains(" ") || keywordInput.getText().trim().contains("\n")){
                 keywordInput.setErrorRed();
             }
@@ -264,12 +264,12 @@ public class KeywordConfigCheckbox extends JPanel {
         deleteButton.setForeground(Color.RED);
         deleteButton.setFont(Defaults.SYMBOLS.deriveFont(16f));
         deleteButton.setBorder(BorderFactory.createEmptyBorder());
-        deleteButton.setBounds(555,455,30,30);
+        deleteButton.setBounds(555,375,30,30);
 
         final boolean[] firstClick = {false};
 
         deleteButton.addActionListener(e -> {
-            deleteButton.setBounds(465,455,120,30);
+            deleteButton.setBounds(465,375,120,30);
 
             deleteButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
             deleteButton.setText("Are you sure?");
@@ -293,15 +293,15 @@ public class KeywordConfigCheckbox extends JPanel {
         commandSettingsPanel.add(cancelButton);
 
 
-        commandSettingsPanel.setBounds(0,0,600,500);
+        commandSettingsPanel.setBounds(0,0,600,420);
         userLevelButton.setBounds(110,250,475,30);
         userLevelText.setBounds(10,250, 450, 30);
         cooldownText.setBounds(10,300, 450, 30);
         sliderValue.setBounds(110, 330, 475, sliderValue.getPreferredSize().height + 5);
         slider.setBounds(108, 300, 480, 30);
-        saveButton.setBounds(195,450,100,40);
-        cancelButton.setBounds(305,450,100,40);
-        helpButton.setBounds(15,455,30,30);
+        saveButton.setBounds(195,370,100,40);
+        cancelButton.setBounds(305,370,100,40);
+        helpButton.setBounds(15,375,30,30);
         commandSettingsPanel.add(messageInput);
         commandSettingsPanel.add(helpButton);
         if(!newCommand) commandSettingsPanel.add(deleteButton);
@@ -314,14 +314,11 @@ public class KeywordConfigCheckbox extends JPanel {
             return false;
         }
         boolean exists = false;
-        for(CommandData existingData : CommandData.getRegisteredCommands()) {
-            if (existingData.getCommand().equalsIgnoreCase(newName)) {
+        for(KeywordData existingData : KeywordData.getRegisteredKeywords()) {
+            if (existingData.getKeyword().equalsIgnoreCase(newName)) {
                 exists = true;
                 break;
             }
-        }
-        if(CommandData.getRegisteredAliases().containsKey(newName)){
-            exists = true;
         }
         return exists;
     }

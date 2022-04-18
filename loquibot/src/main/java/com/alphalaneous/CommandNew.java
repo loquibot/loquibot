@@ -123,10 +123,14 @@ public class CommandNew {
     }
 
     public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, CommandData data) {
-        return replaceBetweenParentheses(message, text, arguments, null, text, data);
+        return replaceBetweenParentheses(message, text, arguments, null, text, data, null);
     }
 
-    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData) {
+    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, CommandData data, KeywordData keywordData) {
+        return replaceBetweenParentheses(message, text, arguments, null, text, data, keywordData);
+    }
+
+    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData) {
 
         if (parenthesisSubstrings == null) parenthesisSubstrings = new ArrayList<>();
 
@@ -153,7 +157,7 @@ public class CommandNew {
             parenthesisSubstrings.add(new ParenthesisSubstrings(sIndex, eIndex - 1, original.substring(sIndex + 1, eIndex - 1)));
             String filled = StringUtils.repeat("█", eIndex - sIndex);
             String result = strS + filled + strE;
-            return replaceBetweenParentheses(message, result, arguments, parenthesisSubstrings, original, commandData);
+            return replaceBetweenParentheses(message, result, arguments, parenthesisSubstrings, original, commandData, keywordData);
         }
         String newResult = original;
         String lastResult = original;
@@ -315,6 +319,14 @@ public class CommandNew {
                                 count = commandData.getCounter();
                                 for (CommandData data1 : CommandData.getRegisteredCommands()) {
                                     if (data1.getCommand().equalsIgnoreCase(commandData.getCommand())) {
+                                        data1.setCounter(count + 1);
+                                    }
+                                }
+                            }
+                            if(keywordData != null) {
+                                count = keywordData.getCounter();
+                                for (KeywordData data1 : KeywordData.getRegisteredKeywords()) {
+                                    if (data1.getKeyword().equalsIgnoreCase(keywordData.getKeyword())) {
                                         data1.setCounter(count + 1);
                                     }
                                 }

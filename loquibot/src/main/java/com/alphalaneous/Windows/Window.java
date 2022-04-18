@@ -318,6 +318,7 @@ public class Window {
                 ListView.resizeAll(new Dimension(windowFrame.getWidth(), windowFrame.getHeight()));
                 CommandConfigCheckbox.resizeAll(windowFrame.getWidth());
                 TimerConfigCheckbox.resizeAll(windowFrame.getWidth());
+                KeywordConfigCheckbox.resizeAll(windowFrame.getWidth());
                 CustomCommands.LegacyCommandsLabel.resize(windowFrame.getWidth());
             }
 

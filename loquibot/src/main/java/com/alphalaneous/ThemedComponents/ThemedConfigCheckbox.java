@@ -132,7 +132,7 @@ public class ThemedConfigCheckbox extends JPanel {
         infoPanel.setOpaque(false);
         infoPanel.setBackground(new Color(0,0,0,0));
         titlePanel.setLayout(new BorderLayout());
-        if(!isCommand){
+        if(!isCommand || keywordData == null){
             text.setPreferredSize(new Dimension(40, 30));
             titlePanel.setBounds(50,0, 200, 70);
         }
@@ -169,7 +169,7 @@ public class ThemedConfigCheckbox extends JPanel {
         configButton.addActionListener(e -> {
             if(function != null) function.run();
         });
-        if(isCommand) {
+        if(isCommand || keywordData != null) {
             add(colorPanel);
         }
         add(configButton);
@@ -177,7 +177,7 @@ public class ThemedConfigCheckbox extends JPanel {
         add(hover);
         add(checkSymbol);
         add(check);
-        if(!isCommand){
+        if(!isCommand || keywordData == null){
             titlePanel.setLayout(null);
             text.setBounds(0,10,500,30);
             descriptionText.setBounds(0,30,500,30);

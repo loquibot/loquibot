@@ -535,11 +535,16 @@ IS_LIGHT_SETTING = Dark Icons
 //Command Editor New
 
 EDIT_COMMAND = Edit Command
+EDIT_KEYWORD = Edit Keyword
 ADD_COMMAND = Add Command
+ADD_KEYWORD = Add Keyword
 COMMAND_NAME_INPUT = Command:
+KEYWORD_NAME_INPUT = Keyword:
 COMMAND_NAME_INPUT_DESC = The command name, what must be typed in chat to run the command.
+KEYWORD_NAME_INPUT_DESC = The keyword, case sensitive (Allows REGEX).
 MESSAGE_INPUT = Message:
 MESSAGE_INPUT_DESC = The response sent in chat after the command is entered.
+MESSAGE_INPUT_KEYWORD_DESC = The response sent in chat after the keyword is entered anywhere.
 USER_LEVEL_SETTING = User Level:
 COOLDOWN_LABEL = Cooldown:
 ALIAS_INPUT = Aliases:

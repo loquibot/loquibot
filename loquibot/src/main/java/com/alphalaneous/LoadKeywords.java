@@ -1,6 +1,7 @@
 package com.alphalaneous;
 
 import com.alphalaneous.ChatbotTab.CustomCommands;
+import com.alphalaneous.ChatbotTab.CustomKeywords;
 import com.alphalaneous.ChatbotTab.DefaultCommands;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,15 +57,10 @@ public class LoadKeywords {
         catch (Exception e){
             e.printStackTrace();
         }
-        DefaultCommands.loadCommands();
-        CustomCommands.loadCommands();
+        CustomKeywords.loadKeywords();
     }
 
     private static ArrayList<KeywordData> loadJsonToKeywordDataArrayList(String jsonData){
-        return loadJsonToKeywordDataArrayList(jsonData, false, false);
-    }
-
-    private static ArrayList<KeywordData> loadJsonToKeywordDataArrayList(String jsonData, boolean isDefault, boolean isGD){
         JSONObject jsonObject = new JSONObject(jsonData);
         JSONArray keywordArray = jsonObject.getJSONArray("keywords");
         ArrayList<KeywordData> commandDataArrayList = new ArrayList<>();

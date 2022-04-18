@@ -106,7 +106,7 @@ public class ChatbotTab {
 		buttons.add(commandsSection);
 		buttons.add(defaultCommandsButton);
 		buttons.add(customCommandsButton);
-		//buttons.add(customKeywordsButton);
+		buttons.add(customKeywordsButton);
 		buttons.add(createSeparator());
 		buttons.add(chatSection);
 		buttons.add(timersButton);
@@ -121,7 +121,7 @@ public class ChatbotTab {
 		content.add(pointsPage);
 		content.add(spamProtectionPage);
 		content.add(blockedKeywordsPage);
-		//content.add(customKeywordsPage);
+		content.add(customKeywordsPage);
 
 		buttons.setPreferredSize(new Dimension(208, 400));
 
