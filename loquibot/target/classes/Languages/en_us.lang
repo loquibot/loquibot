@@ -88,6 +88,7 @@ BLOCK_EXISTS_MESSAGE = @%s, That is already blocked.
 BLOCK_FAILED_MESSAGE = @%s, Failed to block, try again.
 BLOCK_NO_ID_MESSAGE = @%s, Please specify an ID.
 ADD_COMMAND_NO_ARGS_MESSAGE = @%s, Failed to add command, no command entered.
+ADD_COMMAND_ALREADY_EXISTS_MESSAGE = @%s, Failed to add command, "%s" already exists.
 DELETE_COMMAND_NO_ARGS_MESSAGE = @%s, Failed to delete command, no command specified.
 EDIT_COMMAND_NO_ARGS_MESSAGE = @%s, Failed to delete command, no command specified.
 ADD_COMMAND_NO_RESPONSE_MESSAGE = @%s, Failed to add command, no response given.

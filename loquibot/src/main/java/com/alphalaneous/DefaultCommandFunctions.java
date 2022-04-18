@@ -1,5 +1,6 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Components.CommandConfigCheckbox;
 import com.alphalaneous.Moderation.LinkPermit;
 import com.alphalaneous.TwitchBot.ChatMessage;
 import org.json.JSONObject;
@@ -366,6 +367,11 @@ public class DefaultCommandFunctions {
 
             if(aliases != null) newCommand.setAliases(List.of(aliases));
             newCommand.setCooldown(cooldown);
+
+            if(CommandConfigCheckbox.checkIfNameExists(newCommand.getCommand(), "") || newCommand.getCommand().equalsIgnoreCase("")
+                    || newCommand.getCommand().trim().contains(" ") || newCommand.getCommand().trim().contains("\n")){
+                return Utilities.format("$ADD_COMMAND_ALREADY_EXISTS_MESSAGE$", message.getSender(), newCommand.getCommand());
+            }
 
             newCommand.registerCommand();
 

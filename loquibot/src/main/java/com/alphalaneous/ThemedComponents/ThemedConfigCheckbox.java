@@ -55,6 +55,8 @@ public class ThemedConfigCheckbox extends JPanel {
     private static final Color vipColor = new Color(223, 1, 186);
     private static final Color subColor = new Color(129, 5, 180);
     private static final Color everyoneColor = Defaults.COLOR2;
+    private final KeywordData keywordData;
+
 
     public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand) {
         this(label, description, function, isCommand, null);
@@ -68,6 +70,7 @@ public class ThemedConfigCheckbox extends JPanel {
         this.description = description;
         this.isCommand = isCommand;
         this.commandData = commandData;
+        this.keywordData = keywordData;
         text.setTextLang(label);
         text.setForeground(Defaults.FOREGROUND_A);
         check.setFont(Defaults.SYMBOLSalt.deriveFont(16f));
@@ -271,14 +274,15 @@ public class ThemedConfigCheckbox extends JPanel {
     public void resize(int width) {
 
         infoPanel.setBounds(150, 0, width-150, 66);
-        if(!isCommand){
+        titlePanel.setBounds(50,0, width-100, 70);
+        if(!isCommand || keywordData == null){
             descriptionText.setText("<html><div WIDTH=" + (width - 100) + ">" + Language.setLocale(description) + "</div></html>");
-            titlePanel.setBounds(50,0, 200, 70);
             text.setBounds(0,10,width-100,30);
             descriptionText.setBounds(0,30,width-100,30);
         }
         else{
             descriptionText.setText("<html><div WIDTH=" + (width - 220) + ">" + Language.setLocale(description) + "</div></html>");
+            descriptionText.setBounds(0,30,width-220,30);
         }
         check.setBounds(20, 20, 30, 30);
         checkSymbol.setBounds(20, 20, 30, 30);
@@ -302,6 +306,9 @@ public class ThemedConfigCheckbox extends JPanel {
 
         if(isCommand && commandData!= null){
             if(commandData.getUserLevel().equalsIgnoreCase("everyone")) colorPanel.setBackground(Defaults.COLOR5);
+        }
+        if(keywordData != null){
+            if(keywordData.getUserLevel().equalsIgnoreCase("everyone")) colorPanel.setBackground(Defaults.COLOR5);
         }
 
         emptyUI.setBackground(new Color(0,0, 0,0));

@@ -371,7 +371,7 @@ public class CommandConfigCheckbox extends JPanel {
         DialogBox.showDialogBox(commandSettingsPanel, true);
     }
 
-    private static boolean checkIfDefaultExists(CommandData data){
+    public static boolean checkIfDefaultExists(CommandData data){
         boolean exists = false;
         for(CommandData existingData : CommandData.getRegisteredCommands()) {
             if (existingData.getCommand().equalsIgnoreCase(data.getCommand())) {
@@ -383,7 +383,7 @@ public class CommandConfigCheckbox extends JPanel {
         }
         return exists;
     }
-    private static boolean checkIfNameExists(String newName, String originalName){
+    public static boolean checkIfNameExists(String newName, String originalName){
         if(newName.equalsIgnoreCase(originalName)){
             return false;
         }
