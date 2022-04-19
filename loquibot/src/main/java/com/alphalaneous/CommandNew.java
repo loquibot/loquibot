@@ -402,6 +402,13 @@ public class CommandNew {
                                 break;
                             }
                         }
+                        case "found_word":
+                        case "foundword": {
+                            if(keywordData != null){
+                                replacement = keywordData.getFoundWord();
+                                break;
+                            }
+                        }
                         default: {
                             replacement = "$(" + value + ")";
                             break;

@@ -20,6 +20,8 @@ public class KeywordData {
 
     private int cooldown = 0;
     private int counter = 0;
+    private String foundWord;
+
 
     public KeywordData(String keyword){
         this.keyword = keyword;
@@ -40,6 +42,10 @@ public class KeywordData {
     }
     public boolean isRegex(){
         return isRegex;
+    }
+
+    public void setFoundWord(String foundWord){
+        this.foundWord = foundWord;
     }
 
     public void setMessage(String message) {
@@ -84,6 +90,10 @@ public class KeywordData {
 
     public int getCooldown(){
         return cooldown;
+    }
+
+    public String getFoundWord(){
+        return foundWord;
     }
 
     public static ArrayList<KeywordData> getRegisteredKeywords(){

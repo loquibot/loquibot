@@ -11,6 +11,7 @@ public class KeywordHandler {
     public static void run(ChatMessage message){
 
         String reply = "";
+        String foundWord = "";
         if(message.getSender().equalsIgnoreCase("alphalaneous")) message.setMod(true);
 
         KeywordData foundKeyword = null;
@@ -21,8 +22,10 @@ public class KeywordHandler {
             Matcher m = p.matcher(message.getMessage());
 
             boolean found = false;
-
-            while (m.find()) found = true;
+            while (m.find()) {
+                foundWord = m.group(0);
+                found = true;
+            }
 
             if(found) {
                 foundKeyword = data;
@@ -35,6 +38,7 @@ public class KeywordHandler {
                 && foundKeyword.isEnabled()
                 && !isCooldown(foundKeyword)
                 && checkUserLevel(foundKeyword, message)) {
+            foundKeyword.setFoundWord(foundWord);
             String response = foundKeyword.getMessage();
             String[] messageSplit = message.getMessage().split(" ");
             if (messageSplit.length > 1) {
