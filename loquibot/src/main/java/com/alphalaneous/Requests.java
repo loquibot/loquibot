@@ -51,23 +51,8 @@ public class Requests {
     }
 
     public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand) {
-        if(IDa == 0 && Settings.getSettings("basicMode").asBoolean()){
-            ArrayList<String> arguments = new ArrayList<>();
-            arguments.add(""); //Accidentally started array at one due to value I thought existed, easier to add dummy value than change everything.
-            Matcher argMatcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(message.trim());
-            while (argMatcher.find()) {
-                arguments.add(argMatcher.group(1).toLowerCase().trim());
-            }
-            Matcher IDMatcher = Pattern.compile("(\\d+)").matcher(arguments.get(1).trim());
-            System.out.println(arguments.get(1));
-            if (IDMatcher.matches() && arguments.size() <= 2) {
-                IDa = Long.parseLong(IDMatcher.group(1));
 
-            }
-            else{
-                return;
-            }
-        }
+        if(!com.alphalaneous.Windows.Window.getWindow().isVisible()) return;
 
         if (globallyBlockedIDs.containsKey(IDa)) {
             sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(IDa)));

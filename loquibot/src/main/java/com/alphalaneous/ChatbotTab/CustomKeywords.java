@@ -28,7 +28,6 @@ public class CustomKeywords {
         ArrayList<KeywordData> alphabetizedCommands = Utilities.alphabetizeKeywordData(keywords);
 
         for(KeywordData keywordData : alphabetizedCommands){
-            System.out.println(keywordData.getKeyword());
             KeywordConfigCheckbox commandConfigCheckbox = new KeywordConfigCheckbox(keywordData);
             commandConfigCheckbox.resize(Window.getWindow().getWidth());
             listView.addElement(commandConfigCheckbox);

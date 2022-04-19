@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,6 +48,21 @@ public class Main {
     private static StreamDeckSocket streamDeckSocket;
 
     public static void main(String[] args) {
+        Settings.loadSettings();
+
+        FindLoquibot.setup();
+        FindLoquibot.findPath();
+
+        try {
+            URI originalURI = new URI("ws://127.0.0.1:18562");
+            CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
+            checkIfRunning.connectBlocking();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        new Thread(new LoquibotSocket()).start();
 
         iconImages.add(newIcon16);
         iconImages.add(newIcon32);
@@ -80,14 +96,15 @@ public class Main {
                 Main.close();
             }
         });
-        starting.setVisible(true);
+
+
+        if(!Settings.getSettings("runAtStartup").asBoolean()) starting.setVisible(true);
 
         System.out.println("> Start");
 
         //Saves defaults of UI Elements before switching to Nimbus
         //Sets to Nimbus, then sets defaults back
         setUI();
-        Settings.loadSettings();
         LoadGD.load();
         Themes.loadTheme();
 
@@ -162,10 +179,9 @@ public class Main {
                 new Thread(ChannelPointSettings::refresh).start();
             }
             else {
-                Window.setVisible(true);
+                if(!Settings.getSettings("runAtStartup").asBoolean()) Window.setVisible(true);
                 System.out.println("> Window Visible");
             }
-
             new Thread(Variables::loadVars).start();
             System.out.println("> Command Variables Loaded");
 
@@ -264,6 +280,7 @@ public class Main {
             JSONObject messageObj = new JSONObject();
             messageObj.put("request_type", "get_current_streamers");
             serverBot.sendMessage(messageObj.toString());
+            startSaveLoop();
 
 
         } catch (Exception e) {
@@ -404,52 +421,53 @@ public class Main {
         keyboardHookThread.start();
     }
 
+    public static void save(){
+        Variables.saveVars();
+        Settings.saveSettings();
+        Themes.saveTheme();
+        CommandData.saveCustomCommands();
+        CommandData.saveDefaultCommands();
+        CommandData.saveGeometryDashCommands();
+        TimerData.saveCustomTimers();
+        KeywordData.saveCustomKeywords();
+        LoggedID.saveLoggedIDs();
+    }
+
+    public static void startSaveLoop(){
+        new Thread(() -> {
+            while(true){
+                save();
+                Utilities.sleep(10000);
+            }
+        }).start();
+    }
+
     public static void close(boolean forceLoaded, boolean load) {
         boolean loaded = Main.programLoaded;
 
         if (forceLoaded) {
             loaded = load;
         }
-        new Thread(() -> {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        new Thread(Main::save).start();
+        if(!Settings.getSettings("runAtStartup").asBoolean()) {
+            Utilities.disposeTray();
+            if (!Settings.getSettings("onboarding").asBoolean() && loaded) {
+                Window.setVisible(false);
+                Window.setSettings();
+                keepConnecting = false;
+                try {
+                    channelPointListener.disconnectBot();
+                    chatReader.disconnect();
+                    serverBot.disconnect();
+                    GlobalScreen.unregisterNativeHook();
+                } catch (Exception ignored) {
+                }
             }
-            Variables.saveVars();
-            Settings.saveSettings();
-            Themes.saveTheme();
-            CommandData.saveCustomCommands();
-            CommandData.saveDefaultCommands();
-            CommandData.saveGeometryDashCommands();
-            TimerData.saveCustomTimers();
-            KeywordData.saveCustomKeywords();
-            LoggedID.saveLoggedIDs();
             System.exit(0);
-        }).start();
-        Utilities.disposeTray();
-        if (!Settings.getSettings("onboarding").asBoolean() && loaded) {
-            Window.setVisible(false);
-            Window.setSettings();
-            keepConnecting = false;
-            try {
-                channelPointListener.disconnectBot();
-                chatReader.disconnect();
-                serverBot.disconnect();
-                GlobalScreen.unregisterNativeHook();
-            } catch (Exception ignored) {
-            }
-            Variables.saveVars();
-            Themes.saveTheme();
-            Settings.saveSettings();
-            CommandData.saveCustomCommands();
-            CommandData.saveDefaultCommands();
-            CommandData.saveGeometryDashCommands();
-            KeywordData.saveCustomKeywords();
-            TimerData.saveCustomTimers();
-            LoggedID.saveLoggedIDs();
         }
-        System.exit(0);
+        else {
+            Window.setVisible(false);
+        }
     }
 
 

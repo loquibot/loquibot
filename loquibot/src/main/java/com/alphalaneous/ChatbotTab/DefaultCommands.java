@@ -27,7 +27,7 @@ public class DefaultCommands {
 		listView.clearElements();
 
 		ArrayList<CommandData> commands = new ArrayList<>(LoadCommands.getDefaultCommands());
-		if(Settings.getSettings("gdMode").asBoolean()) commands.addAll(LoadCommands.getGeometryDashCommands());
+		if(Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) commands.addAll(LoadCommands.getGeometryDashCommands());
 
 		ArrayList<CommandData> alphabetizedCommands = Utilities.alphabetizeCommandData(commands);
 

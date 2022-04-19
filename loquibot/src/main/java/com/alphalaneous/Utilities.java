@@ -408,6 +408,21 @@ public class Utilities {
 		}
 		return -1;
 	}
+
+	static boolean copyFromJar(InputStream source , String destination) {
+		boolean success = true;
+
+		try {
+			Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			success = false;
+		}
+
+		return success;
+
+	}
+
 	static boolean isCausedBy(Throwable caught, Class<? extends Throwable> isOfOrCausedBy) {
 		if (caught == null) return false;
 		else if (isOfOrCausedBy.isAssignableFrom(caught.getClass())) return true;

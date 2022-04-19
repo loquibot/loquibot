@@ -1,6 +1,7 @@
 package com.alphalaneous;
 
 import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.Windows.Window;
 import com.eclipsesource.v8.V8;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -83,7 +84,7 @@ public class CommandNew {
             }
         }
         if(foundCommand != null && foundCommand.isMethod() && foundCommand.isEnabled() && checkUserLevel(foundCommand, message)){
-            if(foundCommand.isGD() && !Settings.getSettings("gdMode").asBoolean()) return;
+            if(foundCommand.isGD() && (!Settings.getSettings("gdMode").asBoolean() || !Window.getWindow().isVisible())) return;
 
             Reflections reflections =
                     new Reflections(new ConfigurationBuilder()

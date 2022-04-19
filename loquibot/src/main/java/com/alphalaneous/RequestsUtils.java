@@ -4,6 +4,7 @@ import com.alphalaneous.Panels.*;
 import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.Windows.Window;
 import jdash.common.DemonDifficulty;
 import jdash.common.Difficulty;
 import jdash.common.Length;
@@ -649,7 +650,7 @@ public class RequestsUtils {
 				}
 			}
 			for (CommandData commandData : LoadCommands.getGeometryDashCommands()) {
-				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand()) && Settings.getSettings("gdMode").asBoolean()) {
+				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand()) && Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
 					existingCommands.add(geometryDashCommandPrefix + commandData.getCommand());
 				}
 			}

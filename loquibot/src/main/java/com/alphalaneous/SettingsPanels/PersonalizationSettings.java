@@ -10,11 +10,18 @@ import com.alphalaneous.Themes;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 import com.bric.swing.ColorPicker;
+import vbs_sc.ShortcutFactory;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class PersonalizationSettings {
@@ -27,6 +34,39 @@ public class PersonalizationSettings {
 
         settingsPage.addCheckbox("$ALWAYS_ON_TOP$", "$ON_TOP_DESCRIPTION$", "onTop", PersonalizationSettings::setOnTop);
         settingsPage.addCheckbox("$DISABLE_FOCUS$", "$DISABLE_FOCUS_DESCRIPTION$", "disableFocus", PersonalizationSettings::setFocusable);
+        settingsPage.addCheckbox("$RUN_AT_STARTUP$", "$RUN_AT_STARTUP_DESCRIPTION$","runAtStartup", () -> {
+            if(Settings.getSettings("installPath").exists()){
+                Paths.get(Settings.getSettings("installPath").asString());
+                //todo disable GD Mode unless visible
+                Path link = Paths.get(Defaults.saveDirectory + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\loquibot.lnk");
+                if(Settings.getSettings("runAtStartup").asBoolean()) {
+                    System.out.println("here");
+                    try {
+                        FileSystemView filesys = FileSystemView.getFileSystemView();
+                        File file = filesys.getHomeDirectory();
+                        boolean exists = Files.exists(Paths.get(file.getPath() + "/loquibot.lnk"));
+                        ShortcutFactory.createDesktopShortcut(Settings.getSettings("installPath").asString(), "loquibot.lnk");
+
+                        if(exists) Files.copy(Paths.get(file.getPath() + "/loquibot.lnk"), link);
+                        else Files.move(Paths.get(file.getPath() + "/loquibot.lnk"), link);
+
+                        //Files.createLink(link, Paths.get(Settings.getSettings("installLocation").asString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    if(Files.exists(link)){
+                        try {
+                            Files.delete(link);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+        settingsPage.addCheckbox("$PLAY_SOUNDS_WHILE_HIDDEN$", "$PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION$", "playSoundsWhileHidden");
         settingsPage.addCheckbox("$DISABLE_NOTIFICATIONS$", "$DISABLE_NOTIFICATIONS_DESCRIPTION$","disableNotifications");
         return settingsPage;
     }

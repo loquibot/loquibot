@@ -30,14 +30,11 @@ public class Settings {
 			while (it.hasNext()) {
 				Map.Entry pair = (Map.Entry) it.next();
 				pairs.append(pair.getKey()).append(" = ").append(pair.getValue()).append("\n");
-				it.remove();
 			}
 			if (!Files.exists(file)) {
 				Files.createFile(file);
 			}
-			Files.write(
-					file,
-					pairs.toString().getBytes());
+			Files.write(file, pairs.toString().getBytes());
 		} catch (IOException e1) {
 			DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
 
@@ -45,6 +42,7 @@ public class Settings {
 	}
 
 	public static void writeSettings(String key, String setting) {
+		if(key != null && !key.equalsIgnoreCase("null"))
 		settings.put(key, setting.replace("\n", "\\n"));
 	}
 

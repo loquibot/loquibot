@@ -1,6 +1,7 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Windows.Window;
 import javazoom.jl.player.Player;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CloseShieldInputStream;
@@ -70,17 +71,19 @@ public class Sounds {
 		public void playSound() {
 			new Thread(() -> {
 				try {
-					BufferedInputStream inp;
-					if (isURL) {
-						inp = new BufferedInputStream (new URL(location).openStream());
-					} else if (isFile) {
-						inp = new BufferedInputStream (new FileInputStream(location));
-					} else {
-						inp = new BufferedInputStream (BotHandler.class
-								.getResource(location).openStream());
+					if(Window.getWindow().isVisible() || Settings.getSettings("playSoundsWhileHidden").asBoolean()) {
+						BufferedInputStream inp;
+						if (isURL) {
+							inp = new BufferedInputStream(new URL(location).openStream());
+						} else if (isFile) {
+							inp = new BufferedInputStream(new FileInputStream(location));
+						} else {
+							inp = new BufferedInputStream(BotHandler.class
+									.getResource(location).openStream());
+						}
+						mp3player = new Player(inp);
+						mp3player.play();
 					}
-					mp3player = new Player(inp);
-					mp3player.play();
 
 				} catch (Exception f) {
 					f.printStackTrace();

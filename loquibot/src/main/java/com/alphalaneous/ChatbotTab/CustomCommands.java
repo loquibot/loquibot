@@ -85,7 +85,7 @@ public class CustomCommands {
 
 				boolean exists = false;
 				String key = entry.getKey();
-				if (!Settings.getSettings("gdMode").asBoolean()) {
+				if (!Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
 					for (String command : gdCommands) {
 						if (key.equalsIgnoreCase(command)) {
 							exists = true;

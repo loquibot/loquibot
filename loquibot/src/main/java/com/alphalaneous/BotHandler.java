@@ -1,5 +1,7 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Windows.Window;
+
 import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -172,7 +174,7 @@ public class BotHandler {
                     }
                 }
                 if (!mention.contains(m.group(1))) {
-                    if (Settings.getSettings("gdMode").asBoolean()) {
+                    if (Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()){
                         Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), user, isMod, isSub, message, ID, userID, false);
                     }
                 }
