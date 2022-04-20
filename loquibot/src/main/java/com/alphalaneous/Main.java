@@ -5,7 +5,6 @@ import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.*;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
-import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.json.JSONObject;
@@ -20,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +36,6 @@ public class Main {
     private static TwitchListener channelPointListener;
     private static ChatListener chatReader;
     private static ServerBot serverBot = null;
-    private static boolean keepConnecting = true;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
     private static final ImageIcon icon = Assets.loquibot;
@@ -252,7 +249,7 @@ public class Main {
 
             JSONObject messageObj = new JSONObject();
             messageObj.put("request_type", "get_current_streamers");
-            serverBot.sendMessage(messageObj.toString());
+            ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
             startSaveLoop();
 
 
@@ -277,28 +274,13 @@ public class Main {
         return iconImages;
     }
 
-    static void refreshBot() {
-        try {
-            serverBot.connect();
-            if (channelPointListener != null) {
-                channelPointListener.disconnectBot();
-            }
-            channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
-            channelPointListener.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     static void sendMainMessage(String message) {
-
-        chatReader.sendMessage(message);
+        ChatListener.getCurrentListener().sendMessage(message);
     }
 
     public static void sendToServer(String message) {
         try {
-            serverBot.sendMessage(message);
+            ServerBot.getCurrentServerBot().sendMessage(message);
         } catch (Exception ignored) {
         }
     }
@@ -307,7 +289,7 @@ public class Main {
         JSONObject messageObj = new JSONObject();
         messageObj.put("request_type", "send_message");
         messageObj.put("message", message);
-        serverBot.sendMessage(messageObj.toString());
+        ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
     }
 
     static void sendMessage(String message, boolean whisper, String user) {
@@ -325,7 +307,7 @@ public class Main {
                     messageObj.put("message", message);
                 }
                 try {
-                    serverBot.sendMessage(messageObj.toString());
+                    ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -339,7 +321,7 @@ public class Main {
                 }
                 messageObj.put("message", "/w " + user + " " + message);
                 try {
-                    serverBot.sendMessage(messageObj.toString());
+                    ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -427,11 +409,10 @@ public class Main {
             if (!Settings.getSettings("onboarding").asBoolean() && loaded) {
                 Window.setVisible(false);
                 Window.setSettings();
-                keepConnecting = false;
                 try {
-                    channelPointListener.disconnectBot();
-                    chatReader.disconnect();
-                    serverBot.disconnect();
+                    TwitchListener.getCurrentTwitchListener().disconnectBot();
+                    ChatListener.getCurrentListener().disconnect();
+                    ServerBot.getCurrentServerBot().disconnect();
                     GlobalScreen.unregisterNativeHook();
                 } catch (Exception ignored) {
                 }

@@ -10,9 +10,16 @@ import java.util.ArrayList;
 public class ChatListener extends ChatBot {
 
 	private static boolean sentStartupMessage = false;
+	private static ChatListener currentListener;
+
 
 	ChatListener(String channel) {
 		super(channel);
+		currentListener = this;
+	}
+
+	public static ChatListener getCurrentListener(){
+		return currentListener;
 	}
 
 	@Override
@@ -28,7 +35,7 @@ public class ChatListener extends ChatBot {
 	public void onClose(int i, String s, boolean b) {
 		System.out.println("> Disconnected from Chat Listener");
 		Utilities.sleep(2000);
-		connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
+		new ChatListener(TwitchAccount.login).connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
 	}
 
 	@Override

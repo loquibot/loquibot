@@ -17,6 +17,15 @@ public class ServerBot {
 	private Socket clientSocket;
 	private PrintWriter out;
 	private BufferedReader in;
+	private static ServerBot currentServerBot;
+
+	ServerBot(){
+		currentServerBot = this;
+	}
+
+	public static ServerBot getCurrentServerBot(){
+		return currentServerBot;
+	}
 
 	void connect() {
 
@@ -125,7 +134,7 @@ public class ServerBot {
 		}
 		System.out.println("> Disconnected from ServerBot");
 		Utilities.sleep(2000);
-		connect();
+		new ServerBot().connect();
 	}
 
 	public void sendMessage(String message) {

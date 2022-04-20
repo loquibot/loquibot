@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,11 +25,13 @@ import java.util.stream.Stream;
 public class TwitchListener extends WebSocketClient {
 
 	private JSONObject topicObject = new JSONObject();
-
 	private boolean pingSuccess = false;
+	private static TwitchListener currentTwitchListener;
+
 
 	TwitchListener(URI serverURI) {
 		super(serverURI);
+		currentTwitchListener = this;
 		topicObject.put("type", "LISTEN");
 		JSONObject data = new JSONObject();
 		JSONArray topics = new JSONArray();
@@ -37,6 +40,10 @@ public class TwitchListener extends WebSocketClient {
 		data.put("topics", topics);
 		data.put("auth_token", Settings.getSettings("oauth").asString());
 		topicObject.put("data", data);
+	}
+
+	public static TwitchListener getCurrentTwitchListener(){
+		return currentTwitchListener;
 	}
 
 	@Override
@@ -73,7 +80,11 @@ public class TwitchListener extends WebSocketClient {
 	public void onClose(int code, String reason, boolean remote) {
 		System.out.println("> Disconnected from Twitch Listener: " + code + " | Additional info: " + reason);
 		Utilities.sleep(2000);
-		connect();
+		try {
+			new TwitchListener(new URI("wss://pubsub-edge.twitch.tv")).connect();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
