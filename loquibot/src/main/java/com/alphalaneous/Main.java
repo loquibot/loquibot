@@ -185,47 +185,20 @@ public class Main {
             new Thread(Variables::loadVars).start();
             System.out.println("> Command Variables Loaded");
 
+
             new Thread(() -> {
-                while (keepConnecting) {
-                    try {
-                        if (chatReader != null) {
-                            try {
-                                chatReader.disconnect();
-                            } catch (WebsocketNotConnectedException ignored) {
-                            }
-                        }
-                        chatReader = new ChatListener(TwitchAccount.login);
-                        chatReader.connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
-                        while (!chatReader.isClosed()) {
-                            Utilities.sleep(100);
-                        }
-                    } catch (Exception ignored) {
-                    }
-                    Utilities.sleep(1000);
-                }
+                chatReader = new ChatListener(TwitchAccount.login);
+                chatReader.connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
             }).start();
             new Thread(() -> {
-                while (keepConnecting) {
-                    serverBot = new ServerBot();
-                    serverBot.connect();
-                    Utilities.sleep(1000);
-                }
+                serverBot = new ServerBot();
+                serverBot.connect();
             }).start();
-
-
-            //Reads channel point redemptions for channel point triggers
-
             new Thread(() -> {
                 try {
-                    while (true) {
-                        channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
-                        channelPointListener.connectBlocking();
-                        while (channelPointListener.isOpen()) {
-                            Utilities.sleep(10);
-                        }
-                        Utilities.sleep(2000);
-                    }
-                } catch (URISyntaxException | InterruptedException e) {
+                    channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
+                    channelPointListener.connect();
+                } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
             }).start();

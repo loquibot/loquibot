@@ -26,7 +26,9 @@ public class ChatListener extends ChatBot {
 
 	@Override
 	public void onClose(int i, String s, boolean b) {
-
+		System.out.println("> Disconnected from Chat Listener");
+		Utilities.sleep(2000);
+		connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
 	}
 
 	@Override

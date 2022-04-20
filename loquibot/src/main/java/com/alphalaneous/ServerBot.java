@@ -18,19 +18,18 @@ public class ServerBot {
 	private PrintWriter out;
 	private BufferedReader in;
 
-	{
+	void connect() {
+
 		try {
-			//clientSocket = new Socket("localhost", 2963); //test
 			clientSocket = new Socket("142.93.12.163", 2963);
-			
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
+			Utilities.sleep(2000);
+			connect();
 			e.printStackTrace();
 		}
-	}
 
-	void connect() {
 		JSONObject authObj = new JSONObject();
 		authObj.put("request_type", "connect");
 		authObj.put("oauth", Settings.getSettings("oauth").asString());
@@ -124,19 +123,9 @@ public class ServerBot {
 
 			}
 		}
-		System.out.println("dead");
-	}
-
-	static void showReconnectDialog() {
-		String choice = DialogBox.showDialogBox("$CONNECTING_loquibot$", "$CONNECTING_loquibot_INFO$", "$CONNECTING_loquibot_SUBINFO$", new String[]{"$RECONNECT$", "$CANCEL$"});
-		if (choice.equalsIgnoreCase("CANCEL")) {
-			Main.close();
-		}
-		if (choice.equalsIgnoreCase("RECONNECT")) {
-			APIs.success.set(false);
-			APIs.setOauth();
-
-		}
+		System.out.println("> Disconnected from ServerBot");
+		Utilities.sleep(2000);
+		connect();
 	}
 
 	public void sendMessage(String message) {
