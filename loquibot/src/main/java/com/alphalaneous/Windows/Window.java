@@ -26,12 +26,15 @@ public class Window {
     };
     private static final JPanel fullPanel = new JPanel();
     private static final JPanel tabPanel = new JPanel();
+    private static final JPanel updatePanel = new JPanel();
     private static final JPanel mainContent = new JPanel();
     private static final JButtonUI selectUI = new JButtonUI();
     private static final JButtonUI buttonUI = new JButtonUI();
     private static final JPanel dialogBackgroundPanel = new JPanel();
     private static final JPanel backgroundColor = new JPanel();
     private static final JPanel componentLayer = new JPanel();
+    private static final RoundedJButton updateButton = new RoundedJButton("\uF11A", "Update Available");
+
     private static final int width = 800, height = 660;
 
     public static void initFrame() {
@@ -63,9 +66,37 @@ public class Window {
         layeredContentPanel.setBounds(0, 0, width, height);
 
         //tabPanel.setOpaque(false);
-        tabPanel.setBounds(0, 0, 50, height);
+        tabPanel.setBounds(0, 0, 50, height-60);
         tabPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         tabPanel.setBackground(new ThemedColor("color6", tabPanel, ThemedColor.BACKGROUND));
+
+        updatePanel.setBounds(0, windowFrame.getHeight()-85, 50, 50);
+        updatePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        updatePanel.setBackground(new ThemedColor("color6", updatePanel, ThemedColor.BACKGROUND));
+
+        updateButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
+        updateButton.setForeground(Color.GREEN);
+        updateButton.setBackground(Defaults.COLOR3);
+        updateButton.setUI(Defaults.defaultUI);
+        updateButton.setBorder(BorderFactory.createEmptyBorder());
+        updateButton.setPreferredSize(new Dimension(40, 40));
+        updateButton.setVisible(false);
+
+
+        updateButton.addActionListener(e -> {
+            try {
+                Settings.writeSettings("hasUpdated", "true");
+                Main.forceClose();
+                Runtime.getRuntime().exec(Settings.getSettings("installPath").asString());
+                System.exit(0);
+            }
+            catch (Exception f){
+                System.out.println(f);
+                f.printStackTrace();
+            }
+        });
+
+        updatePanel.add(updateButton);
 
         mainContent.setLayout(null);
         mainContent.setBounds(50, 0, width - 50, height);
@@ -112,6 +143,7 @@ public class Window {
         layeredContentPanel.setBackground(new Color(0,0,0,0));
 
         fullPanel.add(tabPanel);
+        fullPanel.add(updatePanel);
         fullPanel.add(mainContent);
 
         layeredContentPanel.setLayer(fullPanel, 0);
@@ -122,18 +154,18 @@ public class Window {
         windowFrame.add(layeredContentPanel);
     }
 
+    public static void showUpdateButton(){
+        updateButton.setVisible(true);
+    }
+
     public static void refreshUI() {
-        //tabPanel.setBackground(Defaults.COLOR6);
-        //mainContent.setBackground(Defaults.COLOR);
-        //windowFrame.getContentPane().setBackground(Defaults.COLOR);
-        //windowFrame.getRootPane().setBackground(Defaults.COLOR);
-        //windowFrame.setBackground(Defaults.COLOR);
         selectUI.setBackground(Defaults.COLOR);
         selectUI.setHover(Defaults.COLOR5);
         selectUI.setSelect(Defaults.COLOR2);
         buttonUI.setBackground(Defaults.COLOR3);
         buttonUI.setHover(Defaults.COLOR5);
         buttonUI.setSelect(Defaults.COLOR2);
+        updateButton.setBackground(Defaults.COLOR3);
         for(ListButton button : buttons){
             button.refreshUI();
         }
@@ -301,7 +333,8 @@ public class Window {
             public void componentResized(ComponentEvent evt) {
                 //closeDialog();
                 //resizing = true;
-                tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 30);
+                tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 85);
+                updatePanel.setBounds(0, windowFrame.getHeight()-85, 50, 50);
                 layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
                 mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
                 RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
@@ -378,7 +411,8 @@ public class Window {
             int newH = Integer.parseInt(dim[1]);
 
             windowFrame.setSize(newW, newH);
-            tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 30);
+            tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 85);
+            updatePanel.setBounds(0, windowFrame.getHeight()-85, 50, 50);
             layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
             mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
             RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());

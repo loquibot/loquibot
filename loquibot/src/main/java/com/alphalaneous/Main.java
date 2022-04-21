@@ -45,7 +45,11 @@ public class Main {
     private static StreamDeckSocket streamDeckSocket;
 
     public static void main(String[] args) {
+
         Settings.loadSettings();
+
+        boolean reopen = Settings.getSettings("hasUpdated").asBoolean();
+        Settings.writeSettings("hasUpdated", "false");
 
         FindLoquibot.setup();
         FindLoquibot.findPath();
@@ -95,7 +99,7 @@ public class Main {
         });
 
 
-        if(!Settings.getSettings("runAtStartup").asBoolean()) starting.setVisible(true);
+        if(!Settings.getSettings("runAtStartup").asBoolean() || reopen) starting.setVisible(true);
 
         System.out.println("> Start");
 
@@ -151,6 +155,7 @@ public class Main {
 
             System.out.println("> Panels Created");
 
+            UpdateChecker.checkForUpdates();
             Window.loadSettings();
 
             Defaults.initializeThemeInfo();
@@ -176,7 +181,7 @@ public class Main {
                 new Thread(ChannelPointSettings::refresh).start();
             }
             else {
-                if(!Settings.getSettings("runAtStartup").asBoolean()) Window.setVisible(true);
+                if(!Settings.getSettings("runAtStartup").asBoolean() || reopen) Window.setVisible(true);
                 System.out.println("> Window Visible");
             }
             new Thread(Variables::loadVars).start();
@@ -403,7 +408,7 @@ public class Main {
         if (forceLoaded) {
             loaded = load;
         }
-        new Thread(Main::save).start();
+        Main.save();
         if(!Settings.getSettings("runAtStartup").asBoolean()) {
             Utilities.disposeTray();
             if (!Settings.getSettings("onboarding").asBoolean() && loaded) {
@@ -421,6 +426,20 @@ public class Main {
         }
         else {
             Window.setVisible(false);
+        }
+    }
+
+    public static void forceClose(){
+        Main.save();
+        Utilities.disposeTray();
+        Window.setVisible(false);
+        Window.setSettings();
+        try {
+            TwitchListener.getCurrentTwitchListener().disconnectBot();
+            ChatListener.getCurrentListener().disconnect();
+            ServerBot.getCurrentServerBot().disconnect();
+            GlobalScreen.unregisterNativeHook();
+        } catch (Exception ignored) {
         }
     }
 

@@ -22,12 +22,11 @@ public class LoquibotSocket extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket webSocket, int i, String s, boolean b) {
-
+        new LoquibotSocket();
     }
 
     @Override
     public void onMessage(WebSocket webSocket, String s) {
-        System.out.println(s);
         if(s.equalsIgnoreCase("opened")){
             sendMessage("yes");
             Window.setVisible(true);
