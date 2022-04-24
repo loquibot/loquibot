@@ -379,6 +379,12 @@ public class CommandNew {
                             }
                             break;
                         }
+                        case "messagebreak":
+                        case "linebreak":
+                        case "newline" : {
+                            replacement = "¦";
+                            break;
+                        }
                         case "followage": {
                             try {
                                 replacement = Utilities.fetchURL("https://2g.be/twitch/following.php?user=" + data.split(" ")[0].trim() + "&channel=" + TwitchAccount.login + "&format=mwdhms" );

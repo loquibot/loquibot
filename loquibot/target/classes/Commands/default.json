@@ -63,6 +63,13 @@
       "description" : "View the game, change the game if mod | Usage: \"%pgame\" | \"%pgame <New Game>\"",
       "runMethod" : true,
       "message" : "runGame"
+    },
+    {
+      "name" : "filesay",
+      "level" : "moderator",
+      "description" : "Say each line of a file in chat.",
+      "runMethod" : true,
+      "message" : "runFileSay"
     }
   ]
 }

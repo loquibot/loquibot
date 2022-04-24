@@ -213,12 +213,17 @@ public class APIs {
 	}
 
 	public static String fetchURL(String url) {
+		return fetchURL(url, false);
+	}
+
+	public static String fetchURL(String url, boolean keepLines) {
 		StringBuilder response = new StringBuilder();
 		try {
 			URL ids = new URL(url);
 			Scanner s = new Scanner(ids.openStream());
 			while (s.hasNextLine()) {
-				response.append(s.nextLine()).append(" ");
+				if(keepLines) response.append(s.nextLine()).append("\n");
+				else response.append(s.nextLine()).append(" ");
 			}
 			s.close();
 		} catch (Exception e) {

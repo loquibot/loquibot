@@ -297,38 +297,43 @@ public class Main {
         ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
     }
 
-    static void sendMessage(String message, boolean whisper, String user) {
-        if (!Settings.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
-            if (!message.equalsIgnoreCase("")) {
+    static void sendMessage(String messageA, boolean whisper, String user) {
 
-                JSONObject messageObj = new JSONObject();
-                messageObj.put("request_type", "send_message");
-                if (Settings.getSettings("antiDox").asBoolean()) {
-                    message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
+        String[] messages = messageA.split("¦");
+        for(String message : messages) {
+
+            if (!Settings.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
+                if (!message.equalsIgnoreCase("")) {
+
+                    JSONObject messageObj = new JSONObject();
+                    messageObj.put("request_type", "send_message");
+                    if (Settings.getSettings("antiDox").asBoolean()) {
+                        message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
+                    }
+                    if (whisper) {
+                        messageObj.put("message", "/w " + user + " " + message);
+                    } else {
+                        messageObj.put("message", message);
+                    }
+                    try {
+                        ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                if (whisper) {
+            } else if (whisper) {
+                if (!message.equalsIgnoreCase("")) {
+                    JSONObject messageObj = new JSONObject();
+                    messageObj.put("request_type", "send_message");
+                    if (Settings.getSettings("antiDox").asBoolean()) {
+                        message = message.replaceAll(System.getProperty("user.name"), "*****");
+                    }
                     messageObj.put("message", "/w " + user + " " + message);
-                } else {
-                    messageObj.put("message", message);
-                }
-                try {
-                    ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (whisper) {
-            if (!message.equalsIgnoreCase("")) {
-                JSONObject messageObj = new JSONObject();
-                messageObj.put("request_type", "send_message");
-                if (Settings.getSettings("antiDox").asBoolean()) {
-                    message = message.replaceAll(System.getProperty("user.name"), "*****");
-                }
-                messageObj.put("message", "/w " + user + " " + message);
-                try {
-                    ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    try {
+                        ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

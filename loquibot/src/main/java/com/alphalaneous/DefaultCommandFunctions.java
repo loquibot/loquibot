@@ -501,6 +501,23 @@ public class DefaultCommandFunctions {
         }
         return "";
     }
+
+    public static String runFileSay(ChatMessage message){
+        if(message.getArgs().length == 1){
+            return Utilities.format("$FILESAY_COMMAND_NO_ARGS_MESSAGE$", message.getSender());
+        }
+
+        String url = message.getArgs()[1];
+
+        String[] fileText = APIs.fetchURL(url, true).split("\n");
+
+        for(String line : fileText){
+            Main.sendMessage(line);
+        }
+
+        return "";
+    }
+
     private static String getValidUserlevel(String userlevel){
         switch (userlevel){
             case "everyone":
