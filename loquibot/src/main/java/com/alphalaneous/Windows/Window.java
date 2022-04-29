@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class Window {
 
-    private static final AcrylicFrame windowFrame = new AcrylicFrame("loquibot");
+    private static final JFrame windowFrame = new JFrame("loquibot");
     public static final JLayeredPane layeredContentPanel = new JLayeredPane() {
         //allows multiple components to overlap without drawing over the other
         @Override
@@ -49,7 +49,7 @@ public class Window {
         windowFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         windowFrame.setSize(width, height + 30);
         windowFrame.setMinimumSize(new Dimension(900, 500));
-        windowFrame.setContentLayout(null);
+        //windowFrame.setContentLayout(null);
 
         if(Settings.getSettings("window").exists()){
             String position = Settings.getSettings("window").asString();
