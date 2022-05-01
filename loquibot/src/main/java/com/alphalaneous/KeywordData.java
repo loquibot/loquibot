@@ -19,7 +19,7 @@ public class KeywordData {
     private boolean isRegex = false;
 
     private int cooldown = 0;
-    private int counter = 0;
+    private long counter = 0;
     private String foundWord;
 
 
@@ -64,7 +64,7 @@ public class KeywordData {
         this.isEnabled = isEnabled;
     }
 
-    public void setCounter(int counter) {
+    public void setCounter(long counter) {
         this.counter = counter;
     }
 
@@ -72,7 +72,7 @@ public class KeywordData {
         return keyword;
     }
 
-    public int getCounter(){
+    public long getCounter(){
         return counter;
     }
 

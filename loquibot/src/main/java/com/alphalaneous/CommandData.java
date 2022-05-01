@@ -25,7 +25,7 @@ public class CommandData {
 
     private List<Object> aliases;
     private int cooldown = 0;
-    private int counter = 0;
+    private long counter = 0;
 
 
     public CommandData(String command){
@@ -82,7 +82,7 @@ public class CommandData {
         this.isMethod = isMethod;
     }
 
-    public void setCounter(int counter) {
+    public void setCounter(long counter) {
         this.counter = counter;
     }
 
@@ -109,7 +109,7 @@ public class CommandData {
     public boolean isGD(){
         return isGD;
     }
-    public int getCounter(){
+    public long getCounter(){
         return counter;
     }
 

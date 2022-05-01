@@ -272,6 +272,7 @@ public class CommandNew {
                                 }
                                 case "ping": {
                                     Sounds.playSound("/sounds/ping.mp3", true, true, false, false);
+                                    break;
                                 }
                                 default: {
                                     Sounds.playSound(dataArr[1].trim(), true, true, false, true);
@@ -315,12 +316,19 @@ public class CommandNew {
                             break;
                         }
                         case "count" : {
-                            int count = 0;
+                            long count = 0;
+                            long addedNumber = 1;
+                            if(data.split(" ").length > 0) {
+                                try {
+                                    addedNumber = Long.parseLong(data.split(" ")[0].trim());
+                                }
+                                catch (Exception ignored){}
+                            }
                             if(commandData != null) {
                                 count = commandData.getCounter();
                                 for (CommandData data1 : CommandData.getRegisteredCommands()) {
                                     if (data1.getCommand().equalsIgnoreCase(commandData.getCommand())) {
-                                        data1.setCounter(count + 1);
+                                        data1.setCounter(count + addedNumber);
                                     }
                                 }
                             }
@@ -328,7 +336,7 @@ public class CommandNew {
                                 count = keywordData.getCounter();
                                 for (KeywordData data1 : KeywordData.getRegisteredKeywords()) {
                                     if (data1.getKeyword().equalsIgnoreCase(keywordData.getKeyword())) {
-                                        data1.setCounter(count + 1);
+                                        data1.setCounter(count + addedNumber);
                                     }
                                 }
                             }

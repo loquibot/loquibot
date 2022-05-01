@@ -68,7 +68,7 @@ public class LoadKeywords {
             try {
                 JSONObject commandDataJson = keywordArray.getJSONObject(i);
                 KeywordData keywordData = new KeywordData(commandDataJson.getString("name"));
-                keywordData.setCounter(commandDataJson.optInt("counter"));
+                keywordData.setCounter(commandDataJson.optLong("counter"));
                 keywordData.setEnabled(commandDataJson.optBoolean("enabled", true));
 
                 keywordData.setMessage(commandDataJson.optString("message"));

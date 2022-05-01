@@ -124,7 +124,7 @@ public class LoadCommands {
             try {
                 JSONObject commandDataJson = commandsArray.getJSONObject(i);
                 CommandData commandData = new CommandData(commandDataJson.getString("name"));
-                commandData.setCounter(commandDataJson.optInt("counter"));
+                commandData.setCounter(commandDataJson.optLong("counter"));
                 commandData.setDefault(isDefault);
                 commandData.setGD(isGD);
                 commandData.setHasDescription(!commandDataJson.optString("description").equalsIgnoreCase(""));
