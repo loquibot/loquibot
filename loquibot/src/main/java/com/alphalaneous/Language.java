@@ -6,9 +6,11 @@ import com.alphalaneous.Components.LangLabel;
 import com.alphalaneous.Components.RoundedJButton;
 import com.alphalaneous.FileUtils.FileList;
 import com.alphalaneous.FileUtils.GetInternalFiles;
+import com.alphalaneous.FileUtils.InternalFile;
+import com.alphalaneous.Tabs.ChatbotTab;
+import com.alphalaneous.Tabs.SettingsTab;
 
 import java.io.*;
-import java.net.URI;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -18,19 +20,8 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class Language {
 
-    private static final String lang = "en_us";
-    private static Path myPath;
 
-    static {
-        if (!BotHandler.uri.getScheme().equals("jar")) {
-            try {
-                URI uri = Objects.requireNonNull(Main.class.getResource("/Languages/")).toURI();
-                myPath = Paths.get(uri);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    private static String lang = "en_us";
 
     public static String setLocale(String text) {
         if(text != null) {
@@ -41,6 +32,10 @@ public class Language {
                     String newWord = Language.getString(word.replace("$", ""));
                     newText = newText.replace(word, newWord);
                 }
+                if(word.startsWith("〈") && word.endsWith("〉")) {
+                    String newWord = Language.getLangPropString(word.replace("〈", "").replace("〉", ""));
+                    newText = newText.replace(word, newWord);
+                }
             }
             return newText;
         }
@@ -48,6 +43,7 @@ public class Language {
     }
 
     static HashMap<String, String> language = new HashMap<>();
+    static HashMap<String, String> langProp = new HashMap<>();
 
     static String[] uwuEndings = {"uwu", "OwO", "rawr~", "X3", "nuzzles~", "(´・ω・｀)", "\uD83E\uDD7A", "uvu", " （=´∇｀=）"};
 
@@ -70,8 +66,28 @@ public class Language {
         return text;
     }
 
+    public static void switchLanguage(String language){
+        switch (language){
+            case "en_us":
+            case "es_es":
+            case "fr_fr":
+            case "pt_br":
+                break;
+            default: lang = "en_us";
+                return;
+        }
+        lang = language;
+        loadLanguage();
+        reloadLocale();
+        SettingsTab.refreshSettingsButtons();
+        ChatbotTab.refreshSettingsButtons();
+    }
+
     static String getString(String identifier){
         return language.getOrDefault(identifier, identifier);
+    }
+    static String getLangPropString(String identifier){
+        return langProp.getOrDefault(identifier, identifier);
     }
 
     static void loadLanguage() {
@@ -99,6 +115,7 @@ public class Language {
 
             GetInternalFiles getInternalFiles = new GetInternalFiles("Languages/");
             FileList files = getInternalFiles.getFiles();
+
             String fileName = lang + ".lang";
 
             String[] fileLines = files.getFile(fileName).getString().split("\n");
@@ -108,6 +125,17 @@ public class Language {
                 }
                 language.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
             }
+            String langProperties = "Languages.prop";
+
+            String[] langPropLines = files.getFile(langProperties).getString().split("\n");
+
+            for(String line : langPropLines){
+                if (line.startsWith("//") || line.trim().equalsIgnoreCase("")) {
+                    continue;
+                }
+                langProp.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,18 +166,7 @@ public class Language {
 
                             if (kind == ENTRY_MODIFY && fileName.toString().equals(lang + ".lang")) {
                                 Language.loadLanguage();
-                                for (int i = 0; i < LangButton.buttonList.size(); i++) {
-                                    LangButton.buttonList.get(i).refreshLocale();
-                                }
-                                for (int i = 0; i < LangLabel.labelList.size(); i++) {
-                                    LangLabel.labelList.get(i).refreshLocale();
-                                }
-                                for (int i = 0; i < RoundedJButton.buttons.size(); i++) {
-                                    RoundedJButton.buttons.get(i).refreshLocale();
-                                }
-                                for (int i = 0; i < CurvedButtonAlt.buttonList.size(); i++) {
-                                    CurvedButtonAlt.buttonList.get(i).refreshLocale();
-                                }
+                                reloadLocale();
                             }
                         }
 
@@ -163,5 +180,19 @@ public class Language {
                 ex.printStackTrace();
             }
         }).start();
+    }
+    private static void reloadLocale(){
+        for (int i = 0; i < LangButton.buttonList.size(); i++) {
+            LangButton.buttonList.get(i).refreshLocale();
+        }
+        for (int i = 0; i < LangLabel.labelList.size(); i++) {
+            LangLabel.labelList.get(i).refreshLocale();
+        }
+        for (int i = 0; i < RoundedJButton.buttons.size(); i++) {
+            RoundedJButton.buttons.get(i).refreshLocale();
+        }
+        for (int i = 0; i < CurvedButtonAlt.buttonList.size(); i++) {
+            CurvedButtonAlt.buttonList.get(i).refreshLocale();
+        }
     }
 }

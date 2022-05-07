@@ -5,6 +5,7 @@ import com.alphalaneous.Main;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,10 +44,11 @@ public class InternalFile {
                 br.close();
                 return string.toString();
             } else {
-                return Files.readString(path, StandardCharsets.UTF_8);
+                return Files.readString(path);
             }
         }
         catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }

@@ -59,6 +59,6 @@ public class LangLabel extends JLabel {
 		}
 	}
 	public String getIdentifier(){
-		return text.replace("$", "");
+		return text.replace("$", "").replace("〈", "").replace("〉","");
 	}
 }

@@ -119,7 +119,7 @@ public class SettingsTab {
 		warrantyPage.setVisible(true);
 		return null;
 	});
-	private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uE12B", () -> {
+	private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uF4F3", () -> {
 		languagePage.setVisible(true);
 		return null;
 	});
@@ -216,7 +216,7 @@ public class SettingsTab {
 		buttons.add(userSection, gbc);
 		buttons.add(accounts, gbc);
 		buttons.add(personalization, gbc);
-
+		buttons.add(language, gbc);
 		buttons.add(createSeparator(), gbc);
 		buttons.add(GDSection, gbc);
 		buttons.add(requests, gbc);
@@ -243,6 +243,7 @@ public class SettingsTab {
 		settingsPanel.add(buttonsScroll);
 		settingsPanel.add(content);
 		Window.add(settingsPanel, Assets.settings, () -> click(accounts));
+		refreshSettingsButtons();
 
 	}
 
@@ -283,7 +284,6 @@ public class SettingsTab {
 		((TitleSeparator) userSection).refreshTextColor();
 		((TitleSeparator) botSection).refreshTextColor();
 		((TitleSeparator) noticesSection).refreshTextColor();
-
 	}
 
 
@@ -333,17 +333,49 @@ public class SettingsTab {
 			setBackground(new Color(0, 0, 0, 0));
 			add(label);
 		}
+		public void resizeText(float size){
+			label.setFont(Defaults.MAIN_FONT.deriveFont(size));
+		}
 
 		public void refreshTextColor(){
 			label.setForeground(Defaults.FOREGROUND_A);
 		}
 
 	}
+
+	public static void refreshSettingsButtons(){
+		String language = Settings.getSettings("language").asString();
+		for(Component component : buttons.getComponents()){
+			if(component instanceof SettingsButton){
+				switch (language){
+					case "fr_fr":
+					case "pt_br":
+						((SettingsButton) component).resizeText(12f);
+						break;
+					default:
+						((SettingsButton) component).resizeText(14f);
+						break;
+				}
+			}
+			if(component instanceof TitleSeparator){
+				switch (language){
+					case "fr_fr":
+					case "pt_br":
+						((TitleSeparator) component).resizeText(10f);
+						break;
+					default:
+						((TitleSeparator) component).resizeText(12f);
+						break;
+				}
+			}
+		}
+	}
+
 	private static class SettingsButton extends CurvedButtonAlt {
 
 		private final Callable<Void> method;
 		private final String text;
-
+		private final LangLabel label;
 
 
 		SettingsButton(String text, String icon, Callable<Void> method){
@@ -351,12 +383,13 @@ public class SettingsTab {
 			this.text = text;
 			this.method = method;
 
-			LangLabel label = new LangLabel(text);
+			label = new LangLabel(text);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			label.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 			if(icon == null) label.setBounds(15, 7, 208, 20);
 			else label.setBounds(40, 7, 208, 20);
 			label.setForeground(Defaults.FOREGROUND_A);
+			label.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 
 			LangLabel iconLabel = new LangLabel(icon);
 
@@ -375,6 +408,11 @@ public class SettingsTab {
 			setOpaque(false);
 			addActionListener(e -> runMethod());
 		}
+
+		public void resizeText(float size){
+			label.setFont(Defaults.MAIN_FONT.deriveFont(size));
+		}
+
 		public void runMethod(){
 			RequestsLog.clear();
 			for (Component componentA : content.getComponents()) {

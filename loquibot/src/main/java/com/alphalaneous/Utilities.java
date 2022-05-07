@@ -191,6 +191,7 @@ public class Utilities {
 	}
 
 	public static String format(String format, Object... args) {
+
 		format = getLocalizedString(format);
 		try {
 			return String.format(format, args);

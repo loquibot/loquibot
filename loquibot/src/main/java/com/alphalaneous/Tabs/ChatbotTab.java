@@ -4,6 +4,7 @@ import com.alphalaneous.Assets;
 import com.alphalaneous.ChatbotTab.*;
 import com.alphalaneous.Components.*;
 import com.alphalaneous.Defaults;
+import com.alphalaneous.Settings;
 import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Windows.Window;
 
@@ -133,7 +134,7 @@ public class ChatbotTab {
 		chatbotPanel.add(content);
 
 		Window.add(chatbotPanel, Assets.commands, () -> click(generalBotButton));
-
+		refreshSettingsButtons();
 	}
 
 	public static void refreshUI() {
@@ -214,8 +215,40 @@ public class ChatbotTab {
 		public void refreshTextColor(){
 			label.setForeground(Defaults.FOREGROUND_A);
 		}
-
+		public void resizeText(float size){
+			label.setFont(Defaults.MAIN_FONT.deriveFont(size));
+		}
 	}
+
+
+	public static void refreshSettingsButtons(){
+		String language = Settings.getSettings("language").asString();
+		for(Component component : buttons.getComponents()){
+			if(component instanceof FunctionButton){
+				switch (language){
+					case "fr_fr":
+					case "pt_br":
+						((FunctionButton) component).resizeText(12f);
+						break;
+					default:
+						((FunctionButton) component).resizeText(14f);
+						break;
+				}
+			}
+			if(component instanceof TitleSeparator){
+				switch (language){
+					case "fr_fr":
+					case "pt_br":
+						((TitleSeparator) component).resizeText(10f);
+						break;
+					default:
+						((TitleSeparator) component).resizeText(12f);
+						break;
+				}
+			}
+		}
+	}
+
 	private static class FunctionButton extends CurvedButtonAlt {
 
 		private final Callable<Void> method;
@@ -223,13 +256,14 @@ public class ChatbotTab {
 		private ImageIcon icon;
 		private final LangLabel iconLabel;
 		private static final ArrayList<FunctionButton> functionButtons = new ArrayList<>();
+		private LangLabel label;
 
 		FunctionButton(String text, String icon, Callable<Void> method){
 			super("");
 			this.text = text;
 			this.method = method;
 
-			LangLabel label = new LangLabel(text);
+			label = new LangLabel(text);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			label.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 			label.setBounds(40, 7, 208, 20);
@@ -259,6 +293,11 @@ public class ChatbotTab {
 			else iconLabel.setIcon(invertImage(this.icon));
 
 		}
+
+		public void resizeText(float size){
+			label.setFont(Defaults.MAIN_FONT.deriveFont(size));
+		}
+
 		public void refreshUI(){
 			if(icon != null){
 				if(!Defaults.isLight) iconLabel.setIcon(icon);

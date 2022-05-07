@@ -44,9 +44,9 @@ public class SettingsPage extends JPanel {
 
         settingsTitle = new SettingsTitle(title);
         settingsTitle.setOpaque(false);
-        settingsTitle.setBounds(0,0,settingsTitle.getWidth(), 80);
+        settingsTitle.setBounds(0,0,Integer.MAX_VALUE, 80);
 
-        titlePane.setPreferredSize(new Dimension(0,80));
+        titlePane.setPreferredSize(new Dimension(Integer.MAX_VALUE,80));
         titlePane.setOpaque(false);
         titlePane.setLayout(null);
         titlePane.add(settingsTitle);

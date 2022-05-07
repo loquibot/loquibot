@@ -20,8 +20,8 @@ public class SettingsTitle extends JPanel {
         settingsTitleLabel = new LangLabel(title);
         settingsTitleLabel.setFont(Defaults.MAIN_FONT.deriveFont(24f));
         settingsTitleLabel.setForeground(Defaults.FOREGROUND_A);
-        settingsTitleLabel.setBounds(25,20,settingsTitleLabel.getPreferredSize().width+40,50);
-        setBounds(0,0, settingsTitleLabel.getPreferredSize().width+40, 80);
+        settingsTitleLabel.setBounds(25,20,500,50);
+        setBounds(0,0, 500, 80);
         add(settingsTitleLabel);
         titleList.add(this);
     }
