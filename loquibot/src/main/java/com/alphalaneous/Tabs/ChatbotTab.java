@@ -228,6 +228,7 @@ public class ChatbotTab {
 				switch (language){
 					case "fr_fr":
 					case "pt_br":
+					case "es_es":
 						((FunctionButton) component).resizeText(12f);
 						break;
 					default:

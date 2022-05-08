@@ -350,6 +350,7 @@ public class SettingsTab {
 				switch (language){
 					case "fr_fr":
 					case "pt_br":
+					case "es_es":
 						((SettingsButton) component).resizeText(12f);
 						break;
 					default:

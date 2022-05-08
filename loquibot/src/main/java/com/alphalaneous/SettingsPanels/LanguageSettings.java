@@ -17,7 +17,7 @@ public class LanguageSettings {
 		Language.switchLanguage(Settings.getSettings("language").asString());
 		SettingsPage settingsPage = new SettingsPage("$LANGUAGE_SETTINGS$");
 
-		settingsPage.addRadioOption("$LANGUAGE$", "", new String[]{"〈en_us〉", /*"%es_es%",*/"〈pt_br〉","〈fr_fr〉"}, "language", "en_us", () -> {
+		settingsPage.addRadioOption("$LANGUAGE$", "", new String[]{"〈en_us〉", "〈es_es〉","〈pt_br〉","〈fr_fr〉"}, "language", "en_us", () -> {
 			Language.switchLanguage(Settings.getSettings("language").asString());
 		});
 
