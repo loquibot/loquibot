@@ -25,7 +25,6 @@
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jsoup-1.14.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/VBS_Shortcut_1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/mp3plugin.jar!/" />
     </CLASSES>
     <JAVADOC />
     <NATIVE>
