@@ -315,6 +315,11 @@ public class CommandNew {
                             replacement = TwitchAccount.id;
                             break;
                         }
+                        case "tts" : {
+                            String finalData = data;
+                            new Thread(() -> TTS.test(finalData)).start();
+                            break;
+                        }
                         case "count" : {
                             long count = 0;
                             long addedNumber = 1;
