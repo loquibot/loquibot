@@ -317,7 +317,7 @@ public class CommandNew {
                         }
                         case "tts" : {
                             String finalData = data;
-                            new Thread(() -> TTS.test(finalData)).start();
+                            new Thread(() -> TTS.playTTS(finalData)).start();
                             break;
                         }
                         case "count" : {
@@ -346,6 +346,10 @@ public class CommandNew {
                                 }
                             }
                             replacement = String.valueOf(count+1);
+                            break;
+                        }
+                        case "message" : {
+                            replacement = message.getMessage();
                             break;
                         }
                         case "query": {
