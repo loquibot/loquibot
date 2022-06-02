@@ -1,7 +1,6 @@
 package com.alphalaneous;
 
 import com.alphalaneous.SettingsPanels.AccountSettings;
-import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +29,8 @@ public class ServerBot {
 	void connect() {
 
 		try {
-			clientSocket = new Socket("142.93.12.163", 2963);
+			//clientSocket = new Socket("142.93.12.163", 2963);
+			clientSocket = new Socket("localhost", 2963);
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
@@ -39,11 +39,12 @@ public class ServerBot {
 			e.printStackTrace();
 		}
 
-		JSONObject authObj = new JSONObject();
-		authObj.put("request_type", "connect");
-		authObj.put("oauth", Settings.getSettings("oauth").asString());
-
-		sendMessage(authObj.toString());
+		if(Settings.getSettings("twitchEnabled").asBoolean()) {
+			JSONObject authObj = new JSONObject();
+			authObj.put("request_type", "connect");
+			authObj.put("oauth", Settings.getSettings("oauth").asString());
+			sendMessage(authObj.toString());
+		}
 
 		String inputLine;
 		connect: while (true) {
@@ -69,9 +70,11 @@ public class ServerBot {
 						if(object.optBoolean("is_officer")){
 							RequestsTab.setOfficerVisible();
 						}
-						Settings.writeSettings("channel", channel);
-						AccountSettings.refreshTwitch(channel);
-						APIs.setAllViewers();
+						if(Settings.getSettings("twitchEnabled").asBoolean()) {
+							Settings.writeSettings("channel", channel);
+							AccountSettings.refreshTwitch(channel);
+							APIs.setAllViewers();
+						}
 						break;
 					}
 					case "connect_failed" : {
@@ -92,6 +95,7 @@ public class ServerBot {
 					case "broadcast" : {
 						String message = object.getString("message");
 						Main.sendMessage("\uD83D\uDCE2 | " + message);
+						Main.sendYTMessage("\uD83D\uDCE2 | " + message);
 						break;
 					}
 
@@ -110,11 +114,10 @@ public class ServerBot {
 						break;
 					}
 					case "clients" : {
-						JSONArray array = object.getJSONArray("clients");
-						System.out.println(array.toString());
+						//JSONArray array = object.getJSONArray("clients");
 					}
 					case "error" : {
-						String error = object.getString("error");
+						/*String error = object.getString("error");
 						switch (error) {
 							case "invalid_blocked_ID" :
 							case "no_id_block_reason_given" :
@@ -122,7 +125,7 @@ public class ServerBot {
 							case "invalid_unblocked_ID" :
 							case "id_not_blocked" :
 							default : break;
-						}
+						}*/
 						break;
 					}
 

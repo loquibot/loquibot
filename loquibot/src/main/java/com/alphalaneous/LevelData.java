@@ -28,6 +28,24 @@ public class LevelData {
 	private boolean persist;
 	private ImageIcon playerIcon;
 	private LevelButton levelButton;
+	private boolean isYouTube;
+	private String displayName;
+
+	public void setYouTube(boolean isYouTube){
+		this.isYouTube = isYouTube;
+	}
+
+	public boolean isYouTube() {
+		return isYouTube;
+	}
+
+	public void setDisplayName(String displayName){
+		this.displayName = displayName;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
 
 	public String getSimpleDifficulty(){
 		if(getGDLevel().isAuto()){

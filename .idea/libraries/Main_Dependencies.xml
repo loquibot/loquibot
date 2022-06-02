@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="Main Dependencies">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/delight-nashorn-sandbox-0.0.6-distribution.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Filters.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Java-WebSocket-1.5.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/javassist.jar!/" />
@@ -29,6 +28,7 @@
     <JAVADOC />
     <NATIVE>
       <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/bin" />
+      <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/javafx-sdk-18.0.1/bin" />
     </NATIVE>
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />

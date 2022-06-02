@@ -45,7 +45,7 @@ public class RequestsUtils {
 		return object;
 	}
 
-	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean vulgar, boolean image, boolean verifiedCoins) {
+	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean verifiedCoins, boolean isYouTube, String displayName) {
 
 		GDLevel level = new GDLevel() {
 			@Override
@@ -209,7 +209,8 @@ public class RequestsUtils {
 		}
 		levelData.setMessage("Reloaded");
 		levelData.setRequester(requester);
-
+		levelData.setYouTube(isYouTube);
+		levelData.setDisplayName(displayName);
 		RequestsTab.addRequest(new LevelButton(levelData));
 
 		if (RequestsTab.getQueueSize() == 1) {
@@ -350,10 +351,6 @@ public class RequestsUtils {
 
 					RequestFunctions.saveFunction();
 					RequestsTab.getLevelsPanel().setSelect(sel);
-					new Thread(() -> {
-						//RequestsTab.unloadComments(true);
-						//RequestsTab.loadComments(0, false);
-					}).start();
 					if (i == 0) {
 						StringSelection selection = new StringSelection(
 								String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
@@ -466,10 +463,6 @@ public class RequestsUtils {
 			for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
 				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().id() == blockedID) {
 					RequestsTab.removeRequest(i);
-					new Thread(() -> {
-						//RequestsTab.unloadComments(true);
-						//RequestsTab.loadComments(0, false);
-					}).start();
 					RequestFunctions.saveFunction();
 					break;
 				}
@@ -620,7 +613,7 @@ public class RequestsUtils {
 			if (info == null) info = "$HELP_NO_INFO$";
 		}
 		else info = "$HELP_NO_COMMAND$";
-		return Utilities.format("$DEFAULT_MENTION$", message.getSender()) + " " + Utilities.format(info);
+		return Utilities.format("$DEFAULT_MENTION$", message.getSenderElseDisplay()) + " " + Utilities.format(info);
 	}
 
 	public static String getCommand(ChatMessage message) {

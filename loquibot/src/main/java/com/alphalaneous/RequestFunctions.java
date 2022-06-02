@@ -5,6 +5,7 @@ import com.alphalaneous.Components.RadioPanel;
 import com.alphalaneous.Panels.*;
 import com.alphalaneous.SettingsPanels.BlockedIDSettings;
 import com.alphalaneous.SettingsPanels.OutputSettings;
+import com.alphalaneous.TwitchBot.ChatMessage;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import javazoom.jl.decoder.JavaLayerException;
@@ -17,7 +18,6 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.BufferedInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -76,7 +76,7 @@ public class RequestFunctions {
                 }
             }).start();
         }
-        boolean wasSelected = false;
+        boolean wasSelected;
 
         if (Main.programLoaded) {
             if (RequestsTab.getQueueSize() != 0) {
@@ -106,12 +106,14 @@ public class RequestFunctions {
 
                 if (pos == 0 && RequestsTab.getQueueSize() > 0) {
                     if (!Settings.getSettings("disableNP").asBoolean()) {
-                        new Thread(() -> {
-                                Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                        RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                        RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                        RequestsTab.getRequest(0).getLevelData().getRequester()), Settings.getSettings("announceNP").asBoolean());
-                        }).start();
+                        Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(0).getLevelData().getRequester()));
+                        Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(0).getLevelData().getRequester()), Settings.getSettings("announceNP").asBoolean());
                     }
                 }
             }
@@ -160,7 +162,7 @@ public class RequestFunctions {
     public static void randomFunction() {
         if (Main.programLoaded) {
             Random random = new Random();
-            int num = 0;
+            int num;
             if (RequestsTab.getQueueSize() != 0) {
                 if (didUndo) {
                     undoQueue.clear();
@@ -192,6 +194,11 @@ public class RequestFunctions {
                     clipboard.setContents(selection, selection);
 
                     if (!Settings.getSettings("disableNP").asBoolean()) {
+                        Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(num).getLevelData().getRequester()));
+
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
@@ -303,7 +310,8 @@ public class RequestFunctions {
                     level.put("level_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().levelVersion());
                     level.put("object_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().objectCount());
                     level.put("has_verified_coins", RequestsTab.getRequest(i).getLevelData().getGDLevel().hasCoinsVerified());
-
+                    level.put("is_youtube", RequestsTab.getRequest(i).getLevelData().isYouTube());
+                    level.put("display_name", RequestsTab.getRequest(i).getLevelData().getDisplayName());
                     levelsArray.put(level);
                 }
 

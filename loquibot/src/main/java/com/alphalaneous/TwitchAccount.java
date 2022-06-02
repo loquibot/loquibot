@@ -24,27 +24,27 @@ public class TwitchAccount {
 	public static String type;
 	public static long view_count;
 
-
 	public static void setInfo() {
+		if(Settings.getSettings("twitchEnabled").asBoolean()) {
+			APIs.setUser(Settings.getSettings("channel").asString());
 
-		APIs.setUser(Settings.getSettings("channel").asString());
+			JSONObject data = APIs.getInfo();
 
-		JSONObject data = APIs.getInfo();
-
-		broadcaster_type = data.getString("broadcaster_type");
-		offline_image_url = data.getString("offline_image_url");
-		description = data.getString("description");
-		created_at = data.getString("created_at");
-		profile_image_url = data.getString("profile_image_url");
-		id = data.getString("id");
-		login = data.getString("login");
-		display_name = data.getString("display_name");
-		type = data.getString("type");
-		view_count = data.getLong("view_count");
-		try {
-			profileImage = ImageIO.read(new URL(profile_image_url));
-		} catch (IOException e) {
-			e.printStackTrace();
+			broadcaster_type = data.getString("broadcaster_type");
+			offline_image_url = data.getString("offline_image_url");
+			description = data.getString("description");
+			created_at = data.getString("created_at");
+			profile_image_url = data.getString("profile_image_url");
+			id = data.getString("id");
+			login = data.getString("login");
+			display_name = data.getString("display_name");
+			type = data.getString("type");
+			view_count = data.getLong("view_count");
+			try {
+				profileImage = ImageIO.read(new URL(profile_image_url));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

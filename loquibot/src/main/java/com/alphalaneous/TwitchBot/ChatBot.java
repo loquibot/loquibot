@@ -25,46 +25,47 @@ public abstract class ChatBot {
 					onRawMessage(message);
 					message = message.replaceAll("\n", "").replaceAll("\r", "");
 					if (message.contains("PRIVMSG")) {
+						if (message.split("@").length > 2) {
+							String tagsPrefix = message.split("@", 3)[1];
+							String channelPrefix = message.split("@", 3)[2].replace("\r", "");
+							String sentMessage = channelPrefix.split(channel + " :", 2)[1].replace("\n", "").replace("\r", "").trim();
+							String sender = channelPrefix.split(".tmi.twitch.tv")[0];
+							String displayName = sender;
+							String[] badges = {};
+							boolean isFirstMessage = false;
+							boolean isMod = false;
+							boolean isSub = false;
+							boolean isVIP = false;
+							int cheerCount = 0;
+							String[] tags = tagsPrefix.split(";");
+							for (String tagA : tags) {
+								if (tagA.split("=", 2)[0].equals("badges")) {
+									badges = tagA.split("=", 2)[1].split(",");
+								}
+								if (tagA.split("=", 2)[0].equals("bits")) {
+									cheerCount = Integer.parseInt(tagA.split("=", 2)[1]);
+								}
+								if (tagA.split("=", 2)[0].equals("display-name")) {
+									displayName = tagA.split("=", 2)[1];
+								}
+								if (tagA.split("=", 2)[0].equals("first-msg")) {
+									isFirstMessage = !tagA.split("=", 2)[1].equals("0");
+								}
+							}
+							for (String badgeA : badges) {
+								if (badgeA.split("/", 2)[0].equals("broadcaster") || badgeA.split("/", 2)[0].equals("moderator")) {
+									isMod = true;
+								}
+								if (badgeA.split("/", 2)[0].equals("subscriber") || badgeA.split("/", 2)[0].equals("founder")) {
+									isSub = true;
+								}
+								if (badgeA.split("/", 2)[0].equals("vip")) {
+									isVIP = true;
+								}
+							}
 
-						String tagsPrefix = message.split("@", 3)[1];
-						String channelPrefix = message.split("@", 3)[2].replace("\r", "");
-						String sentMessage = channelPrefix.split(channel + " :", 2)[1].replace("\n", "").replace("\r", "").trim();
-						String sender = channelPrefix.split(".tmi.twitch.tv")[0];
-						String displayName = sender;
-						String[] badges = {};
-						boolean isFirstMessage = false;
-						boolean isMod = false;
-						boolean isSub = false;
-						boolean isVIP = false;
-						int cheerCount = 0;
-						String[] tags = tagsPrefix.split(";");
-						for(String tagA : tags){
-							if(tagA.split("=", 2)[0].equals("badges")){
-								badges = tagA.split("=", 2)[1].split(",");
-							}
-							if(tagA.split("=", 2)[0].equals("bits")){
-								cheerCount = Integer.parseInt(tagA.split("=", 2)[1]);
-							}
-							if(tagA.split("=", 2)[0].equals("display-name")){
-								displayName = tagA.split("=", 2)[1];
-							}
-							if(tagA.split("=", 2)[0].equals("first-msg")){
-								isFirstMessage = !tagA.split("=", 2)[1].equals("0");
-							}
+							ChatBot.this.onMessage(new ChatMessage(tags, sender, displayName, sentMessage, badges, isMod, isSub, isVIP, cheerCount, isFirstMessage));
 						}
-						for(String badgeA : badges){
-							if(badgeA.split("/", 2)[0].equals("broadcaster") || badgeA.split("/", 2)[0].equals("moderator")){
-								isMod = true;
-							}
-							if(badgeA.split("/", 2)[0].equals("subscriber") || badgeA.split("/", 2)[0].equals("founder")){
-								isSub = true;
-							}
-							if(badgeA.split("/", 2)[0].equals("vip")){
-								isVIP = true;
-							}
-						}
-
-						ChatBot.this.onMessage(new ChatMessage(tags, sender, displayName, sentMessage, badges, isMod, isSub, isVIP, cheerCount, isFirstMessage));
 					}
 					if (message.equalsIgnoreCase("PING :tmi.twitch.tv")) {
 						send("PONG :tmi.twitch.tv");

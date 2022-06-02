@@ -116,6 +116,7 @@ LEVEL_DOESNT_EXIST_MESSAGE = @%s, esse nível não existe.
 LEVEL_COMMAND_FORMAT_MESSAGE = @%s, Solicitação formatada incorretamente, digite "!help !request" para saber como formatá-la.
 REQUEST_ERROR = @%s, ocorreu um erro desconhecido.
 SPECIFY_ID_MESSAGE = @%s, especifique um ID ou nome de nível.
+SPECIFY_ID_REMOVE_MESSAGE = @%S, TODO
 TOO_FEW_OBJECTS_MESSAGE = @%s, Seu nível foi removido por conter poucos objetos.
 TOO_MANY_OBJECTS_MESSAGE = @%s, Seu nível foi removido por conter muitos objetos.
 

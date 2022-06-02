@@ -200,7 +200,7 @@ public class RequestsTab {
                 JTextArea textArea = (JTextArea) e.getSource();
                 if (!idTextArea.getText().equalsIgnoreCase("")) {
                     new Thread(() -> {
-                        Requests.addRequest(Long.parseLong(idTextArea.getText()), TwitchAccount.display_name, true, true, idTextArea.getText(), null, -1,true);
+                        Requests.addRequest(Long.parseLong(idTextArea.getText()), TwitchAccount.display_name, true, true, idTextArea.getText(), null, -1,true, null);
                         textArea.setText("");
                     }).start();
                 }
@@ -218,7 +218,7 @@ public class RequestsTab {
         addIDButton.addActionListener(e -> {
             if (!idTextArea.getText().equalsIgnoreCase("")) {
                 new Thread(() -> {
-                    Requests.addRequest(Long.parseLong(idTextArea.getText()), TwitchAccount.display_name, true, true, idTextArea.getText(), null, -1,true);
+                    Requests.addRequest(Long.parseLong(idTextArea.getText()), TwitchAccount.display_name, true, true, idTextArea.getText(), null, -1,true, null);
                     idTextArea.setText("");
                 }).start();
             }
@@ -332,16 +332,19 @@ public class RequestsTab {
 
     public static void toggle(){
         if (Main.programLoaded) {
-
-            boolean doAnnounce = Settings.getSettings("isMod").asBoolean();
-
+            boolean doAnnounce = false;
+            if(Settings.getSettings("twitchEnabled").asBoolean()) {
+                doAnnounce = Settings.getSettings("isMod").asBoolean();
+            }
             if (Requests.requestsEnabled) {
                 Requests.requestsEnabled = false;
                 Main.sendMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), doAnnounce);
+                Main.sendYTMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"));
 
             } else {
                 Requests.requestsEnabled = true;
                 Main.sendMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), doAnnounce);
+                Main.sendYTMessage(Utilities.format("🟥 | $REQUESTS_ON_TOGGLE_MESSAGE$"));
             }
         }
         if (Requests.requestsEnabled) {

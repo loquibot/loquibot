@@ -11,6 +11,14 @@ public class FindLoquibot {
 
     public static void setup() {
         Path loquibotBin = Paths.get(Defaults.saveDirectory + "/loquibot/bin/");
+        Path loquibot = Paths.get(Defaults.saveDirectory + "/loquibot/");
+        if (!Files.isDirectory(loquibot)) {
+            try {
+                Files.createDirectory(loquibot);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         if (!Files.isDirectory(loquibotBin)) {
             try {
                 Files.createDirectory(loquibotBin);

@@ -6,6 +6,7 @@
 package com.alphalaneous.TwitchBot;
 
 import com.alphalaneous.TwitchAccount;
+import com.alphalaneous.YouTubeAccount;
 
 import java.util.Locale;
 
@@ -20,6 +21,7 @@ public class ChatMessage {
     private final boolean isSub;
     private final boolean isVIP;
     private final boolean isFirstMessage;
+    private boolean isYouTube = false;
 
     private final int cheerCount;
 
@@ -37,18 +39,25 @@ public class ChatMessage {
         this.args = message.split(" ");
     }
 
+    public void setYouTube(boolean isYouTube){
+        this.isYouTube = isYouTube;
+    }
+    public boolean isYouTube(){
+        return isYouTube;
+    }
+
     public String[] getArgs(){
         return args;
     }
 
     public String getTag(String tag) {
-
-        for (String tagA : this.tags) {
-            if (tagA.split("=", 2)[0].equals(tag)) {
-                return tagA.split("=", 2)[1];
+        if(this.tags != null) {
+            for (String tagA : this.tags) {
+                if (tagA.split("=", 2)[0].equals(tag)) {
+                    return tagA.split("=", 2)[1];
+                }
             }
         }
-
         return null;
     }
 
@@ -57,8 +66,12 @@ public class ChatMessage {
     }
 
     public String getUserLevel(){
-
-        if(TwitchAccount.login.toLowerCase(Locale.ROOT).equalsIgnoreCase(sender)) return "owner";
+        if(isYouTube){
+            if (YouTubeAccount.ID.equals(sender)) return "owner";
+        }
+        else {
+            if (TwitchAccount.login.toLowerCase(Locale.ROOT).equalsIgnoreCase(sender)) return "owner";
+        }
         if(isMod) return "moderator";
         if(isVIP) return "twitch_vip";
         if(isSub) return "subscriber";
@@ -100,6 +113,11 @@ public class ChatMessage {
 
     public String getSender() {
         return this.sender;
+    }
+
+    public String getSenderElseDisplay(){
+        if(isYouTube) return displayName;
+        else return sender;
     }
 
     public String getDisplayName() {

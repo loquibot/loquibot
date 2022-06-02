@@ -49,7 +49,8 @@ public class KeywordHandler {
             startCooldown(foundKeyword);
         }
         if (!reply.equalsIgnoreCase("")) {
-            Main.sendMessage(reply);
+            if(message.isYouTube()) Main.sendYTMessage(reply);
+            else Main.sendMessage(reply);
         }
 
     }

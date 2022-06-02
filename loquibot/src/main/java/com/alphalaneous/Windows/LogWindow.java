@@ -140,7 +140,7 @@ public class LogWindow {
             }
             case "/request" : {
                 try {
-                    Requests.request(TwitchAccount.display_name, true, true, text, null, -1);
+                    Requests.request(TwitchAccount.display_name, true, true, text, null, -1, null);
                 }
                 catch (Exception e){
                     System.out.println("! Could not add level! Reason: " + e);

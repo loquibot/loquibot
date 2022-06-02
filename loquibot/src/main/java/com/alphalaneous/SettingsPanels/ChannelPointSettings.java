@@ -42,20 +42,21 @@ public class ChannelPointSettings {
     }
 
     public static void refresh(){
-        try {
-            listView.clearElements();
-            if (TwitchAccount.broadcaster_type.equalsIgnoreCase("affiliate")
-                    || TwitchAccount.broadcaster_type.equalsIgnoreCase("partner")) {
-                ArrayList<ChannelPointReward> rewards = APIs.getChannelPoints();
-                for (ChannelPointReward reward : rewards) {
-                    listView.addElement(createButton(reward.getTitle(), reward.getBgColor(), reward.getIcon(), reward.isDefaultIcon()));
+        if(Settings.getSettings("twitchEnabled").asBoolean()) {
+            try {
+                listView.clearElements();
+                if (TwitchAccount.broadcaster_type.equalsIgnoreCase("affiliate")
+                        || TwitchAccount.broadcaster_type.equalsIgnoreCase("partner")) {
+                    ArrayList<ChannelPointReward> rewards = APIs.getChannelPoints();
+                    for (ChannelPointReward reward : rewards) {
+                        listView.addElement(createButton(reward.getTitle(), reward.getBgColor(), reward.getIcon(), reward.isDefaultIcon()));
+                    }
+                } else {
+                    listView.addElement(notAvailableComponent);
                 }
-            } else {
-                listView.addElement(notAvailableComponent);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }
-        catch (Exception e){
-            e.printStackTrace();
         }
     }
     public static CurvedButton createButton(String command, Color color, Icon icon, boolean defaultIcon){

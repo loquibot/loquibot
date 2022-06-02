@@ -38,8 +38,9 @@ public class GDAPI {
 
             return new ImageIcon(imgScaled);
 	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return null;
+            BufferedImage icon = spriteFactory.makeSprite(IconType.CUBE, 1, 1, 1, false);
+            icon.flush();
+            return new ImageIcon(icon);
 	    }
 	}
     public static ImageIcon getIcon(IconType type, int id, int color1Id, int color2Id, boolean withGlowOutline, int scale){
@@ -82,7 +83,8 @@ public class GDAPI {
     public static GDLevel getLevel(long ID){
         return client.findLevelById(ID).block();
     }
-    public static GDLevel getTopLevelByName(String name){
+
+    public static GDLevel getTopLevelByName(String name) {
         return Objects.requireNonNull(client.browseLevels(LevelBrowseMode.SEARCH, name, LevelSearchFilter.create(), 0).collectList().block()).get(0);
     }
     public static GDLevel getLevelByNameByUser(String name, String username, boolean isEqual){
@@ -107,12 +109,16 @@ public class GDAPI {
     }
 
 
-    public static List<GDComment> getGDComments(long ID, boolean mostLiked, int page){
+    public static List<GDComment> getGDComments(long ID, boolean mostLiked, int page) {
+        try {
+            CommentSortMode commentSortMode = CommentSortMode.RECENT;
+            if (mostLiked) commentSortMode = CommentSortMode.MOST_LIKED;
 
-        CommentSortMode commentSortMode = CommentSortMode.RECENT;
-        if(mostLiked) commentSortMode = CommentSortMode.MOST_LIKED;
-
-        return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofMillis(2500));
+            return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofMillis(2500));
+        }
+        catch (GDClientException e){
+            return null;
+        }
     }
 
     public static GDUserProfile getGDUserProfile(long accountID){

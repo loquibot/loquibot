@@ -40,6 +40,7 @@ public class LevelButton extends CurvedButtonAlt {
 	private final JLabel lRequester = new JLabel();
 	private final JLabel lAnalyzed = new JLabel();
 	private final JPanel info = new JPanel(new GridLayout(0, 2, 1, 1));
+	private final JLabel logo = new JLabel();
 	private boolean viewership = false;
 	private int gonePoints = 4;
 	private final LevelData levelData;
@@ -62,6 +63,18 @@ public class LevelButton extends CurvedButtonAlt {
 		boolean epic = data.getGDLevel().isEpic();
 		boolean featured = data.getFeatured();
 		int starCount = data.getGDLevel().stars();
+
+		String displayRequester;
+
+		if(data.isYouTube()) {
+			logo.setIcon(Assets.YouTube);
+			displayRequester = data.getDisplayName();
+		}
+		else {
+			logo.setIcon(Assets.Twitch);
+			displayRequester = data.getRequester();
+		}
+
 		this.requester = data.getRequester();
 		double version = data.getGDLevel().levelVersion();
 		ImageIcon playerIcon = data.getPlayerIcon();
@@ -91,7 +104,7 @@ public class LevelButton extends CurvedButtonAlt {
 			JLabel lName = new JLabel();
 			lName.setText(name);
 			lAuthorID.setText("By " + author + " (" + ID + ")");
-			lRequester.setText("Sent by " + requester);
+			lRequester.setText("Sent by " + displayRequester);
 			JLabel lStarCount = new JLabel();
 			lStarCount.setText(String.valueOf(starCount));
 
@@ -153,6 +166,7 @@ public class LevelButton extends CurvedButtonAlt {
 			add(lName);
 			add(lAuthorID);
 			add(lRequester);
+			add(logo);
 			JLabel lPlayerIcon = new JLabel();
 			//add(lPlayerIcon);
 			add(reqDifficulty);
@@ -166,6 +180,8 @@ public class LevelButton extends CurvedButtonAlt {
 
 			lName.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 			lName.setBounds(50, -1, (int) lName.getPreferredSize().getWidth() + 5, 30);
+
+			logo.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 25, 0, 30, 30);
 
 			int pos = 0;
 
@@ -199,6 +215,7 @@ public class LevelButton extends CurvedButtonAlt {
 					if(RequestsTab.getQueueSize() > 1) {
 						moveUp.setVisible(true);
 						moveDown.setVisible(true);
+						logo.setVisible(false);
 					}
 				}
 
@@ -206,6 +223,7 @@ public class LevelButton extends CurvedButtonAlt {
 				public void mouseExited(MouseEvent e) {
 					moveUp.setVisible(false);
 					moveDown.setVisible(false);
+					logo.setVisible(true);
 				}
 			});
 
@@ -244,6 +262,7 @@ public class LevelButton extends CurvedButtonAlt {
 					moveUp.setForeground(Defaults.FOREGROUND_B);
 					moveUp.setVisible(true);
 					moveDown.setVisible(true);
+					logo.setVisible(false);
 					moveUpExited[0] = false;
 				}
 
@@ -254,6 +273,7 @@ public class LevelButton extends CurvedButtonAlt {
 					if(moveDownExited[0]){
 						moveUp.setVisible(false);
 						moveDown.setVisible(false);
+						logo.setVisible(true);
 					}
 				}
 			});
@@ -283,6 +303,7 @@ public class LevelButton extends CurvedButtonAlt {
 					moveUp.setVisible(true);
 					moveDown.setVisible(true);
 					moveDownExited[0] = false;
+					logo.setVisible(false);
 
 				}
 
@@ -293,6 +314,8 @@ public class LevelButton extends CurvedButtonAlt {
 					if(moveUpExited[0]){
 						moveUp.setVisible(false);
 						moveDown.setVisible(false);
+						logo.setVisible(true);
+
 					}
 				}
 			});
@@ -377,20 +400,22 @@ public class LevelButton extends CurvedButtonAlt {
 	}
 
 	public void setViewership(boolean viewer) {
-		RequestsTab.getRequest(Requests.getPosFromID(ID)).getLevelData().setViewership(viewership);
+		if(!levelData.isYouTube()) {
+			RequestsTab.getRequest(Requests.getPosFromID(ID)).getLevelData().setViewership(viewership);
 
-		if (viewer) {
-			lRequester.setForeground(Defaults.FOREGROUND_B);
-			viewership = true;
-			gonePoints = 4;
-			markedForRemoval = false;
-		} else {
-			gonePoints = gonePoints - 1;
-			if (gonePoints <= 0) {
-				lRequester.setForeground(Color.RED);
-				viewership = false;
-				gonePoints = 0;
-				markedForRemoval = true;
+			if (viewer) {
+				lRequester.setForeground(Defaults.FOREGROUND_B);
+				viewership = true;
+				gonePoints = 4;
+				markedForRemoval = false;
+			} else {
+				gonePoints = gonePoints - 1;
+				if (gonePoints <= 0) {
+					lRequester.setForeground(Color.RED);
+					viewership = false;
+					gonePoints = 0;
+					markedForRemoval = true;
+				}
 			}
 		}
 	}
@@ -458,6 +483,8 @@ public class LevelButton extends CurvedButtonAlt {
 	void resizeButton() {
 		moveUp.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 34, 0, 25, 30);
 		moveDown.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 34, 30, 25, 30);
+		logo.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 25, 0, 30, 30);
+
 		info.setBounds(50, 60, RequestsTab.getLevelsPanel().getButtonWidth() - 100, 50);
 		setPreferredSize(new Dimension(RequestsTab.getLevelsPanel().getButtonWidth()-50, getHeight()));
 	}

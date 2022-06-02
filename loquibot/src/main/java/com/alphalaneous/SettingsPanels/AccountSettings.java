@@ -20,6 +20,8 @@ public class AccountSettings {
 
     private static AccountPanel geometryDashPanel = null;
     private static AccountPanel twitchPanel = null;
+    private static AccountPanel youTubePanel = null;
+
     private static final CurvedButton loginButton = new CurvedButton("$LOGIN$");
     private static final CurvedButton cancelButton = new CurvedButton("$CANCEL$");
     private static final LangLabel usernameLabel = new LangLabel("$USERNAME$");
@@ -32,7 +34,7 @@ public class AccountSettings {
     private static final JPanel logonFrame = new JPanel();
     private static final CurvedButtonAlt firstLoginButton = new CurvedButtonAlt("GD Account Login");
 
-    public static JPanel createPanel(){
+    public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$ACCOUNTS_SETTINGS$");
 
         logonFrame.setSize(485, 230);
@@ -74,15 +76,14 @@ public class AccountSettings {
         loginButton.addActionListener(e -> {
             try {
                 boolean successfulLogin = GDAPI.login(usernameTextArea.getText(), String.valueOf(passwordTextArea.getPassword()));
-                if(successfulLogin){
+                if (successfulLogin) {
                     LoadGD.isAuth = true;
                     refreshGD(usernameTextArea.getText());
                     Settings.writeSettings("p", new String(Base64.getEncoder().encode(xor(new String(passwordTextArea.getPassword())).getBytes())));
                     Settings.writeSettings("GDUsername", usernameTextArea.getText());
                     Settings.writeSettings("GDLogon", "true");
                     DialogBox.closeDialogBox();
-                }
-                else {
+                } else {
                     usernameLabel.setForeground(red);
                     passwordLabel.setForeground(red);
                     Settings.writeSettings("GDLogon", "false");
@@ -109,10 +110,19 @@ public class AccountSettings {
 
         geometryDashPanel = new AccountPanel(
                 () -> Window.addContextMenu(createGDContextMenu()));
+        geometryDashPanel.hideRefreshButton();
         twitchPanel = new AccountPanel(
                 () -> Window.addContextMenu(createTwitchContextMenu()));
+        youTubePanel = new AccountPanel(
+                () -> Window.addContextMenu(createYouTubeContextMenu()));
 
-        firstLoginButton.setBounds(10,10,300,80);
+        youTubePanel.setIcon(Assets.YouTube);
+        twitchPanel.setIcon(Assets.Twitch);
+        youTubePanel.setLargeIcon(Assets.YouTubeLarge, "YouTube");
+        twitchPanel.setLargeIcon(Assets.TwitchLarge, "Twitch");
+
+
+        firstLoginButton.setBounds(10, 10, 300, 80);
         firstLoginButton.setFont(Defaults.MAIN_FONT.deriveFont(20f));
         firstLoginButton.setUI(settingsButtonUI);
         firstLoginButton.setBackground(Defaults.COLOR2);
@@ -125,39 +135,56 @@ public class AccountSettings {
             //logonFrame.setVisible(true);
         });
 
-        if(Settings.getSettings("onboarding").exists()) {
+        if (Settings.getSettings("onboarding").exists()) {
             refreshTwitch(TwitchAccount.display_name);
+            refreshYouTube(YouTubeAccount.name);
         }
 
-        SettingsComponent geometryDashComponent = new SettingsComponent(geometryDashPanel, new Dimension(475,100)){
+        SettingsComponent geometryDashComponent = new SettingsComponent(geometryDashPanel, new Dimension(475, 100)) {
             @Override
-            protected void refreshUI(){
+            protected void refreshUI() {
                 geometryDashPanel.refresh();
                 refreshLoginPanel();
             }
+
             @Override
-            protected void resizeComponent(Dimension dimension){
+            protected void resizeComponent(Dimension dimension) {
                 geometryDashPanel.resizeComponent(dimension.width);
             }
         };
-        SettingsComponent twitchComponent = new SettingsComponent(twitchPanel, new Dimension(475,100)){
+        SettingsComponent twitchComponent = new SettingsComponent(twitchPanel, new Dimension(475, 100)) {
             @Override
-            protected void refreshUI(){
+            protected void refreshUI() {
                 twitchPanel.refresh();
             }
+
             @Override
-            protected void resizeComponent(Dimension dimension){
+            protected void resizeComponent(Dimension dimension) {
                 twitchPanel.resizeComponent(dimension.width);
             }
         };
 
+        SettingsComponent youTubeComponent = new SettingsComponent(youTubePanel, new Dimension(475, 100)) {
+            @Override
+            protected void refreshUI() {
+                youTubePanel.refresh();
+            }
+
+            @Override
+            protected void resizeComponent(Dimension dimension) {
+                youTubePanel.resizeComponent(dimension.width);
+            }
+        };
+
+
         settingsPage.addComponent(geometryDashComponent);
         settingsPage.addComponent(twitchComponent);
+        settingsPage.addComponent(youTubeComponent);
 
         return settingsPage;
     }
 
-    private static void refreshLoginPanel(){
+    private static void refreshLoginPanel() {
         disclaimerLabel.setForeground(Defaults.FOREGROUND_B);
         usernameLabel.setForeground(Defaults.FOREGROUND_A);
         passwordLabel.setForeground(Defaults.FOREGROUND_A);
@@ -173,24 +200,59 @@ public class AccountSettings {
         firstLoginButton.setForeground(Defaults.FOREGROUND_A);
     }
 
-    public static ContextMenu createGDContextMenu(){
+    public static ContextMenu createGDContextMenu() {
         ContextMenu geometryDashContextMenu = new ContextMenu();
         geometryDashContextMenu.addButton(new ContextButton("Refresh Login", () -> {
             //logonFrame.setLocationRelativeTo(null);
             DialogBox.showDialogBox(logonFrame);
         }));
-       // geometryDashContextMenu.addButton(new ContextButton("Logout", () -> logonFrame.setVisible(true)));
+        // geometryDashContextMenu.addButton(new ContextButton("Logout", () -> logonFrame.setVisible(true)));
         //todo log out GD account, refresh account panel
         return geometryDashContextMenu;
     }
-    public static ContextMenu createTwitchContextMenu(){
+
+    public static ContextMenu createTwitchContextMenu() {
         ContextMenu twitchContextMenu = new ContextMenu();
-        twitchContextMenu.addButton(new ContextButton("Refresh Login", () -> new Thread(APIs::setOauth).start()));
+        twitchContextMenu.addButton(new ContextButton("Refresh Login", () -> {
+            new Thread(() -> {
+                Settings.writeSettings("twitchEnabled","true");
+                APIs.setOauth();
+                refreshTwitch(TwitchAccount.login);
+            }).start();
+        }));
+        twitchContextMenu.addButton(new ContextButton("Logout", () -> {
+            Settings.writeSettings("twitchEnabled","false");
+            twitchPanel.logout();
+        }));
         return twitchContextMenu;
     }
 
+    public static ContextMenu createYouTubeContextMenu() {
+        ContextMenu youTubeContextMenu = new ContextMenu();
+        youTubeContextMenu.addButton(new ContextButton("Refresh Login", () -> {
+            new Thread(() -> {
+                Settings.writeSettings("youtubeEnabled","true");
+                YouTubeAccount.setCredential(true);
+                refreshYouTube(YouTubeAccount.name);
+            }).start();
+        }));
+        youTubeContextMenu.addButton(new ContextButton("Logout", () -> {
+            Settings.writeSettings("youtubeEnabled","false");
+            youTubePanel.logout();
+        }));
+
+        return youTubeContextMenu;
+    }
+
     public static void refreshTwitch(String channel) {
-        twitchPanel.refreshInfo(channel, "Twitch", new ImageIcon(makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60,60, Image.SCALE_SMOOTH)));
+        if (Settings.getSettings("twitchEnabled").asBoolean()){
+            twitchPanel.refreshInfo(channel, "Twitch", new ImageIcon(makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        }
+    }
+    public static void refreshYouTube(String channel) {
+        if (Settings.getSettings("youtubeEnabled").asBoolean()) {
+            youTubePanel.refreshInfo(channel, "YouTube", new ImageIcon(makeRoundedCorner(YouTubeAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        }
     }
 
     public static void refreshGD(String username) {
@@ -230,12 +292,15 @@ public class AccountSettings {
         JLabel accountImageLabel;
         CurvedButton dropDownButton;
         JButtonUI ui = new JButtonUI();
-
+        JLabel icon = new JLabel();
+        JLabel largeIcon = new JLabel();
+        boolean loggedIn = false;
+        String service;
         AccountPanel(Function dropDownFunction){
 
             setLayout(null);
             accountNameLabel = new JLabel();
-            accountNameLabel.setBounds(100,25,470,30);
+            accountNameLabel.setBounds(100,35,470,30);
             accountNameLabel.setFont(Defaults.MAIN_FONT.deriveFont(20f));
             accountTypeLabel = new JLabel();
             accountTypeLabel.setBounds(100,50,470,30);
@@ -252,6 +317,13 @@ public class AccountSettings {
             ui.setHover(Defaults.COLOR1);
             ui.setSelect(Defaults.COLOR4);
 
+            icon.setBounds(60,60,30,30);
+            largeIcon.setBounds(30,25, 50,50);
+
+            add(largeIcon);
+            add(accountNameLabel);
+            add(dropDownButton);
+
             dropDownButton.setUI(ui);
             dropDownButton.setOpaque(false);
             dropDownButton.setFont(Defaults.SYMBOLS.deriveFont(6f));
@@ -267,10 +339,12 @@ public class AccountSettings {
             accountTypeLabel.setText(accountType);
             accountImageLabel.setIcon(accountImage);
             accountImageLabel.setBounds(20+xShift,20+yShift, 60 - xShift,60 - yShift);
+            accountNameLabel.setBounds(100,25,470,30);
+            loggedIn = true;
+            remove(largeIcon);
+            add(icon);
             add(accountImageLabel);
-            add(accountNameLabel);
             add(accountTypeLabel);
-            add(dropDownButton);
             updateUI();
         }
 
@@ -278,15 +352,36 @@ public class AccountSettings {
             setPreferredSize(new Dimension(width-340,100));
             setBounds(30,0,getPreferredSize().width, getPreferredSize().height);
             dropDownButton.setBounds(width-400,35,30,30);
-            accountNameLabel.setBounds(100,25,width,30);
+            if(loggedIn) accountNameLabel.setBounds(100,25,470,30);
+            else accountNameLabel.setBounds(100,35,width,30);
+
             accountTypeLabel.setBounds(100,50,width,30);
             firstLoginButton.setBounds(10,10,width-360,80);
         }
 
+        public void setLargeIcon(ImageIcon icon, String text){
+            largeIcon.setIcon(icon);
+            accountNameLabel.setText(text);
+            this.service = text;
+        }
+
+        public void hideRefreshButton(){
+            dropDownButton.setVisible(false);
+        }
+
+        public void setIcon(ImageIcon icon){
+            this.icon.setIcon(icon);
+        }
+
         public void logout(){
+            loggedIn = false;
+            accountNameLabel.setBounds(100,35,470,30);
+            accountNameLabel.setText(service);
             remove(accountImageLabel);
-            remove(accountNameLabel);
             remove(accountTypeLabel);
+            remove(icon);
+            add(largeIcon);
+            updateUI();
         }
 
         public void refreshInfo(String accountName, String accountType, ImageIcon accountImage){

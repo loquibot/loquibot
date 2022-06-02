@@ -32,6 +32,10 @@ public class Assets {
 	public static ImageIcon actions;
 	public static ImageIcon requests;
 	public static ImageIcon loading;
+	public static ImageIcon YouTube;
+	public static ImageIcon Twitch;
+	public static ImageIcon YouTubeLarge;
+	public static ImageIcon TwitchLarge;
 
 	private static final int size = 30;
 	private static final int largeSize = 50;
@@ -76,7 +80,18 @@ public class Assets {
 			loading = new ImageIcon(Scalr.resize(ImageIO
 					.read(Objects.requireNonNull(Main.class.getClassLoader()
 							.getResource("Icons/loading.gif"))),Scalr.Method.BALANCED,30));
-
+			YouTube = new ImageIcon(Scalr.resize(ImageIO
+					.read(Objects.requireNonNull(Main.class.getClassLoader()
+							.getResource("Icons/YouTube.png"))),Scalr.Method.BALANCED,16));
+			Twitch = new ImageIcon(Scalr.resize(ImageIO
+					.read(Objects.requireNonNull(Main.class.getClassLoader()
+							.getResource("Icons/Twitch.png"))),Scalr.Method.BALANCED,16));
+			YouTubeLarge = new ImageIcon(Scalr.resize(ImageIO
+					.read(Objects.requireNonNull(Main.class.getClassLoader()
+							.getResource("Icons/YouTube.png"))),Scalr.Method.BALANCED,40));
+			TwitchLarge = new ImageIcon(Scalr.resize(ImageIO
+					.read(Objects.requireNonNull(Main.class.getClassLoader()
+							.getResource("Icons/Twitch.png"))),Scalr.Method.BALANCED,40));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

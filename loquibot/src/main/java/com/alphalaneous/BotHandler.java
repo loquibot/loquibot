@@ -1,5 +1,6 @@
 package com.alphalaneous;
 
+import com.alphalaneous.TwitchBot.ChatMessage;
 import com.alphalaneous.Windows.Window;
 
 import java.io.*;
@@ -26,14 +27,14 @@ public class BotHandler {
         }
     }
 
-    static void onMessage(String user, String message, boolean isMod, boolean isSub, int cheer, String ID, long userID) {
+    static void onMessage(String user, String message, boolean isMod, boolean isSub, int cheer, String ID, long userID, ChatMessage chatMessage) {
         boolean whisper = false;
         processing = true;
         boolean goThrough = true;
         String com = message.split(" ")[0];
         String[] arguments = message.split(" ");
         String response = "";
-        String messageNoComma = message.replace(",", "");
+        String messageNoComma = message.replace(",", "").replace(".","");
         Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoComma);
 
         if (!(m.find() && !message.startsWith("!"))) {
@@ -175,7 +176,7 @@ public class BotHandler {
                 }
                 if (!mention.contains(m.group(1))) {
                     if (Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()){
-                        Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), user, isMod, isSub, message, ID, userID, false);
+                        Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), user, isMod, isSub, message, ID, userID, false, chatMessage);
                     }
                 }
 
@@ -184,7 +185,8 @@ public class BotHandler {
             }
         }
         if (response != null && !response.equalsIgnoreCase("")) {
-            Main.sendMessage(response, whisper, user);
+            if(chatMessage.isYouTube()) Main.sendYTMessage(response);
+            else Main.sendMessage(response, whisper, user);
         }
         processing = false;
     }

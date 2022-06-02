@@ -114,8 +114,9 @@ REQUESTS_SUBSCRIBE_MESSAGE = @%s, Please subscribe to request levels.
 LEVEL_USER_DOESNT_EXIST_MESSAGE = @%s, That level or user doesn't exist.
 LEVEL_DOESNT_EXIST_MESSAGE = @%s, That level doesn't exist.
 LEVEL_COMMAND_FORMAT_MESSAGE = @%s, Incorrectly formatted request, type "!help !request" for how to format it.
-REQUEST_ERROR = @%s, An unknown error occured.
-SPECIFY_ID_MESSAGE = @%s, Please specifiy an ID or level name.
+REQUEST_ERROR = @%s, An unknown error occurred.
+SPECIFY_ID_MESSAGE = @%s, Please specify an ID or level name.
+SPECIFY_ID_REMOVE_MESSAGE = @%S, Please specify a position to remove.
 TOO_FEW_OBJECTS_MESSAGE = @%s, Your level has been removed for containing too few objects.
 TOO_MANY_OBJECTS_MESSAGE = @%s, Your level has been removed for containing too many objects.
 

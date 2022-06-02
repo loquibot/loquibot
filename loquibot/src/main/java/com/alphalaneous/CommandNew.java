@@ -119,7 +119,8 @@ public class CommandNew {
             startCooldown(foundCommand);
         }
         if (!reply.equalsIgnoreCase("")) {
-            Main.sendMessage(reply);
+            if(message.isYouTube()) Main.sendYTMessage(reply);
+            else Main.sendMessage(reply);
         }
     }
 
@@ -687,6 +688,7 @@ public class CommandNew {
         return false;
     }
     public static boolean checkUserLevel(CommandData data, ChatMessage message){
+
         String commandLevel = data.getUserLevel();
         String messageLevel = message.getUserLevel();
 

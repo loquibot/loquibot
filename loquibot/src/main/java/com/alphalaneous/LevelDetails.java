@@ -114,7 +114,9 @@ public class LevelDetails extends JPanel {
             usernameLabel = new JLabel("By " + data.getGDLevel().creatorName().get());
         }
 
-        requesterLabel = new JLabel("Sent by " + data.getRequester());
+        if(data.isYouTube()) requesterLabel = new JLabel("Sent by " + data.getDisplayName());
+        else requesterLabel = new JLabel("Sent by " + data.getRequester());
+
 
 
         songTitleLabel = new JLabel("N/A");
@@ -433,9 +435,11 @@ public class LevelDetails extends JPanel {
             e.printStackTrace();
             return false;
         }
-        for (GDComment com : comments) {
-            Comment comment = new Comment(com, 480);
-            commentsPanel.add(comment, gbc);
+        if (comments != null) {
+            for (GDComment com : comments) {
+                Comment comment = new Comment(com, 480);
+                commentsPanel.add(comment, gbc);
+            }
         }
         commentScrollPane.remove(loadingPane);
         commentsPanel.setVisible(true);

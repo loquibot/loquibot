@@ -5,6 +5,7 @@ import com.alphalaneous.Panels.LevelButton;
 import com.alphalaneous.SettingsPanels.OutputSettings;
 import com.alphalaneous.SettingsPanels.FiltersSettings;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.TwitchBot.ChatMessage;
 import com.vdurmont.emoji.EmojiManager;
 import jdash.client.exception.ActionFailedException;
 import jdash.client.exception.GDClientException;
@@ -50,24 +51,33 @@ public class Requests {
         removedForOffline.add(button);
     }
 
-    public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand) {
+
+    public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand, ChatMessage chatMessage) {
+
 
         if(!com.alphalaneous.Windows.Window.getWindow().isVisible()) return;
-
-        if (globallyBlockedIDs.containsKey(IDa)) {
-            sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(IDa)));
-            return;
+        if(chatMessage == null) {
+            chatMessage = new ChatMessage(new String[]{}, user, user, message, new String[]{}, isMod, isSub, false, 0, false);
         }
 
+
+        if (globallyBlockedIDs.containsKey(IDa)) {
+            sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(IDa)), chatMessage.isYouTube());
+            return;
+        }
+        if(chatMessage.isYouTube()){
+            user = chatMessage.getDisplayName();
+        }
         if(IDa != 0) System.out.println("> Adding Request: "+ IDa);
         else System.out.println("> Adding Request: "+ message);
-        long finalIDa = IDa;
+        ChatMessage finalChatMessage = chatMessage;
+        String finalUser = user;
         new Thread(() -> {
             try {
-                if(Moderation.checkIfLink(message)){
+                if(!finalChatMessage.isYouTube() && Moderation.checkIfLink(message)){
                     return;
                 }
-                if (checkList(user, "\\loquibot\\blockedUsers.txt")) {
+                if (checkList(finalChatMessage.getSender(), "\\loquibot\\blockedUsers.txt")) {
                     return;
                 }
                 if (!Main.allowRequests) {
@@ -77,7 +87,7 @@ public class Requests {
                     return;
                 }
                 if (!requestsEnabled) {
-                    sendUnallowed(Utilities.format("$REQUESTS_OFF_MESSAGE$", user));
+                    sendUnallowed(Utilities.format("$REQUESTS_OFF_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                     return;
                 }
 
@@ -118,26 +128,26 @@ public class Requests {
                                 levelNameS = levelNameS.replace("\"", "");
                                 usernameS = argumentsS[1].trim().replace("\"", "");
                             } else {
-                                sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$", user));
+                                sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                                 return;
                             }
 
                             level = GDAPI.getLevelByNameByUser(levelNameS, usernameS, inQuotes);
 
                             if (level == null) {
-                                sendUnallowed(Utilities.format("$LEVEL_USER_DOESNT_EXIST_MESSAGE$", user));
+                                sendUnallowed(Utilities.format("$LEVEL_USER_DOESNT_EXIST_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                                 return;
                             }
                         } else {
-                            level = getID(message, user);
+                            level = getID(message, finalUser, finalChatMessage.isYouTube());
                             if (level == null) return;
                         }
                     } else {
-                        level = getID(message, user);
+                        level = getID(message, finalUser, finalChatMessage.isYouTube());
                         if (level == null) return;
                     }
                 } else {
-                    level = checkLevelIDAndGetLevel(finalIDa);
+                    level = checkLevelIDAndGetLevel(IDa);
                     if (level == null) return;
                 }
 
@@ -146,18 +156,20 @@ public class Requests {
                     if (level.id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().id()) {
                         int j = k + 1;
                         if (!Settings.getSettings("disableShowPosition").asBoolean()) {
-                            sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", user, j));
+                            sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", finalUser, j), finalChatMessage.isYouTube());
                         } else {
-                            sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$", user));
+                            sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$", finalUser), finalChatMessage.isYouTube());
                         }
                         return;
                     }
                 }
-
-                boolean bypass = (Settings.getSettings("modsBypass").asBoolean() && isMod) || (user.equalsIgnoreCase(TwitchAccount.login) && Settings.getSettings("streamerBypass").asBoolean());
+                boolean bypass = false;
+                if(Settings.getSettings("twitchEnabled").asBoolean()){
+                    bypass = (Settings.getSettings("modsBypass").asBoolean() && isMod) || (finalUser.equalsIgnoreCase(TwitchAccount.login) && Settings.getSettings("streamerBypass").asBoolean());
+                }
                 if (!bypass) {
                     if (checkList(level.id(), "\\loquibot\\blocked.txt")) {
-                        sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                         return;
                     }
                     if (Files.exists(logged) && (Settings.getSettings("repeatedRequestsAll").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean()) && Main.programLoaded) {
@@ -165,102 +177,106 @@ public class Requests {
                         while (sc.hasNextLine()) {
                             if (String.valueOf(level.id()).equals(sc.nextLine().split(",")[0])) {
                                 sc.close();
-                                sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
+                                sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                                 return;
                             }
                         }
                         sc.close();
                     }
                     if (globallyBlockedIDs.containsKey(level.id())) {
-                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(level.id())));
+                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", finalUser, globallyBlockedIDs.get(level.id())), finalChatMessage.isYouTube());
                         return;
                     }
                     if (Settings.getSettings("subscribers").asBoolean()) {
                         if (!(isSub || isMod)) {
-                            sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", user));
+                            sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                             return;
                         }
                     }
                     if (Settings.getSettings("followers").asBoolean()) {
-                        if (APIs.isNotFollowing(user, userID)) {
-                            sendUnallowed(Utilities.format("$FOLLOW_MESSAGE$", user));
-                            return;
+                        if(!finalChatMessage.isYouTube()) {
+                            if (APIs.isNotFollowing(finalUser, userID)) {
+                                sendUnallowed(Utilities.format("$FOLLOW_MESSAGE$", finalUser), finalChatMessage.isYouTube());
+                                return;
+                            }
                         }
                     }
                     if (level.id() < Settings.getSettings("minID").asInteger() && Settings.getSettings("minIDOption").asBoolean()) {
-                        sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", user, Settings.getSettings("minID").asInteger()));
+                        sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", finalUser, Settings.getSettings("minID").asInteger()), finalChatMessage.isYouTube());
                         return;
                     }
                     if (level.id() > Settings.getSettings("maxID").asInteger() && Settings.getSettings("maxIDOption").asBoolean()) {
-                        sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", user, Settings.getSettings("maxID").asInteger()));
+                        sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", finalUser, Settings.getSettings("maxID").asInteger()), finalChatMessage.isYouTube());
                         return;
                     }
                     if (Settings.getSettings("queueLimitEnabled").asBoolean() && (RequestsTab.getQueueSize() >= Settings.getSettings("queueLimit").asInteger())) {
                         if (!Settings.getSettings("disableQF").asBoolean()) {
-                            sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$", user));
+                            sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                         }
                         return;
                     }
                     if (Settings.getSettings("userLimitEnabled").asBoolean()) {
                         int size = 0;
                         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-                            if (RequestsTab.getRequest(i).getLevelData().getRequester().equalsIgnoreCase(user)) {
+                            if (RequestsTab.getRequest(i).getLevelData().getRequester().equalsIgnoreCase(finalChatMessage.getSender())) {
                                 size++;
                             }
                         }
                         if (size >= Settings.getSettings("userLimit").asInteger()) {
-                            sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$", user));
+                            sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                             return;
                         }
                     }
                     if (Settings.getSettings("userLimitStreamEnabled").asBoolean()) {
-                        if (userStreamLimitMap.containsKey(user)) {
-                            if (userStreamLimitMap.get(user) >= Settings.getSettings("userLimitStream").asInteger()) {
-                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_STREAM_MESSAGE$", user));
+                        if (userStreamLimitMap.containsKey(finalChatMessage.getSender())) {
+                            if (userStreamLimitMap.get(finalChatMessage.getSender()) >= Settings.getSettings("userLimitStream").asInteger()) {
+                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_STREAM_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                                 return;
                             }
                         }
                     }
                     if (addedLevels.containsKey(level.id()) && (Settings.getSettings("repeatedRequests").asBoolean() && !Settings.getSettings("updatedRepeated").asBoolean())) {
-                        sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                         return;
                     }
                 }
-                if (userStreamLimitMap.containsKey(user)) {
-                    userStreamLimitMap.put(user, userStreamLimitMap.get(user) + 1);
+                if (userStreamLimitMap.containsKey(finalChatMessage.getSender())) {
+                    userStreamLimitMap.put(finalChatMessage.getSender(), userStreamLimitMap.get(finalChatMessage.getSender()) + 1);
                 } else {
-                    userStreamLimitMap.put(user, 1);
+                    userStreamLimitMap.put(finalChatMessage.getSender(), 1);
                 }
 
                 LevelData levelData = new LevelData();
+                levelData.setYouTube(finalChatMessage.isYouTube());
+                if (levelData.isYouTube()) levelData.setDisplayName(finalChatMessage.getDisplayName());
                 if (!bypass) {
                     if (checkList(level.creatorName(), "\\loquibot\\blockedGDUsers.txt")) {
-                        sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", finalUser), levelData.isYouTube());
                         return;
                     }
                     if (Settings.getSettings("rated").asBoolean() && !(level.stars() > 0)) {
-                        sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", finalUser), levelData.isYouTube());
                         return;
                     }
                     if (Settings.getSettings("unrated").asBoolean() && level.stars() > 0) {
-                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
                     if (Settings.getSettings("minObjectsOption").asBoolean() && level.objectCount() < Settings.getSettings("minObjects").asInteger()) {
-                        sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
                     if (Settings.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > Settings.getSettings("maxObjects").asInteger()) {
-                        sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
                     if (level.objectCount() != 0) {
                         if (Settings.getSettings("minLikesOption").asBoolean() && level.objectCount() < Settings.getSettings("minLikes").asInteger()) {
-                            sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$", user));
+                            sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$", finalUser),levelData.isYouTube());
                             return;
                         }
                         if (Settings.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > Settings.getSettings("maxLikes").asInteger()) {
-                            sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$", user));
+                            sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$", finalUser),levelData.isYouTube());
                             return;
                         }
                     }
@@ -287,7 +303,7 @@ public class Requests {
                                 }
                                 if (version >= levelData.getGDLevel().levelVersion()) {
                                     sc.close();
-                                    sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
+                                    sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser),levelData.isYouTube());
                                     return;
                                 }
                             }
@@ -296,20 +312,20 @@ public class Requests {
                     }
                     if (addedLevels.containsKey(level.id()) && (Settings.getSettings("updatedRepeated").asBoolean())) {
                         if (addedLevels.get(level.id()) >= levelData.getGDLevel().levelVersion()) {
-                            sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", user));
+                            sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser),levelData.isYouTube());
                             return;
                         }
                     }
                     if (FiltersSettings.excludedDifficulties.contains(levelData.getSimpleDifficulty().toLowerCase()) && Settings.getSettings("disableDifficulties").asBoolean()) {
-                        sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
                     if (FiltersSettings.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().requestedStars())) && Settings.getSettings("disableReqDifficulties").asBoolean()) {
-                        sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
                     if (FiltersSettings.excludedLengths.contains(level.length().name().toLowerCase()) && Settings.getSettings("disableLengths").asBoolean()) {
-                        sendUnallowed(Utilities.format("$LENGTH_MESSAGE$", user));
+                        sendUnallowed(Utilities.format("$LENGTH_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
                 }
@@ -332,7 +348,7 @@ public class Requests {
                     }).start();
                 }
 
-                levelData.setRequester(user);
+                levelData.setRequester(finalUser);
                 levelData.setMessage(message);
                 levelData.setMessageID(messageID);
 
@@ -361,12 +377,12 @@ public class Requests {
                                 levelData.getRequester(),
                                 level.name(),
                                 level.id(),
-                                RequestsTab.getQueueSize()), Settings.getSettings("whisperConfirm").asBoolean(), user);
+                                RequestsTab.getQueueSize()), Settings.getSettings("whisperConfirm").asBoolean(), finalUser,levelData.isYouTube());
                     } else {
                         sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
                                 levelData.getRequester(),
                                 level.name(),
-                                level.id()), Settings.getSettings("whisperConfirm").asBoolean(), user);
+                                level.id()), Settings.getSettings("whisperConfirm").asBoolean(), finalUser,levelData.isYouTube());
                     }
                 }
 
@@ -380,25 +396,33 @@ public class Requests {
                                 RequestsTab.getRequest(0).getLevelData().getRequester(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().id()), Settings.getSettings("announceNP").asBoolean());
-
+                        Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
+                                RequestsTab.getRequest(0).getLevelData().getRequester(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
                     }
 
                 }
 
             } catch (GDClientException e) {
-                e.printStackTrace();
+                boolean isYT = finalChatMessage.isYouTube();
+
                 if (Utilities.isCausedBy(e, ActionFailedException.class)) {
-                    sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", user));
+                    sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", finalUser), isYT);
                 } else if (Utilities.isCausedBy(e, HttpResponseException.class)) {
-                    sendError(Utilities.format("$SEARCH_FAILED$", user));
+                    sendError(Utilities.format("$SEARCH_FAILED$", finalUser), isYT);
                 } else if (Utilities.isCausedBy(e, ResponseDeserializationException.class)) {
-                    sendError(Utilities.format("$REQUEST_FAILED$", user));
+                    sendError(Utilities.format("$REQUEST_FAILED$", finalUser), isYT);
                 } else {
-                    sendError(Utilities.format("$REQUEST_ERROR$", user));
+                    sendError(Utilities.format("$REQUEST_ERROR$", finalUser), isYT);
+                    System.out.println(IDa);
+                    System.out.println(message);
+                    e.printStackTrace();
                 }
             } catch (Exception e) {
+                boolean isYT = finalChatMessage.isYouTube();
                 e.printStackTrace();
-                sendError(Utilities.format("$REQUEST_ERROR$", user));
+                sendError(Utilities.format("$REQUEST_ERROR$", finalUser), isYT);
             }
         }).start();
     }
@@ -485,7 +509,7 @@ public class Requests {
                     level.getInt("featured_score"),
                     level.getInt("stars"),
                     level.getInt("requested_stars"),
-                    level.getString("requester"),
+                    level.optString("requester", level.optString("display_name", "Unknown")),
                     level.getInt("game_version"),
                     level.getInt("coin_count"),
                     level.getString("description"),
@@ -498,23 +522,25 @@ public class Requests {
                     level.getString("song_artist"),
                     level.getInt("object_count"),
                     level.getLong("original_id"),
-                    false, false,
-                    level.getBoolean("has_verified_coins")
+                    level.getBoolean("has_verified_coins"),
+                    level.optBoolean("is_youtube", false),
+                    level.optString("display_name", "")
+
             );
         }
     }
 
-    private static GDLevel getID(String message, String user) {
+    private static GDLevel getID(String message, String user, boolean isYT) {
         String messageS = message.split(" ", 2)[1].replace("\"", "");
         GDLevel level;
         if(EmojiManager.containsEmoji(messageS)){
-            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", user));
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", user), isYT);
             return null;
         }
         level = GDAPI.getTopLevelByName(messageS);
 
         if (level == null) {
-            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", user));
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", user), isYT);
             return null;
         }
         return level;
@@ -529,16 +555,19 @@ public class Requests {
         return level;
     }
 
-    private static void sendError(String message) {
-        Main.sendMessage("🔴 | " + message);
+    private static void sendError(String message, boolean isYT) {
+        if(isYT) Main.sendYTMessage("🔴 | " + message);
+        else Main.sendMessage("🔴 | " + message);
     }
 
-    private static void sendUnallowed(String message) {
-        Main.sendMessage("🟡 | " + message);
+    private static void sendUnallowed(String message, boolean isYT) {
+        if(isYT) Main.sendYTMessage("🟡 | " + message);
+        else Main.sendMessage("🟡 | " + message);
     }
 
-    private static void sendSuccess(String message, boolean whisper, String user) {
-        Main.sendMessage("🟢 | " + message, whisper, user);
+    private static void sendSuccess(String message, boolean whisper, String user, boolean isYT) {
+        if(isYT) Main.sendYTMessage("🟢 | " + message);
+        else Main.sendMessage("🟢 | " + message, whisper, user);
     }
 
     private static boolean checkList(Object object, String path) {
@@ -595,11 +624,7 @@ public class Requests {
                 }
                 for (String value1 : values) {
                     if (Settings.getSettings("lowCPUMode").asBoolean()) {
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        Utilities.sleep(50);
                     }
                     if (value1.startsWith("1,1110") || value1.startsWith("1,211") || value1.startsWith("1,914")) {
                         String value = value1.replaceAll("(,[^,]*),", "$1;");
@@ -664,11 +689,7 @@ public class Requests {
                             break all;
                         }
                     }
-                    try {
-                        Thread.sleep(0);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Utilities.sleep(0);
                 }
                 try {
                     URL ids = new URL("https://raw.githubusercontent.com/Alphatism/loquibot/Master/GD%20Request%20Bot/External/false%20positives.txt");
@@ -687,11 +708,7 @@ public class Requests {
                 if (image) {
                     RequestsTab.getRequest(k).getLevelData().setContainsImage();
                 }
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Utilities.sleep(250);
                 try {
                     RequestsTab.getRequest(k).getLevelData().setAnalyzed();
                     RequestsTab.getLevelsPanel().updateUI(RequestsTab.getRequest(k).getLevelData().getGDLevel().id());
@@ -721,8 +738,8 @@ public class Requests {
         return sb;
     }
 
-    public static void request(String user, boolean isMod, boolean isSub, String message, String messageID, long userID) {
-        addRequest(0, user, isMod, isSub, message, messageID, userID, true);
+    public static void request(String user, boolean isMod, boolean isSub, String message, String messageID, long userID, ChatMessage chatMessage) {
+        addRequest(0, user, isMod, isSub, message, messageID, userID, true, chatMessage);
     }
 
     public static int getPosFromIDBasic(long ID) {

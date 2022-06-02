@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -125,6 +126,16 @@ public class APIs {
 		}
 	}
 
+	private static java.util.List<Object> viewerList;
+
+	public static boolean isViewer(String username){
+		for(Object object : viewerList){
+			if(((String)object).equalsIgnoreCase(username)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@SuppressWarnings("InfiniteLoopStatement")
 	static void checkViewers() {
@@ -149,13 +160,19 @@ public class APIs {
 						for (String type : types) {
 							if (viewers.get("chatters") != null) {
 								JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
-								for (int i = 0; i < viewerList.length(); i++) {
-									String viewer = viewerList.get(i).toString().replaceAll("\"", "");
-									for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-										if (RequestsTab.getLevelsPanel().getButton(k).getRequester().equalsIgnoreCase(viewer)) {
+								APIs.viewerList = viewerList.toList();
+
+								for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+									if(ChatterActivity.checkIfActive(RequestsTab.getLevelsPanel().getButton(k).getRequester())){
+										if(!RequestsTab.getLevelsPanel().getButton(k).getLevelData().isYouTube()) {
 											RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
 										}
 									}
+								}
+
+								for (int i = 0; i < viewerList.length(); i++) {
+									String viewer = viewerList.get(i).toString().replaceAll("\"", "");
+
 									if (Settings.getSettings("removeIfOffline").asBoolean()) {
 										for (LevelButton button : Requests.getRemovedForOffline()) {
 											if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
