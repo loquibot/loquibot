@@ -434,6 +434,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.3" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:18.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:18.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:18.0.1" level="project" />
@@ -448,7 +449,6 @@
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-common:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-client:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor.addons:reactor-extra:3.4.5" level="project" />
-    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.10" level="project" />
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-graphics:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-configuration2:2.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.9" level="project" />
