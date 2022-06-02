@@ -13,11 +13,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-            <version>3.4.18</version>
-        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -146,7 +141,18 @@
             <artifactId>delight-nashorn-sandbox</artifactId>
             <version>0.2.5</version>
         </dependency>
+
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>3.4.18</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
