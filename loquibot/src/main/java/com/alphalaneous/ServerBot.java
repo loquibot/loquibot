@@ -29,8 +29,8 @@ public class ServerBot {
 	void connect() {
 
 		try {
-			//clientSocket = new Socket("142.93.12.163", 2963);
-			clientSocket = new Socket("localhost", 2963);
+			clientSocket = new Socket("142.93.12.163", 2963);
+			//clientSocket = new Socket("localhost", 2963);
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
