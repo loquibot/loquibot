@@ -53,6 +53,10 @@ public class Main {
         boolean reopen = Settings.getSettings("hasUpdated").asBoolean();
         Settings.writeSettings("hasUpdated", "false");
 
+        if(Settings.getSettings("channel").exists() && !Settings.getSettings("twitchEnabled").exists()){
+            Settings.writeSettings("twitchEnabled", "true");
+        }
+
         FindLoquibot.setup();
         FindLoquibot.findPath();
 
