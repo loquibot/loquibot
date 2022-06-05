@@ -16,8 +16,8 @@ public class RequestsSettings {
         settingsPage.addCheckbox("$GD_MODE$", "$GD_MODE_DESC$", "gdMode", true, DefaultCommands::loadCommands);
         //settingsPage.addCheckbox("$BASIC_MODE$", "$BASIC_MODE_DESC$", "basicMode", RequestsSettings::setBasicMode);
         settingsPage.addCheckbox("$REMOVE_IF_OFFLINE$", "$REMOVE_IF_OFFLINE_DESC$", "removeIfOffline");
-        settingsPage.addCheckbox("$FOLLOWERS_ONLY$", "", "followers");
-        settingsPage.addCheckbox("$SUBSCRIBERS_ONLY$", "", "subscribers");
+        settingsPage.addCheckbox("$FOLLOWERS_ONLY$ (Twitch)", "", "followers");
+        settingsPage.addCheckbox("$SUBSCRIBERS_ONLY$ (Twitch)", "", "subscribers");
         settingsPage.addCheckbox("$STREAMER_BYPASS$", "$STREAMER_BYPASS_DESC$", "streamerBypass", true, null);
         settingsPage.addCheckbox("$MODS_BYPASS$", "$MODS_BYPASS_DESC$", "modsBypass");
         settingsPage.addCheckbox("$AUTOMATIC_SONG_DOWNLOADS$", "", "autoDL");

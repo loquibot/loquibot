@@ -4,6 +4,7 @@ import com.alphalaneous.Components.CurvedButton;
 import com.alphalaneous.Components.JButtonUI;
 import com.alphalaneous.Components.RoundedJButton;
 import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -149,24 +150,16 @@ public class Onboarding {
 			public void mousePressed(MouseEvent e) {
 				try {
 					if(youtubeLoggedIn.get() || twitchLoggedIn.get()){
-						Settings.writeSettings("onboarding", "false");
-						Onboarding.isLoading = false;
-						if(!Settings.getSettings("seenTutorial").exists()){
-							switch (page[0]){
-								case 0:
-									content.setVisible(false);
-									tutorialImage.setVisible(true);
-									break;
-								case 1:
-								default:
-									com.alphalaneous.Windows.Window.closeDialog();
-									break;
-							}
-							page[0]++;
+
+						if (page[0] == 0) {
+							content.setVisible(false);
+							tutorialImage.setVisible(true);
+						} else {
+							Settings.writeSettings("onboarding", "false");
+							Onboarding.isLoading = false;
+							Window.closeDialog();
 						}
-						else {
-							com.alphalaneous.Windows.Window.closeDialog();
-						}
+						page[0]++;
 					}
 				} catch (Exception ignored) {
 				}

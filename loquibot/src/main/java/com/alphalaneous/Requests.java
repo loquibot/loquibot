@@ -188,9 +188,11 @@ public class Requests {
                         return;
                     }
                     if (Settings.getSettings("subscribers").asBoolean()) {
-                        if (!(isSub || isMod)) {
-                            sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
-                            return;
+                        if(!finalChatMessage.isYouTube()) {
+                            if (!(isSub || isMod)) {
+                                sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
+                                return;
+                            }
                         }
                     }
                     if (Settings.getSettings("followers").asBoolean()) {
