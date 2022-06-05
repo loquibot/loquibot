@@ -15,13 +15,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.alphalaneous.Windows.Window.ListButton.invertImage;
+
 public class Onboarding {
 	public static int openKeybind = 36;
 	static boolean isLoading = false;
 	private static final JPanel everything = new JPanel(null);
 	private static final JPanel content = new JPanel(null);
 	private static final JButtonUI defaultUI = new JButtonUI();
-	private static JLabel tutorialImage = new JLabel();
+	private static final JLabel tutorialImage = new JLabel();
 
 	private static int width = 465;
 	private static int height = 512;
@@ -33,6 +35,12 @@ public class Onboarding {
 		everything.setOpaque(false);
 
 		tutorialImage.setBounds(0,0,width,height-60);
+
+
+		if(!Defaults.isLight) tutorialImage.setIcon(Assets.tutorial);
+		else tutorialImage.setIcon(invertImage(Assets.tutorial));
+
+
 		tutorialImage.setIcon(Assets.tutorial);
 		everything.add(tutorialImage);
 
