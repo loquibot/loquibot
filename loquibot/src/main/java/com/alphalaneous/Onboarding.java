@@ -17,18 +17,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Onboarding {
 	public static int openKeybind = 36;
 	static boolean isLoading = false;
+	private static final JPanel everything = new JPanel(null);
 	private static final JPanel content = new JPanel(null);
 	private static final JButtonUI defaultUI = new JButtonUI();
+	private static JLabel tutorialImage = new JLabel();
 
 	private static int width = 465;
 	private static int height = 512;
 
 	static void createPanel() {
 
+		everything.setBounds(0, 0, width-4, height);
+		everything.setLayout(null);
+		everything.setOpaque(false);
 
+		tutorialImage.setBounds(0,0,width,height-60);
+		tutorialImage.setIcon(Assets.tutorial);
+		everything.add(tutorialImage);
+
+		tutorialImage.setVisible(false);
 
 		content.setOpaque(false);
-		content.setBounds(0, 0, width - 2, height);
+		content.setBounds(0, 0, width, height-100);
 		content.setBackground(new Color(0,0,0,0));
 		content.setLayout(null);
 
@@ -125,6 +135,8 @@ public class Onboarding {
 		});
 
 
+		final int[] page = {0};
+
 		nextButton.setBackground(Defaults.COLOR2);
 		nextButton.setBounds(20, height - 45, width - 50, 30);
 		nextButton.setPreferredSize(new Dimension(width - 50, 30));
@@ -139,7 +151,22 @@ public class Onboarding {
 					if(youtubeLoggedIn.get() || twitchLoggedIn.get()){
 						Settings.writeSettings("onboarding", "false");
 						Onboarding.isLoading = false;
-						com.alphalaneous.Windows.Window.closeDialog();
+						if(!Settings.getSettings("seenTutorial").exists()){
+							switch (page[0]){
+								case 0:
+									content.setVisible(false);
+									tutorialImage.setVisible(true);
+									break;
+								case 1:
+								default:
+									com.alphalaneous.Windows.Window.closeDialog();
+									break;
+							}
+							page[0]++;
+						}
+						else {
+							com.alphalaneous.Windows.Window.closeDialog();
+						}
 					}
 				} catch (Exception ignored) {
 				}
@@ -154,10 +181,13 @@ public class Onboarding {
 		content.add(authInfo);
 		content.add(twitchButton);
 		content.add(youtubeButton);
-		content.add(nextButton);
 		content.add(moveOn);
 		content.add(infoText);
-		DialogBox.showDialogBox(content, true);
+
+		everything.add(content);
+		everything.add(nextButton);
+
+		DialogBox.showDialogBox(everything, true);
 	}
 
 	static void refreshUI() {
@@ -165,6 +195,7 @@ public class Onboarding {
 		defaultUI.setHover(Defaults.COLOR5);
 		defaultUI.setSelect(Defaults.COLOR4);
 		content.setBackground(new Color(0,0,0,0));
+		everything.setBackground(new Color(0,0,0,0));
 	}
 
 

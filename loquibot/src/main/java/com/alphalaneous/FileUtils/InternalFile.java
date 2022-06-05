@@ -19,6 +19,10 @@ public class InternalFile {
         //System.out.println(path.toString());
     }
 
+    public Path getPath(){
+        return path;
+    }
+
     public String getName(){
         String[] file;
         if (GetInternalFiles.isInJar()) file = path.toString().split("/");

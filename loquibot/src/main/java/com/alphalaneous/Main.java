@@ -177,7 +177,6 @@ public class Main {
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
 
-
             if (!Settings.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();
                 Window.setVisible(true);
@@ -197,6 +196,9 @@ public class Main {
                 if(!Settings.getSettings("runAtStartup").asBoolean() || reopen) Window.setVisible(true);
                 System.out.println("> Window Visible");
             }
+
+
+
             new Thread(Variables::loadVars).start();
             System.out.println("> Command Variables Loaded");
 
@@ -290,6 +292,18 @@ public class Main {
             streamDeckSocket.sendMessage(message);
         }
     }
+
+    public static void restart(){
+        try {
+            Main.forceClose();
+            Runtime.getRuntime().exec(Settings.getSettings("installPath").asString());
+            System.exit(0);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     private static void updateTree(){
         ComponentTree.updateTree(Window.getWindow().getRootPane());

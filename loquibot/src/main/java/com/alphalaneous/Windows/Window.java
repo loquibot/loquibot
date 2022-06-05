@@ -86,9 +86,7 @@ public class Window {
         updateButton.addActionListener(e -> {
             try {
                 Settings.writeSettings("hasUpdated", "true");
-                Main.forceClose();
-                Runtime.getRuntime().exec(Settings.getSettings("installPath").asString());
-                System.exit(0);
+                Main.restart();
             }
             catch (Exception f){
                 System.out.println(f);

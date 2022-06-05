@@ -218,6 +218,10 @@ public class AccountSettings {
                 Settings.writeSettings("twitchEnabled","true");
                 APIs.setOauth();
                 refreshTwitch(TwitchAccount.login);
+                String option = DialogBox.showDialogBox("Restart loquibot?", "It is recommended to restart loquibot after logging in.", "Restart?", new String[]{"Yes", "No"});
+                if(option.equalsIgnoreCase("yes")){
+                    Main.restart();
+                }
             }).start();
         }));
         twitchContextMenu.addButton(new ContextButton("Logout", () -> {
@@ -234,6 +238,10 @@ public class AccountSettings {
                 Settings.writeSettings("youtubeEnabled","true");
                 YouTubeAccount.setCredential(true);
                 refreshYouTube(YouTubeAccount.name);
+                String option = DialogBox.showDialogBox("Restart loquibot?", "It is recommended to restart loquibot after logging in.", "Restart?", new String[]{"Yes", "No"});
+                if(option.equalsIgnoreCase("yes")){
+                    Main.restart();
+                }
             }).start();
         }));
         youTubeContextMenu.addButton(new ContextButton("Logout", () -> {

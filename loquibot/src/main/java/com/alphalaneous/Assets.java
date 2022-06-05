@@ -36,6 +36,7 @@ public class Assets {
 	public static ImageIcon Twitch;
 	public static ImageIcon YouTubeLarge;
 	public static ImageIcon TwitchLarge;
+	public static ImageIcon tutorial;
 
 	private static final int size = 30;
 	private static final int largeSize = 50;
@@ -92,6 +93,9 @@ public class Assets {
 			TwitchLarge = new ImageIcon(Scalr.resize(ImageIO
 					.read(Objects.requireNonNull(Main.class.getClassLoader()
 							.getResource("Icons/Twitch.png"))),Scalr.Method.BALANCED,40));
+			tutorial = new ImageIcon(ImageIO
+					.read(Objects.requireNonNull(Main.class.getClassLoader()
+							.getResource("tutorial.png"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
