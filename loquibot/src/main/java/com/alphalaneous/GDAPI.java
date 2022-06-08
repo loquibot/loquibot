@@ -39,8 +39,9 @@ public class GDAPI {
             return new ImageIcon(imgScaled);
 	    } catch (Exception e) {
             BufferedImage icon = spriteFactory.makeSprite(IconType.CUBE, 1, 1, 1, false);
+            Image imgScaled = icon.getScaledInstance(scale, scale, Image.SCALE_SMOOTH);
             icon.flush();
-            return new ImageIcon(icon);
+            return new ImageIcon(imgScaled);
 	    }
 	}
     public static ImageIcon getIcon(IconType type, int id, int color1Id, int color2Id, boolean withGlowOutline, int scale){

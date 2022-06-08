@@ -494,7 +494,10 @@ public class Main {
                     ChatListener.getCurrentListener().disconnect();
                     ServerBot.getCurrentServerBot().disconnect();
                     GlobalScreen.unregisterNativeHook();
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    System.out.println("Failed closing properly, forcing close");
+                    e.printStackTrace();
+                    System.exit(0);
                 }
             }
             System.exit(0);
@@ -514,7 +517,10 @@ public class Main {
             ChatListener.getCurrentListener().disconnect();
             ServerBot.getCurrentServerBot().disconnect();
             GlobalScreen.unregisterNativeHook();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println("Failed closing properly, forcing close");
+            e.printStackTrace();
+            System.exit(0);
         }
     }
 
