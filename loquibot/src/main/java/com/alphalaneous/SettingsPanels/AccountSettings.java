@@ -137,7 +137,12 @@ public class AccountSettings {
 
         if (Settings.getSettings("onboarding").exists()) {
             refreshTwitch(TwitchAccount.display_name);
-            refreshYouTube(YouTubeAccount.name);
+            try {
+                refreshYouTube(YouTubeAccount.name);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         SettingsComponent geometryDashComponent = new SettingsComponent(geometryDashPanel, new Dimension(475, 100)) {
@@ -236,7 +241,12 @@ public class AccountSettings {
         youTubeContextMenu.addButton(new ContextButton("Refresh Login", () -> {
             new Thread(() -> {
                 Settings.writeSettings("youtubeEnabled","true");
-                YouTubeAccount.setCredential(true);
+                try {
+                    YouTubeAccount.setCredential(true);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
                 refreshYouTube(YouTubeAccount.name);
                 String option = DialogBox.showDialogBox("Restart loquibot?", "It is recommended to restart loquibot after logging in.", "Restart?", new String[]{"Yes", "No"});
                 if(option.equalsIgnoreCase("yes")){

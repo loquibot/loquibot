@@ -1,39 +1,38 @@
 <component name="libraryTable">
   <library name="Main Dependencies">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Filters.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/Java-WebSocket-1.5.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/javassist.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jlayer-1.0.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jnativehook-2.1.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/json-20140107.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/okhttp-3.9.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/okio-1.13.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/reflections-0.9.12.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/rsyntaxtextarea-3.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-api-1.7.30.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/slf4j-nop-1.7.30.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/swingx-1.6.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/system-hook-3.5.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/commons-io-2.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/emoji-java-5.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/imgscalr-lib-4.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/j2v8_win32_x86_64-4.6.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/discord-rpc.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/jsoup-1.14.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/VBS_Shortcut_1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/discord-rpc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/ColorPicker.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/commons-io-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/emoji-java-5.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/Filters.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/imgscalr-lib-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/j2v8_win32_x86_64-4.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/Java-WebSocket-1.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/javassist.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/jnativehook-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/json-20140107.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/jsoup-1.14.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/okhttp-3.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/okio-1.13.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/reflections-0.9.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/rsyntaxtextarea-3.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/slf4j-api-1.7.30.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/slf4j-nop-1.7.30.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/system-hook-3.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/swingx-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/VBS_Shortcut_1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/jlayer-1.0.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <NATIVE>
-      <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/bin" />
-      <root url="file://$PROJECT_DIR$/../../GDBoard Dependencies/javafx-sdk-18.0.1/bin" />
+      <root url="file://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/bin" />
     </NATIVE>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/ColorPicker.jar!/" />
       <root url="jar://$USER_HOME$/.ideaLibSources/imgscalr-lib-4.2-sources.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../GDBoard Dependencies/VBS_Shortcut_1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/ColorPicker.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/VBS_Shortcut_1.1.jar!/" />
     </SOURCES>
   </library>
 </component>

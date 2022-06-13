@@ -1,5 +1,7 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Windows.Window;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.YouTube;
@@ -27,21 +29,26 @@ import java.util.List;
 public class GetLiveChatId {
 
     static String getLiveChatId(YouTube youtube) throws IOException {
-
-        YouTube.LiveBroadcasts.List broadcastList = youtube
-                .liveBroadcasts()
-                .list(Collections.singletonList("snippet"))
-                .setFields("items/snippet/liveChatId")
-                .setBroadcastType("all")
-                .setBroadcastStatus("active");
-        LiveBroadcastListResponse broadcastListResponse = broadcastList.execute();
-        for (LiveBroadcast b : broadcastListResponse.getItems()) {
-            String liveChatId = b.getSnippet().getLiveChatId();
-            if (liveChatId != null && !liveChatId.isEmpty()) {
-                return liveChatId;
+        try {
+            YouTube.LiveBroadcasts.List broadcastList = youtube
+                    .liveBroadcasts()
+                    .list(Collections.singletonList("snippet"))
+                    .setFields("items/snippet/liveChatId")
+                    .setBroadcastType("all")
+                    .setBroadcastStatus("active");
+            LiveBroadcastListResponse broadcastListResponse = broadcastList.execute();
+            for (LiveBroadcast b : broadcastListResponse.getItems()) {
+                String liveChatId = b.getSnippet().getLiveChatId();
+                if (liveChatId != null && !liveChatId.isEmpty()) {
+                    return liveChatId;
+                }
             }
         }
-
+        catch (GoogleJsonResponseException e) {
+            if (Window.getWindow().isVisible()) {
+                DialogBox.showDialogBox("Error", "This user isn't enabled for livestreaming! :(", "", new String[]{"Okay"});
+            }
+        }
         return null;
     }
 

@@ -30,6 +30,8 @@ public class SettingsTab {
 	private static final JPanel blockedUsersPage = BlockedUserSettings.createPanel();
 	private static final JPanel blockedCreatorsPage = BlockedCreatorSettings.createPanel();
 	private static final JPanel loggedIDsPage = RequestsLog.createPanel();
+	private static final JPanel devPage = DeveloperSettings.createPanel();
+
 	private static final JPanel legalPage = LegalPage.createPanel();
 	private static final JPanel privacyPage = PrivacyPage.createPanel();
 	private static final JPanel warrantyPage = WarrantyPage.createPanel();
@@ -105,6 +107,10 @@ public class SettingsTab {
 	private static final SettingsButton loggedIDs = createButton("$LOGGED_IDS_SETTINGS$", "\uF0D6", () -> {
 		loggedIDsPage.setVisible(true);
 		RequestsLog.loadIDs();
+		return null;
+	});
+	private static final SettingsButton developer = createButton("$DEVELOPER_SETTINGS$", "\uF0D6", () -> {
+		devPage.setVisible(true);
 		return null;
 	});
 	private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
@@ -183,6 +189,7 @@ public class SettingsTab {
 		content.add(blockedUsersPage);
 		content.add(blockedCreatorsPage);
 		content.add(loggedIDsPage);
+		content.add(devPage);
 		content.add(languagePage);
 		content.add(legalPage);
 		content.add(privacyPage);
@@ -200,6 +207,7 @@ public class SettingsTab {
 		blockedUsersPage.setVisible(false);
 		blockedCreatorsPage.setVisible(false);
 		loggedIDsPage.setVisible(false);
+		devPage.setVisible(false);
 		legalPage.setVisible(false);
 		languagePage.setVisible(false);
 		privacyPage.setVisible(false);
@@ -228,6 +236,9 @@ public class SettingsTab {
 		buttons.add(blockedUsers, gbc);
 		buttons.add(blockedCreators, gbc);
 		buttons.add(loggedIDs, gbc);
+		if(Settings.getSettings("isDev").asBoolean()) {
+			buttons.add(developer, gbc);
+		}
 		buttons.add(createSeparator(), gbc);
 		buttons.add(noticesSection, gbc);
 		buttons.add(legal, gbc);

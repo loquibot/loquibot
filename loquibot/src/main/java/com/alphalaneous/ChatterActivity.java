@@ -29,16 +29,20 @@ public class ChatterActivity {
 
     public static boolean checkIfActive(String username){
         for(ChatterActivity activity : chatterActivities){
-            if(activity.getUsername().equalsIgnoreCase(username) || APIs.isViewer(username)){
-                return true;
+            if(activity != null) {
+                if (activity.getUsername().equalsIgnoreCase(username) || APIs.isViewer(username)) {
+                    return true;
+                }
             }
         }
         return false;
     }
     public static ChatterActivity getActivity(String username){
         for(ChatterActivity activity : chatterActivities){
-            if(activity.getUsername().equalsIgnoreCase(username)){
-                return activity;
+            if(activity != null) {
+                if (activity.getUsername().equalsIgnoreCase(username)) {
+                    return activity;
+                }
             }
         }
         return null;

@@ -61,9 +61,11 @@ public class ChatListener extends ChatBot {
 	private void waitOnMessage(ChatMessage chatMessage) {
 		CommandNew.run(chatMessage);
 		KeywordHandler.run(chatMessage);
-		long userID = 0;
-		if(chatMessage.getTag("user-id") == null) userID = Long.parseLong(chatMessage.getTag("user-id"));
-		BotHandler.onMessage(chatMessage.getSender(), chatMessage.getMessage(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getCheerCount(), chatMessage.getTag("id"), userID, chatMessage);
+		long userID;
+		if (chatMessage.getTag("user-id") != null) {
+			userID = Long.parseLong(chatMessage.getTag("user-id"));
+			BotHandler.onMessage(chatMessage.getSender(), chatMessage.getMessage(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getCheerCount(), chatMessage.getTag("id"), userID, chatMessage);
+		}
 	}
 
 	@Override

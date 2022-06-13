@@ -165,7 +165,6 @@ public class Moderation {
 									conn.connect();
 									return true;
 								} catch (IOException e) {
-									e.printStackTrace();
 									return false;
 								}
 							}
@@ -231,7 +230,7 @@ public class Moderation {
 				int start = Integer.parseInt(position.split("-")[0]);
 				int stop = Integer.parseInt(position.split("-")[1]) + 1;
 				String strToReplace = message.substring(start, stop) + " ";
-				newMessage = newMessage.replaceFirst(strToReplace, "");
+				newMessage = newMessage.replaceFirst(Pattern.quote(strToReplace), "");
 			}
 		}
 		return newMessage;

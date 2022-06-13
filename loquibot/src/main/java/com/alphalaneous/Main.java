@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +46,7 @@ public class Main {
     private static StreamDeckSocket streamDeckSocket;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
 
         Settings.loadSettings();
@@ -121,14 +122,24 @@ public class Main {
             try {
                 TwitchAccount.setInfo();
                 new Thread(ChannelPointSettings::refresh).start();
-                if(Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                try {
+                    if (Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                }
+                catch (Exception e){
+                    YouTubeAccount.setCredential(true);
+                }
                 YouTubeAccount.setInfo();
             } catch (Exception e) {
                 e.printStackTrace();
                 if(Settings.getSettings("twitchEnabled").asBoolean()) APIs.setOauth();
                 TwitchAccount.setInfo();
                 new Thread(ChannelPointSettings::refresh).start();
-                if(Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                try {
+                    if (Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                }
+                catch (Exception f){
+                    YouTubeAccount.setCredential(true);
+                }
                 YouTubeAccount.setInfo();
             }
         }
@@ -457,15 +468,20 @@ public class Main {
     }
 
     public static void save(){
-        Variables.saveVars();
-        Settings.saveSettings();
-        Themes.saveTheme();
-        CommandData.saveCustomCommands();
-        CommandData.saveDefaultCommands();
-        CommandData.saveGeometryDashCommands();
-        TimerData.saveCustomTimers();
-        KeywordData.saveCustomKeywords();
-        LoggedID.saveLoggedIDs();
+        try {
+            Variables.saveVars();
+            Settings.saveSettings();
+            Themes.saveTheme();
+            CommandData.saveCustomCommands();
+            CommandData.saveDefaultCommands();
+            CommandData.saveGeometryDashCommands();
+            TimerData.saveCustomTimers();
+            KeywordData.saveCustomKeywords();
+            LoggedID.saveLoggedIDs();
+        }
+        catch (Exception e){
+            System.exit(0);
+        }
     }
 
     public static void startSaveLoop(){

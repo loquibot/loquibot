@@ -1,6 +1,8 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Windows.DialogBox;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
 import com.google.api.services.youtube.model.ChannelListResponse;
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -27,14 +30,9 @@ public class YouTubeAccount {
         return youtube;
     }
 
-    public static void setCredential(boolean refresh){
-        try {
-            credential = Auth.authorize(scopes, "YouTubeCredentials", refresh);
-            setInfo();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+    public static void setCredential(boolean refresh) throws IOException {
+        credential = Auth.authorize(scopes, "YouTubeCredentials", refresh);
+        setInfo();
     }
 
     public static void setInfo(){

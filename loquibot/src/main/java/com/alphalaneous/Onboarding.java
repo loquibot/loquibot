@@ -133,7 +133,12 @@ public class Onboarding {
 					nextButton.setLForeground(Defaults.FOREGROUND_A);
 					new Thread(() -> {
 						Settings.writeSettings("youtubeEnabled", "true");
-						YouTubeAccount.setCredential(true);
+						try {
+							YouTubeAccount.setCredential(true);
+						}
+						catch (Exception f){
+							f.printStackTrace();
+						}
 						youtubeLoggedIn.set(true);
 						youtubeButton.setUsername(YouTubeAccount.name);
 

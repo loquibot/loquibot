@@ -17,8 +17,8 @@ public class ServerBot {
 	private PrintWriter out;
 	private BufferedReader in;
 	private static ServerBot currentServerBot;
-
-	ServerBot(){
+	private boolean disconnected = false;
+	public ServerBot(){
 		currentServerBot = this;
 	}
 
@@ -26,17 +26,22 @@ public class ServerBot {
 		return currentServerBot;
 	}
 
-	void connect() {
+	public void connect() {
 
 		try {
-			clientSocket = new Socket("142.93.12.163", 2963);
-			//clientSocket = new Socket("localhost", 2963);
+			if(Settings.getSettings("isDev").asBoolean()) {
+				if (Settings.getSettings("dev_Server").asString().equalsIgnoreCase("main"))
+					clientSocket = new Socket("142.93.12.163", 2963);
+				else clientSocket = new Socket("localhost", 2963);
+			}
+			else clientSocket = new Socket("142.93.12.163", 2963);
+
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
+			e.printStackTrace();
 			Utilities.sleep(2000);
 			connect();
-			e.printStackTrace();
 		}
 
 		if(Settings.getSettings("twitchEnabled").asBoolean()) {
@@ -136,16 +141,19 @@ public class ServerBot {
 			}
 		}
 		System.out.println("> Disconnected from ServerBot");
-		Utilities.sleep(2000);
-		new ServerBot().connect();
+		if(!disconnected) {
+			Utilities.sleep(2000);
+			new ServerBot().connect();
+		}
 	}
 
 	public void sendMessage(String message) {
 		out.println(message);
 	}
 
-	void disconnect() {
+	public void disconnect() {
 		try {
+			disconnected = true;
 			clientSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
