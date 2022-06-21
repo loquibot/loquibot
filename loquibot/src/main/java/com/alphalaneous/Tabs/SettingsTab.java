@@ -35,6 +35,7 @@ public class SettingsTab {
 	private static final JPanel legalPage = LegalPage.createPanel();
 	private static final JPanel privacyPage = PrivacyPage.createPanel();
 	private static final JPanel warrantyPage = WarrantyPage.createPanel();
+	private static final JPanel termsPage = TermsPage.createPanel();
 
 	private static final JPanel languagePage = LanguageSettings.createPanel();
 	private static final LangLabel title = new LangLabel("$SETTINGS_TITLE$");
@@ -125,6 +126,10 @@ public class SettingsTab {
 		warrantyPage.setVisible(true);
 		return null;
 	});
+	private static final SettingsButton terms = createButton("$TERMS_SETTINGS$", null, () -> {
+		termsPage.setVisible(true);
+		return null;
+	});
 	private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uF4F3", () -> {
 		languagePage.setVisible(true);
 		return null;
@@ -194,6 +199,7 @@ public class SettingsTab {
 		content.add(legalPage);
 		content.add(privacyPage);
 		content.add(warrantyPage);
+		content.add(termsPage);
 
 		generalPage.setVisible(true);
 		overlayPage.setVisible(false);
@@ -212,6 +218,7 @@ public class SettingsTab {
 		languagePage.setVisible(false);
 		privacyPage.setVisible(false);
 		warrantyPage.setVisible(false);
+		termsPage.setVisible(false);
 
 		requests.setBackground(Defaults.COLOR4);
 		requests.setUI(selectUI);
@@ -244,6 +251,7 @@ public class SettingsTab {
 		buttons.add(legal, gbc);
 		buttons.add(privacy, gbc);
 		buttons.add(warranty, gbc);
+		buttons.add(terms, gbc);
 
 		buttonsParent.add(buttons);
 		//width 208

@@ -49,6 +49,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
+
         Settings.loadSettings();
 
         boolean reopen = Settings.getSettings("hasUpdated").asBoolean();
