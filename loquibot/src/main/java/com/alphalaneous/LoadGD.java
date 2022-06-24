@@ -25,6 +25,7 @@ public class LoadGD {
                     isAuth = true;
                     AccountSettings.refreshGD(username);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Settings.writeSettings("GDLogon", "false");
                     isAuth = false;
                 }
