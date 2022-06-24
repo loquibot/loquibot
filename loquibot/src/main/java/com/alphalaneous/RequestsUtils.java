@@ -33,13 +33,91 @@ public class RequestsUtils {
 		if(data != null) {
 			object.put("type", "level");
 			object.put("difficulty", data.getSimpleDifficulty());
+			object.put("id", data.getGDLevel().id());
+			String creator = "-";
+			if(data.getGDLevel().creatorName().isPresent()){
+				creator = data.getGDLevel().creatorName().get();
+			}
+			object.put("name", data.getGDLevel().name());
+			object.put("creator", creator);
+			int songID = 0;
+			if(data.getGDLevel().songId().isPresent()){
+				songID = data.getGDLevel().songId().get().intValue();
+			}
+			object.put("songID", songID);
+			object.put("creatorID", data.getGDLevel().creatorPlayerId());
 			object.put("stars", data.getGDLevel().stars());
 			object.put("likes", data.getGDLevel().likes());
 			object.put("downloads", data.getGDLevel().downloads());
 			object.put("length", data.getGDLevel().length());
+			object.put("status", "notempty");
 		}
 		else {
 			object.put("type", "level");
+			object.put("status", "empty");
+		}
+		return object;
+	}
+	public static JSONObject getNextInfoObject(LevelData data){
+		JSONObject object = new JSONObject();
+		if(data != null) {
+			object.put("type", "nextlevel");
+			object.put("difficulty", data.getSimpleDifficulty());
+			object.put("id", data.getGDLevel().id());
+			String creator = "-";
+			if(data.getGDLevel().creatorName().isPresent()){
+				creator = data.getGDLevel().creatorName().get();
+			}
+
+			object.put("name", data.getGDLevel().name());
+			object.put("creator", creator);
+
+			int songID = 0;
+			if(data.getGDLevel().songId().isPresent()){
+				songID = data.getGDLevel().songId().get().intValue();
+			}
+			object.put("songID", songID);
+			object.put("creatorID", data.getGDLevel().creatorPlayerId());
+			object.put("stars", data.getGDLevel().stars());
+			object.put("likes", data.getGDLevel().likes());
+			object.put("downloads", data.getGDLevel().downloads());
+			object.put("length", data.getGDLevel().length());
+			object.put("status", "notempty");
+		}
+		else {
+			object.put("type", "nextlevel");
+			object.put("status", "empty");
+		}
+		return object;
+	}
+	public static JSONObject getCurrentInfoObject(LevelData data){
+		JSONObject object = new JSONObject();
+		if(data != null) {
+			object.put("type", "currentlevel");
+			object.put("difficulty", data.getSimpleDifficulty());
+			object.put("id", data.getGDLevel().id());
+			String creator = "-";
+			if(data.getGDLevel().creatorName().isPresent()){
+				creator = data.getGDLevel().creatorName().get();
+			}
+
+			object.put("name", data.getGDLevel().name());
+			object.put("creator", creator);
+
+			int songID = 0;
+			if(data.getGDLevel().songId().isPresent()){
+				songID = data.getGDLevel().songId().get().intValue();
+			}
+			object.put("songID", songID);
+			object.put("creatorID", data.getGDLevel().creatorPlayerId());
+			object.put("stars", data.getGDLevel().stars());
+			object.put("likes", data.getGDLevel().likes());
+			object.put("downloads", data.getGDLevel().downloads());
+			object.put("length", data.getGDLevel().length());
+			object.put("status", "notempty");
+		}
+		else {
+			object.put("type", "nextlevel");
 			object.put("status", "empty");
 		}
 		return object;

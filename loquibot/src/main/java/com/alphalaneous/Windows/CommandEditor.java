@@ -7,6 +7,9 @@ import com.alphalaneous.Main;
 import com.alphalaneous.SettingsPanels.CommandSettings;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.ThemedComponents.ThemedCheckbox;
+import com.sun.javafx.application.PlatformImpl;
+import javafx.embed.swing.JFXPanel;
+import javafx.stage.FileChooser;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
@@ -34,8 +37,8 @@ public class CommandEditor {
 	private static final JFrame editor = new JFrame();
 	private static String command;
 	private static boolean active = false;
-	private static final RadioPanel editorChoices = new RadioPanel(new String[]{"$BASIC_EDITOR$", "$ADVANCED_EDITOR$"});
-	private static final RadioPanel basicChoices = new RadioPanel(new String[]{"$SEND_MESSAGE$", "$PLAY_SOUND$"});
+	private static final RadioPanel editorChoices = new RadioPanel("$BASIC_EDITOR$", "$ADVANCED_EDITOR$");
+	private static final RadioPanel basicChoices = new RadioPanel("$SEND_MESSAGE$", "$PLAY_SOUND$");
 
 	private static final UndoManager undoManager = new UndoManager();
 
@@ -46,7 +49,7 @@ public class CommandEditor {
 	private static final FancyTextArea commandNameText = new FancyTextArea(false, false);
 	private static final FancyTextArea commandResponse = new FancyTextArea(false, false);
 	private static final FancyTextArea soundFileLocation = new FancyTextArea(false, false);
-	private static final RoundedJButton fileExplorerButton = new RoundedJButton("\uF12B", "$OPEN_EXPLORER$");
+	private static final RoundedJButton fileExplorerButton = new RoundedJButton("\uF094", "$OPEN_EXPLORER$");
 	private static final RoundedJButton deleteButton = new RoundedJButton("\uF0CE", "$DELETE_COMMAND$");
 
 	private static final ThemedCheckbox modOnly = createButton("$MOD_ONLY$", 310);
@@ -241,7 +244,7 @@ public class CommandEditor {
 		fileExplorerButton.setForeground(Defaults.FOREGROUND_A);
 		fileExplorerButton.setBackground(Defaults.COLOR);
 		fileExplorerButton.setBounds(585, 80, 32, 32);
-		/*fileExplorerButton.addMouseListener(new MouseAdapter() {
+		fileExplorerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
@@ -250,14 +253,14 @@ public class CommandEditor {
 				PlatformImpl.startup(() -> {
 					FileChooser d = new FileChooser();
 					d.setTitle("Open Sound File");
-					d.getExtensionFilters().add(new FileChooser.ExtensionFilter("mp3 files (*.mp3)"));
+					d.getExtensionFilters().add(new FileChooser.ExtensionFilter("MP3 Files", "*.mp3"));
 					File file = d.showOpenDialog(null);
 					if (file != null) {
 						soundFileLocation.setText(file.getPath().replace("\\", "/"));
 					}
 				});
 			}
-		});*/
+		});
 
 		deleteButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
 		deleteButton.setUI(defaultUI);
@@ -285,7 +288,7 @@ public class CommandEditor {
 		});
 
 		fileExplorerButton.setVisible(false);
-		//basicPanel.add(fileExplorerButton);
+		basicPanel.add(fileExplorerButton);
 
 		editorChoices.setChecked("BASIC_EDITOR");
 		editorChoices.setWidth(300);
@@ -309,7 +312,7 @@ public class CommandEditor {
 		commandResponse.setLineWrap(true);
 		commandResponse.setWrapStyleWord(true);
 
-		soundFileLocation.setBounds(20, 80, 595, 32);
+		soundFileLocation.setBounds(20, 80, 555, 32);
 		soundFileLocation.getDocument().putProperty("filterNewlines", Boolean.TRUE);
 		soundFileLocation.setVisible(false);
 

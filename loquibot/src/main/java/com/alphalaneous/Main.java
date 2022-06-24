@@ -5,6 +5,8 @@ import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.*;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.json.JSONObject;
@@ -43,12 +45,10 @@ public class Main {
     private static final Image newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
     private static final Image newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
     private static final JFrame starting = new JFrame("loquibot");
-    private static StreamDeckSocket streamDeckSocket;
+    private static ConnectorSocket streamDeckSocket;
 
 
     public static void main(String[] args) throws IOException {
-
-
 
         Settings.loadSettings();
 
@@ -156,7 +156,7 @@ public class Main {
 
             Assets.loadAssets();
             new Thread(Defaults::startMainThread).start();
-            new Thread(streamDeckSocket = new StreamDeckSocket()).start();
+            new Thread(streamDeckSocket = new ConnectorSocket()).start();
 
             System.out.println("> Main Threads Started");
 
@@ -299,7 +299,7 @@ public class Main {
         }
     }
 
-    public static void sendMessageToStreamDeck(String message){
+    public static void sendMessageConnectedService(String message){
         if(streamDeckSocket != null) {
             streamDeckSocket.sendMessage(message);
         }

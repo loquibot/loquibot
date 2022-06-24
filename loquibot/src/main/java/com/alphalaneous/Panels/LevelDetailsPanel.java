@@ -1,6 +1,7 @@
 package com.alphalaneous.Panels;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
@@ -36,7 +37,10 @@ public class LevelDetailsPanel {
                 }
             }
         }
-        new Thread(() -> Main.sendMessageToStreamDeck(RequestsUtils.getInfoObject(data).toString())).start();
+        new Thread(() -> Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data).toString())).start();
+        if(data == null) Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(null).toString());
+        else new Thread(() -> Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1).getLevelData()).toString())).start();
+
         tries = 0;
         mainPanel.repaint();
 

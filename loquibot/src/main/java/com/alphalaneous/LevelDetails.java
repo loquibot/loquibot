@@ -402,7 +402,7 @@ public class LevelDetails extends JPanel {
 
                         JSONObject object = new JSONObject();
                         object.put("type", "youtube");
-                        Main.sendMessageToStreamDeck(object.toString());
+                        Main.sendMessageConnectedService(object.toString());
                         next.setBounds(470, commentScrollPane.getY()-40, 30, 30);
                         prev.setBounds(435, commentScrollPane.getY()-40, 30, 30);
                         topComments.setBounds(135, commentScrollPane.getY()-40, 30, 30);

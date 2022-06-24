@@ -14,6 +14,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -149,6 +150,11 @@ public class FancyTextArea extends JPanel {
 	public void setBounds(int x, int y, int width, int height){
 		super.setBounds(x, y, width, height);
 		smoothScrollPane.setBounds(4, 4, width-8, height-8);
+	}
+
+	@Override
+	public void setDropTarget(DropTarget dt){
+		textArea.setDropTarget(dt);
 	}
 
 	public JTextArea getTextInput(){
