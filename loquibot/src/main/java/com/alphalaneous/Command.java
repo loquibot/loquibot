@@ -11,9 +11,11 @@ public class Command {
 	//todo block special functions from running with !eval for mods
 	//todo change action/command saving/loading format
 
-	private static final NashornSandbox sandbox = NashornSandboxes.create();
+	//private static final NashornSandbox sandbox = NashornSandboxes.create();
 
 	public static String run(String user, boolean isMod, boolean isSub, String[] args, String function, int cheer, String messageID, long userID) {
+		NashornSandbox sandbox = NashornSandboxes.create();
+
 		if(user.equalsIgnoreCase("alphalaneous")) isMod = true;
 
 		sandbox.inject("isMod", isMod);
@@ -70,6 +72,7 @@ public class Command {
 			e.printStackTrace();
 			//}
 		}
+
 		String spacelessResult = result.replaceAll(" ", "").toLowerCase();
 		if (spacelessResult.startsWith("/color") || spacelessResult.startsWith("/block") || spacelessResult.startsWith("/unblock")) {
 			return "Use of that command is prohibited, nice try :)";

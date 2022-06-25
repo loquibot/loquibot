@@ -8,6 +8,7 @@ import com.alphalaneous.FileUtils.InternalFile;
 import com.alphalaneous.Panels.SettingsTitle;
 import com.alphalaneous.SettingsPanels.CommandSettings;
 import com.alphalaneous.Windows.CommandEditor;
+import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -59,6 +60,8 @@ public class CustomCommands {
 			try {
 				Path comPath = Paths.get(Defaults.saveDirectory + "/loquibot/commands/");
 				if (Files.exists(comPath)) {
+					new Thread(() -> JOptionPane.showMessageDialog(Window.getWindow(), "Legacy Commands are being removed in a future release, please \nbe sure to recreate them with the new command system ASAP.", "Legacy Commands", JOptionPane.WARNING_MESSAGE)).start();
+
 					Stream<Path> walk1 = Files.walk(comPath, 1);
 					for (Iterator<Path> it = walk1.iterator(); it.hasNext(); ) {
 						Path path = it.next();

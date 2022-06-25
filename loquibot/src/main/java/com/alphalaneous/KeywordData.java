@@ -126,14 +126,4 @@ public class KeywordData {
         jsonObject.put("keywords", jsonArray);
         save(Paths.get(Defaults.saveDirectory + "/loquibot/customKeywords.json"), jsonObject);
     }
-
-    private static void saveCommands(JSONArray jsonArray, KeywordData data) {
-        JSONObject commandObject = new JSONObject();
-        commandObject.putOpt("name", data.getKeyword());
-        commandObject.putOpt("enabled", data.isEnabled());
-        commandObject.putOpt("isRegex", data.isRegex());
-        commandObject.putOpt("level", data.getUserLevel());
-        commandObject.putOpt("cooldown", data.getCooldown());
-        jsonArray.put(commandObject);
-    }
 }

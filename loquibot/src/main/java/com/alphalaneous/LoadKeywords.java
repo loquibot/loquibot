@@ -42,7 +42,7 @@ public class LoadKeywords {
     public static void reloadCustomKeywords(){
         customKeywords.clear();
         customKeywords.addAll(KeywordData.getRegisteredKeywords());
-        CustomCommands.loadCommands();
+        CustomKeywords.loadKeywords();
     }
 
     public static void loadKeywords(){

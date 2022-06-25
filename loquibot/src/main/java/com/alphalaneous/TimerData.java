@@ -78,8 +78,7 @@ public class TimerData {
     public void runTimer(int minute){
         if(minute % interval == 0 && isEnabled && ChatListener.SelfDestructingMessage.getSize() >= lines) {
             if (runCommand != null && !runCommand.equalsIgnoreCase("")) {
-                String[] args = runCommand.split(" ");
-                ChatMessage message = new ChatMessage(args, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false);
+                ChatMessage message = new ChatMessage(new String[]{}, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false);
                 CommandNew.run(message);
                 message.setYouTube(true);
                 CommandNew.run(message);

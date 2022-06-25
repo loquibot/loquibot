@@ -15,26 +15,18 @@ import java.util.Map;
 public class Sounds {
 
 	static HashMap<String, Sound> sounds = new HashMap<>();
-	static HashMap<String, Player> cachedSoundDownloads = new HashMap<>();
 
 
 	public static void playSound(String location, boolean restart, boolean overlap) {
-		if (sounds.size() <= 5 && (!sounds.containsKey(location) || overlap)) {
-			new Sound(location, true, false).playSound();
-		} else if (sounds.containsKey(location) && restart) {
-			sounds.get(location).stopSound();
-			new Sound(location, true, false).playSound();
-		}
+		playSound(location, restart, overlap, true, false);
 	}
 
 	public static void playSound(String location, boolean restart, boolean overlap, boolean isFile, boolean isURL) {
 
-
-		if (sounds.size() <= 5 && (!sounds.containsKey(location) || overlap)) {
+		if (sounds.size() <= 5 && (!contains(location) || overlap)) {
 			new Sound(location, isFile, isURL).playSound();
-		} else if (sounds.containsKey(location) && restart) {
-			System.out.println(restart);
-			sounds.get(location).stopSound();
+		} else if (contains(location) && restart) {
+			sounds.get(getLocationID(location)).stopSound();
 			new Sound(location, isFile, isURL).playSound();
 		}
 	}
@@ -43,6 +35,23 @@ public class Sounds {
 		sounds.get(location).stopSound();
 	}
 
+	public static String getLocationID(String location){
+		for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
+			if (((Sound) ((Map.Entry) stringSoundEntry).getValue()).location.equalsIgnoreCase(location)) {
+				return stringSoundEntry.toString();
+			}
+		}
+		return null;
+	}
+
+	public static boolean contains(String location){
+		for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
+			if (((Sound) ((Map.Entry) stringSoundEntry).getValue()).location.equalsIgnoreCase(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 	@SuppressWarnings("rawtypes")
@@ -55,6 +64,7 @@ public class Sounds {
 
 	public static class Sound {
 
+		String UUID = java.util.UUID.randomUUID().toString().replace("-", "");
 		String location;
 		boolean complete = false;
 		boolean isFile;
@@ -65,7 +75,7 @@ public class Sounds {
 			this.location = location;
 			this.isFile = isFile;
 			this.isURL = isURL;
-			Sounds.sounds.put(location, this);
+			Sounds.sounds.put(UUID, this);
 		}
 
 		public void playSound() {
@@ -91,7 +101,7 @@ public class Sounds {
 
 				}
 				complete = true;
-				Sounds.sounds.remove(location, this);
+				Sounds.sounds.remove(UUID, this);
 			}).start();
 
 		}

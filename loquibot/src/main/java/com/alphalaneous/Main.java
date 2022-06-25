@@ -169,6 +169,7 @@ public class Main {
             Window.loadTopComponent();
             LoadCommands.loadCommands();
             LoadTimers.loadTimers();
+            LoadPoints.loadPoints();
             LoadKeywords.loadKeywords();
             LoggedID.loadLoggedIDs();
             TimerHandler.startTimerHandler();
@@ -420,6 +421,7 @@ public class Main {
     }
 
     public static void sendMessage(String message) {
+        System.out.println(message);
         sendMessage(message, false, null);
     }
     public static void sendMessage(String message, boolean doAnnounce) {
@@ -478,6 +480,7 @@ public class Main {
             CommandData.saveGeometryDashCommands();
             TimerData.saveCustomTimers();
             KeywordData.saveCustomKeywords();
+            ChannelPointData.saveCustomPoints();
             LoggedID.saveLoggedIDs();
         }
         catch (Exception e){

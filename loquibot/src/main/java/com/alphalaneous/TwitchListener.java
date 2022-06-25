@@ -3,6 +3,7 @@ package com.alphalaneous;
 import com.alphalaneous.FileUtils.FileList;
 import com.alphalaneous.FileUtils.GetInternalFiles;
 import com.alphalaneous.FileUtils.InternalFile;
+import com.alphalaneous.TwitchBot.ChatMessage;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
@@ -112,41 +113,21 @@ public class TwitchListener extends WebSocketClient {
 				} else {
 					System.out.println(redemption + " redeemed by " + username);
 				}
-				String finalUserInput = userInput;
 				try {
-					boolean comExists = false;
-					Path comPath = Paths.get(Defaults.saveDirectory + "/loquibot/points/");
-					if (Files.exists(comPath)) {
-						Stream<Path> walk1 = Files.walk(comPath, 1);
-						for (Iterator<Path> it = walk1.iterator(); it.hasNext(); ) {
-							Path path = it.next();
-							String[] file = path.toString().split("\\\\");
-							String fileName = file[file.length - 1];
-							if (fileName.equalsIgnoreCase(redemption + ".js")) {
-								comExists = true;
-								new Thread(() -> {
-									try {
-										while (BotHandler.processing) {
-											Utilities.sleep(50);
-										}
-										Main.sendMessage(Command.run(username, finalUserInput, Files.readString(path, StandardCharsets.UTF_8)));
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-								}).start();
-							}
+
+					ChannelPointData data = null;
+
+					for (ChannelPointData existingData : ChannelPointData.getRegisteredPoints()) {
+						if (existingData.getName().equalsIgnoreCase(redemption)) {
+							data = existingData;
+							break;
 						}
 					}
-					if (!comExists) {
-						GetInternalFiles getInternalFiles = new GetInternalFiles("points/");
-						FileList files = getInternalFiles.getFiles();
-						for (InternalFile file : files) {
-							if (file.getName().equalsIgnoreCase(redemption + ".js")) {
-								Main.sendMessage(Command.run(username, finalUserInput, file.getString()));
-								break;
-							}
-						}
+					if(data != null){
+						ChatMessage messageA = new ChatMessage(new String[]{}, username, username, userInput, new String[0], false, false, false, 0, false);
+						Main.sendMessage(CommandNew.replaceBetweenParentheses(messageA, data.getMessage(), data.getMessage().split(" "), null));
 					}
+
 				} catch (Exception ignored) {
 				}
 

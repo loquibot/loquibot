@@ -585,3 +585,7 @@ WARRANTY_SETTINGS = Warranty
 TERMS_SETTINGS = Terms of Service
 LANGUAGE_SETTINGS = Languages
 NOTICES_SECTION_TITLE = LEGAL INFORMATION
+
+EDIT_POINT = Edit Channel Point
+POINT_NAME_INPUT = Name:
+MESSAGE_INPUT_POINT_DESC = The text that is sent when a point is redeemed

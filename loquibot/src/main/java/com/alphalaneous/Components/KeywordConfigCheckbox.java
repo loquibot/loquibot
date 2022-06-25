@@ -349,9 +349,9 @@ public class KeywordConfigCheckbox extends JPanel {
     }
 
     public static class TextInput extends JPanel {
-        private final FancyTextArea textArea;
+        public final FancyTextArea textArea;
         private final LangLabel titleText = new LangLabel("");
-        TextInput(String text, String description, String defaultInput, int lines){
+        public TextInput(String text, String description, String defaultInput, int lines){
             int height = 0;
             for(int i = 0; i < lines; i++){
                 height += 32;
