@@ -60,7 +60,9 @@ public class LoadGD {
 
         StringBuilder outputString = new StringBuilder();
 
-        for (int i = 0; i < inputString.length(); i++) {
+        int len = inputString.length();
+
+        for (int i = 0; i < len; i++) {
             outputString.append((char) (inputString.charAt(i) ^ 15));
         }
         return outputString.toString();

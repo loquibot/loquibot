@@ -6,7 +6,6 @@ import com.alphalaneous.Tabs.*;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
 import javafx.application.Application;
-import javafx.embed.swing.JFXPanel;
 import javafx.stage.Stage;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -50,8 +49,6 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-
-        SwingUtilities.invokeLater(JFXPanel::new);
 
         Settings.loadSettings();
 

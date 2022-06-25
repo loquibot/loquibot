@@ -2,7 +2,6 @@ package com.alphalaneous.SettingsPanels;
 
 import com.alphalaneous.Components.CurvedButtonAlt;
 import com.alphalaneous.Components.LangLabel;
-import com.alphalaneous.Components.SettingsComponent;
 import com.alphalaneous.Components.SettingsPage;
 import com.alphalaneous.Defaults;
 import com.alphalaneous.Settings;
@@ -69,13 +68,6 @@ public class PersonalizationSettings {
         });
         settingsPage.addCheckbox("$PLAY_SOUNDS_WHILE_HIDDEN$", "$PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION$", "playSoundsWhileHidden");
         settingsPage.addCheckbox("$DISABLE_NOTIFICATIONS$", "$DISABLE_NOTIFICATIONS_DESCRIPTION$","disableNotifications");
-
-        settingsPage.addComponent(new SettingsComponent(new JPanel(){{
-
-
-
-        }}, new Dimension()));
-
         return settingsPage;
     }
     public static void setTheme(){
