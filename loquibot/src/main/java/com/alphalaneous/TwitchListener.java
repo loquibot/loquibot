@@ -100,7 +100,7 @@ public class TwitchListener extends WebSocketClient {
 
 			if (topic.startsWith("channel-points-channel-v1")) {
 				System.out.println(message);
-				String redemptionA = object.getJSONObject("data").get("message").toString().replaceAll("\\\\\"", "\"").replaceAll("\r", "").replaceAll("\n", "");
+				String redemptionA = object.getJSONObject("data").get("message").toString().replaceAll("\r", "").replaceAll("\n", "");
 				System.out.println(redemptionA);
 				String redemption = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("reward").get("title").toString().replaceAll("\"", "");
 				String username = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("user").get("login").toString().replaceAll("\"", "");
