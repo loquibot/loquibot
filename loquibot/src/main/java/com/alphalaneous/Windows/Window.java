@@ -89,7 +89,6 @@ public class Window {
                 Main.restart();
             }
             catch (Exception f){
-                System.out.println(f);
                 f.printStackTrace();
             }
         });

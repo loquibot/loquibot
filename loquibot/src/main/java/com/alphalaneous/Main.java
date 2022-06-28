@@ -50,6 +50,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        //CommandCreatorTool commandCreatorTool = new CommandCreatorTool("test");
+
         Settings.loadSettings();
 
         boolean reopen = Settings.getSettings("hasUpdated").asBoolean();

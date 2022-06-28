@@ -317,13 +317,11 @@ public class CommandNew {
                             break;
                         }
                         case "tts" : {
-                            String finalData = data;
-                            new Thread(() -> TTS.playTTS(finalData, false)).start();
+                            TTS.runTTS(data, false);
                             break;
                         }
                         case "tts-overlap" : {
-                            String finalData = data;
-                            new Thread(() -> TTS.playTTS(finalData, true)).start();
+                            TTS.runTTS(data, true);
                             break;
                         }
                         case "count" : {
