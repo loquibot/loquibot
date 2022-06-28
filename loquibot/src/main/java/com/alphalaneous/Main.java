@@ -5,8 +5,6 @@ import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.*;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
-import javafx.application.Application;
-import javafx.stage.Stage;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.json.JSONObject;

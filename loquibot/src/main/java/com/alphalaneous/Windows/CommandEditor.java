@@ -4,12 +4,11 @@ import com.alphalaneous.ChatbotTab.CustomCommands;
 import com.alphalaneous.Components.*;
 import com.alphalaneous.Defaults;
 import com.alphalaneous.Main;
-import com.alphalaneous.SettingsPanels.CommandSettings;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.ThemedComponents.ThemedCheckbox;
-import com.sun.javafx.application.PlatformImpl;
-import javafx.embed.swing.JFXPanel;
-import javafx.stage.FileChooser;
+//import com.sun.javafx.application.PlatformImpl;
+//import javafx.embed.swing.JFXPanel;
+//import javafx.stage.FileChooser;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
@@ -244,7 +243,7 @@ public class CommandEditor {
 		fileExplorerButton.setForeground(Defaults.FOREGROUND_A);
 		fileExplorerButton.setBackground(Defaults.COLOR);
 		fileExplorerButton.setBounds(585, 80, 32, 32);
-		fileExplorerButton.addMouseListener(new MouseAdapter() {
+		/*fileExplorerButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
@@ -260,7 +259,7 @@ public class CommandEditor {
 					}
 				});
 			}
-		});
+		});*/
 
 		deleteButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
 		deleteButton.setUI(defaultUI);
