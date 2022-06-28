@@ -52,6 +52,14 @@ public class Main {
 
         //CommandCreatorTool commandCreatorTool = new CommandCreatorTool("test");
 
+        new Thread(() -> {
+            Utilities.sleep(21600000);
+            if(Settings.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
+                restart();
+            }
+        }).start();
+
+
         Settings.loadSettings();
 
         boolean reopen = Settings.getSettings("hasUpdated").asBoolean();
