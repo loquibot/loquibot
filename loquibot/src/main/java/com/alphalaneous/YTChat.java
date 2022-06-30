@@ -74,7 +74,7 @@ public class YTChat {
                         listChatMessages(
                                 liveChatId,
                                 response.getNextPageToken(),
-                                15000);
+                                5000);
                         Utilities.sleep(1);
                     } catch (Exception e) {
                         e.printStackTrace();
