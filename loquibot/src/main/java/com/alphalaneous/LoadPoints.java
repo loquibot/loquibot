@@ -59,7 +59,13 @@ public class LoadPoints {
     }
 
     private static ArrayList<ChannelPointData> loadJsonToPointDataArrayList(String jsonData){
-        JSONObject jsonObject = new JSONObject(jsonData);
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonData);
+        }
+        catch (Exception e){
+            jsonObject = new JSONObject();
+        }
         JSONArray pointArray = jsonObject.getJSONArray("points");
         ArrayList<ChannelPointData> commandDataArrayList = new ArrayList<>();
         for(int i = 0; i < pointArray.length(); i++){

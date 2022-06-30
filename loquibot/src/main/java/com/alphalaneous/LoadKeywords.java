@@ -61,7 +61,13 @@ public class LoadKeywords {
     }
 
     private static ArrayList<KeywordData> loadJsonToKeywordDataArrayList(String jsonData){
-        JSONObject jsonObject = new JSONObject(jsonData);
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonData);
+        }
+        catch (Exception e){
+            jsonObject = new JSONObject();
+        }
         JSONArray keywordArray = jsonObject.getJSONArray("keywords");
         ArrayList<KeywordData> commandDataArrayList = new ArrayList<>();
         for(int i = 0; i < keywordArray.length(); i++){

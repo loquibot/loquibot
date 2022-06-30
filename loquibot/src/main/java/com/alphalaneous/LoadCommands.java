@@ -117,7 +117,13 @@ public class LoadCommands {
     }
 
     private static ArrayList<CommandData> loadJsonToCommandDataArrayList(String jsonData, boolean isDefault, boolean isGD){
-        JSONObject jsonObject = new JSONObject(jsonData);
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonData);
+        }
+        catch (Exception e){
+            jsonObject = new JSONObject();
+        }
         JSONArray commandsArray = jsonObject.getJSONArray("commands");
         ArrayList<CommandData> commandDataArrayList = new ArrayList<>();
         for(int i = 0; i < commandsArray.length(); i++){

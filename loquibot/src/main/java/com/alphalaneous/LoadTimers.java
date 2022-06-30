@@ -59,7 +59,13 @@ public class LoadTimers {
         TimerSettings.loadTimers();
     }
     private static ArrayList<TimerData> loadJsonToTimerDataArrayList(String jsonData){
-        JSONObject jsonObject = new JSONObject(jsonData);
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonData);
+        }
+        catch (Exception e){
+            jsonObject = new JSONObject();
+        }
         JSONArray timersArray = jsonObject.getJSONArray("timers");
         ArrayList<TimerData> timerDataArrayList = new ArrayList<>();
         for(int i = 0; i < timersArray.length(); i++){
