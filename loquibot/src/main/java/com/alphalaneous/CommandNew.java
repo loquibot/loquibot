@@ -186,7 +186,7 @@ public class CommandNew {
 
                     switch (identifier.toLowerCase()) {
                         case "user": {
-                            replacement = message.getSender();
+                            replacement = message.getSenderElseDisplay();
                             break;
                         }
                         case "touser":
@@ -194,7 +194,7 @@ public class CommandNew {
                             if (arguments.length > 0) {
                                 replacement = arguments[0].trim();
                             } else {
-                                replacement = message.getSender();
+                                replacement = message.getSenderElseDisplay();
                             }
                             break;
                         }
@@ -231,7 +231,7 @@ public class CommandNew {
                         }
                         case "userid":
                         case "user_id": {
-                            replacement = message.getTag("user-id");
+                            if(!message.isYouTube()) replacement = message.getTag("user-id");
                             break;
                         }
                         case "userlevel":
@@ -308,12 +308,14 @@ public class CommandNew {
                         }
                         case "channel":
                         case "broadcaster": {
-                            replacement = TwitchAccount.login;
+                            if(message.isYouTube()) replacement = YouTubeAccount.name;
+                            else replacement = TwitchAccount.login;
                             break;
                         }
                         case "channelid":
                         case "channel_id": {
-                            replacement = TwitchAccount.id;
+                            if(message.isYouTube()) replacement = YouTubeAccount.ID;
+                            else replacement = TwitchAccount.id;
                             break;
                         }
                         case "tts" : {

@@ -412,8 +412,8 @@ public class APIs {
 			if (twitch.auth().awaitAccessToken()) {
 				Settings.writeSettings("oauth", twitch.auth().getAccessToken());
 				Settings.writeSettings("channel", Objects.requireNonNull(getChannel()));
-				TwitchAccount.setInfo();
-				AccountSettings.refreshTwitch(Settings.getSettings("channel").asString());
+				TwitchAccount.setInfo(true);
+				AccountSettings.refreshTwitch(Settings.getSettings("channel").asString(), true);
 				//Main.refreshBot();
 				success.set(true);
 			} else {

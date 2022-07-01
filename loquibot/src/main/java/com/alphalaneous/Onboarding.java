@@ -112,15 +112,16 @@ public class Onboarding {
 				try {
 					nextButton.setLForeground(Defaults.FOREGROUND_A);
 					new Thread(() -> {
-						Settings.writeSettings("twitchEnabled", "true");
 						APIs.setOauth();
 						while (!APIs.success.get()) {
 							Utilities.sleep(100);
 						}
+						Settings.writeSettings("twitchEnabled", "true");
 						twitchLoggedIn.set(true);
 						twitchButton.setUsername(TwitchAccount.login);
 					}).start();
 				} catch (Exception ignored) {
+
 				}
 			}
 		});
@@ -132,13 +133,13 @@ public class Onboarding {
 				try {
 					nextButton.setLForeground(Defaults.FOREGROUND_A);
 					new Thread(() -> {
-						Settings.writeSettings("youtubeEnabled", "true");
 						try {
 							YouTubeAccount.setCredential(true);
 						}
 						catch (Exception f){
 							f.printStackTrace();
 						}
+						Settings.writeSettings("youtubeEnabled", "true");
 						youtubeLoggedIn.set(true);
 						youtubeButton.setUsername(YouTubeAccount.name);
 

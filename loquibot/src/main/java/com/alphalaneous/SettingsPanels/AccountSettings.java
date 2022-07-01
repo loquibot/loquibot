@@ -262,13 +262,22 @@ public class AccountSettings {
         return youTubeContextMenu;
     }
 
-    public static void refreshTwitch(String channel) {
-        if (Settings.getSettings("twitchEnabled").asBoolean()){
+    public static void refreshTwitch(String channel){
+        refreshTwitch(channel, false);
+    }
+
+    public static void refreshTwitch(String channel, boolean skipCheck) {
+        if (Settings.getSettings("twitchEnabled").asBoolean() || skipCheck){
             twitchPanel.refreshInfo(channel, "Twitch", new ImageIcon(makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         }
     }
-    public static void refreshYouTube(String channel) {
-        if (Settings.getSettings("youtubeEnabled").asBoolean()) {
+
+    public static void refreshYouTube(String channel){
+        refreshYouTube(channel, false);
+    }
+
+    public static void refreshYouTube(String channel, boolean skipCheck) {
+        if (Settings.getSettings("youtubeEnabled").asBoolean() || skipCheck) {
             youTubePanel.refreshInfo(channel, "YouTube", new ImageIcon(makeRoundedCorner(YouTubeAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         }
     }

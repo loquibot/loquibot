@@ -24,8 +24,13 @@ public class TwitchAccount {
 	public static String type;
 	public static long view_count;
 
-	public static void setInfo() {
-		if(Settings.getSettings("twitchEnabled").asBoolean()) {
+	public static void setInfo(){
+		setInfo(false);
+	}
+
+
+	public static void setInfo(boolean skipCheck) {
+		if(Settings.getSettings("twitchEnabled").asBoolean() || skipCheck) {
 			APIs.setUser(Settings.getSettings("channel").asString());
 
 			JSONObject data = APIs.getInfo();

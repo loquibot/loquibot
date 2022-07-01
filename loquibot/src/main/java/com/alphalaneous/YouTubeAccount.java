@@ -32,11 +32,15 @@ public class YouTubeAccount {
 
     public static void setCredential(boolean refresh) throws IOException {
         credential = Auth.authorize(scopes, "YouTubeCredentials", refresh);
-        setInfo();
+        setInfo(true);
     }
 
     public static void setInfo(){
-        if(Settings.getSettings("youtubeEnabled").asBoolean()) {
+        setInfo(false);
+    }
+
+    public static void setInfo(boolean skipCheck){
+        if(Settings.getSettings("youtubeEnabled").asBoolean() || skipCheck) {
             try {
 
                 youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
