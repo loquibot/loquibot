@@ -31,8 +31,8 @@ public class RequestsSettings {
         settingsPage.addCheckbox("$DISABLE_REPEATED_ALL$", "$DISABLE_REPEATED_ALL_DESC$", "repeatedRequestsAll");
         settingsPage.addCheckbox("$ALLOW_UPDATED_REPEATED$", "$ALLOW_UPDATED_REPEATED_DESC$", "updatedRepeated");
         settingsPage.addCheckedInput("$MAX_QUEUE_SIZE$", "", 1, true, false, false, "queueLimitEnabled", "queueLimit");
-        settingsPage.addCheckedInput("$REQUEST_LIMIT_QUEUE$", "", 1, true, false, false, "userLimitEnabled", "userLimit");
-        settingsPage.addCheckedInput("$STREAM_REQUEST_LIMIT$", "",1, true, false, false, "userLimitStreamEnabled", "userLimitStream");
+        settingsPage.addCheckedInput("$REQUEST_LIMIT_QUEUE$", "$REQUEST_LIMIT_QUEUE_DESC$", 1, true, false, false, "userLimitEnabled", "userLimit");
+        settingsPage.addCheckedInput("$STREAM_REQUEST_LIMIT$", "$STREAM_REQUEST_LIMIT_DESC$",1, true, false, false, "userLimitStreamEnabled", "userLimitStream");
         settingsPage.addInput("$QUEUE_COMMAND_LABEL$", "", 1, true, false, false, "queueLevelLength", "10", true);
 
         return settingsPage;

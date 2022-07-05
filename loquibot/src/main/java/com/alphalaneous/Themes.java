@@ -4,7 +4,9 @@ import com.alphalaneous.ChatbotTab.CustomCommands;
 import com.alphalaneous.Components.*;
 import com.alphalaneous.Panels.LevelDetailsPanel;
 import com.alphalaneous.Panels.SettingsTitle;
+import com.alphalaneous.Panels.VideoDetailsPanel;
 import com.alphalaneous.Tabs.ChatbotTab;
+import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.ThemedComponents.ThemedCheckbox;
 import com.alphalaneous.ThemedComponents.ThemedConfigCheckbox;
 import com.alphalaneous.ThemedComponents.ThemedIconCheckbox;
@@ -48,6 +50,7 @@ public class Themes {
 		ThemedColor.setAllThemeColors();
 
 		RequestsTab.refreshUI();
+		MediaShareTab.refreshUI();
 		FancyTooltip.refreshAll();
 		SettingsTitle.refreshAll();
 		ThemedConfigCheckbox.refreshAll();
@@ -64,6 +67,7 @@ public class Themes {
 		CustomCommands.LegacyCommandsLabel.refreshUI();
 		CustomCommands.refreshListButtons();
 		LevelDetailsPanel.refreshUI();
+		VideoDetailsPanel.refreshUI();
 		SettingsTab.refreshUI();
 		ChatbotTab.refreshUI();
 		CommandEditor.refreshUI();

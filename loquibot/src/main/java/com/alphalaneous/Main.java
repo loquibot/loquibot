@@ -1,10 +1,13 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Panels.LevelDetailsPanel;
+import com.alphalaneous.Panels.VideoDetailsPanel;
 import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.*;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.json.JSONObject;
@@ -171,6 +174,7 @@ public class Main {
             Window.initFrame();
             CommandEditor.createPanel();
             RequestsTab.createPanel();
+            MediaShareTab.createPanel();
             ChatbotTab.createPanel();
             SettingsTab.createPanel();
             OfficerWindow.create();
@@ -183,12 +187,16 @@ public class Main {
             TimerHandler.startTimerHandler();
 
             LevelDetailsPanel.setPanel(null);
+            VideoDetailsPanel.setPanel(null);
+
+            new JFXPanel(); //Initialize JavaFX Graphics Toolkit (Hacky Solution)
+
+            Platform.runLater(MediaShare::init);
 
             System.out.println("> Panels Created");
 
             UpdateChecker.checkForUpdates();
             Window.loadSettings();
-
             Defaults.initializeThemeInfo();
             Themes.refreshUI();
 
@@ -250,7 +258,7 @@ public class Main {
 
             Window.setOnTop(Settings.getSettings("onTop").asBoolean());
             try {
-                OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+                OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
             }
             catch (Exception e){
                 Settings.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());

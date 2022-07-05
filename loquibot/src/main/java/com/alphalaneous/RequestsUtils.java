@@ -302,7 +302,7 @@ public class RequestsUtils {
 
 		String result = "NA";
 		try {
-			if(!Settings.getSettings("basicMode").asBoolean()) {
+
 				switch (attribute) {
 					case "name":
 						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().name();
@@ -381,10 +381,7 @@ public class RequestsUtils {
 						break;
 					default:
 						result = "Error: Invalid type.";
-				}
-			}
-			else{
-				result = String.valueOf(RequestsTab.getRequestBasic(level).ID);
+
 			}
 		} catch (Exception e) {
 			result = "Exception: " + e;
@@ -823,43 +820,7 @@ public class RequestsUtils {
 		Main.close();
 	}
 
-	static String parseInfoString(String text, int level) {
-
-		if (RequestsTab.getQueueSize() != 0) {
-
-			Optional<String> creatorNameOptional = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName();
-			String creatorName = "";
-			if(creatorNameOptional.isPresent()){
-				creatorName = creatorNameOptional.get();
-			}
-			Optional<GDSong> songOptional = RequestsTab.getRequest(level).getLevelData().getGDLevel().song();
-			String songTitle = "";
-			String songArtist = "";
-			String songID = "";
-
-			if(songOptional.isPresent()){
-				songTitle = songOptional.get().title();
-				songArtist = songOptional.get().artist();
-				songID = String.valueOf(songOptional.get().id());
-			}
-
-			text = text.replaceAll("(?i)%levelName%", RequestsTab.getRequest(level).getLevelData().getGDLevel().name())
-					.replaceAll("(?i)%levelID%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().name()))
-					.replaceAll("(?i)%levelAuthor%", creatorName)
-					.replaceAll("(?i)%requester%", RequestsTab.getRequest(level).getLevelData().getRequester())
-					.replaceAll("(?i)%songName%", songTitle)
-					.replaceAll("(?i)%songID%", songID)
-					.replaceAll("(?i)%songArtist%", songArtist)
-					.replaceAll("(?i)%likes%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().likes()))
-					.replaceAll("(?i)%downloads%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().downloads()))
-					.replaceAll("(?i)%description%", RequestsTab.getRequest(level).getLevelData().getGDLevel().description())
-					.replaceAll("(?i)%coins%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().coinCount()))
-					.replaceAll("(?i)%objects%", String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount()))
-					.replaceAll("(?i)%queueSize%", String.valueOf(RequestsTab.getQueueSize()))
-					.replaceAll("(?i)%s%", "");
-			return text;
-		} else {
-			return Settings.getSettings("noLevelsString").asString().replaceAll("(?i)%s%", "");
-		}
+	static String parseInfoString(String text) {
+		return CommandNew.replaceBetweenParentheses(new ChatMessage(null,"OutputHandler", "OutputHandler", "", null, true, true, true, 0, false), text, text.split(" "), null);
 	}
 }

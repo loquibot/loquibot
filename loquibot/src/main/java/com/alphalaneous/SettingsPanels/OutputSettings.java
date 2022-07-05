@@ -14,7 +14,7 @@ public class OutputSettings {
 
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$OUTPUTS_SETTINGS$");
-        settingsPage.addInput("$OUTPUTS_TEXT$", "", 7, "outputString", "Currently playing %levelName% (%levelID%) by %levelAuthor%!");
+        settingsPage.addInput("$OUTPUTS_TEXT$", "", 7, "outputString", "Currently playing $(level 0 name) ($(level 0 id)) by $(level 0 author)!");
         settingsPage.addInput("$NO_LEVELS_TEXT$", "", 7, "noLevelsString", "There are no levels in the queue!");
         settingsPage.addInput("$FILE_LOCATION$", "", 2, "outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
         return settingsPage;

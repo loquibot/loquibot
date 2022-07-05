@@ -44,9 +44,6 @@ public class LevelsPanel extends JPanel {
     public void addButton(LevelButton button){
         buttonPanel.add(button, gbc);
     }
-    public void addButton(BasicLevelButton button){
-        buttonPanel.add(button, gbc);
-    }
     public void addButton(LevelButton button, int pos){
         buttonPanel.add(button, gbc, pos);
     }
@@ -56,20 +53,6 @@ public class LevelsPanel extends JPanel {
     public int getQueueSize(){
         return buttonPanel.getComponentCount();
     }
-    /*public void refreshButtons(){
-        buttonPanel.removeAll();
-
-        for(LevelData data : Requests.levels){
-            LevelButton button = data.getLevelButton();
-            buttonPanel.add(button, gbc);
-            try {
-                Thread.sleep(0);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        buttonPanel.updateUI();
-    }*/
 
     public void resizePanel(int width, int height){
         buttonWidth = width - 18;
@@ -83,13 +66,11 @@ public class LevelsPanel extends JPanel {
     }
 
     public void updateUI(long ID) {
-        while (true) {
-            for (Component component : buttonPanel.getComponents()) {
-                if (component instanceof LevelButton) {
-                    if (((LevelButton) component).ID == ID) {
-                        ((LevelButton) component).refresh();
-                        return;
-                    }
+        for (Component component : buttonPanel.getComponents()) {
+            if (component instanceof LevelButton) {
+                if (((LevelButton) component).ID == ID) {
+                    ((LevelButton) component).refresh();
+                    return;
                 }
             }
         }
@@ -116,29 +97,15 @@ public class LevelsPanel extends JPanel {
             newPosition = RequestsTab.getQueueSize() - 1;
         }
         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-            if(!Settings.getSettings("basicMode").asBoolean()) {
-                if (getButton(i).selected) {
-                    selectID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
-                }
-            }
-            else {
-                if (getButtonBasic(i).selected) {
-                    selectID = RequestsTab.getRequestBasic(i).getID();
-                }
+            if (getButton(i).selected) {
+                selectID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
             }
         }
         System.out.println("Position: " + position + " | newPosition: " + newPosition);
         buttonPanel.add(buttonPanel.getComponents()[position], gbc, newPosition);
         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-            if(!Settings.getSettings("basicMode").asBoolean()) {
-                if (selectID == RequestsTab.getRequest(i).getLevelData().getGDLevel().id()) {
-                    setSelect(i, false, false);
-                }
-            }
-            else{
-                if (selectID == RequestsTab.getRequestBasic(i).getID()) {
-                    setSelect(i, false, false);
-                }
+            if (selectID == RequestsTab.getRequest(i).getLevelData().getGDLevel().id()) {
+                setSelect(i, false, false);
             }
         }
         RequestFunctions.saveFunction();
@@ -152,37 +119,18 @@ public class LevelsPanel extends JPanel {
     public void setSelect(int position, boolean refresh, boolean resetScroll){
         deselectAll();
         if(buttonPanel.getComponentCount() != 0) {
-            if(!Settings.getSettings("basicMode").asBoolean()) {
-                LevelButton button;
-                if (buttonPanel.getComponentCount() == 1) {
-                    button = ((LevelButton) buttonPanel.getComponents()[0]);
-                } else {
-                    button = ((LevelButton) buttonPanel.getComponents()[position]);
-                }
-                button.select(refresh);
-                if (resetScroll) {
-                    if (position == 0) {
-                        scrollPane.getViewport().setViewPosition(new Point(0, 0));
-                    } else {
-                        scrollPane.getViewport().setViewPosition(new Point(0, button.getY()));
-                    }
-                }
-
+            LevelButton button;
+            if (buttonPanel.getComponentCount() == 1) {
+                button = ((LevelButton) buttonPanel.getComponents()[0]);
+            } else {
+                button = ((LevelButton) buttonPanel.getComponents()[position]);
             }
-            else {
-                BasicLevelButton button;
-                if (buttonPanel.getComponentCount() == 1) {
-                    button = ((BasicLevelButton) buttonPanel.getComponents()[0]);
+            button.select(refresh);
+            if (resetScroll) {
+                if (position == 0) {
+                    scrollPane.getViewport().setViewPosition(new Point(0, 0));
                 } else {
-                    button = ((BasicLevelButton) buttonPanel.getComponents()[position]);
-                }
-                button.select();
-                if (resetScroll) {
-                    if (position == 0) {
-                        scrollPane.getViewport().setViewPosition(new Point(0, 0));
-                    } else {
-                        scrollPane.getViewport().setViewPosition(new Point(0, button.getY()));
-                    }
+                    scrollPane.getViewport().setViewPosition(new Point(0, button.getY()));
                 }
             }
         }
@@ -196,9 +144,6 @@ public class LevelsPanel extends JPanel {
         for(int i = 0; i < buttonPanel.getComponents().length; i++){
             if(buttonPanel.getComponents()[i] instanceof LevelButton){
                 ((LevelButton)buttonPanel.getComponents()[i]).deselect();
-            }
-            if(buttonPanel.getComponents()[i] instanceof BasicLevelButton){
-                ((BasicLevelButton)buttonPanel.getComponents()[i]).deselect();
             }
         }
     }

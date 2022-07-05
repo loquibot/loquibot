@@ -5,7 +5,6 @@ import com.alphalaneous.Components.RadioPanel;
 import com.alphalaneous.Panels.*;
 import com.alphalaneous.SettingsPanels.BlockedIDSettings;
 import com.alphalaneous.SettingsPanels.OutputSettings;
-import com.alphalaneous.TwitchBot.ChatMessage;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import javazoom.jl.decoder.JavaLayerException;
@@ -118,7 +117,7 @@ public class RequestFunctions {
                 }
             }
         }
-        OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+        OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
 
         RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
         if(RequestsTab.getQueueSize() == 0) LevelDetailsPanel.setPanel(null);
@@ -205,7 +204,7 @@ public class RequestFunctions {
                                 RequestsTab.getRequest(num).getLevelData().getRequester()), Settings.getSettings("announceNP").asBoolean());
 
                     }
-                    OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), num));
+                    OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
                     LevelDetailsPanel.setPanel(RequestsTab.getRequest(num).getLevelData());
                 }
             }

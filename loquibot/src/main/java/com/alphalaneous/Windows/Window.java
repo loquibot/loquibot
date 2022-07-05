@@ -5,6 +5,7 @@ import com.alphalaneous.ChatbotTab.CustomCommands;
 import com.alphalaneous.Components.*;
 import com.alphalaneous.Panels.ContextMenu;
 import com.alphalaneous.Tabs.ChatbotTab;
+import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Tabs.SettingsTab;
 
@@ -188,7 +189,7 @@ public class Window {
     private static ListButton createButton(String text) {
         ListButton button = new ListButton();
         button.setText(text);
-        button.setFont(Defaults.SYMBOLS);
+        button.setFont(Defaults.SYMBOLS.deriveFont(20f));
         buttons.add(button);
         return button;
     }
@@ -335,6 +336,7 @@ public class Window {
                 layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
                 mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
                 RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
+                MediaShareTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
                 SettingsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
                 ChatbotTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
                 dialogBackgroundPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
@@ -413,6 +415,7 @@ public class Window {
             layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
             mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
             RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
+            MediaShareTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
             SettingsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
             ChatbotTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
         }

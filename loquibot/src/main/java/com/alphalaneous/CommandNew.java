@@ -1,5 +1,6 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.TwitchBot.ChatMessage;
 import com.alphalaneous.Windows.Window;
 import com.eclipsesource.v8.V8;
@@ -12,6 +13,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
@@ -19,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 public class CommandNew {
@@ -132,6 +135,300 @@ public class CommandNew {
         return replaceBetweenParentheses(message, text, arguments, null, text, data, keywordData);
     }
 
+    private static String runCommandActions(String value, CommandData commandData, KeywordData keywordData, ChatMessage message, String[] arguments){
+        String data = "";
+        String[] dataArr = value.split(" ", 2);
+        if (dataArr.length > 1) data = value.split(" ", 2)[1];
+        String identifier = value.split(" ")[0];
+        String replacement = "";
+
+        switch (identifier.toLowerCase()) {
+            case "user": {
+                replacement = message.getSenderElseDisplay();
+                break;
+            }
+            case "touser":
+            case "to_user": {
+                if (arguments.length > 0) {
+                    replacement = arguments[0].trim();
+                } else {
+                    replacement = message.getSenderElseDisplay();
+                }
+                break;
+            }
+            case "arg": {
+                int arg;
+                try {
+                    arg = Integer.parseInt(data)-1;
+                } catch (NumberFormatException e) {
+                    replacement = "Error";
+                    break;
+                }
+                if (arguments.length >= arg) {
+                    replacement = arguments[arg];
+                } else {
+                    replacement = "Error";
+                }
+                break;
+            }
+            case "eval": {
+                try {
+                    V8 v8 = V8.createV8Runtime();
+                    replacement = String.valueOf(v8.executeScript(data));
+                    v8.getLocker().release();
+
+                } catch (Exception e) {
+                    replacement = e.toString();
+                }
+                break;
+            }
+            case "displayname":
+            case "display_name": {
+                replacement = message.getDisplayName();
+                break;
+            }
+            case "userid":
+            case "user_id": {
+                if(!message.isYouTube()) replacement = message.getTag("user-id");
+                break;
+            }
+            case "userlevel":
+            case "user_level": {
+                replacement = message.getUserLevel();
+                break;
+            }
+            case "messageid":
+            case "message_id": {
+                replacement = message.getTag("id");
+                break;
+            }
+            case "bwomp": {
+                Board.bwomp();
+                break;
+            }
+            case "playsound":
+            case "sound": {
+                switch (dataArr[1].trim().toLowerCase()){
+                    case "bwomp": {
+                        Board.bwomp();
+                        break;
+                    }
+                    case "boowomp": {
+                        Sounds.playSound("/sounds/boowomp.mp3", true, true, false, false);
+                        break;
+                    }
+                    case "fart": {
+                        Sounds.playSound("/sounds/fart.mp3", true, true, false, false);
+                        break;
+                    }
+                    case "bonk": {
+                        Sounds.playSound("/sounds/bonk.mp3", true, true, false, false);
+                        break;
+                    }
+                    case "honk": {
+                        Sounds.playSound("/sounds/honk.mp3", true, true, false, false);
+                        break;
+                    }
+                    case "ping": {
+                        Sounds.playSound("/sounds/ping.mp3", true, true, false, false);
+                        break;
+                    }
+                    default: {
+                        if(data.startsWith("file://")) Sounds.playSound(dataArr[1].trim(), true, true, true, false);
+                        else Sounds.playSound(dataArr[1].trim(), true, true, false, true);
+                        break;
+                    }
+                }
+                break;
+            }
+
+            case "level": {
+                String[] levelArguments = data.split(" ");
+                if (levelArguments.length > 2) {
+                    replacement = "";
+                    break;
+                }
+                if (levelArguments.length < 2) {
+                    replacement = "";
+                    break;
+                }
+                int pos;
+                try {
+                    pos = Integer.parseInt(levelArguments[0].trim());
+                    if (pos < RequestsUtils.getSize()) {
+                        replacement = RequestsUtils.getLevel(pos, levelArguments[1].trim().toLowerCase(Locale.ROOT));
+                    } else {
+                        replacement = "";
+                    }
+                } catch (NumberFormatException e) {
+                    replacement = "Error";
+                }
+                break;
+            }
+            case "channel":
+            case "broadcaster": {
+                if(message.isYouTube()) replacement = YouTubeAccount.name;
+                else replacement = TwitchAccount.login;
+                break;
+            }
+            case "channelid":
+            case "channel_id": {
+                if(message.isYouTube()) replacement = YouTubeAccount.ID;
+                else replacement = TwitchAccount.id;
+                break;
+            }
+            case "tts" : {
+                TTS.runTTS(data, false);
+                break;
+            }
+            case "tts-overlap" : {
+                TTS.runTTS(data, true);
+                break;
+            }
+            case "count" : {
+                long count = 0;
+                long addedNumber = 1;
+                if(data.split(" ").length > 0) {
+                    try {
+                        addedNumber = Long.parseLong(data.split(" ")[0].trim());
+                    }
+                    catch (Exception ignored){}
+                }
+                if(commandData != null) {
+                    count = commandData.getCounter();
+                    for (CommandData data1 : CommandData.getRegisteredCommands()) {
+                        if (data1.getCommand().equalsIgnoreCase(commandData.getCommand())) {
+                            data1.setCounter(count + addedNumber);
+                        }
+                    }
+                }
+                if(keywordData != null) {
+                    count = keywordData.getCounter();
+                    for (KeywordData data1 : KeywordData.getRegisteredKeywords()) {
+                        if (data1.getKeyword().equalsIgnoreCase(keywordData.getKeyword())) {
+                            data1.setCounter(count + addedNumber);
+                        }
+                    }
+                }
+                replacement = String.valueOf(count+1);
+                break;
+            }
+            case "message" : {
+                replacement = message.getMessage();
+                break;
+            }
+            case "query": {
+                String command = message.getMessage().split(" ")[0].trim();
+                replacement = message.getMessage().substring(command.length()).trim();
+                break;
+            }
+            case "querystring":
+            case "query_string": {
+                String command = message.getMessage().split(" ")[0].trim();
+                String query = message.getMessage().substring(command.length()).trim();
+                replacement = URLEncoder.encode(query, StandardCharsets.UTF_8);
+                break;
+            }
+            case "time": {
+
+                String timezone = data.split(" ")[0].trim();
+                String restOfData = "";
+                if(data.trim().equalsIgnoreCase("")){
+                    timezone = "America/Detroit";
+                }
+                else {
+                    restOfData = data.substring(timezone.length()).trim();
+                }
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM do yyyy, h:mm:ss a z ZZZZ".replace("do", "'do'"));
+                if(restOfData.startsWith("\"") && restOfData.endsWith("\"")){
+                    dateTimeFormatter = DateTimeFormatter.ofPattern(restOfData.substring(1, restOfData.length()-1).replace("do", "'do'"));
+                }
+
+                ZoneId time = ZoneId.of(timezone);
+                ZonedDateTime today = ZonedDateTime.now(time);
+                String dayNumberSuffix = getDayNumberSuffix(today.getDayOfMonth());
+
+                replacement = today.format(dateTimeFormatter).replace("do",today.getDayOfMonth() + dayNumberSuffix);
+                break;
+            }
+            case "urlfetch":
+            case "url_fetch": {
+                try {
+                    replacement = Utilities.fetchURL(data);
+                }
+                catch (Exception e){
+                    replacement = "Error";
+                }
+                break;
+            }
+            case "messagebreak":
+            case "linebreak":
+            case "newline" : {
+                replacement = "¦";
+                break;
+            }
+            case "followage": {
+                try {
+                    replacement = Utilities.fetchURL("https://2g.be/twitch/following.php?user="
+                            + data.split(" ")[0].trim()
+                            + "&channel="
+                            + TwitchAccount.login + "&format=mwdhms" );
+                }
+                catch (Exception e){
+                    replacement = "Error";
+                }
+                break;
+            }
+            case "weather": {
+                if(data.trim().equalsIgnoreCase("")){
+                    replacement = "No location provided";
+                    break;
+                }
+                try {
+                    replacement = getWeather(data);
+                    break;
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    replacement = "Couldn't find location";
+                    break;
+                }
+            }
+            case "found_word":
+            case "foundword": {
+                if(keywordData != null){
+                    replacement = keywordData.getFoundWord();
+                    break;
+                }
+            }
+            case "random_user":
+            case "random_viewer": {
+                Random ran = new Random();
+                replacement = APIs.allViewers.get(ran.nextInt(APIs.allViewers.size()));
+                break;
+            }
+            case "queue_size": {
+                replacement = String.valueOf(RequestsTab.getQueueSize());
+                break;
+            }
+            case "show_media_share": {
+                try {
+                    YouTubeVideo video = YTScrape.searchYouTube(data).get(0);
+                    MediaShare.addMedia(video);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            default: {
+                replacement = "$(" + value + ")";
+                break;
+            }
+        }
+        return replacement;
+    }
+
+
     public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData) {
 
         if (parenthesisSubstrings == null) parenthesisSubstrings = new ArrayList<>();
@@ -165,285 +462,16 @@ public class CommandNew {
         String lastResult = original;
 
         for (ParenthesisSubstrings parenthesisSubstrings1 : parenthesisSubstrings) {
-            //System.out.println(parenthesisSubstrings1.getStartIndex() + ", " + parenthesisSubstrings1.getEndIndex());
-
 
             if (parenthesisSubstrings1.getStartIndex() - 1 >= 0) {
-                //System.out.println(newResult.charAt(parenthesisSubstrings1.getStartIndex()-1));
                 if (newResult.charAt(parenthesisSubstrings1.getStartIndex() - 1) == '$') {
 
                     String strStart = newResult.substring(0, parenthesisSubstrings1.getStartIndex()-1);
-                    //System.out.println("s: " + strStart);
                     String strEnd = newResult.substring(parenthesisSubstrings1.getEndIndex()+1);
-                    //System.out.println("e: " + strEnd);
                     String value = newResult.substring(parenthesisSubstrings1.getStartIndex()+1, parenthesisSubstrings1.getEndIndex());
-                    //System.out.println("v: " + value);
-                    String data = "";
-                    String[] dataArr = value.split(" ", 2);
-                    if (dataArr.length > 1) data = value.split(" ", 2)[1];
-                    String identifier = value.split(" ")[0];
-                    String replacement = "";
 
-                    switch (identifier.toLowerCase()) {
-                        case "user": {
-                            replacement = message.getSenderElseDisplay();
-                            break;
-                        }
-                        case "touser":
-                        case "to_user": {
-                            if (arguments.length > 0) {
-                                replacement = arguments[0].trim();
-                            } else {
-                                replacement = message.getSenderElseDisplay();
-                            }
-                            break;
-                        }
-                        case "arg": {
-                            int arg;
-                            try {
-                                arg = Integer.parseInt(data)-1;
-                            } catch (NumberFormatException e) {
-                                replacement = "Error";
-                                break;
-                            }
-                            if (arguments.length >= arg) {
-                                replacement = arguments[arg];
-                            } else {
-                                replacement = "Error";
-                            }
-                            break;
-                        }
-                        case "eval": {
-                            try {
-                                V8 v8 = V8.createV8Runtime();
-                                replacement = String.valueOf(v8.executeScript(data));
-                                v8.getLocker().release();
+                    String replacement = runCommandActions(value, commandData, keywordData, message, arguments);
 
-                            } catch (Exception e) {
-                                replacement = e.toString();
-                            }
-                            break;
-                        }
-                        case "displayname":
-                        case "display_name": {
-                            replacement = message.getDisplayName();
-                            break;
-                        }
-                        case "userid":
-                        case "user_id": {
-                            if(!message.isYouTube()) replacement = message.getTag("user-id");
-                            break;
-                        }
-                        case "userlevel":
-                        case "user_level": {
-                            replacement = message.getUserLevel();
-                            break;
-                        }
-                        case "messageid":
-                        case "message_id": {
-                            replacement = message.getTag("id");
-                            break;
-                        }
-                        case "bwomp": {
-                            Board.bwomp();
-                            break;
-                        }
-                        case "playsound":
-                        case "sound": {
-                            switch (dataArr[1].trim().toLowerCase()){
-                                case "bwomp": {
-                                    Board.bwomp();
-                                    break;
-                                }
-                                case "boowomp": {
-                                    Sounds.playSound("/sounds/boowomp.mp3", true, true, false, false);
-                                    break;
-                                }
-                                case "fart": {
-                                    Sounds.playSound("/sounds/fart.mp3", true, true, false, false);
-                                    break;
-                                }
-                                case "bonk": {
-                                    Sounds.playSound("/sounds/bonk.mp3", true, true, false, false);
-                                    break;
-                                }
-                                case "honk": {
-                                    Sounds.playSound("/sounds/honk.mp3", true, true, false, false);
-                                    break;
-                                }
-                                case "ping": {
-                                    Sounds.playSound("/sounds/ping.mp3", true, true, false, false);
-                                    break;
-                                }
-                                default: {
-                                    Sounds.playSound(dataArr[1].trim(), true, true, false, true);
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-
-                        case "level": {
-                            String[] levelArguments = data.split(" ");
-                            if (levelArguments.length > 2) {
-                                replacement = "Error";
-                                break;
-                            }
-                            if (levelArguments.length < 2) {
-                                replacement = "Error.";
-                                break;
-                            }
-                            int pos;
-                            try {
-                                pos = Integer.parseInt(levelArguments[0].trim());
-                                if (pos < RequestsUtils.getSize()) {
-                                    replacement = RequestsUtils.getLevel(pos, levelArguments[1].trim().toLowerCase(Locale.ROOT));
-                                } else {
-                                    replacement = "Error";
-                                }
-                            } catch (NumberFormatException e) {
-                                replacement = "Error";
-                            }
-                            break;
-                        }
-                        case "channel":
-                        case "broadcaster": {
-                            if(message.isYouTube()) replacement = YouTubeAccount.name;
-                            else replacement = TwitchAccount.login;
-                            break;
-                        }
-                        case "channelid":
-                        case "channel_id": {
-                            if(message.isYouTube()) replacement = YouTubeAccount.ID;
-                            else replacement = TwitchAccount.id;
-                            break;
-                        }
-                        case "tts" : {
-                            TTS.runTTS(data, false);
-                            break;
-                        }
-                        case "tts-overlap" : {
-                            TTS.runTTS(data, true);
-                            break;
-                        }
-                        case "count" : {
-                            long count = 0;
-                            long addedNumber = 1;
-                            if(data.split(" ").length > 0) {
-                                try {
-                                    addedNumber = Long.parseLong(data.split(" ")[0].trim());
-                                }
-                                catch (Exception ignored){}
-                            }
-                            if(commandData != null) {
-                                count = commandData.getCounter();
-                                for (CommandData data1 : CommandData.getRegisteredCommands()) {
-                                    if (data1.getCommand().equalsIgnoreCase(commandData.getCommand())) {
-                                        data1.setCounter(count + addedNumber);
-                                    }
-                                }
-                            }
-                            if(keywordData != null) {
-                                count = keywordData.getCounter();
-                                for (KeywordData data1 : KeywordData.getRegisteredKeywords()) {
-                                    if (data1.getKeyword().equalsIgnoreCase(keywordData.getKeyword())) {
-                                        data1.setCounter(count + addedNumber);
-                                    }
-                                }
-                            }
-                            replacement = String.valueOf(count+1);
-                            break;
-                        }
-                        case "message" : {
-                            replacement = message.getMessage();
-                            break;
-                        }
-                        case "query": {
-                            String command = message.getMessage().split(" ")[0].trim();
-                            replacement = message.getMessage().substring(command.length()).trim();
-                            break;
-                        }
-                        case "querystring":
-                        case "query_string": {
-                            String command = message.getMessage().split(" ")[0].trim();
-                            String query = message.getMessage().substring(command.length()).trim();
-                            replacement = URLEncoder.encode(query, StandardCharsets.UTF_8);
-                            break;
-                        }
-                        case "time": {
-
-                            String timezone = data.split(" ")[0].trim();
-                            String restOfData = "";
-                            if(data.trim().equalsIgnoreCase("")){
-                                timezone = "America/Detroit";
-                            }
-                            else {
-                                restOfData = data.substring(timezone.length()).trim();
-                            }
-                            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM do yyyy, h:mm:ss a z ZZZZ".replace("do", "'do'"));
-                            if(restOfData.startsWith("\"") && restOfData.endsWith("\"")){
-                                dateTimeFormatter = DateTimeFormatter.ofPattern(restOfData.substring(1, restOfData.length()-1).replace("do", "'do'"));
-                            }
-
-                            ZoneId time = ZoneId.of(timezone);
-                            ZonedDateTime today = ZonedDateTime.now(time);
-                            String dayNumberSuffix = getDayNumberSuffix(today.getDayOfMonth());
-
-                            replacement = today.format(dateTimeFormatter).replace("do",today.getDayOfMonth() + dayNumberSuffix);
-                            break;
-                        }
-                        case "urlfetch":
-                        case "url_fetch": {
-                            try {
-                                replacement = Utilities.fetchURL(data);
-                            }
-                            catch (Exception e){
-                                replacement = "Error";
-                            }
-                            break;
-                        }
-                        case "messagebreak":
-                        case "linebreak":
-                        case "newline" : {
-                            replacement = "¦";
-                            break;
-                        }
-                        case "followage": {
-                            try {
-                                replacement = Utilities.fetchURL("https://2g.be/twitch/following.php?user=" + data.split(" ")[0].trim() + "&channel=" + TwitchAccount.login + "&format=mwdhms" );
-                            }
-                            catch (Exception e){
-                                replacement = "Error";
-                            }
-                            break;
-                        }
-                        case "weather": {
-                            if(data.trim().equalsIgnoreCase("")){
-                                replacement = "No location provided";
-                                break;
-                            }
-                            try {
-                                replacement = getWeather(data);
-                                break;
-                            }
-                            catch (Exception e){
-                                e.printStackTrace();
-                                replacement = "Couldn't find location";
-                                break;
-                            }
-                        }
-                        case "found_word":
-                        case "foundword": {
-                            if(keywordData != null){
-                                replacement = keywordData.getFoundWord();
-                                break;
-                            }
-                        }
-                        default: {
-                            replacement = "$(" + value + ")";
-                            break;
-                        }
-                    }
                     newResult = strStart + replacement + strEnd;
 
                     for(ParenthesisSubstrings substring : parenthesisSubstrings){

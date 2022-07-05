@@ -35,7 +35,7 @@ import java.util.zip.GZIPInputStream;
 public class Requests {
 
     public static volatile boolean requestsEnabled = true;
-    static HashMap<Long, String> globallyBlockedIDs = new HashMap<>();
+    public static HashMap<Long, String> globallyBlockedIDs = new HashMap<>();
     private static final HashMap<Long, Integer> addedLevels = new HashMap<>();
     private static final HashMap<String, Integer> userStreamLimitMap = new HashMap<>();
     private static final Path logged = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
@@ -451,7 +451,7 @@ public class Requests {
     public static void saveLogs(LevelData levelData){
         try {
             addedLevels.put(levelData.getGDLevel().id(), levelData.getGDLevel().levelVersion());
-            OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
+            OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
 
             boolean exists = false;

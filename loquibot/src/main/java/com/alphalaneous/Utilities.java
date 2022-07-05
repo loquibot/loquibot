@@ -3,6 +3,7 @@ package com.alphalaneous;
 import com.alphalaneous.SettingsPanels.CommandSettings;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,13 +59,16 @@ public class Utilities {
 		});
 		PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
+		MenuItem consoleItem = new MenuItem("Console");
 		MenuItem exitItem = new MenuItem("Exit");
 		MenuItem forceExitItem = new MenuItem("Force Exit");
 
 		forceExitItem.addActionListener(e -> System.exit(0));
 		exitItem.addActionListener(e -> Main.close());
 		aboutItem.addActionListener(e -> RequestsTab.showAttributions());
+		consoleItem.addActionListener(e -> LogWindow.toggleLogWindow());
 		popup.add(aboutItem);
+		popup.add(consoleItem);
 		popup.addSeparator();
 		popup.add(exitItem);
 		popup.add(forceExitItem);

@@ -10,7 +10,7 @@ SAVE = Save
 STARTUP_MESSAGE = Thank you for using loquibot by Alphalaneous! It is suggested to VIP or Mod loquibot to prevent chat limits from occurring.
 STARTUP_MESSAGE_MOD_VIP = Thank you for using loquibot by Alphalaneous!
 
-//SuperOP Window
+//Officer Window
 
 ENTER_ID = Enter ID:
 GLOBALLY_BLOCK_ID = Block
@@ -18,6 +18,7 @@ GLOBALLY_UNBLOCK_ID = Unblock
 ENTER_GLOBALLY_BLOCK_REASON = Enter Reason:
 SURE_GLOBALLY_UNBLOCK = Are you sure?
 GLOBALLY_SUBMIT = Submit
+OFFICER_TOOLTIP = Officer Dashboard
 
 //Commands Editor
 
@@ -37,7 +38,7 @@ DELETE_COMMAND_INFO = This cannot be undone.
 INVALID_NAME = Invalid Name!
 INVALID_NAME_INFO = Make sure you have set a name!
 
-//Startup Dialogs 
+//Startup Dialogs
 
 LOADING_LOQUIBOT = Loading loquibot...
 LOADING_LOQUIBOT_INFO = This may take a few seconds
@@ -205,11 +206,11 @@ CHANNEL_POINTS_SETTINGS = Channel Points
 CHEERS_SETTINGS = Cheers
 REQUESTS_SETTINGS = Requests
 FILTERS_SETTINGS = Filters
-SHORTCUTS_SETTINGS = Shortcuts
+SHORTCUTS_SETTINGS = Keybinds
 PERSONALIZATION_SETTINGS = Personalization
 BLOCKED_IDS_SETTINGS = Blocked IDs
 BLOCKED_USERS_SETTINGS = Blocked Users
-BLOCKED_CREATORS_SETTINGS =Blocked Creators
+BLOCKED_CREATORS_SETTINGS = Blocked Creators
 LOGGED_IDS_SETTINGS = Logged IDs
 WINDOWED_SETTINGS = Switch to Windowed
 CUSTOM_COMMANDS_SETTINGS = Custom

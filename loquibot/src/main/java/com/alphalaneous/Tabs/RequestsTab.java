@@ -13,17 +13,13 @@ import java.awt.event.*;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.Map;
-import java.util.Scanner;
 
 import static com.alphalaneous.Defaults.defaultUI;
 
@@ -66,7 +62,7 @@ public class RequestsTab {
     private static final LevelsPanel levelsPanel = new LevelsPanel();
     //private static final InfoPanel levelInfoPanel = new InfoPanel();
 
-    private static final JButton officerMenuButton = createButton("\uF4F3", "$officer_TOOLTIP$");
+    private static final JButton officerMenuButton = createButton("\uF4F3", "$OFFICER_TOOLTIP$");
 
     private static final JButton undo = createButton("\uF32A", "$UNDO_LEVEL_TOOLTIP$");
 
@@ -357,9 +353,7 @@ public class RequestsTab {
     public static void addRequest(LevelButton button){
         levelsPanel.addButton(button);
     }
-    public static void addRequest(BasicLevelButton button){
-        levelsPanel.addButton(button);
-    }
+
     public static void addRequest(LevelButton button, int pos){
         levelsPanel.addButton(button, pos);
     }
@@ -376,9 +370,6 @@ public class RequestsTab {
     }
     public static LevelButton getRequest(int pos){
         return levelsPanel.getButton(pos);
-    }
-    public static BasicLevelButton getRequestBasic(int pos){
-        return levelsPanel.getButtonBasic(pos);
     }
     public static int getLevelPosition(LevelButton button){
         int pos = 0;
@@ -424,7 +415,7 @@ public class RequestsTab {
 
     public static void showModPane(int pos) {
         if (getQueueSize() != 0) {
-            if(!Settings.getSettings("basicMode").asBoolean()) {
+
                 selectedUsername = String.valueOf(getRequest(pos).getLevelData().getRequester());
                 selectedID = pos;
                 usernameLabel.setText(String.valueOf(getRequest(pos).getLevelData().getRequester()));
@@ -435,19 +426,6 @@ public class RequestsTab {
                 messageTextArea.setText(getRequest(pos).getLevelData().getMessage());
                 messageTextArea.clearUndo();
                 DialogBox.showDialogBox(moderationFrame);
-            }
-            else {
-                selectedUsername = String.valueOf(getRequestBasic(pos).getRequester());
-                selectedID = pos;
-                usernameLabel.setText(String.valueOf(getRequestBasic(pos).getRequester()));
-                levelNameLabel.setText("Unknown");
-                //levelNameLabel.setBounds(473 - levelNameLabel.getPreferredSize().width, 0, 473, 40);
-                levelIDLabel.setText("(" + getRequestBasic(pos).getID() + ")");
-                levelIDLabel.setBounds(473 - levelIDLabel.getPreferredSize().width, 16, 473, 40);
-                messageTextArea.setText("Unknown");
-                messageTextArea.clearUndo();
-                DialogBox.showDialogBox(moderationFrame);
-            }
         }
     }
 

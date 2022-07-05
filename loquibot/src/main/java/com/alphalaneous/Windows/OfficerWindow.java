@@ -1,11 +1,8 @@
 package com.alphalaneous.Windows;
 
+import com.alphalaneous.*;
 import com.alphalaneous.Components.*;
-import com.alphalaneous.Defaults;
-import com.alphalaneous.GDAPI;
-import com.alphalaneous.Main;
 import com.alphalaneous.Panels.LevelButton;
-import com.alphalaneous.Settings;
 import com.alphalaneous.Tabs.RequestsTab;
 import jdash.common.entity.GDLevel;
 import org.json.JSONObject;
@@ -18,7 +15,8 @@ public class OfficerWindow {
 
     //todo Themeing and Functional blocking and unblocking with the servers
 
-    private static final JPanel frame = new JPanel();
+    private static final JPanel panel = new JPanel();
+
     private static final FancyTextArea idInput = new FancyTextArea(true,false);
     private static final FancyTextArea reasonInput = new FancyTextArea(false,true);
     private static final CurvedButtonAlt submitButton = createCurvedButton("$GLOBALLY_SUBMIT$");
@@ -35,11 +33,45 @@ public class OfficerWindow {
     private static boolean unblock = false;
 
     public static void create(){
-        frame.setBounds(0,0,280,260);
-        frame.setLayout(null);
-        frame.setBackground(Defaults.COLOR3);
+
+        /*panel.setBounds(0,0,700,440);
+        panel.setLayout(null);
+
+        CurvedButtonAlt blockIDButton = createCurvedButton("Block ID");
+
+        blockIDButton.setBounds(10,50,100,30);
+
+        CurvedButtonAlt blockUserButton = createCurvedButton("Block User");
+
+        blockUserButton.setBounds(10,90,100,30);
+
+        CurvedButtonAlt IDBlocklistButton = createCurvedButton("ID Blocklist");
+
+        IDBlocklistButton.setBounds(10,130,100,30);
+
+        CurvedButtonAlt userBlocklistButton = createCurvedButton("User Blocklist");
+
+        userBlocklistButton.setBounds(10,170,100,30);
+
+        panel.add(blockIDButton);
+        panel.add(blockUserButton);
+        panel.add(IDBlocklistButton);
+        panel.add(userBlocklistButton);*/
+
+        panel.setBounds(0,0,680,460);
+        panel.setLayout(null);
+        panel.setBackground(Defaults.COLOR3);
+
         blockID.addActionListener(e -> {
-            if(!idInput.getText().equalsIgnoreCase("")) {
+            submitButton.setVisible(false);
+            reasonInput.setVisible(false);
+            areYouSureLabel.setVisible(false);
+            reasonLabel.setVisible(false);
+            if(Requests.globallyBlockedIDs.containsKey(Long.parseLong(idInput.getText()))){
+                enterIDLabel.setForeground(Color.RED);
+                enterIDLabel.setTextLang("$ENTER_ID$" + " (Level Already Blocked)");
+            }
+            else if(!idInput.getText().equalsIgnoreCase("")) {
                 unblock = false;
                 enterIDLabel.setForeground(Defaults.FOREGROUND_A);
                 reasonLabel.setVisible(true);
@@ -92,6 +124,9 @@ public class OfficerWindow {
                 enterIDLabel.setForeground(Color.RED);
                 failed = true;
             }
+
+
+
             if(failed) return;
             if(unblock){
                 new Thread(() -> {
@@ -113,24 +148,26 @@ public class OfficerWindow {
                 }).start();
             }
             else {
-                new Thread(() -> {
-                    String levelName = "Unknown";
-                    try{
-                        GDLevel level = GDAPI.getLevel(Long.parseLong(idInput.getText()));
-                        levelName = level.name();
-                    }
-                    catch (Exception ignored){}
-                    String option = DialogBox.showDialogBox("Globally Block " + idInput.getText() + "?", "\"" + levelName + "\" will no longer be able to be requested anywhere using loquibot. REASON: " + reasonInput.getText(), "", new String[]{"$YES$", "$NO$"});
-                    if (option.equalsIgnoreCase("YES")) {
-                        System.out.println("blocked");
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("request_type", "globally_block_id");
-                        jsonObject.put("id", idInput.getText());
-                        jsonObject.put("reason", reasonInput.getText());
-                        Main.sendToServer(jsonObject.toString());
-                        DialogBox.closeDialogBox();
-                    }
-                }).start();
+
+                    new Thread(() -> {
+                        String levelName = "Unknown";
+                        try {
+                            GDLevel level = GDAPI.getLevel(Long.parseLong(idInput.getText()));
+                            levelName = level.name();
+                        } catch (Exception ignored) {
+                        }
+                        String option = DialogBox.showDialogBox("Globally Block " + idInput.getText() + "?", "\"" + levelName + "\" will no longer be able to be requested anywhere using loquibot. REASON: " + reasonInput.getText(), "", new String[]{"$YES$", "$NO$"});
+                        if (option.equalsIgnoreCase("YES")) {
+                            System.out.println("blocked");
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("request_type", "globally_block_id");
+                            jsonObject.put("id", idInput.getText());
+                            jsonObject.put("reason", reasonInput.getText());
+                            Main.sendToServer(jsonObject.toString());
+                            DialogBox.closeDialogBox();
+                        }
+                    }).start();
+
             }
         });
 
@@ -147,19 +184,19 @@ public class OfficerWindow {
         areYouSureLabel.setVisible(false);
         reasonInput.setVisible(false);
         submitButton.setVisible(false);
-        frame.add(enterIDLabel);
-        frame.add(reasonLabel);
-        frame.add(areYouSureLabel);
-        frame.add(blockID);
-        frame.add(unblockID);
-        frame.add(idInput);
-        frame.add(reasonInput);
-        frame.add(submitButton);
+        panel.add(enterIDLabel);
+        panel.add(reasonLabel);
+        panel.add(areYouSureLabel);
+        panel.add(blockID);
+        panel.add(unblockID);
+        panel.add(idInput);
+        panel.add(reasonInput);
+        panel.add(submitButton);
     }
 
 
     public static void refreshUI(){
-        frame.setBackground(Defaults.COLOR3);
+        panel.setBackground(Defaults.COLOR3);
         reasonLabel.setForeground(Defaults.FOREGROUND_A);
         enterIDLabel.setForeground(Defaults.FOREGROUND_A);
         submitButton.setBackground(Defaults.COLOR2);
@@ -181,15 +218,9 @@ public class OfficerWindow {
         reasonInput.setVisible(false);
         submitButton.setVisible(false);
         if(RequestsTab.getQueueSize() != 0) {
-            if (!Settings.getSettings("basicMode").asBoolean()) {
-                idInput.setText(String.valueOf(RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().id()));
-            }
-            else{
-                idInput.setText(String.valueOf(RequestsTab.getRequestBasic(LevelButton.selectedID).getID()));
-
-            }
+            idInput.setText(String.valueOf(RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().id()));
         }
-        DialogBox.showDialogBox(frame);
+        DialogBox.showDialogBox(panel);
     }
     private static CurvedButtonAlt createCurvedButton(String text) {
         CurvedButtonAlt button = new CurvedButtonAlt(text);

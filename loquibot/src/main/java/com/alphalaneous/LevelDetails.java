@@ -800,41 +800,27 @@ public class LevelDetails extends JPanel {
         BufferedImage ret = img;
         int w, h;
         if (higherQuality) {
-
             w = img.getWidth();
             h = img.getHeight();
-
         } else {
-
             w = targetWidth;
             h = targetHeight;
-
         }
-
         do {
-
             if (higherQuality && w < targetWidth) {
-
                 w *= 2;
                 if (w > targetWidth) {
-
                     w = targetWidth;
-
                 }
-
             }
-
             if (higherQuality && h < targetHeight) {
-
                 h *= 2;
                 if (h > targetHeight) {
 
                     h = targetHeight;
 
                 }
-
             }
-
             BufferedImage tmp = new BufferedImage(w, h, type);
             Graphics2D g2 = tmp.createGraphics();
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
