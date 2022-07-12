@@ -2,7 +2,7 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
 import com.alphalaneous.Swing.Components.*;
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Main;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Swing.ThemedComponents.ThemedCheckbox;
@@ -29,7 +29,7 @@ import java.nio.file.*;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static com.alphalaneous.Defaults.defaultUI;
+import static com.alphalaneous.Utils.Defaults.defaultUI;
 
 public class CommandEditor {
 

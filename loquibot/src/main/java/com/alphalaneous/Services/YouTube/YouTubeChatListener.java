@@ -1,10 +1,11 @@
 package com.alphalaneous.Services.YouTube;
 
-import com.alphalaneous.*;
+import com.alphalaneous.ChatBot.BotHandler;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Utilities;
 import com.google.api.services.youtube.model.*;
 import java.util.*;
@@ -21,7 +22,7 @@ public class YouTubeChatListener {
 
 
     public static void startChatListener(String liveChatID) {
-        if(Settings.getSettings("youtubeEnabled").asBoolean()) {
+        if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()) {
             try {
                 while (true) {
                     if (!isConnected) {
@@ -65,7 +66,7 @@ public class YouTubeChatListener {
                             ChatMessage message1 = buildChatMessage(message);
                             if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg")) {
                                 new TwitchChatListener.SelfDestructingMessage();
-                                if (Settings.getSettings("multiMode").asBoolean()) {
+                                if (SettingsHandler.getSettings("multiMode").asBoolean()) {
                                     if(!isFirstMessage) waitOnMessage(message1, true);
                                 } else {
                                     if(!isFirstMessage) waitOnMessage(message1, false);

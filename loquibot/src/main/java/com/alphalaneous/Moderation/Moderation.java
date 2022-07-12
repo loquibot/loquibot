@@ -4,7 +4,7 @@ import com.alphalaneous.GibberishDetector.GibberishDetector;
 import com.alphalaneous.GibberishDetector.GibberishDetectorExtended;
 import com.alphalaneous.GibberishDetector.GibberishDetectorFactory;
 import com.alphalaneous.Main;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.ChatBot.ChatMessage;
 
 import java.io.BufferedReader;
@@ -54,11 +54,11 @@ public class Moderation {
 		//System.out.println(capCount + " :: " + capsPercent);
 		//System.out.println(symCount + " ::: " + symPercent);
 
-		boolean emoteEnabled = Settings.getSettings("emoteFilterEnabled").asBoolean();
-		boolean capitalEnabled = Settings.getSettings("capitalFilterEnabled").asBoolean();
-		boolean symbolEnabled = Settings.getSettings("symbolFilterEnabled").asBoolean();
-		boolean linkDetectionEnabled = Settings.getSettings("linkFilterEnabled").asBoolean();
-		boolean gibberishDetectionEnabled = Settings.getSettings("gibberishFilterEnabled").asBoolean();
+		boolean emoteEnabled = SettingsHandler.getSettings("emoteFilterEnabled").asBoolean();
+		boolean capitalEnabled = SettingsHandler.getSettings("capitalFilterEnabled").asBoolean();
+		boolean symbolEnabled = SettingsHandler.getSettings("symbolFilterEnabled").asBoolean();
+		boolean linkDetectionEnabled = SettingsHandler.getSettings("linkFilterEnabled").asBoolean();
+		boolean gibberishDetectionEnabled = SettingsHandler.getSettings("gibberishFilterEnabled").asBoolean();
 
 		float setEmotePercent;
 		float setCapsPercent;
@@ -68,23 +68,23 @@ public class Moderation {
 		int setCapsCount;
 		int setSymbolCount;
 
-		if(!Settings.getSettings("emotePercent").exists()) setEmotePercent = 0.5f;
-		else setEmotePercent = Settings.getSettings("emotePercent").asFloat();
+		if(!SettingsHandler.getSettings("emotePercent").exists()) setEmotePercent = 0.5f;
+		else setEmotePercent = SettingsHandler.getSettings("emotePercent").asFloat();
 
-		if(!Settings.getSettings("capitalPercent").exists()) setCapsPercent = 0.5f;
-		else setCapsPercent = Settings.getSettings("capitalPercent").asFloat();
+		if(!SettingsHandler.getSettings("capitalPercent").exists()) setCapsPercent = 0.5f;
+		else setCapsPercent = SettingsHandler.getSettings("capitalPercent").asFloat();
 
-		if(!Settings.getSettings("symbolPercent").exists()) setSymbolPercent = 0.5f;
-		else setSymbolPercent = Settings.getSettings("symbolPercent").asFloat();
+		if(!SettingsHandler.getSettings("symbolPercent").exists()) setSymbolPercent = 0.5f;
+		else setSymbolPercent = SettingsHandler.getSettings("symbolPercent").asFloat();
 
-		if(!Settings.getSettings("emoteCount").exists()) setEmoteCount = 5;
-		else setEmoteCount = Settings.getSettings("emoteCount").asInteger();
+		if(!SettingsHandler.getSettings("emoteCount").exists()) setEmoteCount = 5;
+		else setEmoteCount = SettingsHandler.getSettings("emoteCount").asInteger();
 
-		if(!Settings.getSettings("capitalCount").exists()) setCapsCount = 5;
-		else setCapsCount = Settings.getSettings("capitalCount").asInteger();
+		if(!SettingsHandler.getSettings("capitalCount").exists()) setCapsCount = 5;
+		else setCapsCount = SettingsHandler.getSettings("capitalCount").asInteger();
 
-		if(!Settings.getSettings("symbolCount").exists()) setSymbolCount = 5;
-		else setSymbolCount = Settings.getSettings("symbolCount").asInteger();
+		if(!SettingsHandler.getSettings("symbolCount").exists()) setSymbolCount = 5;
+		else setSymbolCount = SettingsHandler.getSettings("symbolCount").asInteger();
 
 		if(checkIfLink(messageEmoteless) && linkDetectionEnabled && !LinkPermit.checkPermit(chatMessage.getSender())){
 			Main.sendMessage("@" + chatMessage.getSender() + ", links are not allowed here!");
@@ -120,11 +120,11 @@ public class Moderation {
 			addWarning(chatMessage.getSender(), "gibberishFilter");
 			return;
 		}
-		if(Settings.getSettings("autoDeleteGDLevelIDs").asBoolean() && checkIfLevelID(messageEmoteless)){
+		if(SettingsHandler.getSettings("autoDeleteGDLevelIDs").asBoolean() && checkIfLevelID(messageEmoteless)){
 			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
 			return;
 		}
-		if(isFollowerBot(chatMessage) && Settings.getSettings("autoDeleteBigFollows").asBoolean()){
+		if(isFollowerBot(chatMessage) && SettingsHandler.getSettings("autoDeleteBigFollows").asBoolean()){
 			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
 		}
 	}

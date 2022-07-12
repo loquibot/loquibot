@@ -1,7 +1,7 @@
 package com.alphalaneous.Theming;
 
-import com.alphalaneous.Defaults;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Settings.SettingsHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,7 +53,7 @@ public class ThemedColor extends Color {
         if(Defaults.isLight) themeColor = lightColors.get(themeSetting);
         else themeColor = darkColors.get(themeSetting);
 
-        if(Settings.getSettings("theme").exists() && Settings.getSettings("theme").asString().equalsIgnoreCase("CUSTOM_MODE")){
+        if(SettingsHandler.getSettings("theme").exists() && SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("CUSTOM_MODE")){
             Color color = Themes.getThemeSettingNullable(themeSetting);
             if(color != null) themeColor = color;
         }

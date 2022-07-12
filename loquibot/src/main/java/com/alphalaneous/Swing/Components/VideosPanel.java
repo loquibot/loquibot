@@ -1,6 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.MediaShare;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
 
 import javax.swing.*;

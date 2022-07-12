@@ -1,6 +1,6 @@
 package com.alphalaneous.Interactive.Timers;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Tabs.ChatbotPages.TimerSettings;
 import org.json.JSONArray;
 import org.json.JSONException;

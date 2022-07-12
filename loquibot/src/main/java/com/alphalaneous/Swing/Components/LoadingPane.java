@@ -1,11 +1,9 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Arc2D;
 
 public class LoadingPane extends JPanel {

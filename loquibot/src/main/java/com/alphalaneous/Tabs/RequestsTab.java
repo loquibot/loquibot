@@ -1,10 +1,14 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.RequestFunctions;
+import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Interactive.Commands.Command;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.OfficerWindow;
@@ -24,7 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static com.alphalaneous.Defaults.defaultUI;
+import static com.alphalaneous.Utils.Defaults.defaultUI;
 
 public class RequestsTab {
 
@@ -332,8 +336,8 @@ public class RequestsTab {
     public static void toggle(){
         if (Main.programLoaded) {
             boolean doAnnounce = false;
-            if(Settings.getSettings("twitchEnabled").asBoolean()) {
-                doAnnounce = Settings.getSettings("isMod").asBoolean();
+            if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
+                doAnnounce = SettingsHandler.getSettings("isMod").asBoolean();
             }
             if (Requests.requestsEnabled) {
                 Requests.requestsEnabled = false;

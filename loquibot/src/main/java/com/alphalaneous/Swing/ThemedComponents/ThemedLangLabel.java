@@ -1,7 +1,7 @@
 package com.alphalaneous.Swing.ThemedComponents;
 
 import com.alphalaneous.Swing.Components.LangLabel;
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 
 import java.util.ArrayList;
 

@@ -1,12 +1,13 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.*;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
 import com.alphalaneous.Tabs.ChatbotPages.DefaultCommands;
 
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
@@ -33,8 +34,8 @@ public class CommandConfigCheckbox extends JPanel {
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
 
-        if(Settings.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = Settings.getSettings("defaultCommandPrefix").asString();
-        if(Settings.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = Settings.getSettings("geometryDashCommandPrefix").asString();
+        if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+        if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
 
         if(commandData.isDefault()) prefix = defaultCommandPrefix;
         if(commandData.isGD()) prefix = geometryDashCommandPrefix;
@@ -125,8 +126,8 @@ public class CommandConfigCheckbox extends JPanel {
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
 
-        if(Settings.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = Settings.getSettings("defaultCommandPrefix").asString();
-        if(Settings.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = Settings.getSettings("geometryDashCommandPrefix").asString();
+        if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+        if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
         if(data != null) {
             if (data.isDefault()) prefix = defaultCommandPrefix;
             if (data.isGD()) prefix = geometryDashCommandPrefix;

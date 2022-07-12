@@ -1,10 +1,9 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.APIs;
 import com.alphalaneous.Interactive.ChannelPoints.ChannelPointData;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Main;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Utils.Utilities;
 import org.java_websocket.client.WebSocketClient;
@@ -30,10 +29,10 @@ public class TwitchListener extends WebSocketClient {
 		topicObject.put("type", "LISTEN");
 		JSONObject data = new JSONObject();
 		JSONArray topics = new JSONArray();
-		topics.put("channel-points-channel-v1." + APIs.getUserID());
+		topics.put("channel-points-channel-v1." + TwitchAPI.getUserID());
 
 		data.put("topics", topics);
-		data.put("auth_token", Settings.getSettings("oauth").asString());
+		data.put("auth_token", SettingsHandler.getSettings("oauth").asString());
 		topicObject.put("data", data);
 	}
 

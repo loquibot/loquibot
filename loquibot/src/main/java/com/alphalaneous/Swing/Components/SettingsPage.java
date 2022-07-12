@@ -1,8 +1,8 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Interfaces.Function;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Theming.ThemedColor;
 import com.alphalaneous.Swing.ThemedComponents.ThemedCheckbox;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
@@ -207,7 +207,7 @@ public class SettingsPage extends JPanel {
                 changed();
             }
             public void changed() {
-                Settings.writeSettings(setting, textArea.getText());
+                SettingsHandler.writeSettings(setting, textArea.getText());
             }
         });
         return textArea;
@@ -281,15 +281,15 @@ public class SettingsPage extends JPanel {
             radioPanel = new RadioPanel(options){
                 @Override
                 public void changeFired(String identifier) {
-                    Settings.writeSettings(setting, identifier);
+                    SettingsHandler.writeSettings(setting, identifier);
                     if(function != null) function.run();
                 }
             };
 
-            if(Settings.getSettings(setting).exists()) radioPanel.setChecked(Settings.getSettings(setting).asString());
+            if(SettingsHandler.getSettings(setting).exists()) radioPanel.setChecked(SettingsHandler.getSettings(setting).asString());
             else {
                 radioPanel.setChecked(defaultOption);
-                Settings.writeSettings(setting, defaultOption);
+                SettingsHandler.writeSettings(setting, defaultOption);
             }
 
             radioPanel.setBounds(30,30 + descriptionText.getPreferredSize().height,460, radioPanel.getPreferredSize().height);
@@ -327,10 +327,10 @@ public class SettingsPage extends JPanel {
             checkbox.setOpaque(false);
             checkbox.setPreferredSize(new Dimension(450, 30));
             checkbox.setBounds(29,0, 450, 30);
-            if(Settings.getSettings(checkSetting).exists()) checkbox.setChecked(Settings.getSettings(checkSetting).asBoolean());
+            if(SettingsHandler.getSettings(checkSetting).exists()) checkbox.setChecked(SettingsHandler.getSettings(checkSetting).asBoolean());
             else {
                 checkbox.setChecked(defaultOption);
-                Settings.writeSettings(checkSetting, String.valueOf(defaultOption));
+                SettingsHandler.writeSettings(checkSetting, String.valueOf(defaultOption));
             }
 
             descriptionText.setTextLang("<html><div WIDTH=450> " + description + " </div></html>");
@@ -357,20 +357,20 @@ public class SettingsPage extends JPanel {
                     textArea.setFocusable(false);
                     textArea.setFocusable(checkbox.getSelectedState());
                     textArea.setEditable(checkbox.getSelectedState());
-                    Settings.writeSettings(checkSetting, String.valueOf(checkbox.getSelectedState()));
+                    SettingsHandler.writeSettings(checkSetting, String.valueOf(checkbox.getSelectedState()));
                 }
             });
             setOpaque(false);
             setLayout(null);
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
-            if (Settings.getSettings(inputSetting).exists()) textArea.setText(Settings.getSettings(inputSetting).asString());
+            if (SettingsHandler.getSettings(inputSetting).exists()) textArea.setText(SettingsHandler.getSettings(inputSetting).asString());
             else {
                 textArea.setText(defaultInput);
-                Settings.writeSettings(inputSetting, defaultInput);
+                SettingsHandler.writeSettings(inputSetting, defaultInput);
             }
-            textArea.setEditable(Settings.getSettings(checkSetting).asBoolean());
-            textArea.setFocusable(Settings.getSettings(checkSetting).asBoolean());
+            textArea.setEditable(SettingsHandler.getSettings(checkSetting).asBoolean());
+            textArea.setFocusable(SettingsHandler.getSettings(checkSetting).asBoolean());
             setBackground(new Color(0,0,0,0));
             add(textArea);
             add(checkbox);
@@ -430,10 +430,10 @@ public class SettingsPage extends JPanel {
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
             if(setting != null) {
-                if (Settings.getSettings(setting).exists()) textArea.setText(Settings.getSettings(setting).asString());
+                if (SettingsHandler.getSettings(setting).exists()) textArea.setText(SettingsHandler.getSettings(setting).asString());
                 else {
                     textArea.setText(defaultInput);
-                    Settings.writeSettings(setting, defaultInput);
+                    SettingsHandler.writeSettings(setting, defaultInput);
                 }
             }
             else textArea.setText(defaultInput);
@@ -464,17 +464,17 @@ public class SettingsPage extends JPanel {
 
         CheckBox(String text, String description, String setting, boolean defaultOption, Function function){
             themedCheckbox = new ThemedCheckbox(text);
-            if (Settings.getSettings(setting).exists()) themedCheckbox.setChecked(Settings.getSettings(setting).asBoolean());
+            if (SettingsHandler.getSettings(setting).exists()) themedCheckbox.setChecked(SettingsHandler.getSettings(setting).asBoolean());
             else {
                 themedCheckbox.setChecked(defaultOption);
-                Settings.writeSettings(setting, String.valueOf(defaultOption));
+                SettingsHandler.writeSettings(setting, String.valueOf(defaultOption));
             }
             setLayout(null);
             setOpaque(false);
             themedCheckbox.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    Settings.writeSettings(setting, String.valueOf(themedCheckbox.getSelectedState()));
+                    SettingsHandler.writeSettings(setting, String.valueOf(themedCheckbox.getSelectedState()));
                     if(function != null) function.run();
                 }
             });
@@ -510,17 +510,17 @@ public class SettingsPage extends JPanel {
 
         public CheckBoxConfig(String text, String description, String setting, boolean defaultOption, Function function){
             themedCheckbox = new ThemedConfigCheckbox(text, description, function, false);
-            if (Settings.getSettings(setting).exists()) themedCheckbox.setChecked(Settings.getSettings(setting).asBoolean());
+            if (SettingsHandler.getSettings(setting).exists()) themedCheckbox.setChecked(SettingsHandler.getSettings(setting).asBoolean());
             else {
                 themedCheckbox.setChecked(defaultOption);
-                Settings.writeSettings(setting, String.valueOf(defaultOption));
+                SettingsHandler.writeSettings(setting, String.valueOf(defaultOption));
             }
             setLayout(null);
             setOpaque(false);
             themedCheckbox.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    Settings.writeSettings(setting, String.valueOf(themedCheckbox.getSelectedState()));
+                    SettingsHandler.writeSettings(setting, String.valueOf(themedCheckbox.getSelectedState()));
                 }
             });
 

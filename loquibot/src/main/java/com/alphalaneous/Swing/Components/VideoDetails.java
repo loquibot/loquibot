@@ -1,13 +1,9 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Images.BoxBlurFilter;
-import com.alphalaneous.MediaShare;
-import com.alphalaneous.Swing.Components.JButtonUI;
-import com.alphalaneous.Swing.Components.MultiLineLabel;
-import com.alphalaneous.Swing.Components.RoundedJButton;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
-import com.alphalaneous.Swing.Components.ThumbnailPanel;
 import com.alphalaneous.Windows.Window;
 import org.imgscalr.Scalr;
 

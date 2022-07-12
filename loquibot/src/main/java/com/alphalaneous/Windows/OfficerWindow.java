@@ -1,15 +1,18 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.GDAPI;
+import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Swing.Components.LevelButton;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Utils.Defaults;
 import jdash.common.entity.GDLevel;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import static com.alphalaneous.Defaults.settingsButtonUI;
+import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
 
 public class OfficerWindow {
 

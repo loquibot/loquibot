@@ -1,5 +1,10 @@
 package com.alphalaneous;
 
+import com.alphalaneous.ChatBot.ServerBot;
+import com.alphalaneous.Services.GeometryDash.LoadGD;
+import com.alphalaneous.Services.GeometryDash.RequestFunctions;
+import com.alphalaneous.Services.GeometryDash.Requests;
+import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.ChannelPointData;
 import com.alphalaneous.Interactive.ChannelPoints.LoadPoints;
@@ -8,24 +13,31 @@ import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Keywords.LoadKeywords;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Interactive.Timers.LoadTimers;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Interactive.Timers.TimerHandler;
+import com.alphalaneous.Interactive.Variables;
 import com.alphalaneous.Running.CheckIfRunning;
 import com.alphalaneous.Running.LoquibotSocket;
-import com.alphalaneous.SettingsPanels.Logs.LoggedID;
+import com.alphalaneous.Services.Twitch.TwitchAPI;
+import com.alphalaneous.Settings.Account;
+import com.alphalaneous.Settings.ChannelPoints;
+import com.alphalaneous.Settings.Outputs;
+import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Settings.Logs.LoggedID;
 import com.alphalaneous.Swing.Components.ComponentTree;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Services.YouTube.YouTubeChatListener;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
-import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.*;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.Twitch.TwitchListener;
 import com.alphalaneous.Theming.Themes;
 import com.alphalaneous.Utils.*;
+import com.alphalaneous.Utils.KeyListener;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
 import javafx.application.Platform;
@@ -78,19 +90,19 @@ public class Main {
 
         new Thread(() -> {
             Utilities.sleep(21600000);
-            if(Settings.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
+            if(SettingsHandler.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
                 restart();
             }
         }).start();
 
 
-        Settings.loadSettings();
+        SettingsHandler.loadSettings();
 
-        boolean reopen = Settings.getSettings("hasUpdated").asBoolean();
-        Settings.writeSettings("hasUpdated", "false");
+        boolean reopen = SettingsHandler.getSettings("hasUpdated").asBoolean();
+        SettingsHandler.writeSettings("hasUpdated", "false");
 
-        if(Settings.getSettings("channel").exists() && !Settings.getSettings("twitchEnabled").exists()){
-            Settings.writeSettings("twitchEnabled", "true");
+        if(SettingsHandler.getSettings("channel").exists() && !SettingsHandler.getSettings("twitchEnabled").exists()){
+            SettingsHandler.writeSettings("twitchEnabled", "true");
         }
 
         FindLoquibot.setup();
@@ -140,7 +152,7 @@ public class Main {
         });
 
 
-        if(!Settings.getSettings("runAtStartup").asBoolean() || reopen) starting.setVisible(true);
+        if(!SettingsHandler.getSettings("runAtStartup").asBoolean() || reopen) starting.setVisible(true);
 
         System.out.println("> Start");
 
@@ -152,12 +164,12 @@ public class Main {
 
         System.out.println("> Settings Loaded");
 
-        if (Settings.getSettings("onboarding").exists()) {
+        if (SettingsHandler.getSettings("onboarding").exists()) {
             try {
                 TwitchAccount.setInfo();
                 new Thread(ChannelPoints::refresh).start();
                 try {
-                    if (Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                    if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
                 }
                 catch (Exception e){
                     YouTubeAccount.setCredential(true);
@@ -165,11 +177,11 @@ public class Main {
                 YouTubeAccount.setInfo();
             } catch (Exception e) {
                 e.printStackTrace();
-                if(Settings.getSettings("twitchEnabled").asBoolean()) APIs.setOauth();
+                if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
                 TwitchAccount.setInfo();
                 new Thread(ChannelPoints::refresh).start();
                 try {
-                    if (Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                    if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
                 }
                 catch (Exception f){
                     YouTubeAccount.setCredential(true);
@@ -228,7 +240,7 @@ public class Main {
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
 
-            if (!Settings.getSettings("onboarding").exists()) {
+            if (!SettingsHandler.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();
                 Window.setVisible(true);
                 System.out.println("> Window Visible");
@@ -240,11 +252,11 @@ public class Main {
                 }
                 TwitchAccount.setInfo();
                 YouTubeAccount.setInfo();
-                if(Settings.getSettings("youtubeEnabled").asBoolean()) Account.refreshYouTube(YouTubeAccount.name);
+                if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()) Account.refreshYouTube(YouTubeAccount.name);
                 new Thread(ChannelPoints::refresh).start();
             }
             else {
-                if(!Settings.getSettings("runAtStartup").asBoolean() || reopen) Window.setVisible(true);
+                if(!SettingsHandler.getSettings("runAtStartup").asBoolean() || reopen) Window.setVisible(true);
                 System.out.println("> Window Visible");
             }
 
@@ -258,14 +270,14 @@ public class Main {
                 serverBot.connect();
             }).start();
 
-            if(Settings.getSettings("youtubeEnabled").asBoolean()){
+            if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
                 new Thread(() -> YouTubeChatListener.startChatListener(null)).start();
             }
 
-            if(Settings.getSettings("twitchEnabled").asBoolean()) {
+            if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
                 new Thread(() -> {
                     chatReader = new TwitchChatListener(TwitchAccount.login);
-                    chatReader.connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
+                    chatReader.connect(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.login);
                 }).start();
                 new Thread(() -> {
                     try {
@@ -278,12 +290,12 @@ public class Main {
             }
 
 
-            Window.setOnTop(Settings.getSettings("onTop").asBoolean());
+            Window.setOnTop(SettingsHandler.getSettings("onTop").asBoolean());
             try {
-                Outputs.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
+                Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
             }
             catch (Exception e){
-                Settings.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
+                SettingsHandler.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
                 //OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
             }
             Path initialJS = Paths.get(Defaults.saveDirectory + "\\loquibot\\initial.js");
@@ -303,24 +315,28 @@ public class Main {
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\saved.json");
             if (Files.exists(file)) {
                 String levelsJson = Files.readString(file, StandardCharsets.UTF_8);
-                JSONObject object = new JSONObject(levelsJson);
-                Requests.loadLevels(object);
+                try {
+                    JSONObject object = new JSONObject(levelsJson);
+                    Requests.loadLevels(object);
+                }
+                catch (Exception ignored){
+                }
             }
             allowRequests = true;
             RequestFunctions.saveFunction();
             RequestsTab.getLevelsPanel().setSelect(0);
-            new Thread(APIs::checkViewers).start();
+            new Thread(TwitchAPI::checkViewers).start();
 
             sendMessages = true;
-            if(Settings.getSettings("twitchEnabled").asBoolean()) {
-                APIs.setAllViewers();
+            if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
+                TwitchAPI.setAllViewers();
 
-                Settings.writeSettings("isMod", String.valueOf(APIs.isLoquiMod()));
+                SettingsHandler.writeSettings("isMod", String.valueOf(TwitchAPI.isLoquiMod()));
 
-                if (!Settings.getSettings("isHigher").exists()) {
-                    if (APIs.allMods.contains("loquibot") || APIs.allVIPs.contains("loquibot"))
-                        Settings.writeSettings("isHigher", "true");
-                    else Settings.writeSettings("isHigher", "false");
+                if (!SettingsHandler.getSettings("isHigher").exists()) {
+                    if (TwitchAPI.allMods.contains("loquibot") || TwitchAPI.allVIPs.contains("loquibot"))
+                        SettingsHandler.writeSettings("isHigher", "true");
+                    else SettingsHandler.writeSettings("isHigher", "false");
                 }
             }
             programLoaded = true;
@@ -347,7 +363,7 @@ public class Main {
     public static void restart(){
         try {
             Main.forceClose();
-            Runtime.getRuntime().exec(Settings.getSettings("installPath").asString());
+            Runtime.getRuntime().exec(SettingsHandler.getSettings("installPath").asString());
             System.exit(0);
         }
         catch (Exception e){
@@ -364,7 +380,7 @@ public class Main {
         return iconImages;
     }
 
-    static void sendMainMessage(String message) {
+    public static void sendMainMessage(String message) {
         TwitchChatListener.getCurrentListener().sendMessage(message);
     }
 
@@ -376,7 +392,7 @@ public class Main {
     }
 
     public static void sendMessageWithoutCooldown(String message){
-        if(Settings.getSettings("twitchEnabled").asBoolean()) {
+        if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
             JSONObject messageObj = new JSONObject();
             messageObj.put("request_type", "send_message");
             messageObj.put("message", message);
@@ -384,18 +400,18 @@ public class Main {
         }
     }
 
-    static void sendMessage(String messageA, boolean whisper, String user) {
-        if(Settings.getSettings("twitchEnabled").asBoolean()) {
+    public static void sendMessage(String messageA, boolean whisper, String user) {
+        if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
 
             String[] messages = messageA.split("¦");
             for (String message : messages) {
 
-                if (!Settings.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
+                if (!SettingsHandler.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
                     if (!message.equalsIgnoreCase("")) {
 
                         JSONObject messageObj = new JSONObject();
                         messageObj.put("request_type", "send_message");
-                        if (Settings.getSettings("antiDox").asBoolean()) {
+                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
                             message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
                         }
                         if (whisper) {
@@ -413,7 +429,7 @@ public class Main {
                     if (!message.equalsIgnoreCase("")) {
                         JSONObject messageObj = new JSONObject();
                         messageObj.put("request_type", "send_message");
-                        if (Settings.getSettings("antiDox").asBoolean()) {
+                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
                             message = message.replaceAll(System.getProperty("user.name"), "*****");
                         }
                         messageObj.put("message", "/w " + user + " " + message);
@@ -429,18 +445,18 @@ public class Main {
     }
 
     public static void sendYTMessage(String messageA){
-        if(Settings.getSettings("youtubeEnabled").asBoolean()){
+        if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
             String[] messages = messageA.split("¦");
             for(String message : messages) {
 
-                if (!Settings.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
+                if (!SettingsHandler.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
                     if (!message.equalsIgnoreCase("")) {
 
                         JSONObject messageObj = new JSONObject();
                         messageObj.put("request_type", "send_yt_message");
                         messageObj.put("liveChatId", YouTubeAccount.liveChatId);
 
-                        if (Settings.getSettings("antiDox").asBoolean()) {
+                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
                             message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
                         }
                         messageObj.put("message", message);
@@ -463,9 +479,9 @@ public class Main {
         sendMessage(message, false, null);
     }
     public static void sendMessage(String message, boolean doAnnounce) {
-        if(Settings.getSettings("twitchEnabled").asBoolean()) {
-            Settings.writeSettings("isMod", String.valueOf(APIs.isLoquiMod()));
-            if (doAnnounce && Settings.getSettings("isMod").asBoolean() && !message.startsWith("/"))
+        if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
+            SettingsHandler.writeSettings("isMod", String.valueOf(TwitchAPI.isLoquiMod()));
+            if (doAnnounce && SettingsHandler.getSettings("isMod").asBoolean() && !message.startsWith("/"))
                 sendMessage("/announce " + message, false, null);
             else sendMessage(message, false, null);
         }
@@ -511,7 +527,7 @@ public class Main {
     public static void save(){
         try {
             Variables.saveVars();
-            Settings.saveSettings();
+            SettingsHandler.saveSettings();
             Themes.saveTheme();
             CommandData.saveCustomCommands();
             CommandData.saveDefaultCommands();
@@ -542,9 +558,9 @@ public class Main {
             loaded = load;
         }
         Main.save();
-        if(!Settings.getSettings("runAtStartup").asBoolean()) {
+        if(!SettingsHandler.getSettings("runAtStartup").asBoolean()) {
             Utilities.disposeTray();
-            if (!Settings.getSettings("onboarding").asBoolean() && loaded) {
+            if (!SettingsHandler.getSettings("onboarding").asBoolean() && loaded) {
                 Window.setVisible(false);
                 Window.setSettings();
                 try {

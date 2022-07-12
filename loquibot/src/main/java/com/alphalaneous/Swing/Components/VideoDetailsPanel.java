@@ -1,7 +1,7 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.*;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;

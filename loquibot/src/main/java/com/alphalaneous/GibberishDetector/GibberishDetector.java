@@ -1,6 +1,6 @@
 package com.alphalaneous.GibberishDetector;
 
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +49,8 @@ public class GibberishDetector {
 	// can be overridden for another threshold heuristic implementation
 	protected double getThreshold() {
 
-		if(!Settings.getSettings("gibberishThreshold").exists()) return 0.015;
-		else return 1-Settings.getSettings("gibberishThreshold").asDouble();
+		if(!SettingsHandler.getSettings("gibberishThreshold").exists()) return 0.015;
+		else return 1- SettingsHandler.getSettings("gibberishThreshold").asDouble();
 
 	}
 		

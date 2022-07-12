@@ -1,6 +1,6 @@
 package com.alphalaneous.Windows;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 
 import java.io.*;
 import java.awt.*;
@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 

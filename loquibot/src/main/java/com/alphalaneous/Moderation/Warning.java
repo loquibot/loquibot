@@ -1,7 +1,7 @@
 package com.alphalaneous.Moderation;
 
 import com.alphalaneous.Main;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 
 import java.util.HashMap;
 
@@ -22,9 +22,9 @@ public class Warning {
         if(warningMap.containsKey(type)) warningMap.put(type, warningMap.get(type)+1);
         else warningMap.put(type, 1);
 
-        if(warningMap.get(type) >= Settings.getSettings(type+"Warnings").asInteger()){
+        if(warningMap.get(type) >= SettingsHandler.getSettings(type+"Warnings").asInteger()){
 
-            int timeoutDuration = Settings.getSettings(type+ "TimeoutDuration").asInteger();
+            int timeoutDuration = SettingsHandler.getSettings(type+ "TimeoutDuration").asInteger();
             if(timeoutDuration != 0) {
                 Main.sendMessage("/timeout " + username + " " + timeoutDuration);
             }

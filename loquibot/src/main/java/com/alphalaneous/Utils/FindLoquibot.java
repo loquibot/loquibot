@@ -1,9 +1,7 @@
 package com.alphalaneous.Utils;
 
-import com.alphalaneous.Defaults;
 import com.alphalaneous.Main;
-import com.alphalaneous.Settings;
-import com.alphalaneous.Utils.Utilities;
+import com.alphalaneous.Settings.SettingsHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +35,7 @@ public class FindLoquibot {
     }
 
     public static void findPath() {
-        if(!Settings.getSettings("installPath").exists()) {
+        if(!SettingsHandler.getSettings("installPath").exists()) {
             String exe = "loquibot.exe";
             try {
                 Process p = Runtime.getRuntime().exec(Defaults.saveDirectory + "/loquibot/bin/getPrograms.bat " + exe);
@@ -51,7 +49,7 @@ public class FindLoquibot {
                     Path path1 = Paths.get(line);
                     if (path1.getParent().endsWith("loquibot")) {
                         if (path1.getParent().getParent().endsWith("Alphalaneous")) {
-                            Settings.writeSettings("installPath", line);
+                            SettingsHandler.writeSettings("installPath", line);
                             break;
                         }
                     }

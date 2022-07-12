@@ -1,6 +1,6 @@
 package com.alphalaneous.Interactive.Keywords;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
 import com.alphalaneous.Utils.Utilities;
 import org.json.JSONArray;

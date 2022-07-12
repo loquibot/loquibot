@@ -4,7 +4,7 @@ import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Swing.Components.CommandConfigCheckbox;
 import com.alphalaneous.Swing.Components.ListView;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
 
@@ -27,7 +27,7 @@ public class DefaultCommands {
 			listView.clearElements();
 		}
 		ArrayList<CommandData> commands = new ArrayList<>(LoadCommands.getDefaultCommands());
-		if(Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) commands.addAll(LoadCommands.getGeometryDashCommands());
+		if(SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) commands.addAll(LoadCommands.getGeometryDashCommands());
 
 		ArrayList<CommandData> alphabetizedCommands = Utilities.alphabetizeCommandData(commands);
 

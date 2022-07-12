@@ -2,9 +2,9 @@ package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Interactive.Keywords.LoadKeywords;
 import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
-import com.alphalaneous.*;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;

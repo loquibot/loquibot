@@ -1,6 +1,9 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.Requests;
+import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
@@ -13,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.alphalaneous.Defaults.defaultUI;
+import static com.alphalaneous.Utils.Defaults.defaultUI;
 
 public class BasicLevelButton extends CurvedButtonAlt {
 
@@ -261,7 +264,7 @@ public class BasicLevelButton extends CurvedButtonAlt {
                 gonePoints = 0;
             }
         }
-        if(!Settings.getSettings("basicMode").asBoolean()) {
+        if(!SettingsHandler.getSettings("basicMode").asBoolean()) {
             RequestsTab.getRequest(Requests.getPosFromID(ID)).getLevelData().setViewership(viewership);
         }
     }

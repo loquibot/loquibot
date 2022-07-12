@@ -1,6 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Theming.ThemedColor;
 import com.alphalaneous.Swing.Layouts.WrapLayout;
@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static com.alphalaneous.Defaults.settingsButtonUI;
+import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
 
 public class ListView extends JPanel {
 

@@ -1,7 +1,7 @@
 package com.alphalaneous.Interactive.Timers;
 
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Main;
 import com.alphalaneous.ChatBot.ChatMessage;

@@ -1,11 +1,14 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.GDAPI;
+import com.alphalaneous.Services.GeometryDash.LevelData;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Images.BoxBlurFilter;
 import com.alphalaneous.Services.YouTube.YouTubeScrape;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
 import jdash.client.exception.GDClientException;

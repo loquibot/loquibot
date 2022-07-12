@@ -1,7 +1,7 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
-import com.alphalaneous.GDAPI;
+import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Services.GeometryDash.GDAPI;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Theming.ThemedColor;
 import jdash.client.exception.GDClientException;

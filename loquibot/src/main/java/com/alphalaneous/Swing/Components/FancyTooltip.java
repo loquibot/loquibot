@@ -1,6 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
 import java.util.ArrayList;

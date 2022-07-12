@@ -1,9 +1,10 @@
 package com.alphalaneous.Tabs.ChatbotPages;
 
-import com.alphalaneous.*;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Interactive.Commands.CommandData;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.CommandEditor;
 import com.alphalaneous.Windows.Window;
@@ -84,7 +85,7 @@ public class CustomCommands {
 
 				boolean exists = false;
 				String key = entry.getKey();
-				if (!Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
+				if (!SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
 					for (String command : gdCommands) {
 						if (key.equalsIgnoreCase(command)) {
 							exists = true;
@@ -96,8 +97,8 @@ public class CustomCommands {
 					String defaultCommandPrefix = "!";
 					String geometryDashCommandPrefix = "!";
 
-					if(Settings.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = Settings.getSettings("defaultCommandPrefix").asString();
-					if(Settings.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = Settings.getSettings("geometryDashCommandPrefix").asString();
+					if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+					if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
 
 					boolean existingDefault = false;
 					for(CommandData commandData : LoadCommands.getDefaultCommands()) {

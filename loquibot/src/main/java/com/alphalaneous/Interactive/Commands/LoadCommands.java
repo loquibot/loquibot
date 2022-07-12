@@ -1,6 +1,6 @@
 package com.alphalaneous.Interactive.Commands;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Main;
 import com.alphalaneous.Tabs.ChatbotPages.DefaultCommands;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;

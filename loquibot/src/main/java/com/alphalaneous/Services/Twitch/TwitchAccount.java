@@ -1,7 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.APIs;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -29,10 +28,10 @@ public class TwitchAccount {
 
 
 	public static void setInfo(boolean skipCheck) {
-		if(Settings.getSettings("twitchEnabled").asBoolean() || skipCheck) {
-			APIs.setUser(Settings.getSettings("channel").asString());
+		if(SettingsHandler.getSettings("twitchEnabled").asBoolean() || skipCheck) {
+			TwitchAPI.setUser(SettingsHandler.getSettings("channel").asString());
 
-			JSONObject data = APIs.getInfo();
+			JSONObject data = TwitchAPI.getInfo();
 
 			broadcaster_type = data.getString("broadcaster_type");
 			offline_image_url = data.getString("offline_image_url");

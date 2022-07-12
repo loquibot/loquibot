@@ -1,7 +1,7 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Settings.SettingsHandler;
 import org.jnativehook.keyboard.SwingKeyAdapter;
 
 import javax.swing.*;
@@ -31,10 +31,10 @@ public class KeybindButton extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == 8 || e.getKeyCode() == 16 || e.getKeyCode() == 17 || e.getKeyCode() == 18 || e.getKeyCode() == 10) {
                     input.setText("");
-                    Settings.writeSettings(setting, "-1");
+                    SettingsHandler.writeSettings(setting, "-1");
                 } else {
                     input.setText(KeyEvent.getKeyText(e.getKeyCode()));
-                    Settings.writeSettings(setting, String.valueOf(e.getKeyCode()));
+                    SettingsHandler.writeSettings(setting, String.valueOf(e.getKeyCode()));
                 }
                 requestFocusInWindow();
             }
@@ -54,7 +54,7 @@ public class KeybindButton extends JPanel {
         input.setPreferredSize(new Dimension(100,32));
         input.setDocument(doc);
 
-        int keycode = Settings.getSettings(setting).asInteger();
+        int keycode = SettingsHandler.getSettings(setting).asInteger();
         if(!(keycode == 0 || keycode == -1)){
             input.setText(KeyEvent.getKeyText(keycode));
         }

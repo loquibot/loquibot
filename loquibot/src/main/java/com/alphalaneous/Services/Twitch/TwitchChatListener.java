@@ -1,12 +1,14 @@
 package com.alphalaneous.Services.Twitch;
 
 import com.alphalaneous.*;
+import com.alphalaneous.ChatBot.BotHandler;
 import com.alphalaneous.ChatBot.ChatterActivity;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.Moderation.Moderation;
 import com.alphalaneous.ChatBot.ChatBot;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Utilities;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -40,20 +42,20 @@ public class TwitchChatListener extends ChatBot {
 	public void onClose(int i, String s, boolean b) {
 		System.out.println("> Disconnected from Chat Listener");
 		Utilities.sleep(2000);
-		new TwitchChatListener(TwitchAccount.login).connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
+		new TwitchChatListener(TwitchAccount.login).connect(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.login);
 	}
 
 	@Override
 	public void onMessage(ChatMessage chatMessage) {
 		//TwitchChat.addMessage(chatMessage);
 		if(chatMessage.getSender().equalsIgnoreCase("loquibot") && chatMessage.isMod()){
-			Settings.writeSettings("isMod", "true");
+			SettingsHandler.writeSettings("isMod", "true");
 		}
 
 		if (!chatMessage.getSender().equalsIgnoreCase("loquibot")) {
 			new SelfDestructingMessage();
 			new ChatterActivity(chatMessage.getSender());
-			if (Settings.getSettings("multiMode").asBoolean()) {
+			if (SettingsHandler.getSettings("multiMode").asBoolean()) {
 				new Thread(() -> waitOnMessage(chatMessage)).start();
 			} else {
 				waitOnMessage(chatMessage);

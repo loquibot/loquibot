@@ -1,8 +1,11 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.LevelData;
+import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Tabs.SettingsTab;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;

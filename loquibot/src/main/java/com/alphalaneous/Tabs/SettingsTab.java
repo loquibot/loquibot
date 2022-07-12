@@ -1,13 +1,11 @@
 package com.alphalaneous.Tabs;
 
-import com.alphalaneous.*;
 import com.alphalaneous.Images.Assets;
-import com.alphalaneous.SettingsPanels.Logs.RequestsLog;
+import com.alphalaneous.Settings.*;
+import com.alphalaneous.Settings.Logs.RequestsLog;
 import com.alphalaneous.Swing.Components.*;
-import com.alphalaneous.SettingsPanels.*;
-import com.alphalaneous.SettingsPanels.MediaShare;
-import com.alphalaneous.SettingsPanels.Requests;
 import com.alphalaneous.Theming.ThemedColor;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
@@ -262,7 +260,7 @@ public class SettingsTab {
 		buttons.add(blockedUsers, gbc);
 		buttons.add(blockedCreators, gbc);
 		buttons.add(loggedIDs, gbc);
-		if(Settings.getSettings("isDev").asBoolean()) {
+		if(SettingsHandler.getSettings("isDev").asBoolean()) {
 			buttons.add(developer, gbc);
 		}
 		//buttons.add(createSeparator(), gbc);
@@ -387,7 +385,7 @@ public class SettingsTab {
 	}
 
 	public static void refreshSettingsButtons(){
-		String language = Settings.getSettings("language").asString();
+		String language = SettingsHandler.getSettings("language").asString();
 		for(Component component : buttons.getComponents()){
 			if(component instanceof SettingsButton){
 				switch (language){

@@ -1,7 +1,7 @@
 package com.alphalaneous.Audio;
 
-import com.alphalaneous.BotHandler;
-import com.alphalaneous.Settings;
+import com.alphalaneous.ChatBot.BotHandler;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 import javazoom.jl.player.Player;
@@ -22,7 +22,7 @@ public class Sounds {
 
 	public static void playSound(String location, boolean restart, boolean overlap, boolean isFile, boolean isURL) {
 
-		if (sounds.size() <= 5 && (!contains(location) || overlap)) {
+		if (!contains(location) || overlap) {
 			new Sound(location, isFile, isURL).playSound();
 		} else if (contains(location) && restart) {
 			sounds.get(getLocationID(location)).stopSound();
@@ -80,7 +80,7 @@ public class Sounds {
 		public void playSound() {
 			new Thread(() -> {
 				try {
-					if(Window.getWindow().isVisible() || Settings.getSettings("playSoundsWhileHidden").asBoolean()) {
+					if(Window.getWindow().isVisible() || SettingsHandler.getSettings("playSoundsWhileHidden").asBoolean()) {
 						BufferedInputStream inp;
 						if (isURL) {
 							inp = new BufferedInputStream(new URL(location).openStream());

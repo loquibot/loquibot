@@ -2,6 +2,7 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Swing.Components.ContextMenu;
@@ -10,6 +11,7 @@ import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Tabs.SettingsTab;
 import com.alphalaneous.Theming.ThemedColor;
+import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,8 +56,8 @@ public class Window {
         windowFrame.setMinimumSize(new Dimension(900, 500));
         //windowFrame.setContentLayout(null);
 
-        if(Settings.getSettings("window").exists()){
-            String position = Settings.getSettings("window").asString();
+        if(SettingsHandler.getSettings("window").exists()){
+            String position = SettingsHandler.getSettings("window").asString();
             int winX = Integer.parseInt(position.split(",")[0]);
             int winY = Integer.parseInt(position.split(",")[1]);
             windowFrame.setLocation(winX, winY);
@@ -88,7 +90,7 @@ public class Window {
 
         updateButton.addActionListener(e -> {
             try {
-                Settings.writeSettings("hasUpdated", "true");
+                SettingsHandler.writeSettings("hasUpdated", "true");
                 Main.restart();
             }
             catch (Exception f){
@@ -391,23 +393,23 @@ public class Window {
 
     public static void focus() {
         windowFrame.setAlwaysOnTop(true);
-        windowFrame.setAlwaysOnTop(Settings.getSettings("onTop").asBoolean());
+        windowFrame.setAlwaysOnTop(SettingsHandler.getSettings("onTop").asBoolean());
     }
 
     public static void setSettings() {
-        Settings.writeSettings("window", windowFrame.getX() + "," + windowFrame.getY());
-        Settings.writeSettings("windowState", String.valueOf(windowFrame.getExtendedState()));
-        Settings.writeSettings("windowSize", windowFrame.getWidth() + "," + windowFrame.getHeight());
+        SettingsHandler.writeSettings("window", windowFrame.getX() + "," + windowFrame.getY());
+        SettingsHandler.writeSettings("windowState", String.valueOf(windowFrame.getExtendedState()));
+        SettingsHandler.writeSettings("windowSize", windowFrame.getWidth() + "," + windowFrame.getHeight());
     }
 
     public static void loadSettings() {
-        if (!Settings.getSettings("windowState").asString().equalsIgnoreCase("")) {
-            int windowState = Settings.getSettings("windowState").asInteger();
+        if (!SettingsHandler.getSettings("windowState").asString().equalsIgnoreCase("")) {
+            int windowState = SettingsHandler.getSettings("windowState").asInteger();
             windowFrame.setExtendedState(windowState);
         }
 
-        if (!Settings.getSettings("windowSize").asString().equalsIgnoreCase("")) {
-            String[] dim = Settings.getSettings("windowSize").asString().split(",");
+        if (!SettingsHandler.getSettings("windowSize").asString().equalsIgnoreCase("")) {
+            String[] dim = SettingsHandler.getSettings("windowSize").asString().split(",");
             int newW = Integer.parseInt(dim[0]);
             int newH = Integer.parseInt(dim[1]);
 

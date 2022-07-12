@@ -1,10 +1,10 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.*;
 import com.alphalaneous.Interactive.Timers.LoadTimers;
 import com.alphalaneous.Tabs.ChatbotPages.TimerSettings;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import org.apache.commons.text.StringEscapeUtils;

@@ -1,8 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Swing.Components.CurvedButtonAlt;
-import com.alphalaneous.Swing.Components.JButtonUI;
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Windows.Window;
 

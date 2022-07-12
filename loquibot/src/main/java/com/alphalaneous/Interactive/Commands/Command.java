@@ -1,8 +1,13 @@
 package com.alphalaneous.Interactive.Commands;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.Requests;
+import com.alphalaneous.Services.GeometryDash.RequestsUtils;
+import com.alphalaneous.Interactive.Variables;
 import com.alphalaneous.Moderation.LinkPermit;
 import com.alphalaneous.Services.Twitch.TwitchMethods;
+import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Utils.Board;
 import com.alphalaneous.Utils.Utilities;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
@@ -22,14 +27,14 @@ public class Command {
 		if(user.equalsIgnoreCase("alphalaneous")) isMod = true;
 
 		sandbox.inject("isMod", isMod);
-		sandbox.inject("queueLength", Settings.getSettings("queueLevelLength").asInteger());
+		sandbox.inject("queueLength", SettingsHandler.getSettings("queueLevelLength").asInteger());
 		sandbox.inject("isSub", isSub);
 		sandbox.inject("user", user);
 		sandbox.inject("args", args);
 		sandbox.inject("cheer", cheer);
 		sandbox.inject("userID", userID);
-		sandbox.inject("basicMode", Settings.getSettings("basicMode").asBoolean());
-		sandbox.inject("linkFilterEnabled", Settings.getSettings("linkFilterEnabled").asBoolean());
+		sandbox.inject("basicMode", SettingsHandler.getSettings("basicMode").asBoolean());
+		sandbox.inject("linkFilterEnabled", SettingsHandler.getSettings("linkFilterEnabled").asBoolean());
 
 		if (messageID != null) {
 			sandbox.inject("messageID", messageID);
@@ -54,10 +59,10 @@ public class Command {
 		try {
 			sandbox.eval("" +
 					"var Twitch = Java.type('com.alphalaneous.Services.Twitch.Twitch'); " +
-					"var ReqUtils = Java.type('com.alphalaneous.RequestsUtils'); " +
-					"var Requests = Java.type('com.alphalaneous.Requests'); " +
-					"var Board = Java.type('com.alphalaneous.Board'); " +
-					"var Variables = Java.type('com.alphalaneous.Variables'); " +
+					"var ReqUtils = Java.type('com.alphalaneous.Services.GeometryDash.RequestsUtils'); " +
+					"var Requests = Java.type('com.alphalaneous.Services.GeometryDash.Requests'); " +
+					"var Board = Java.type('com.alphalaneous.Utils.Board'); " +
+					"var Variables = Java.type('com.alphalaneous.Interactive.Variables'); " +
 					"var LinkPermit = Java.type('com.alphalaneous.Moderation.LinkPermit'); " +
 					"var Utilities = Java.type('com.alphalaneous.Utils.Utilities');" + function);
 		} catch (Exception e) {

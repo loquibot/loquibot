@@ -1,6 +1,5 @@
 package com.alphalaneous.Swing.ThemedComponents;
 
-import com.alphalaneous.*;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Swing.Components.CurvedButtonAlt;
 import com.alphalaneous.Swing.Components.JButtonUI;
@@ -8,6 +7,7 @@ import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Theming.ThemedColor;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Language;
 
 import javax.swing.*;

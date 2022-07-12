@@ -1,6 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.Window;
 

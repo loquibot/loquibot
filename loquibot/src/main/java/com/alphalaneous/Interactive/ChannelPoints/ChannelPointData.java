@@ -1,6 +1,6 @@
 package com.alphalaneous.Interactive.ChannelPoints;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

@@ -5,6 +5,7 @@ import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Tabs.SettingsTab;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 

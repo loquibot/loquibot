@@ -1,12 +1,12 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Theming.ThemedColor;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.alphalaneous.Defaults.settingsButtonUI;
+import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
 
 public class ListButton extends CurvedButton{
 

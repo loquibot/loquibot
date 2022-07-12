@@ -1,6 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.ChatBot.ChatMessage;
 
 import javax.swing.*;

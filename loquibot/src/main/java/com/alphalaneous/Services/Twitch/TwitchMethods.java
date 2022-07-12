@@ -1,7 +1,5 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.APIs;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,19 +14,19 @@ public class TwitchMethods {
 	}
 
 	public static long getFollowers() {
-		return APIs.getFollowerCount();
+		return TwitchAPI.getFollowerCount();
 	}
 
 	public static String getRandomViewer() {
-		APIs.setAllViewers();
+		TwitchAPI.setAllViewers();
 		Random random = new Random();
-		int num = random.nextInt(APIs.allViewers.size() - 1);
-		return APIs.allViewers.get(num);
+		int num = random.nextInt(TwitchAPI.allViewers.size() - 1);
+		return TwitchAPI.allViewers.get(num);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static String[] getViewers() {
-		ArrayList<String> allViewers = (ArrayList<String>) APIs.allViewers.clone();
+		ArrayList<String> allViewers = (ArrayList<String>) TwitchAPI.allViewers.clone();
 		String[] array = new String[allViewers.size()];
 		for (int j = 0; j < allViewers.size(); j++) {
 			array[j] = allViewers.get(j);
@@ -37,7 +35,7 @@ public class TwitchMethods {
 	}
 
 	public static void reloadViewers() {
-		APIs.setAllViewers();
+		TwitchAPI.setAllViewers();
 	}
 
 	public static void checkloquibot() {

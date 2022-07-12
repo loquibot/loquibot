@@ -1,15 +1,14 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.Images.Assets;
-import com.alphalaneous.SettingsPanels.Logs.RequestsLog;
+import com.alphalaneous.Settings.ChannelPoints;
+import com.alphalaneous.Settings.Chatbot;
+import com.alphalaneous.Settings.Logs.RequestsLog;
+import com.alphalaneous.Settings.SpamProtection;
 import com.alphalaneous.Swing.Components.*;
-import com.alphalaneous.Defaults;
-import com.alphalaneous.Settings;
-import com.alphalaneous.SettingsPanels.*;
-import com.alphalaneous.Tabs.ChatbotPages.BlockedKeywords;
-import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
-import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
-import com.alphalaneous.Tabs.ChatbotPages.TimerSettings;
+import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Tabs.ChatbotPages.*;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
@@ -224,7 +223,7 @@ public class ChatbotTab {
 
 
 	public static void refreshSettingsButtons(){
-		String language = Settings.getSettings("language").asString();
+		String language = SettingsHandler.getSettings("language").asString();
 		for(Component component : buttons.getComponents()){
 			if(component instanceof FunctionButton){
 				switch (language){

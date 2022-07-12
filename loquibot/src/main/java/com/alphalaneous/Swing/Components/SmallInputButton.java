@@ -1,7 +1,7 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Defaults;
-import com.alphalaneous.Settings;
+import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Settings.SettingsHandler;
 import org.jnativehook.keyboard.SwingKeyAdapter;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class SmallInputButton extends JPanel {
         setOpaque(false);
         label = new LangLabel(text);
 
-        if(Settings.getSettings(setting).exists()) input.setText(Settings.getSettings(setting).asString());
+        if(SettingsHandler.getSettings(setting).exists()) input.setText(SettingsHandler.getSettings(setting).asString());
         else input.setText(defaultValue);
 
 
@@ -27,7 +27,7 @@ public class SmallInputButton extends JPanel {
         input.addKeyListener(new SwingKeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                Settings.writeSettings(setting, input.getText().replace(" ", ""));
+                SettingsHandler.writeSettings(setting, input.getText().replace(" ", ""));
                 input.setText(input.getText().replace(" ", ""));
             }
         });

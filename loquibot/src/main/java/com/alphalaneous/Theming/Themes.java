@@ -1,7 +1,7 @@
 package com.alphalaneous.Theming;
 
-import com.alphalaneous.Defaults;
-import com.alphalaneous.SettingData;
+import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Settings.SettingData;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
@@ -30,8 +30,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
-import static com.alphalaneous.Defaults.defaultUI;
-import static com.alphalaneous.Defaults.settingsButtonUI;
+import static com.alphalaneous.Utils.Defaults.defaultUI;
+import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
 
 public class Themes {
 

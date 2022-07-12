@@ -4,7 +4,9 @@ import com.alphalaneous.*;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Timers.TimerData;
-import com.alphalaneous.SettingsPanels.Commands;
+import com.alphalaneous.Services.Twitch.TwitchAPI;
+import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Settings.Commands;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.LogWindow;
@@ -195,7 +197,7 @@ public class Utilities {
 	}
 
 	public static String fetchURL(String url) {
-		return APIs.fetchURL(url);
+		return TwitchAPI.fetchURL(url);
 	}
 
 	public static String format(String format, Object... args) {
@@ -300,7 +302,7 @@ public class Utilities {
 	}
 
 	public static void notify(String title, String message) {
-		if (!Settings.getSettings("disableNotifications").asBoolean()) {
+		if (!SettingsHandler.getSettings("disableNotifications").asBoolean()) {
 			trayIcon.displayMessage(title, message, TrayIcon.MessageType.NONE);
 		}
 

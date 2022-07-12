@@ -1,6 +1,6 @@
 package com.alphalaneous.Swing.ThemedComponents;
 
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
 import java.util.ArrayList;

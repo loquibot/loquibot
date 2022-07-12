@@ -1,6 +1,6 @@
 package com.alphalaneous.Services.YouTube;
 
-import com.alphalaneous.Settings;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
@@ -39,7 +39,7 @@ public class YouTubeAccount {
     }
 
     public static void setInfo(boolean skipCheck){
-        if(Settings.getSettings("youtubeEnabled").asBoolean() || skipCheck) {
+        if(SettingsHandler.getSettings("youtubeEnabled").asBoolean() || skipCheck) {
             try {
 
                 youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)

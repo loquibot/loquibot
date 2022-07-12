@@ -3,13 +3,18 @@ package com.alphalaneous.Interactive.Commands;
 import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
+import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
+import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.YouTube.YouTubeScrape;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Utils.Board;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
 import com.eclipsesource.v8.V8;
@@ -45,8 +50,8 @@ public class CommandHandler {
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
 
-        if(Settings.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = Settings.getSettings("defaultCommandPrefix").asString();
-        if(Settings.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = Settings.getSettings("geometryDashCommandPrefix").asString();
+        if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+        if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
 
         for (CommandData command : LoadCommands.getDefaultCommands()) {
             if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(defaultCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
@@ -96,7 +101,7 @@ public class CommandHandler {
             }
         }
         if(foundCommand != null && foundCommand.isMethod() && foundCommand.isEnabled() && checkUserLevel(foundCommand, message)){
-            if(foundCommand.isGD() && (!Settings.getSettings("gdMode").asBoolean() || !Window.getWindow().isVisible())) return;
+            if(foundCommand.isGD() && (!SettingsHandler.getSettings("gdMode").asBoolean() || !Window.getWindow().isVisible())) return;
 
             Reflections reflections =
                     new Reflections(new ConfigurationBuilder()
@@ -107,7 +112,7 @@ public class CommandHandler {
 
             try {
                 for (String str : typeList) {
-                    if (str.equals("com.alphalaneous.DefaultCommandFunctions")) {
+                    if (str.equals("com.alphalaneous.Interactive.Commands.DefaultCommandFunctions")) {
                         reply = (String) Class.forName(str).getMethod(foundCommand.getMessage(), ChatMessage.class).invoke(null, message);
                     }
                 }
@@ -243,7 +248,7 @@ public class CommandHandler {
                         break;
                     }
                     default: {
-                        if(data.startsWith("file://")) Sounds.playSound(dataArr[1].trim(), true, true, true, false);
+                        if(data.startsWith("file://")) Sounds.playSound(dataArr[1].trim().substring(7), true, true, true, false);
                         else Sounds.playSound(dataArr[1].trim(), true, true, false, true);
                         break;
                     }
@@ -413,7 +418,7 @@ public class CommandHandler {
             case "random_user":
             case "random_viewer": {
                 Random ran = new Random();
-                replacement = APIs.allViewers.get(ran.nextInt(APIs.allViewers.size()));
+                replacement = TwitchAPI.allViewers.get(ran.nextInt(TwitchAPI.allViewers.size()));
                 break;
             }
             case "queue_size": {

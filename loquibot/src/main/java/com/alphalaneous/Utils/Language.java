@@ -1,6 +1,5 @@
 package com.alphalaneous.Utils;
 
-import com.alphalaneous.Defaults;
 import com.alphalaneous.Swing.Components.CurvedButtonAlt;
 import com.alphalaneous.Swing.Components.LangButton;
 import com.alphalaneous.Swing.Components.LangLabel;

@@ -1,6 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.RequestFunctions;
+import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Tabs.RequestsTab;
 
 public class LevelContextMenu extends ContextMenu {

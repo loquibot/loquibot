@@ -1,7 +1,7 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Interactive.Commands.CommandData;
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
 import java.awt.*;

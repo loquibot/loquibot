@@ -1,7 +1,10 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.FancyTextArea;
 import com.alphalaneous.Swing.Components.JButtonUI;
 import com.alphalaneous.Swing.Components.RoundedJButton;
@@ -9,9 +12,9 @@ import com.alphalaneous.Swing.Components.VideoButton;
 import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Swing.Components.VideosPanel;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
-import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import static com.alphalaneous.Defaults.defaultUI;
+import static com.alphalaneous.Utils.Defaults.defaultUI;
 
 public class MediaShareTab {
 
@@ -212,7 +215,7 @@ public class MediaShareTab {
         contentPanel.add(buttonPanel);
         windowPanel.add(contentPanel);
         windowPanel.setBounds(0,0, 100, 100);
-        Window.add(windowPanel, "\uF03D");
+        //Window.add(windowPanel, "\uF03D");
     }
 
 
@@ -220,8 +223,8 @@ public class MediaShareTab {
     public static void toggle(){
         if (Main.programLoaded) {
             boolean doAnnounce = false;
-            if(Settings.getSettings("twitchEnabled").asBoolean()) {
-                doAnnounce = Settings.getSettings("isMod").asBoolean();
+            if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
+                doAnnounce = SettingsHandler.getSettings("isMod").asBoolean();
             }
             if (MediaShare.sharingEnabled) {
                 MediaShare.sharingEnabled = false;

@@ -1,6 +1,6 @@
 package com.alphalaneous.ChatBot;
 
-import com.alphalaneous.APIs;
+import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Utils.Utilities;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ChatterActivity {
     public static boolean checkIfActive(String username){
         for(ChatterActivity activity : chatterActivities){
             if(activity != null) {
-                if (activity.getUsername().equalsIgnoreCase(username) || APIs.isViewer(username)) {
+                if (activity.getUsername().equalsIgnoreCase(username) || TwitchAPI.isViewer(username)) {
                     return true;
                 }
             }

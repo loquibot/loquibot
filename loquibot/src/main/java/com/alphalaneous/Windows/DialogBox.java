@@ -2,7 +2,7 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.Swing.Components.CurvedButtonAlt;
 import com.alphalaneous.Swing.Components.LangLabel;
-import com.alphalaneous.Defaults;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.alphalaneous.Defaults.defaultUI;
+import static com.alphalaneous.Utils.Defaults.defaultUI;
 
 public class DialogBox {
 
