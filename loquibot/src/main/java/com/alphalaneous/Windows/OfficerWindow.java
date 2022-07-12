@@ -1,8 +1,8 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
-import com.alphalaneous.Components.*;
-import com.alphalaneous.Panels.LevelButton;
+import com.alphalaneous.Swing.Components.*;
+import com.alphalaneous.Swing.Components.LevelButton;
 import com.alphalaneous.Tabs.RequestsTab;
 import jdash.common.entity.GDLevel;
 import org.json.JSONObject;

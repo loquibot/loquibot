@@ -1,10 +1,10 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Components.LangLabel;
-import com.alphalaneous.Components.RadioPanel;
-import com.alphalaneous.Panels.*;
-import com.alphalaneous.SettingsPanels.BlockedIDSettings;
-import com.alphalaneous.SettingsPanels.OutputSettings;
+import com.alphalaneous.SettingsPanels.Logs.LoggedID;
+import com.alphalaneous.Swing.Components.*;
+import com.alphalaneous.SettingsPanels.BlockedIDs;
+import com.alphalaneous.SettingsPanels.Outputs;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import javazoom.jl.decoder.JavaLayerException;
@@ -117,7 +117,7 @@ public class RequestFunctions {
                 }
             }
         }
-        OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
+        Outputs.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
 
         RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
         if(RequestsTab.getQueueSize() == 0) LevelDetailsPanel.setPanel(null);
@@ -204,7 +204,7 @@ public class RequestFunctions {
                                 RequestsTab.getRequest(num).getLevelData().getRequester()), Settings.getSettings("announceNP").asBoolean());
 
                     }
-                    OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
+                    Outputs.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
                     LevelDetailsPanel.setPanel(RequestsTab.getRequest(num).getLevelData());
                 }
             }
@@ -352,7 +352,7 @@ public class RequestFunctions {
                     else option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{RequestsTab.getRequest(pos).getLevelData().getGDLevel().name(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()});
 
                     if (option.equalsIgnoreCase("YES")) {
-                        BlockedIDSettings.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
+                        BlockedIDs.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
                         Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blocked.txt");
 
                         try {

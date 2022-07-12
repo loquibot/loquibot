@@ -1,7 +1,9 @@
 package com.alphalaneous;
 
-import com.alphalaneous.SettingsPanels.AccountSettings;
+import com.alphalaneous.SettingsPanels.Account;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utils.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,7 +79,7 @@ public class ServerBot {
 						}
 						if(Settings.getSettings("twitchEnabled").asBoolean()) {
 							Settings.writeSettings("channel", channel);
-							AccountSettings.refreshTwitch(channel);
+							Account.refreshTwitch(channel);
 							APIs.setAllViewers();
 						}
 						break;

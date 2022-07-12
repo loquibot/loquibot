@@ -1,8 +1,11 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.*;
-import com.alphalaneous.Components.*;
-import com.alphalaneous.Panels.*;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Swing.Components.*;
+import com.alphalaneous.Interactive.Commands.Command;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.OfficerWindow;
 import com.alphalaneous.Windows.Window;
@@ -458,11 +461,6 @@ public class RequestsTab {
             if (component instanceof JButton) {
                 component.setBackground(Defaults.COLOR);
                 component.setForeground(Defaults.FOREGROUND_A);
-            }
-        }
-        for (Component component : sideButtons.getComponents()) {
-            if (component instanceof HighlightButton) {
-                ((HighlightButton) component).refresh();
             }
         }
         for (Component component : modButtonsPanel.getComponents()) {

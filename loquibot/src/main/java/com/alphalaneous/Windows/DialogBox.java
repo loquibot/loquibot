@@ -1,9 +1,9 @@
 package com.alphalaneous.Windows;
 
-import com.alphalaneous.Components.CurvedButtonAlt;
-import com.alphalaneous.Components.LangLabel;
+import com.alphalaneous.Swing.Components.CurvedButtonAlt;
+import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Defaults;
-import com.alphalaneous.Utilities;
+import com.alphalaneous.Utils.Utilities;
 
 import javax.swing.*;
 import java.awt.*;

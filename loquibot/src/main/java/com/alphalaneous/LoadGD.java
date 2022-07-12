@@ -1,7 +1,7 @@
 package com.alphalaneous;
 
-import com.alphalaneous.SettingsPanels.AccountSettings;
-import jdash.common.entity.GDLevel;
+import com.alphalaneous.SettingsPanels.Account;
+import com.alphalaneous.Utils.Utilities;
 
 import javax.swing.*;
 import java.util.Base64;
@@ -23,7 +23,7 @@ public class LoadGD {
                     password = xor(new String(Base64.getDecoder().decode(Settings.getSettings("p").asString().getBytes())));
                     GDAPI.login(username, password);
                     isAuth = true;
-                    AccountSettings.refreshGD(username);
+                    Account.refreshGD(username);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Settings.writeSettings("GDLogon", "false");

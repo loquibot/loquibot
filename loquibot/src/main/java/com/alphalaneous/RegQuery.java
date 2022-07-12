@@ -25,6 +25,7 @@ public class RegQuery {
             + " /v Background";
 
     public static Color getWallpaperColor(){
+        if(Settings.getSettings("noReg").asBoolean()) return new Color(70, 86, 255);
         try {
             Process process = Runtime.getRuntime().exec(WALLPAPER_COLOR);
             StreamReader reader = new StreamReader(process.getInputStream());
@@ -52,6 +53,7 @@ public class RegQuery {
     }
 
     public static String getWallpaperLocation(){
+        if(Settings.getSettings("noReg").asBoolean()) return "";
         try {
             Process process = Runtime.getRuntime().exec(WALLPAPER);
             StreamReader reader = new StreamReader(process.getInputStream());
@@ -75,6 +77,7 @@ public class RegQuery {
 
 
     public static int getTheme() {
+        if(Settings.getSettings("noReg").asBoolean()) return -1;
         try {
             Process process = Runtime.getRuntime().exec(PERSONALIZE);
             StreamReader reader = new StreamReader(process.getInputStream());
@@ -99,6 +102,7 @@ public class RegQuery {
     }
 
     public static int getColor() {
+        if(Settings.getSettings("noReg").asBoolean()) return -1;
         try {
             Process process = Runtime.getRuntime().exec(SYSTEM_COLOR);
             StreamReader reader = new StreamReader(process.getInputStream());
@@ -138,7 +142,7 @@ public class RegQuery {
                 while ((c = is.read()) != -1)
                     sw.write(c);
             } catch (IOException e) {
-                ;
+                e.printStackTrace();
             }
         }
 

@@ -1,5 +1,7 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Audio.Sounds;
+import com.alphalaneous.Interactive.Commands.Command;
 import com.alphalaneous.Windows.DialogBox;
 import jdash.client.exception.GDClientException;
 import jdash.common.entity.GDSong;

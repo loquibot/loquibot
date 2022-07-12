@@ -1,9 +1,14 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.*;
+import com.alphalaneous.Interactive.Commands.CommandData;
+import com.alphalaneous.Interactive.Commands.CommandHandler;
+import com.alphalaneous.Interactive.Commands.LoadCommands;
+import com.alphalaneous.Swing.Components.LevelButton;
+import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.RequestsTab;
-import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
 import jdash.common.DemonDifficulty;
 import jdash.common.Difficulty;
@@ -556,7 +561,7 @@ public class RequestsUtils {
 			sc.close();
 
 			response = Utilities.format("$BLOCK_MESSAGE$", user, arguments[1]);
-			BlockedIDSettings.addBlockedLevel(arguments[1]);
+			BlockedIDs.addBlockedLevel(arguments[1]);
 			if (start) {
 				RequestsTab.getLevelsPanel().setSelect(0);
 			}
@@ -585,7 +590,7 @@ public class RequestsUtils {
 				sc.close();
 
 				if (exists) {
-					BlockedIDSettings.removeBlockedLevel(arguments[1]);
+					BlockedIDs.removeBlockedLevel(arguments[1]);
 					response = Utilities.format("$UNBLOCK_MESSAGE$", user, arguments[1]);
 				} else {
 					response = Utilities.format("$UNBLOCK_DOESNT_EXISTS_MESSAGE$", user);
@@ -617,7 +622,7 @@ public class RequestsUtils {
 			sc.close();
 
 			response = Utilities.format("$BLOCK_USER_MESSAGE$", user, arguments[1]);
-			BlockedUserSettings.addBlockedUser(arguments[1]);
+			BlockedUsers.addBlockedUser(arguments[1]);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -646,7 +651,7 @@ public class RequestsUtils {
 				if (exists) {
 
 					response = Utilities.format("$UNBLOCK_USER_MESSAGE$", user, arguments[1]);
-					BlockedUserSettings.removeBlockedUser(unblocked);
+					BlockedUsers.removeBlockedUser(unblocked);
 				} else {
 					response = Utilities.format("$UNBLOCK_USER_DOESNT_EXISTS_MESSAGE$", user);
 
@@ -713,17 +718,17 @@ public class RequestsUtils {
 
 
 			for (CommandData commandData : LoadCommands.getDefaultCommands()) {
-				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
 					existingCommands.add(defaultCommandPrefix + commandData.getCommand());
 				}
 			}
 			for (CommandData commandData : LoadCommands.getGeometryDashCommands()) {
-				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand()) && Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
+				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand()) && Settings.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
 					existingCommands.add(geometryDashCommandPrefix + commandData.getCommand());
 				}
 			}
 			for (CommandData commandData : LoadCommands.getCustomCommands()) {
-				if (CommandNew.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
 					existingCommands.add(commandData.getCommand());
 				}
 			}
@@ -805,7 +810,7 @@ public class RequestsUtils {
 	}
 
 	@SuppressWarnings("unused")
-	public static Setting getOAuth() {
+	public static SettingData getOAuth() {
 		return Settings.getSettings("oauth");
 	}
 
@@ -821,6 +826,6 @@ public class RequestsUtils {
 	}
 
 	static String parseInfoString(String text) {
-		return CommandNew.replaceBetweenParentheses(new ChatMessage(null,"OutputHandler", "OutputHandler", "", null, true, true, true, 0, false), text, text.split(" "), null);
+		return CommandHandler.replaceBetweenParentheses(new ChatMessage(null,"OutputHandler", "OutputHandler", "", null, true, true, true, 0, false), text, text.split(" "), null);
 	}
 }

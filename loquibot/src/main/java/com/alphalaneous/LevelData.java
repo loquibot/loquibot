@@ -1,10 +1,9 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.LevelButton;
+import com.alphalaneous.Swing.Components.LevelButton;
 import jdash.common.entity.GDLevel;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @noinspection WeakerAccess

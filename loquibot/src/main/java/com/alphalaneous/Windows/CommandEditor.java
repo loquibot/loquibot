@@ -1,11 +1,11 @@
 package com.alphalaneous.Windows;
 
-import com.alphalaneous.ChatbotTab.CustomCommands;
-import com.alphalaneous.Components.*;
+import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
+import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Defaults;
 import com.alphalaneous.Main;
 import com.alphalaneous.Tabs.RequestsTab;
-import com.alphalaneous.ThemedComponents.ThemedCheckbox;
+import com.alphalaneous.Swing.ThemedComponents.ThemedCheckbox;
 //import com.sun.javafx.application.PlatformImpl;
 //import javafx.embed.swing.JFXPanel;
 //import javafx.stage.FileChooser;

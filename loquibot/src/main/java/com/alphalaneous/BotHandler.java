@@ -1,6 +1,9 @@
 package com.alphalaneous;
 
-import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.Interactive.Commands.Command;
+import com.alphalaneous.Interactive.Commands.CommandData;
+import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Interactive.Commands.LoadCommands;
 import com.alphalaneous.Windows.Window;
 
 import java.io.*;
@@ -27,7 +30,7 @@ public class BotHandler {
         }
     }
 
-    static void onMessage(String user, String message, boolean isMod, boolean isSub, int cheer, String ID, long userID, ChatMessage chatMessage) {
+    public static void onMessage(String user, String message, boolean isMod, boolean isSub, int cheer, String ID, long userID, ChatMessage chatMessage) {
         boolean whisper = false;
         processing = true;
         boolean goThrough = true;

@@ -1,9 +1,14 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.LevelButton;
-import com.alphalaneous.Panels.LevelDetailsPanel;
-import com.alphalaneous.SettingsPanels.AccountSettings;
+import com.alphalaneous.ChatBot.ChatterActivity;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Interactive.ChannelPoints.ChannelPointReward;
+import com.alphalaneous.Swing.Components.LevelButton;
+import com.alphalaneous.Swing.Components.LevelDetailsPanel;
+import com.alphalaneous.SettingsPanels.Account;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
 import com.mb3364.twitch.api.Twitch;
 import com.mb3364.twitch.api.auth.Scopes;
@@ -26,21 +31,20 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class APIs {
 
-	static ArrayList<String> allViewers = new ArrayList<>();
+	public static ArrayList<String> allViewers = new ArrayList<>();
 	static ArrayList<String> allMods = new ArrayList<>();
 	static ArrayList<String> allVIPs = new ArrayList<>();
 	static AtomicBoolean success = new AtomicBoolean(false);
 	@SuppressWarnings("SpellCheckingInspection")
 	static final String clientID = "fzwze6vc6d2f7qodgkpq2w8nnsz3rl";
 
-	static void setAllViewers() {
+	public static void setAllViewers() {
 
 		try {
 			JSONObject viewers = getViewers();
@@ -413,7 +417,7 @@ public class APIs {
 				Settings.writeSettings("oauth", twitch.auth().getAccessToken());
 				Settings.writeSettings("channel", Objects.requireNonNull(getChannel()));
 				TwitchAccount.setInfo(true);
-				AccountSettings.refreshTwitch(Settings.getSettings("channel").asString(), true);
+				Account.refreshTwitch(Settings.getSettings("channel").asString(), true);
 				//Main.refreshBot();
 				success.set(true);
 			} else {

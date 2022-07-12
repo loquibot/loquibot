@@ -5,7 +5,7 @@ import com.alphalaneous.GibberishDetector.GibberishDetectorExtended;
 import com.alphalaneous.GibberishDetector.GibberishDetectorFactory;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings;
-import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.ChatBot.ChatMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -138,6 +137,18 @@ public class Moderation {
 	public static boolean checkIfLevelID(String message){
 		return Pattern.compile("\\s*(\\d{6,})\\s*").matcher(message.replace(",", "")).find();
 	}
+
+	public static boolean checkIfNormalLink(String message){
+		try {
+			URL url = new URL(message);
+			url.toURI();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+
+	}
+
 
 	public static boolean checkIfLink(String message){
 		String[] replaceSymbols = { "\\", "|", "{", "}", "\"", "'", ";", "<", ">", ",", "`", "!", "$", "^", "*"};

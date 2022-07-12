@@ -1,15 +1,18 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.*;
-import com.alphalaneous.Components.*;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.SettingsPanels.Logs.RequestsLog;
+import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.SettingsPanels.*;
+import com.alphalaneous.SettingsPanels.MediaShare;
+import com.alphalaneous.SettingsPanels.Requests;
+import com.alphalaneous.Theming.ThemedColor;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.Callable;
-
-import static com.alphalaneous.Defaults.defaultUI;
 
 public class SettingsTab {
 	public static JPanel window = new JPanel();
@@ -18,26 +21,29 @@ public class SettingsTab {
 	private static final JScrollPane buttonsScroll = new SmoothScrollPane(buttonsParent);
 	private static final JPanel content = new JPanel();
 	public static final JButtonUI selectUI = new JButtonUI();
-	private static final JPanel generalPage = RequestsSettings.createPanel();
-	private static final JPanel messagePage = MessageSettings.createPanel();
-	private static final JPanel overlayPage = OutputSettings.createPanel();
-	private static final JPanel accountsPage = AccountSettings.createPanel();
+	private static final JPanel generalPage = Requests.createPanel();
+	private static final JPanel messagePage = Messages.createPanel();
+	private static final JPanel overlayPage = Outputs.createPanel();
+	private static final JPanel accountsPage = Account.createPanel();
 	//private static final JPanel commandsPage = CommandSettings.createPanel();
-	private static final JPanel requestsPage = FiltersSettings.createPanel();
-	private static final JPanel shortcutsPage = ShortcutSettings.createPanel();
-	private static final JPanel personalizationPage = PersonalizationSettings.createPanel();
-	private static final JPanel blockedPage = BlockedIDSettings.createPanel();
-	private static final JPanel blockedUsersPage = BlockedUserSettings.createPanel();
-	private static final JPanel blockedCreatorsPage = BlockedCreatorSettings.createPanel();
+	private static final JPanel requestsPage = Filters.createPanel();
+	private static final JPanel shortcutsPage = Keybinds.createPanel();
+	private static final JPanel personalizationPage = Personalization.createPanel();
+	private static final JPanel blockedPage = BlockedIDs.createPanel();
+	private static final JPanel blockedUsersPage = BlockedUsers.createPanel();
+	private static final JPanel blockedCreatorsPage = BlockedCreators.createPanel();
 	private static final JPanel loggedIDsPage = RequestsLog.createPanel();
-	private static final JPanel devPage = DeveloperSettings.createPanel();
+	private static final JPanel devPage = Developer.createPanel();
 
-	private static final JPanel legalPage = LegalPage.createPanel();
-	private static final JPanel privacyPage = PrivacyPage.createPanel();
-	private static final JPanel warrantyPage = WarrantyPage.createPanel();
-	private static final JPanel termsPage = TermsPage.createPanel();
+	private static final JPanel mediaSharePage = MediaShare.createPanel();
+	private static final JPanel mediaShareKeybindsPage = MediaShareShortcuts.createPanel();
 
-	private static final JPanel languagePage = LanguageSettings.createPanel();
+	private static final JPanel legalPage = Lega.createPanel();
+	private static final JPanel privacyPage = Privacy.createPanel();
+	private static final JPanel warrantyPage = Warranty.createPanel();
+	private static final JPanel termsPage = Terms.createPanel();
+
+	private static final JPanel languagePage = Languages.createPanel();
 	private static final LangLabel title = new LangLabel("$SETTINGS_TITLE$");
 	private static final JPanel settingsPanel = new JPanel(null);
 
@@ -47,6 +53,7 @@ public class SettingsTab {
 	private static final JPanel botSection = new TitleSeparator("$BOT_SECTION_TITLE$");
 	private static final JPanel GDSection = new TitleSeparator("$GD_SECTION_TITLE$");
 	private static final JPanel noticesSection = new TitleSeparator("$NOTICES_SECTION_TITLE$");
+	private static final JPanel mediaShareSection = new TitleSeparator("$MEDIA_SHARE_SECTION_TITLE$");
 	private static final JPanel userSection = new TitleSeparator("$USER_SECTION_TITLE$");
 
 	public static JButtonUI settingsUI = new JButtonUI(){{
@@ -112,6 +119,14 @@ public class SettingsTab {
 	});
 	private static final SettingsButton developer = createButton("$DEVELOPER_SETTINGS$", "\uF0D6", () -> {
 		devPage.setVisible(true);
+		return null;
+	});
+	private static final SettingsButton mediaShare = createButton("$MEDIA_SHARE_SETTINGS$", "\uF03D", () -> {
+		mediaSharePage.setVisible(true);
+		return null;
+	});
+	private static final SettingsButton mediaShareKeybinds = createButton("$MEDIA_SHARE_SHORTCUTS_SETTINGS$", "\uF03D", () -> {
+		mediaShareKeybindsPage.setVisible(true);
 		return null;
 	});
 	private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
@@ -195,6 +210,8 @@ public class SettingsTab {
 		content.add(blockedCreatorsPage);
 		content.add(loggedIDsPage);
 		content.add(devPage);
+		content.add(mediaSharePage);
+		content.add(mediaShareKeybindsPage);
 		content.add(languagePage);
 		content.add(legalPage);
 		content.add(privacyPage);
@@ -214,6 +231,8 @@ public class SettingsTab {
 		blockedCreatorsPage.setVisible(false);
 		loggedIDsPage.setVisible(false);
 		devPage.setVisible(false);
+		mediaSharePage.setVisible(false);
+		mediaShareKeybindsPage.setVisible(false);
 		legalPage.setVisible(false);
 		languagePage.setVisible(false);
 		privacyPage.setVisible(false);
@@ -246,6 +265,10 @@ public class SettingsTab {
 		if(Settings.getSettings("isDev").asBoolean()) {
 			buttons.add(developer, gbc);
 		}
+		//buttons.add(createSeparator(), gbc);
+		//buttons.add(mediaShareSection, gbc);
+		//buttons.add(mediaShare, gbc);
+		//buttons.add(mediaShareKeybinds, gbc);
 		buttons.add(createSeparator(), gbc);
 		buttons.add(noticesSection, gbc);
 		buttons.add(legal, gbc);
@@ -303,6 +326,7 @@ public class SettingsTab {
 		((TitleSeparator) userSection).refreshTextColor();
 		((TitleSeparator) botSection).refreshTextColor();
 		((TitleSeparator) noticesSection).refreshTextColor();
+		((TitleSeparator) mediaShareSection).refreshTextColor();
 	}
 
 

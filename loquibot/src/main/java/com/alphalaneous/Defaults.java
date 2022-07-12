@@ -1,7 +1,9 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Components.JButtonUI;
-import com.alphalaneous.SettingsPanels.PersonalizationSettings;
+import com.alphalaneous.Swing.Components.JButtonUI;
+import com.alphalaneous.SettingsPanels.Personalization;
+import com.alphalaneous.Theming.Themes;
+import com.alphalaneous.Utils.Utilities;
 
 import java.awt.*;
 import java.io.IOException;
@@ -216,7 +218,7 @@ public class Defaults {
 			else if (Settings.getSettings("theme").asString().equalsIgnoreCase("DARK_MODE")) setDark();
 			else if (Settings.getSettings("theme").asString().equalsIgnoreCase("CUSTOM_MODE")) {
 				setCustom();
-				PersonalizationSettings.showCustomizeButton();
+				Personalization.showCustomizeButton();
 			}
 			else {
 				if (os.contains("WIN")) Defaults.setSystem();

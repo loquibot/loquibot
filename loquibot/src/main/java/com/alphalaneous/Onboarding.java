@@ -1,8 +1,12 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Components.CurvedButton;
-import com.alphalaneous.Components.JButtonUI;
-import com.alphalaneous.Components.RoundedJButton;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Swing.Components.CurvedButton;
+import com.alphalaneous.Swing.Components.JButtonUI;
+import com.alphalaneous.Swing.Components.RoundedJButton;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Services.YouTube.YouTubeAccount;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 

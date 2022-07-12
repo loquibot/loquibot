@@ -1,9 +1,31 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Panels.LevelDetailsPanel;
-import com.alphalaneous.Panels.VideoDetailsPanel;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Interactive.ChannelPoints.ChannelPointData;
+import com.alphalaneous.Interactive.ChannelPoints.LoadPoints;
+import com.alphalaneous.Interactive.Commands.Command;
+import com.alphalaneous.Interactive.Commands.CommandData;
+import com.alphalaneous.Interactive.Commands.LoadCommands;
+import com.alphalaneous.Interactive.Keywords.KeywordData;
+import com.alphalaneous.Interactive.Keywords.LoadKeywords;
+import com.alphalaneous.Interactive.Timers.LoadTimers;
+import com.alphalaneous.Interactive.Timers.TimerData;
+import com.alphalaneous.Interactive.Timers.TimerHandler;
+import com.alphalaneous.Running.CheckIfRunning;
+import com.alphalaneous.Running.LoquibotSocket;
+import com.alphalaneous.SettingsPanels.Logs.LoggedID;
+import com.alphalaneous.Swing.Components.ComponentTree;
+import com.alphalaneous.Swing.Components.LevelDetailsPanel;
+import com.alphalaneous.Swing.Components.VideoDetailsPanel;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
+import com.alphalaneous.Services.YouTube.YouTubeChatListener;
+import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.SettingsPanels.*;
 import com.alphalaneous.Tabs.*;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Services.Twitch.TwitchListener;
+import com.alphalaneous.Theming.Themes;
+import com.alphalaneous.Utils.*;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
 import javafx.application.Platform;
@@ -30,6 +52,7 @@ public class Main {
 
     static {
         BackwardsCompatibilityLayer.setNewLocation();
+        LogWindow.createWindow();
     }
 
     public static boolean programLoaded = false;
@@ -38,7 +61,7 @@ public class Main {
     public static Thread keyboardHookThread;
 
     private static TwitchListener channelPointListener;
-    private static ChatListener chatReader;
+    private static TwitchChatListener chatReader;
     private static ServerBot serverBot = null;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
@@ -92,7 +115,6 @@ public class Main {
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         logger.setUseParentHandlers(false);
-        LogWindow.createWindow();
         new Thread(Main::runKeyboardHook).start();
 
         try {
@@ -133,7 +155,7 @@ public class Main {
         if (Settings.getSettings("onboarding").exists()) {
             try {
                 TwitchAccount.setInfo();
-                new Thread(ChannelPointSettings::refresh).start();
+                new Thread(ChannelPoints::refresh).start();
                 try {
                     if (Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
                 }
@@ -145,7 +167,7 @@ public class Main {
                 e.printStackTrace();
                 if(Settings.getSettings("twitchEnabled").asBoolean()) APIs.setOauth();
                 TwitchAccount.setInfo();
-                new Thread(ChannelPointSettings::refresh).start();
+                new Thread(ChannelPoints::refresh).start();
                 try {
                     if (Settings.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
                 }
@@ -218,8 +240,8 @@ public class Main {
                 }
                 TwitchAccount.setInfo();
                 YouTubeAccount.setInfo();
-                if(Settings.getSettings("youtubeEnabled").asBoolean()) AccountSettings.refreshYouTube(YouTubeAccount.name);
-                new Thread(ChannelPointSettings::refresh).start();
+                if(Settings.getSettings("youtubeEnabled").asBoolean()) Account.refreshYouTube(YouTubeAccount.name);
+                new Thread(ChannelPoints::refresh).start();
             }
             else {
                 if(!Settings.getSettings("runAtStartup").asBoolean() || reopen) Window.setVisible(true);
@@ -237,12 +259,12 @@ public class Main {
             }).start();
 
             if(Settings.getSettings("youtubeEnabled").asBoolean()){
-                new Thread(() -> YTChat.startChatListener(null)).start();
+                new Thread(() -> YouTubeChatListener.startChatListener(null)).start();
             }
 
             if(Settings.getSettings("twitchEnabled").asBoolean()) {
                 new Thread(() -> {
-                    chatReader = new ChatListener(TwitchAccount.login);
+                    chatReader = new TwitchChatListener(TwitchAccount.login);
                     chatReader.connect(Settings.getSettings("oauth").asString(), TwitchAccount.login);
                 }).start();
                 new Thread(() -> {
@@ -258,7 +280,7 @@ public class Main {
 
             Window.setOnTop(Settings.getSettings("onTop").asBoolean());
             try {
-                OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
+                Outputs.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
             }
             catch (Exception e){
                 Settings.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
@@ -343,7 +365,7 @@ public class Main {
     }
 
     static void sendMainMessage(String message) {
-        ChatListener.getCurrentListener().sendMessage(message);
+        TwitchChatListener.getCurrentListener().sendMessage(message);
     }
 
     public static void sendToServer(String message) {
@@ -526,9 +548,15 @@ public class Main {
                 Window.setVisible(false);
                 Window.setSettings();
                 try {
-                    TwitchListener.getCurrentTwitchListener().disconnectBot();
-                    ChatListener.getCurrentListener().disconnect();
-                    ServerBot.getCurrentServerBot().disconnect();
+                    if(TwitchListener.getCurrentTwitchListener() != null) {
+                        TwitchListener.getCurrentTwitchListener().disconnectBot();
+                    }
+                    if(TwitchChatListener.getCurrentListener() != null) {
+                        TwitchChatListener.getCurrentListener().disconnect();
+                    }
+                    if(ServerBot.getCurrentServerBot() != null) {
+                        ServerBot.getCurrentServerBot().disconnect();
+                    }
                     GlobalScreen.unregisterNativeHook();
                 } catch (Exception e) {
                     System.out.println("Failed closing properly, forcing close");
@@ -549,9 +577,15 @@ public class Main {
         Window.setVisible(false);
         Window.setSettings();
         try {
-            TwitchListener.getCurrentTwitchListener().disconnectBot();
-            ChatListener.getCurrentListener().disconnect();
-            ServerBot.getCurrentServerBot().disconnect();
+            if(TwitchListener.getCurrentTwitchListener() != null) {
+                TwitchListener.getCurrentTwitchListener().disconnectBot();
+            }
+            if(TwitchChatListener.getCurrentListener() != null) {
+                TwitchChatListener.getCurrentListener().disconnect();
+            }
+            if(ServerBot.getCurrentServerBot() != null) {
+                ServerBot.getCurrentServerBot().disconnect();
+            }
             GlobalScreen.unregisterNativeHook();
         } catch (Exception e) {
             System.out.println("Failed closing properly, forcing close");

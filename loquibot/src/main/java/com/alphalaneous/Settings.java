@@ -2,7 +2,6 @@ package com.alphalaneous;
 
 import com.alphalaneous.Windows.DialogBox;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,11 +45,11 @@ public class Settings {
 		settings.put(key, setting.replace("\n", "\\n"));
 	}
 
-	public static Setting getSettings(String key) {
+	public static SettingData getSettings(String key) {
 		if (settings.containsKey(key)) {
-			return new Setting(settings.get(key).replace("\\n", "\n"));
+			return new SettingData(settings.get(key).replace("\\n", "\n"));
 		}
-		return new Setting(true);
+		return new SettingData(true);
 	}
 
 	static void loadSettings() {

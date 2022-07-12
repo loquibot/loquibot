@@ -1,8 +1,10 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
-import com.alphalaneous.Components.SmoothScrollPane;
-import org.json.JSONArray;
+import com.alphalaneous.Swing.Components.AlphaContainer;
+import com.alphalaneous.Swing.Components.SmoothScrollPane;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utils.Utilities;
 import org.json.JSONObject;
 
 import javax.swing.*;

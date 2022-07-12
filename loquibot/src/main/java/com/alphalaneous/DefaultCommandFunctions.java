@@ -1,8 +1,12 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Components.CommandConfigCheckbox;
+import com.alphalaneous.Audio.Sounds;
+import com.alphalaneous.Interactive.Commands.LoadCommands;
+import com.alphalaneous.Swing.Components.CommandConfigCheckbox;
+import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Moderation.LinkPermit;
-import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Utils.Utilities;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

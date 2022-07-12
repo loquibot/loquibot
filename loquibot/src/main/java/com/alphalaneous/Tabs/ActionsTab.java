@@ -1,6 +1,6 @@
 package com.alphalaneous.Tabs;
 
-import com.alphalaneous.Assets;
+import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;

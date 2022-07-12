@@ -590,3 +590,19 @@ NOTICES_SECTION_TITLE = LEGAL INFORMATION
 EDIT_POINT = Edit Channel Point
 POINT_NAME_INPUT = Name:
 MESSAGE_INPUT_POINT_DESC = The text that is sent when a point is redeemed
+
+//MEDIASHARE
+
+MEDIA_SHARE_ADDED = @%s, "%s" has been added to the Media Share queue.
+MEDIA_SHARE_TOO_LONG = @%s, "%s" is too long, the max time is %s seconds.
+MEDIA_SHARE_IN_QUEUE = @%s, "%s" is already in the Media Share queue.
+MEDIA_SHARE_SECTION_TITLE = Media Share
+MEDIA_SHARE_SETTINGS = Video Sharing
+MEDIA_SHARE_MAX_DURATION = Max Duration (Seconds)
+MEDIA_SHARE_MAX_DURATION_DESC = The maximum length a Media Share can be in seconds.
+MEDIA_SHARE_ENABLED = Enable Media Share
+MEDIA_SHARE_AUTOMATICALLY_PLAY = Automatically Play New Videos
+MEDIA_SHARE_AUTOMATICALLY_PLAY_DESC = Automatically plays new videos that are shared when the queue is empty.
+MEDIA_SHARE_REMOVE_WHEN_DONE = Automatically Remove Watched Videos
+MEDIA_SHARE_DISABLE_REPEATED_SHARES = Disable Repeated Shares
+MEDIA_SHARE_DISABLE_REPEATED_SHARES_ALL_TIME = Disable Repeated Shares All Time

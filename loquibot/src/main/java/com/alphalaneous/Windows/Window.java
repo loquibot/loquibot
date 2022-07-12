@@ -1,13 +1,15 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
-import com.alphalaneous.ChatbotTab.CustomCommands;
-import com.alphalaneous.Components.*;
-import com.alphalaneous.Panels.ContextMenu;
+import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
+import com.alphalaneous.Swing.Components.*;
+import com.alphalaneous.Swing.Components.ContextMenu;
 import com.alphalaneous.Tabs.ChatbotTab;
 import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Tabs.SettingsTab;
+import com.alphalaneous.Theming.ThemedColor;
 
 import javax.swing.*;
 import java.awt.*;

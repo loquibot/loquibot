@@ -1,13 +1,15 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.*;
-import com.alphalaneous.Components.FancyTextArea;
-import com.alphalaneous.Components.JButtonUI;
-import com.alphalaneous.Components.RoundedJButton;
-import com.alphalaneous.Panels.LevelDetailsPanel;
-import com.alphalaneous.Panels.VideoButton;
-import com.alphalaneous.Panels.VideoDetailsPanel;
-import com.alphalaneous.Panels.VideosPanel;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Swing.Components.FancyTextArea;
+import com.alphalaneous.Swing.Components.JButtonUI;
+import com.alphalaneous.Swing.Components.RoundedJButton;
+import com.alphalaneous.Swing.Components.VideoButton;
+import com.alphalaneous.Swing.Components.VideoDetailsPanel;
+import com.alphalaneous.Swing.Components.VideosPanel;
+import com.alphalaneous.Services.YouTube.YouTubeVideo;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 
@@ -210,8 +212,10 @@ public class MediaShareTab {
         contentPanel.add(buttonPanel);
         windowPanel.add(contentPanel);
         windowPanel.setBounds(0,0, 100, 100);
-        //Window.add(windowPanel, "\uF03D");
+        Window.add(windowPanel, "\uF03D");
     }
+
+
 
     public static void toggle(){
         if (Main.programLoaded) {
@@ -256,11 +260,6 @@ public class MediaShareTab {
             if (component instanceof JButton) {
                 component.setBackground(Defaults.COLOR);
                 component.setForeground(Defaults.FOREGROUND_A);
-            }
-        }
-        for (Component component : sideButtons.getComponents()) {
-            if (component instanceof HighlightButton) {
-                ((HighlightButton) component).refresh();
             }
         }
 
@@ -347,9 +346,29 @@ public class MediaShareTab {
         return videosPanel.getButton(pos);
     }
 
+    public static int getVideoPosition(YouTubeVideo video){
+        int pos = 0;
+        for(Component component : videosPanel.getButtonPanel().getComponents()){
+            if (((VideoButton) component).getVideoData().equals(video)) {
+                return pos;
+            }
+            pos++;
+        }
+        return -1;
+    }
+
+    public static boolean exists(YouTubeVideo video){
+        for(Component component : videosPanel.getButtonPanel().getComponents()){
+            if (((VideoButton) component).getVideoData().getVideoID().equals(video.getVideoID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int getVideoPosition(VideoButton button){
         int pos = 0;
-        for(Component component : button.getParent().getComponents()){
+        for(Component component : videosPanel.getButtonPanel().getComponents()){
             if(component.equals(button)){
                 return pos;
             }

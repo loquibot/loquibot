@@ -1,11 +1,15 @@
 package com.alphalaneous.Tabs;
 
-import com.alphalaneous.Assets;
-import com.alphalaneous.ChatbotTab.*;
-import com.alphalaneous.Components.*;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.SettingsPanels.Logs.RequestsLog;
+import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Defaults;
 import com.alphalaneous.Settings;
 import com.alphalaneous.SettingsPanels.*;
+import com.alphalaneous.Tabs.ChatbotPages.BlockedKeywords;
+import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
+import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
+import com.alphalaneous.Tabs.ChatbotPages.TimerSettings;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
@@ -14,20 +18,18 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import static com.alphalaneous.Defaults.defaultUI;
-
 public class ChatbotTab {
 	public static JPanel window = new JPanel();
 	private static final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
 	private static final JScrollPane buttonsScroll = new SmoothScrollPane(buttons);
 	private static final JPanel content = new JPanel();
-	private static final JPanel generalBotPage = ChatbotSettings.createPanel();
+	private static final JPanel generalBotPage = Chatbot.createPanel();
 	private static final JPanel customCommandsPage = CustomCommands.createPanel();
 	private static final JPanel defaultCommandsPage = DefaultCommands.createPanel();
 	private static final JPanel timersPage = TimerSettings.createPanel();
 
-	private static final JPanel pointsPage = ChannelPointSettings.createPanel();
-	private static final JPanel spamProtectionPage = SpamProtectionSettings.createPanel();
+	private static final JPanel pointsPage = ChannelPoints.createPanel();
+	private static final JPanel spamProtectionPage = SpamProtection.createPanel();
 	private static final JPanel customKeywordsPage = CustomKeywords.createPanel();
 	private static final JPanel blockedKeywordsPage = BlockedKeywords.createPanel();
 
@@ -47,7 +49,7 @@ public class ChatbotTab {
 		return null;
 	});
 	private static final FunctionButton defaultCommandsButton = createButton("$DEFAULT_COMMANDS_SETTINGS$", "\uF4EA", () -> {
-		DefaultCommands.loadCommands();
+		com.alphalaneous.Tabs.ChatbotPages.DefaultCommands.loadCommands();
 		defaultCommandsPage.setVisible(true);
 		return null;
 	});

@@ -1,11 +1,13 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Moderation.Moderation;
-import com.alphalaneous.Panels.LevelButton;
-import com.alphalaneous.SettingsPanels.OutputSettings;
-import com.alphalaneous.SettingsPanels.FiltersSettings;
+import com.alphalaneous.Swing.Components.LevelButton;
+import com.alphalaneous.SettingsPanels.Outputs;
+import com.alphalaneous.SettingsPanels.Filters;
 import com.alphalaneous.Tabs.RequestsTab;
-import com.alphalaneous.TwitchBot.ChatMessage;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Utils.Utilities;
 import com.vdurmont.emoji.EmojiManager;
 import jdash.client.exception.ActionFailedException;
 import jdash.client.exception.GDClientException;
@@ -318,15 +320,15 @@ public class Requests {
                             return;
                         }
                     }
-                    if (FiltersSettings.excludedDifficulties.contains(levelData.getSimpleDifficulty().toLowerCase()) && Settings.getSettings("disableDifficulties").asBoolean()) {
+                    if (Filters.excludedDifficulties.contains(levelData.getSimpleDifficulty().toLowerCase()) && Settings.getSettings("disableDifficulties").asBoolean()) {
                         sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
-                    if (FiltersSettings.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().requestedStars())) && Settings.getSettings("disableReqDifficulties").asBoolean()) {
+                    if (Filters.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().requestedStars())) && Settings.getSettings("disableReqDifficulties").asBoolean()) {
                         sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
-                    if (FiltersSettings.excludedLengths.contains(level.length().name().toLowerCase()) && Settings.getSettings("disableLengths").asBoolean()) {
+                    if (Filters.excludedLengths.contains(level.length().name().toLowerCase()) && Settings.getSettings("disableLengths").asBoolean()) {
                         sendUnallowed(Utilities.format("$LENGTH_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
@@ -451,7 +453,7 @@ public class Requests {
     public static void saveLogs(LevelData levelData){
         try {
             addedLevels.put(levelData.getGDLevel().id(), levelData.getGDLevel().levelVersion());
-            OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
+            Outputs.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString()));
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
 
             boolean exists = false;

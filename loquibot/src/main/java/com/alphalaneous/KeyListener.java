@@ -1,6 +1,6 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Components.KeybindButton;
+import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
@@ -76,6 +76,18 @@ public class KeyListener extends SwingKeyAdapter {
 				}
 				if (key == Settings.getSettings("clearKeybind").asInteger()) {
 					RequestFunctions.clearFunction();
+				}
+				if(key == Settings.getSettings("mediaShareSkipKeybind").asInteger()){
+
+				}
+				if(key == Settings.getSettings("mediaShareUndoKeybind").asInteger()){
+
+				}
+				if(key == Settings.getSettings("mediaShareRandomKeybind").asInteger()){
+
+				}
+				if(key == Settings.getSettings("mediaSharePauseKeybind").asInteger()){
+
 				}
 			}
 			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {
