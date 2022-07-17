@@ -23,6 +23,7 @@ public class CommandData {
     private boolean isMethod = false;
     private boolean isDefault = false;
     private boolean isGD = false;
+    private boolean isMediaShare = false;
 
     private List<Object> aliases;
     private int cooldown = 0;
@@ -59,6 +60,12 @@ public class CommandData {
     public void setGD(boolean isGD){
         this.isGD = isGD;
     }
+
+    public void setMediaShare(boolean mediaShare){
+        this.isMediaShare = mediaShare;
+    }
+
+
     public void setHasDescription(boolean hasDescription){
         this.hasDescription = hasDescription;
     }
@@ -110,6 +117,12 @@ public class CommandData {
     public boolean isGD(){
         return isGD;
     }
+
+    public boolean isMediaShare(){
+        return isMediaShare;
+    }
+
+
     public long getCounter(){
         return counter;
     }
@@ -195,6 +208,15 @@ public class CommandData {
         }
         jsonObject.put("commands", jsonArray);
         save(Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json"), jsonObject);
+    }
+    public static void saveMediaShareCommands(){
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for(CommandData data : LoadCommands.getMediaShareCommands()){
+            saveCommands(jsonArray, data);
+        }
+        jsonObject.put("commands", jsonArray);
+        save(Paths.get(Defaults.saveDirectory + "/loquibot/mediaShareCommands.json"), jsonObject);
     }
 
     private static void saveCommands(JSONArray jsonArray, CommandData data) {

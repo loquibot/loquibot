@@ -24,7 +24,7 @@ public class SmallInputButton extends JPanel {
 
 
 
-        input.addKeyListener(new SwingKeyAdapter() {
+        input.getTextInput().addKeyListener(new SwingKeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 SettingsHandler.writeSettings(setting, input.getText().replace(" ", ""));

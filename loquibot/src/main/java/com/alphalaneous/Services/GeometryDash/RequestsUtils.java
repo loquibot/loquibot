@@ -719,9 +719,11 @@ public class RequestsUtils {
 
 			String defaultCommandPrefix = "!";
 			String geometryDashCommandPrefix = "!";
+			String mediaShareCommandPrefix = "!";
 
 			if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
 			if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
+			if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
 
 			for (CommandData commandData : LoadCommands.getDefaultCommands()) {
@@ -732,6 +734,11 @@ public class RequestsUtils {
 			for (CommandData commandData : LoadCommands.getGeometryDashCommands()) {
 				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand()) && SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
 					existingCommands.add(geometryDashCommandPrefix + commandData.getCommand());
+				}
+			}
+			for (CommandData commandData : LoadCommands.getMediaShareCommands()) {
+				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+					existingCommands.add(mediaShareCommandPrefix + commandData.getCommand());
 				}
 			}
 			for (CommandData commandData : LoadCommands.getCustomCommands()) {

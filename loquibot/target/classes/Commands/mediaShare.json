@@ -1,0 +1,25 @@
+{
+  "name" : "Media Share",
+  "commands" : [
+    {
+      "name" : "share",
+      "description" : "Allows users to share media | Usage: \"%pshare <Media Name|URL>\"",
+      "runMethod" : true,
+      "message" : "runMSShare"
+    },
+    {
+      "name" : "skip",
+      "level" : "moderator",
+      "description" : "Skips the current playing media | Usage: \"%pskip\"",
+      "runMethod" : true,
+      "message" : "runMSSkip"
+    },
+    {
+      "name" : "clearmedia",
+      "level" : "moderator",
+      "description" : "Clears the Media Share queue | Usage: \"%pclearmedia\"",
+      "runMethod" : true,
+      "message" : "runMSClear"
+    }
+  ]
+}

@@ -22,6 +22,7 @@ public class LoadCommands {
 
     public static ArrayList<CommandData> defaultCommands;
     public static ArrayList<CommandData> geometryDashCommands;
+    public static ArrayList<CommandData> mediaShareCommands;
     public static ArrayList<CommandData> customCommands = new ArrayList<>();
 
     private static final BufferedReader defaultCommandsReader = new BufferedReader(
@@ -30,6 +31,10 @@ public class LoadCommands {
     private static final BufferedReader geometryCommandsReader = new BufferedReader(
             new InputStreamReader(Objects.requireNonNull(
                     Main.class.getClassLoader().getResourceAsStream("Commands/geometry.json"))));
+    private static final BufferedReader mediaShareCommandsReader = new BufferedReader(
+            new InputStreamReader(Objects.requireNonNull(
+                    Main.class.getClassLoader().getResourceAsStream("Commands/mediaShare.json"))));
+
 
     public static ArrayList<CommandData> getDefaultCommands(){
         return defaultCommands;
@@ -39,6 +44,9 @@ public class LoadCommands {
     }
     public static ArrayList<CommandData> getGeometryDashCommands(){
         return geometryDashCommands;
+    }
+    public static ArrayList<CommandData> getMediaShareCommands(){
+        return mediaShareCommands;
     }
 
     private static void combineData(ArrayList<CommandData> original, ArrayList<CommandData> toCombine){
@@ -83,7 +91,7 @@ public class LoadCommands {
 
     public static void loadCommands(){
         try {
-            defaultCommands = loadJsonToCommandDataArrayList(readIntoString(defaultCommandsReader), true, false);
+            defaultCommands = loadJsonToCommandDataArrayList(readIntoString(defaultCommandsReader), true, false, false);
             Path defaultCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/defaultCommands.json");
             createPathIfDoesntExist(defaultCommandPath);
             ArrayList<CommandData> defaultCommandSettings = loadJsonToCommandDataArrayList(Files.readString(defaultCommandPath, StandardCharsets.UTF_8));
@@ -91,13 +99,21 @@ public class LoadCommands {
 
             for(CommandData data : defaultCommands) data.registerCommand();
 
-            geometryDashCommands = loadJsonToCommandDataArrayList(readIntoString(geometryCommandsReader), true, true);
+            geometryDashCommands = loadJsonToCommandDataArrayList(readIntoString(geometryCommandsReader), true, true, false);
             Path geometryDashCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json");
             createPathIfDoesntExist(geometryDashCommandPath);
             ArrayList<CommandData> geometryDashCommandSettings = loadJsonToCommandDataArrayList(Files.readString(geometryDashCommandPath, StandardCharsets.UTF_8));
             combineData(geometryDashCommands, geometryDashCommandSettings);
 
             for(CommandData data : geometryDashCommands) data.registerCommand();
+
+            mediaShareCommands = loadJsonToCommandDataArrayList(readIntoString(mediaShareCommandsReader), true, false, true);
+            Path mediaShareCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/mediaShareCommands.json");
+            createPathIfDoesntExist(mediaShareCommandPath);
+            ArrayList<CommandData> mediaShareCommandSettings = loadJsonToCommandDataArrayList(Files.readString(mediaShareCommandPath, StandardCharsets.UTF_8));
+            combineData(mediaShareCommands, mediaShareCommandSettings);
+
+            for(CommandData data : mediaShareCommands) data.registerCommand();
 
             Path customCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/customCommands.json");
             createPathIfDoesntExist(customCommandPath);
@@ -114,10 +130,10 @@ public class LoadCommands {
     }
 
     private static ArrayList<CommandData> loadJsonToCommandDataArrayList(String jsonData){
-        return loadJsonToCommandDataArrayList(jsonData, false, false);
+        return loadJsonToCommandDataArrayList(jsonData, false, false, false);
     }
 
-    private static ArrayList<CommandData> loadJsonToCommandDataArrayList(String jsonData, boolean isDefault, boolean isGD){
+    private static ArrayList<CommandData> loadJsonToCommandDataArrayList(String jsonData, boolean isDefault, boolean isGD, boolean isMediaShare){
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(jsonData);
@@ -134,6 +150,7 @@ public class LoadCommands {
                 commandData.setCounter(commandDataJson.optLong("counter"));
                 commandData.setDefault(isDefault);
                 commandData.setGD(isGD);
+                commandData.setMediaShare(isMediaShare);
                 commandData.setHasDescription(!commandDataJson.optString("description").equalsIgnoreCase(""));
                 if(!commandDataJson.optString("description").equalsIgnoreCase(""))
                     commandData.setDescription(commandDataJson.optString("description"));

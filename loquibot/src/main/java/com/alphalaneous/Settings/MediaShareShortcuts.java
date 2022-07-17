@@ -13,8 +13,8 @@ public class MediaShareShortcuts {
         SettingsPage settingsPage = new SettingsPage("$MEDIA_SHARE_SHORTCUTS_SETTINGS$");
 
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$MS_SKIP_SHORTCUT$", "mediaShareSkipKeybind")));
-        settingsPage.addComponent(createKeybindComponent(new KeybindButton("$MS_UNDO_SHORTCUT$", "mediaShareUndoKeybind")));
-        settingsPage.addComponent(createKeybindComponent(new KeybindButton("$MS_RANDOM_SHORTCUT$", "mediaShareRandomKeybind")));
+        //settingsPage.addComponent(createKeybindComponent(new KeybindButton("$MS_UNDO_SHORTCUT$", "mediaShareUndoKeybind")));
+        //settingsPage.addComponent(createKeybindComponent(new KeybindButton("$MS_RANDOM_SHORTCUT$", "mediaShareRandomKeybind")));
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$MS_PAUSE_SHORTCUT$", "mediaSharePauseKeybind")));
 
         return settingsPage;

@@ -1,5 +1,7 @@
 package com.alphalaneous.Interactive.MediaShare;
 
+import com.alphalaneous.Swing.Components.MultiLineLabel;
+import com.alphalaneous.Swing.Components.VideoProgressBar;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Images.BoxBlurFilter;
 import com.alphalaneous.Main;
@@ -9,22 +11,28 @@ import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Utils.Utilities;
+import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Windows.Window;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class MediaShare {
 
     public static boolean sharingEnabled = true;
+    private static final ArrayList<String> sentVideos = new ArrayList<>();
+
 
     public static void init(){
         new Thread(() -> {
@@ -35,10 +43,12 @@ public class MediaShare {
 
     static class MediaSharePanel extends JPanel{
         private final JLabel background = new JLabel();
-        private final JLabel title = new JLabel();
+        private final MultiLineLabel title;
         private final JLabel timeLabel = new JLabel("0 / 0");
         private final WebView webView = new WebView();
         private final YouTubeVideo video;
+        private final VideoProgressBar videoProgressBar;
+
 
         private static MediaSharePanel currentVideo;
         private static double prevDur;
@@ -47,11 +57,13 @@ public class MediaShare {
         public MediaSharePanel(YouTubeVideo video){
             currentVideo = this;
             this.video = video;
+            this.title = new MultiLineLabel(video.getTitle(), 470, Defaults.MAIN_FONT.deriveFont(16f));
+            videoProgressBar = new VideoProgressBar(video.getDuration());
+            videoProgressBar.setBounds(0,0,480,340);
             JPanel panel = new JPanel();
             JFXPanel panel1 = new JFXPanel();
             VBox vBox = new VBox(webView);
             Scene scene = new Scene(vBox, 480, 270);
-            panel.setBackground(Color.ORANGE);
             panel.setBounds(0,0,480,340);
             panel.setLayout(null);
             panel1.setScene(scene);
@@ -60,7 +72,7 @@ public class MediaShare {
             background.setBounds(0,0,480, 340);
 
             title.setBounds(10,280, 480, 50);
-            title.setFont(Defaults.MAIN_FONT.deriveFont(20f));
+            //title.setFont(Defaults.MAIN_FONT.deriveFont(20f));
             title.setForeground(Defaults.FOREGROUND_A);
 
             timeLabel.setBounds(10,250, 480, 20);
@@ -87,10 +99,12 @@ public class MediaShare {
             };
             panel.addMouseListener(ma);
             panel.addMouseMotionListener(ma);
-            panel.add(timeLabel);
+            //panel.add(timeLabel);
             panel.add(title);
             panel.add(panel1);
             panel.add(background);
+            background.setLayout(null);
+            background.add(videoProgressBar);
             setLayout(null);
             setBounds(0,0,480,340);
 
@@ -101,11 +115,9 @@ public class MediaShare {
         public void setBackground(Image icon){
             background.setIcon(new ImageIcon(blur((BufferedImage) icon)));
         }
-        public void setTitle(String titleText){
-            title.setText(titleText);
-        }
-        public void setTimeText(String text){
-            timeLabel.setText(text);
+        public void setTimeText(double time){
+            videoProgressBar.setValue((int) (time*100));
+            videoProgressBar.repaint();
         }
         public WebEngine getEngine(){
             return webView.getEngine();
@@ -113,51 +125,96 @@ public class MediaShare {
         private Thread thread;
         private final int[] tries = {0};
         boolean playing = false;
-
+        boolean paused = false;
 
         public void play(){
             Platform.runLater(() -> {
+                playing = true;
                 frame.setSize(480, 340);
 
                 setBackground(video.getImage().getImage());
-                setTitle(video.getTitle());
-                getEngine().load("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1");
+                getEngine().load("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
+                System.out.println("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
+                Window.setPlayButtonIcon(true);
+                Window.setSliderInfo(true, video.getDuration());
 
+
+                //System.out.println("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
                 thread = new Thread(() -> {
                     while (true) {
                         Platform.runLater(() -> {
                             try {
+                                removeElementByClassName(getEngine(), "ytp-watermark yt-uix-sessionlink");
+                                removeElementByClassName(getEngine(), "ytp-chrome-top ytp-show-cards-title");
+                                removeElementByClassName(getEngine(), "ytp-gradient-top");
+
+                                com.sun.webkit.dom.HTMLDivElementImpl offsetParent = (com.sun.webkit.dom.HTMLDivElementImpl) getEngine().executeScript("document.getElementsByClassName('ytp-large-play-button ytp-button')[0].offsetParent");
+                                if(offsetParent != null){
+                                    showMediaShare(video);
+                                }
 
                                 double duration = (double) getEngine().executeScript("document.getElementsByTagName('video')[0].duration");
-                                if (Double.isNaN(duration)) {
+                                int errorLength = (int) getEngine().executeScript("document.getElementsByClassName('ytp-error').length");
+                                if(errorLength == 1){
                                     int pos = MediaShareTab.getVideoPosition(video);
                                     showMediaShare(MediaShareTab.getVideo(pos + 1).getVideoData());
                                     MediaShareTab.setVideoSelect(pos + 1);
                                     VideoDetailsPanel.setPanel(MediaShareTab.getVideo(pos + 1).getVideoData());
+                                    playing = false;
+                                    tries[0] = 0;
+                                    stop();
                                 }
 
                                 double time = (double) getEngine().executeScript("document.getElementsByTagName('video')[0].currentTime");
-                                setTimeText(time + " / " + duration);
+                                setTimeText(time);
+                                Window.setSliderValue((int) (time*10));
+
+                                String formattedDuration = DurationFormatUtils.formatDuration((int)time * 1000L, "m:ss");
+
+                                String formattedLength =  DurationFormatUtils.formatDuration((int)duration * 1000L, "m:ss");
+
+
+                                Window.setTime(formattedDuration + " / " + formattedLength);
+
                                 if (prevVideo == video) tries[0]++;
                                 if (time >= duration && (prevDur != duration || tries[0] >= 5)) {
 
                                     System.out.println("Finished");
+
+
                                     prevDur = duration;
                                     prevVideo = video;
 
+
                                     int pos = MediaShareTab.getVideoPosition(video);
 
-                                    //MediaShareTab.removeVideo(pos);
-                                    if (MediaShareTab.getQueueSize() > pos + 1) {
-                                        showMediaShare(MediaShareTab.getVideo(pos + 1).getVideoData());
-                                        MediaShareTab.setVideoSelect(pos + 1);
-                                        VideoDetailsPanel.setPanel(MediaShareTab.getVideo(pos + 1).getVideoData());
+                                    int posNew = pos + 1;
+
+
+                                    if(SettingsHandler.getSettings("mediaShareRemoveWhenDone").asBoolean()){
+                                        MediaShareTab.removeVideo(pos);
+                                        posNew = pos;
                                     }
-                                    playing = false;
+                                    if (MediaShareTab.getQueueSize() > posNew) {
+                                        playing = false;
+                                        tries[0] = 0;
+                                        showMediaShare(MediaShareTab.getVideo(posNew).getVideoData());
+                                        MediaShareTab.setVideoSelect(posNew);
+                                        VideoDetailsPanel.setPanel(MediaShareTab.getVideo(posNew).getVideoData());
+                                    }
+                                    if(MediaShareTab.getQueueSize() == 0){
+                                        VideoDetailsPanel.setPanel(null);
+                                    }
+                                    else{
+                                        playing = false;
+                                        tries[0] = 0;
+                                    }
                                     stop();
                                 }
-                            } catch (Exception ignored) {
-                            }
+                                if(!paused) {
+                                    getEngine().executeScript("document.getElementsByTagName('video')[0].play();");
+                                }
+                                } catch (Exception ignored) {}
                         });
                         Utilities.sleep(100);
                     }
@@ -169,6 +226,10 @@ public class MediaShare {
             if(thread != null) {
                 thread.stop();
             }
+            playing = false;
+            Window.setPlayButtonIcon(false);
+            Window.setTime("0:00 / 0:00");
+            Window.setSliderInfo(false, 0);
             getEngine().load("about:blank");
             frame.remove(this);
             frame.setSize(0,0);
@@ -177,10 +238,70 @@ public class MediaShare {
         public boolean isPlaying(){
             return playing;
         }
+        public void togglePause(){
+            boolean paused = (boolean) getEngine().executeScript("document.getElementsByTagName('video')[0].paused;");
+            if(paused){
+                this.paused = false;
+                getEngine().executeScript("document.getElementsByTagName('video')[0].play();");
+            }
+            else{
+                this.paused = true;
+                getEngine().executeScript("document.getElementsByTagName('video')[0].pause();");
+            }
+
+        }
+
         public static MediaSharePanel getCurrentVideo(){
             return currentVideo;
         }
 
+    }
+
+    public static void setTime(double time){
+        Platform.runLater(() -> MediaSharePanel.getCurrentVideo().getEngine().executeScript("document.getElementsByTagName('video')[0].currentTime = " + time + ";"));
+    }
+
+    public static void togglePause(){
+        if(MediaSharePanel.getCurrentVideo() != null) {
+            Platform.runLater(() -> MediaSharePanel.getCurrentVideo().togglePause());
+            Window.setPlayButtonIcon(MediaSharePanel.getCurrentVideo().paused);
+        }
+    }
+
+    public static void removeMedia(int pos){
+        MediaShareTab.removeVideo(pos);
+
+        if(pos == VideoButton.selectedID){
+            if(pos < MediaShareTab.getQueueSize()) {
+                MediaShareTab.getVideosPanel().setSelect(pos, true);
+                showMediaShare(MediaShareTab.getVideo(pos).getVideoData());
+            }
+            else{
+                if(MediaSharePanel.getCurrentVideo() != null) {
+                    Platform.runLater(() -> MediaSharePanel.getCurrentVideo().stop());
+                }
+                VideoDetailsPanel.setPanel(null);
+            }
+        }
+    }
+
+    public static void clearMedia(boolean skip) {
+        new Thread(() -> {
+            String option;
+            if(skip){
+                option = "CLEAR_ALL";
+            }
+            else{
+                option = DialogBox.showDialogBox("$CLEAR_MEDIA_TITLE$", "$CLEAR_MEDIA_INFO$", "$CLEAR_MEDIA_SUBINFO$", new String[]{"$CLEAR_ALL$", "$CANCEL$"});
+            }
+            if (option.equalsIgnoreCase("CLEAR_ALL")) {
+                if(MediaSharePanel.getCurrentVideo() != null) {
+                    Platform.runLater(() -> MediaSharePanel.getCurrentVideo().stop());
+                }
+                MediaShareTab.clearVideos();
+                VideoDetailsPanel.setPanel(null);
+            }
+        }).start();
     }
 
 
@@ -188,22 +309,31 @@ public class MediaShare {
 
         if((video.getDuration() > SettingsHandler.getSettings("mediaShareMaxDuration").asInteger())
                 && SettingsHandler.getSettings("mediaShareMaxDurationEnabled").asBoolean()) {
-            Main.sendMessage(Utilities.format("$MEDIA_SHARE_TOO_LONG$", video.getRequester(), video.getTitle(), SettingsHandler.getSettings("mediaShareMaxDuration").asInteger()));
-            Main.sendYTMessage(Utilities.format("$MEDIA_SHARE_TOO_LONG$", video.getRequester(), video.getTitle(), SettingsHandler.getSettings("mediaShareMaxDuration").asInteger()));
+
+            if(video.isYT()) Main.sendYTMessage(Utilities.format("$MEDIA_SHARE_TOO_LONG$", video.getRequester(), video.getTitle(), SettingsHandler.getSettings("mediaShareMaxDuration").asInteger()));
+            else Main.sendMessage(Utilities.format("$MEDIA_SHARE_TOO_LONG$", video.getRequester(), video.getTitle(), SettingsHandler.getSettings("mediaShareMaxDuration").asInteger()));
             return;
         }
 
         if(MediaShareTab.exists(video)){
-            Main.sendMessage(Utilities.format("$MEDIA_SHARE_IN_QUEUE$", video.getRequester(), video.getTitle()));
+            if(video.isYT()) Main.sendYTMessage(Utilities.format("$MEDIA_SHARE_IN_QUEUE$", video.getRequester(), video.getTitle()));
+            else Main.sendMessage(Utilities.format("$MEDIA_SHARE_IN_QUEUE$", video.getRequester(), video.getTitle()));
             return;
         }
 
-        Main.sendMessage(Utilities.format("$MEDIA_SHARE_ADDED$", video.getRequester(), video.getTitle()));
-        Main.sendYTMessage(Utilities.format("$MEDIA_SHARE_ADDED$", video.getRequester(), video.getTitle()));
+        if(SettingsHandler.getSettings("").asBoolean() && sentVideos.contains(video.getVideoID())){
+            if(video.isYT()) Main.sendYTMessage(Utilities.format("$MEDIA_SHARE_ALREADY_SENT$", video.getRequester(), video.getTitle()));
+            else Main.sendMessage(Utilities.format("$MEDIA_SHARE_ALREADY_SENT$", video.getRequester(), video.getTitle()));
+            return;
+        }
+
+        if(video.isYT()) Main.sendYTMessage(Utilities.format("$MEDIA_SHARE_ADDED$", video.getRequester(), video.getTitle()));
+        else Main.sendMessage(Utilities.format("$MEDIA_SHARE_ADDED$", video.getRequester(), video.getTitle()));
 
         VideoButton videoButton = new VideoButton(video);
 
         MediaShareTab.addVideo(videoButton);
+        sentVideos.add(video.getVideoID());
         try{
             MediaShareTab.getVideosPanel().setSelect(VideoButton.selectedID, MediaShareTab.getQueueSize() == 1);
         }
@@ -214,20 +344,28 @@ public class MediaShare {
         if(MediaShareTab.getQueueSize() == 1 && SettingsHandler.getSettings("mediaShareAutoPlay").asBoolean()){
             showMediaShare(video);
         }
-        else if(VideoButton.selectedID + 2 == MediaShareTab.getQueueSize() && SettingsHandler.getSettings("mediaShareAutoPlay").asBoolean() && !MediaSharePanel.getCurrentVideo().isPlaying()){
-            MediaShareTab.getVideosPanel().setSelect(MediaShareTab.getQueueSize()-1, MediaShareTab.getQueueSize() == 1);
+        else if(VideoButton.selectedID + 2 == MediaShareTab.getQueueSize() && SettingsHandler.getSettings("mediaShareAutoPlay").asBoolean() && MediaSharePanel.getCurrentVideo() == null){
+            MediaShareTab.getVideosPanel().setSelect(MediaShareTab.getQueueSize()-1, true);
             showMediaShare(video);
         }
     }
 
-    static JFrame frame = new JFrame(){{
+    static JDialog frame = new JDialog(){{
+
         setUndecorated(true);
         setFocusable(false);
         setLocation(40,40);
         setLayout(null);
         setTitle("loquibot - Media Share");
-        setVisible(true);
+        setIconImages(Main.getIconImages());
+        setVisible(SettingsHandler.getSettings("mediaShareEnabled").asBoolean());
+
     }};
+
+    public static void setMediaShareVisible(boolean visible){
+        frame.setVisible(visible);
+    }
+
 
     public static void showMediaShare(YouTubeVideo video){
         Platform.runLater(() -> {
@@ -266,5 +404,9 @@ public class MediaShare {
         newImage.getGraphics().drawImage(newImage, 0, 0, null);
         return newImage;
     }
+    public static void removeElementByClassName(WebEngine engine, String className){
 
+        engine.executeScript("document.getElementsByClassName('" + className + "')[0].innerHTML = null;");
+
+    }
 }

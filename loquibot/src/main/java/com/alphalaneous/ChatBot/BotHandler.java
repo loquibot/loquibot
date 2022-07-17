@@ -47,14 +47,20 @@ public class BotHandler {
             try {
                 String defaultCommandPrefix = "!";
                 String geometryDashCommandPrefix = "!";
+                String mediaShareCommandPrefix = "!";
+
                 if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
                 if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
+                if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
                 for(CommandData data : LoadCommands.getDefaultCommands()){
                     if((defaultCommandPrefix + data.getCommand()).equalsIgnoreCase(com) ) return;
                 }
                 for(CommandData data : LoadCommands.getGeometryDashCommands()){
                     if((geometryDashCommandPrefix + data.getCommand()).equalsIgnoreCase(com) ) return;
+                }
+                for(CommandData data : LoadCommands.getMediaShareCommands()){
+                    if((mediaShareCommandPrefix + data.getCommand()).equalsIgnoreCase(com) ) return;
                 }
 
                 if (com.equalsIgnoreCase("!sudo") && (isMod || user.equalsIgnoreCase("Alphalaneous"))) {

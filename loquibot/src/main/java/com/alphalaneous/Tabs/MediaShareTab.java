@@ -15,6 +15,7 @@ import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,9 +53,10 @@ public class MediaShareTab {
 
     private static final JButton undo = createButton("\uF32A", "$UNDO_LEVEL_TOOLTIP$");
 
-    private static final JButton toggleRequests = createButton("\uF186", "$TOGGLE_REQUESTS_TOOLTIP$");
+    private static final JButton toggleMedia = createButton("\uF186", "$TOGGLE_MEDIA_TOOLTIP$");
 
     private static final VideosPanel videosPanel = new VideosPanel();
+
 
     public static void createPanel() {
 
@@ -62,18 +64,18 @@ public class MediaShareTab {
         buttonUI.setHover(Defaults.COLOR5);
         buttonUI.setSelect(Defaults.COLOR4);
 
-        JButton skip = createButton("\uF31B", "$SKIP_LEVEL_TOOLTIP$");
-        skip.addActionListener(e -> RequestFunctions.skipFunction());
+        JButton skip = createButton("\uF31B", "$SKIP_MEDIA_TOOLTIP$");
+        skip.addActionListener(e ->MediaShare.removeMedia(VideoButton.selectedID));
 
         undo.addActionListener(e -> RequestFunctions.undoFunction());
 
         JButton randNext = createButton("\uF2D8", "$NEXT_RANDOM_TOOLTIP$");
         randNext.addActionListener(e -> RequestFunctions.randomFunction());
 
-        JButton clear = createButton("\uF0CE", "$CLEAR_TOOLTIP$");
-        clear.addActionListener(e -> RequestFunctions.clearFunction());
+        JButton clear = createButton("\uF0CE", "$CLEAR_MEDIA_TOOLTIP$");
+        clear.addActionListener(e -> MediaShare.clearMedia(false));
 
-        toggleRequests.addActionListener(e -> toggle());
+        toggleMedia.addActionListener(e -> toggle());
 
 
         int width = 465;
@@ -92,10 +94,10 @@ public class MediaShareTab {
         buttonPanel.setBackground(Defaults.COLOR3);
         buttonPanel.setDoubleBuffered(true);
         buttonPanel.add(skip);
-        buttonPanel.add(undo);
-        buttonPanel.add(randNext);
+        //buttonPanel.add(undo);
+        //buttonPanel.add(randNext);
         buttonPanel.add(clear);
-        buttonPanel.add(toggleRequests);
+        buttonPanel.add(toggleMedia);
 
         iconPanel.setBounds(width - 65, 100 - 95, 80, 50);
         iconPanel.setBackground(new Color(0, 0, 0, 0));
@@ -215,7 +217,7 @@ public class MediaShareTab {
         contentPanel.add(buttonPanel);
         windowPanel.add(contentPanel);
         windowPanel.setBounds(0,0, 100, 100);
-        //Window.add(windowPanel, "\uF03D");
+        Window.add(windowPanel, "\uF03D");
     }
 
 
@@ -238,9 +240,9 @@ public class MediaShareTab {
             }
         }
         if (MediaShare.sharingEnabled) {
-            toggleRequests.setText("\uF186");
+            toggleMedia.setText("\uF186");
         } else {
-            toggleRequests.setText("\uF184");
+            toggleMedia.setText("\uF184");
         }
     }
 
@@ -283,7 +285,7 @@ public class MediaShareTab {
 
     }
 
-    private static RoundedJButton createButton(String icon, String tooltip) {
+    public static RoundedJButton createButton(String icon, String tooltip) {
         RoundedJButton button = new RoundedJButton(icon, tooltip);
         button.setPreferredSize(new Dimension(50, 50));
         button.setUI(defaultUI);

@@ -39,6 +39,15 @@ public class LoadingPane extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
+        applyRenderingProperties(g2d);
+        Arc2D.Double arc = new Arc2D.Double(5, 5, 50, 50, angle, extent, Arc2D.OPEN);
+        BasicStroke stroke = new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
+        g2d.setStroke(stroke);
+        g2d.setColor(Defaults.FOREGROUND_A);
+        g2d.draw(arc);
+        g2d.dispose();
+    }
+    public static void applyRenderingProperties(Graphics2D g2d){
         g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
@@ -48,12 +57,5 @@ public class LoadingPane extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        Arc2D.Double arc = new Arc2D.Double(5, 5, 50, 50, angle, extent, Arc2D.OPEN);
-        BasicStroke stroke = new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
-        g2d.setStroke(stroke);
-        g2d.setColor(Defaults.FOREGROUND_A);
-        g2d.draw(arc);
-        g2d.dispose();
     }
-
 }

@@ -16,6 +16,7 @@ public class Chatbot {
         settingsPage.addCheckbox("$ANTI_DOX$", "$ANTI_DOX_DESC$", "antiDox", true, null);
         settingsPage.addComponent(createKeybindComponent(new SmallInputButton("$DEFAULT_COMMAND_PREFIX$", "defaultCommandPrefix", "!")));
         settingsPage.addComponent(createKeybindComponent(new SmallInputButton("$GEOMETRY_DASH_COMMAND_PREFIX$", "geometryDashCommandPrefix", "!")));
+        settingsPage.addComponent(createKeybindComponent(new SmallInputButton("$MEDIA_SHARE_COMMAND_PREFIX$", "mediaShareCommandPrefix", "!")));
 
         return settingsPage;
     }

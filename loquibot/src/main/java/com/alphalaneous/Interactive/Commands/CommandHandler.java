@@ -49,9 +49,11 @@ public class CommandHandler {
         CommandData foundCommand = null;
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
+        String mediaShareCommandPrefix = "!";
 
         if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
         if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
+        if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
         for (CommandData command : LoadCommands.getDefaultCommands()) {
             if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(defaultCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
@@ -62,6 +64,14 @@ public class CommandHandler {
         if(foundCommand == null) {
             for (CommandData command : LoadCommands.getGeometryDashCommands()) {
                 if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(geometryDashCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
+                    foundCommand = command;
+                    break;
+                }
+            }
+        }
+        if(foundCommand == null) {
+            for (CommandData command : LoadCommands.getMediaShareCommands()) {
+                if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(mediaShareCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
                     foundCommand = command;
                     break;
                 }
@@ -423,17 +433,6 @@ public class CommandHandler {
             }
             case "queue_size": {
                 replacement = String.valueOf(RequestsTab.getQueueSize());
-                break;
-            }
-            case "show_media_share": {
-                try {
-
-                    YouTubeVideo video = YouTubeScrape.searchYouTube(data).get(0);
-                    video.setRequester(message.getSenderElseDisplay());
-                    MediaShare.addMedia(video);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 break;
             }
             default: {

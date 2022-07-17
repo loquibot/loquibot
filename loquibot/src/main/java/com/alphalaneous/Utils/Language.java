@@ -102,7 +102,7 @@ public class Language {
                         Scanner sc = new Scanner(path.toFile());
                         while (sc.hasNextLine()) {
                             String line = sc.nextLine();
-                            if (line.startsWith("//") || line.trim().equalsIgnoreCase("")) {
+                            if (line.startsWith("#") || line.trim().equalsIgnoreCase("")) {
                                 continue;
                             }
                             language.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
@@ -119,7 +119,7 @@ public class Language {
 
             String[] fileLines = files.getFile(fileName).getString().split("\n");
             for(String line : fileLines){
-                if (line.startsWith("//") || line.trim().equalsIgnoreCase("")) {
+                if (line.startsWith("#") || line.trim().equalsIgnoreCase("")) {
                     continue;
                 }
                 language.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
@@ -129,7 +129,7 @@ public class Language {
             String[] langPropLines = files.getFile(langProperties).getString().split("\n");
 
             for(String line : langPropLines){
-                if (line.startsWith("//") || line.trim().equalsIgnoreCase("")) {
+                if (line.startsWith("#") || line.trim().equalsIgnoreCase("")) {
                     continue;
                 }
                 langProp.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());

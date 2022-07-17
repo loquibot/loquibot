@@ -1,5 +1,5 @@
 
-//All
+#All
 
 BACK_BUTTON = Back
 YES = Yes
@@ -10,7 +10,7 @@ SAVE = Save
 STARTUP_MESSAGE = Thank you for using loquibot by Alphalaneous! It is suggested to VIP or Mod loquibot to prevent chat limits from occurring.
 STARTUP_MESSAGE_MOD_VIP = Thank you for using loquibot by Alphalaneous!
 
-//Officer Window
+#Officer Window
 
 ENTER_ID = Enter ID:
 GLOBALLY_BLOCK_ID = Block
@@ -20,7 +20,7 @@ SURE_GLOBALLY_UNBLOCK = Are you sure?
 GLOBALLY_SUBMIT = Submit
 OFFICER_TOOLTIP = Officer Dashboard
 
-//Commands Editor
+#Commands Editor
 
 COMMAND_NAME = Action Name:
 BASIC_EDITOR = Basic Editor
@@ -38,7 +38,7 @@ DELETE_COMMAND_INFO = This cannot be undone.
 INVALID_NAME = Invalid Name!
 INVALID_NAME_INFO = Make sure you have set a name!
 
-//Startup Dialogs
+#Startup Dialogs
 
 LOADING_LOQUIBOT = Loading loquibot...
 LOADING_LOQUIBOT_INFO = This may take a few seconds
@@ -47,7 +47,7 @@ CONNECTING_LOQUIBOT_INFO = This may take a few seconds
 CONNECTING_LOQUIBOT_SUBINFO = If stuck here, try pressing reconnect or restart loquibot.
 RECONNECT = Reconnect
 
-//Utilities
+#Utilities
 
 COMMAND_EXISTS = @%s, That command already exists.
 COMMAND_DOESNT_EXIST = @%s, That command doesn't exist.
@@ -60,7 +60,7 @@ POINTS_EDIT_SUCCESS = @%s, %s has been edited successfully.
 POINTS_ADDED_SUCCESS = @%s, %s has been added successfully.
 POINTS_DELETE_SUCCESS = @%s, %s has been deleted successfully.
 
-//Commands
+#Commands
 
 CLEAR_MESSAGE = @%s, Successfully cleared the queue!
 CURRENT_MESSAGE = @%s, The current level is %s by %s (%s) Requested by %s.
@@ -121,7 +121,7 @@ SPECIFY_ID_REMOVE_MESSAGE = @%S, Please specify a position to remove.
 TOO_FEW_OBJECTS_MESSAGE = @%s, Your level has been removed for containing too few objects.
 TOO_MANY_OBJECTS_MESSAGE = @%s, Your level has been removed for containing too many objects.
 
-//Requests Responses
+#Requests Responses
 
 ALREADY_IN_QUEUE_MESSAGE = @%s, That level is at position %s.
 ALREADY_IN_QUEUE_MESSAGE_ALT = @%s, That level is already in the queue.
@@ -159,7 +159,7 @@ REQUESTS_OFF_TOGGLE_MESSAGE = Requests are now off!
 REQUESTS_ON_TOGGLE_MESSAGE = Requests are now on!
 GLOBALLY_BLOCKED_LEVEL_MESSAGE = @%s, That level is globally blocked! Reason: %s
 
-//Command Responses
+#Command Responses
 
 NO_USER_MESSAGE = @%s, Please specify a user to permit.
 PERMIT_SUCCESS_MESSAGE = @%s, Successfully permitted @%s to send links for 1 minute.
@@ -186,7 +186,7 @@ INVALID_ACTION_MESSAGE = @%s, Please enter a valid action (add, edit, delete).
 STOP_SOUNDS_MESSAGE = @%s, All playing sounds have been stopped.
 
 
-//Title Separators
+#Title Separators
 
 BOT_SECTION_TITLE = BOT SETTINGS
 GD_SECTION_TITLE = GD SETTINGS
@@ -194,7 +194,7 @@ USER_SECTION_TITLE = USER SETTINGS
 COMMANDS_SECTION_TITLE = COMMANDS
 CHAT_SECTION_TITLE = CHAT
 
-//Settings
+#Settings
 
 GENERAL_SETTINGS = Requests
 CHAOS_SETTINGS = Chaos Mode
@@ -222,7 +222,7 @@ SPAM_PROTECTION_SETTINGS = Spam Protection
 MESSAGE_SETTINGS = Messages
 BLOCKED_KEYWORDS_SETTINGS = Blocked Phrases
 
-//General Bot Settings
+#General Bot Settings
 
 MULTI_THREAD = Multithreaded Commands
 ANTI_DOX = Dox Prevention Mode
@@ -230,7 +230,7 @@ GLOBAL_COOLDOWN = Global Message Cooldown (ms)
 DEFAULT_COMMAND_PREFIX = Default Command Prefix
 GEOMETRY_DASH_COMMAND_PREFIX = Geometry Dash Command Prefix
 
-//General Settings
+#General Settings
 
 FOLLOWERS_ONLY = Followers Only
 SUBSCRIBERS_ONLY = Subscribers Only
@@ -258,7 +258,7 @@ MODS_BYPASS = Mods Bypass Filters
 QUEUE_COMMAND_LABEL = Queue Command Level Count:
 BASIC_MODE = Basic Mode
 
-//Chaos Mode Settings
+#Chaos Mode Settings
 
 ENABLE_CHAOS_MODE = Enable Chaos Mode
 MOD_ONLY_CHAOS = Mod Only
@@ -266,20 +266,20 @@ SUB_ONLY_CHAOS = Subscribers Only
 DISABLE_KILL = Disable Kill
 MINIMUM_X = Minimum X
 MAXIMUM_X = Maximum X
-MINIMUM_Y = Minumum Y
+MINIMUM_Y = Minimum Y
 MAXIMUM_Y = Maximum Y
 MINIMUM_SIZE = Minimum Size
 MAXIMUM_SIZE = Maximum Size
 MINIMUM_SPEED = Minimum Speed
 MAXIMUM_SPEED = Maximum Speed
 
-//Outputs Settings
+#Outputs Settings
 
 OUTPUTS_TEXT = Outputs Text:
 NO_LEVELS_TEXT = No Levels Text:
 FILE_LOCATION = File Location:
 
-//Accounts Settings
+#Accounts Settings
 
 GEOMETRY_DASH = Geometry Dash: %s
 TWITCH = Twitch: %s
@@ -290,14 +290,14 @@ USERNAME = Username:
 PASSWORD = Password:
 LOGIN = Log In
 
-//Channel Point Settings
+#Channel Point Settings
 
 CHANNEL_POINTS_UNAVAILABLE = Channel Points are unavailable at the moment.
 ADD_CHANNEL_POINTS_TOOLTIP = Add Channel Point Action
 REFRESH_CHANNEL_POINTS_TOOLTIP = Refresh Channel Point Rewards
 POINTS_LIST = Channel Point Actions
 
-//Commands Settings
+#Commands Settings
 
 DISABLE_COMMAND = Disable Command
 MOD_ONLY = Mod Only
@@ -307,7 +307,7 @@ COOLDOWN = %s seconds
 COMMANDS_LIST = Commands
 ADD_COMMAND_TOOLTIP = Add Command
 
-//Requests Settings
+#Requests Settings
 
 RATED_LEVELS_ONLY = Rated Levels Only
 UNRATED_LEVELS_ONLY = Unrated Levels Only
@@ -340,13 +340,13 @@ MINIMUM_ID = Minimum ID:
 MAXIMUM_ID = Maximum ID:
 ALLOWED_WORDS = Allowed Words
 DISALLOWED_WORDS = Disallowed Words
-TITLES_CONTAINS = Only allow level titiles that contain these
+TITLES_CONTAINS = Only allow level titles that contain these
 TITLES_DOESNT_CONTAIN = Don't allow level titles that contain these
 ALLOWED_TEXT = Allowed:
 DISALLOWED_TEXT = Disallowed:
 ADD_WORD_TOOLTIP =Add Word
 
-//Shortcuts Settings
+#Shortcuts Settings
 
 OPEN_SHORTCUT = To Front
 SKIP_SHORTCUT = Skip/Next
@@ -356,7 +356,7 @@ COPY_SHORTCUT = Copy
 BLOCK_SHORTCUT = Block
 CLEAR_SHORTCUT = Clear
 
-//Personalization Settings
+#Personalization Settings
 
 ALWAYS_ON_TOP = Always On Top
 ON_TOP_DESCRIPTION = Forces the window to be above everything.
@@ -374,28 +374,28 @@ THEME_TEXT = Theme:
 DISABLE_NOTIFICATIONS = Disable notifications
 DISABLE_NOTIFICATIONS_DESCRIPTION = Disables notifications sent by loquibot.
 
-//Blocked IDs Settings
+#Blocked IDs Settings
 
 BLOCKED_IDS = Blocked IDs
 ADD_ID_TOOLTIP = Add ID
 UNBLOCK_ID_DIALOG_TITLE = Unblock %s?
 UNBLOCK_ID_DIALOG_INFO = This will unblock the ID and allow it to be requested again.
 
-//Blocked Users Settings
+#Blocked Users Settings
 
 BLOCKED_USERS = Blocked Users
 ADD_USER_TOOLTIP = Add User
 UNBLOCK_USER_DIALOG_TITLE = Unblock %s?
 UNBLOCK_USER_DIALOG_INFO = This will unblock the ID and allow it to be requested again.
 
-//Blocked Creators Settings
+#Blocked Creators Settings
 
 BLOCKED_CREATORS = Blocked Creators
 ADD_CREATOR_TOOLTIP = Add Creator
 UNBLOCK_CREATOR_DIALOG_TITLE = Unblock %s?
 UNBLOCK_CREATOR_DIALOG_INFO = This will unblock the creator and allow their levels again.
 
-//Logged IDs Settings
+#Logged IDs Settings
 
 LOGGED_IDS = Logged IDs
 REMOVE_LOG_DIALOG_TITLE = Remove %s from logs?
@@ -405,7 +405,7 @@ CLEAR_LOGS_DIALOG_INFO = This will remove all logged levels and allow them to be
 CLEAR_LOGS_TOOLTIP = Clear Logs
 
 
-//Windowed Interface
+#Windowed Interface
 
 DELETE = Delete
 BAN = Ban User
@@ -418,7 +418,7 @@ DISCORD_BUTTON = Discord
 NEWEST_FIRST = Newest First
 TOP_COMMENTS = Top Comments
 
-//Windowed Tooltips
+#Windowed Tooltips
 
 SWITCH_PAGES = Switch Pages
 SKIP_LEVEL_TOOLTIP = Next/Skip Level
@@ -431,9 +431,9 @@ TOGGLE_REQUESTS_TOOLTIP = Toggle Requests
 SHOW_COMMENTS_TOOLTIP = Show Comments
 HIDE_COMMENTS_TOOLTIP = Hide Comments
 MODERATE_TOOLTIP = Message and Moderation
-SUPEROP_TOOLTIP = SuperOP Actions
+SUPEROP_TOOLTIP = Officer Actions
 
-//Comments Tooltips
+#Comments Tooltips
 
 PREV_PAGE = Previous Page
 NEXT_PAGE = Next Page
@@ -441,7 +441,7 @@ TOP_COMMENTS = Top Comments
 LATEST_COMMENTS = Latest Comments
 
 
-//Popups
+#Popups
 
 CLEAR_QUEUE_TITLE = Clear the Queue?
 CLEAR_QUEUE_INFO = This will clear the levels from the queue.
@@ -452,15 +452,15 @@ BLOCK_ID_TITLE = Block %s (%s)?
 BLOCK_ID_INFO = This will block the selected level from being added.
 BLOCK_ID_SUBINFO = This can be undone in settings.
 
-//Settings Main
+#Settings Main
 
 HOME_BUTTON = Home
 
-//Window Titles
+#Window Titles
 
 COMMENTS_TITLE = Comments
 
-//Settings Descriptions
+#Settings Descriptions
 
 GD_MODE_DESC = Enables Geometry Dash related features.
 FOLLOWERS_ONLY_DESC = Only followers can request levels.
@@ -492,7 +492,7 @@ ANTI_DOX_DESC = Replaces your PCs name with asterisks if it shows in chat with a
 GLOBAL_COOLDOWN_DESC = Sets a cooldown for all messages sent by the bot.
 BASIC_MODE_DESC = Disables all GD server connectivity for requests.
 
-//Spam Protection Settings
+#Spam Protection Settings
 
 CAPITAL_LETTER_SPAM = Capital Letter Filter
 CAPITAL_LETTERS = Capital Letters
@@ -505,7 +505,7 @@ GIBBERISH_SPAM = Gibberish Filter
 BIG_FOLLOWS_SPAM = Auto Delete Follow Buying Spam Messages
 AUTO_DELETE_GD_LEVEL_IDS = Auto Delete GD Level IDs
 
-//Basic Mode
+#Basic Mode
 
 NEXT_MESSAGE_BASIC = @%s, The next level is %s.
 NOW_PLAYING_TOP_MESSAGE_BASIC = @%s, %s is now being played!
@@ -513,7 +513,7 @@ CONFIRMATION_MESSAGE_BASIC = @%s, %s has been added to the queue at position %s!
 CONFIRMATION_MESSAGE_BASIC_ALT = @%s, %s has been added to the queue!
 NOW_PLAYING_MESSAGE_BASIC = Now playing %s, requested by %s!
 
-//Antispam
+#Antispam
 
 ANTISPAM_COUNT_INPUT = Count:
 ANTISPAM_COUNT_INPUT_DESC = Minimum %s before percentage check.
@@ -526,7 +526,7 @@ ANTISPAM_TIMEOUT_DURATION_INPUT_DESC = Amount of time the user will be timed out
 GIBBERISH_THRESHOLD_INPUT = Gibberish Detection Threshold
 GIBBERISH_THRESHOLD_INPUT_DESC = Gibberish detection accuracy (very finicky).
 
-//Custom Theme Settings
+#Custom Theme Settings
 
 BACKGROUND_MAIN = Background
 BACKGROUND_SECONDARY = Background Secondary
@@ -539,7 +539,7 @@ FOREGROUND_MAIN = Foreground
 FOREGROUND_SECONDARY = Foreground Secondary
 IS_LIGHT_SETTING = Dark Icons
 
-//Command Editor New
+#Command Editor New
 
 EDIT_COMMAND = Edit Command
 EDIT_KEYWORD = Edit Keyword
@@ -557,7 +557,7 @@ COOLDOWN_LABEL = Cooldown:
 ALIAS_INPUT = Aliases:
 ALIAS_INPUT_DESC = Other command names that will activate this command (comma separated).
 
-//Timer Editor
+#Timer Editor
 
 EDIT_TIMER = Edit Timer
 ADD_TIMER = Add Timer
@@ -575,10 +575,11 @@ INTERVAL_DESCRIPTION = Interval where timer repeats. (Exact per hour, example: 1
 LINES_DESCRIPTION = Amount of messages within 5 minutes for a timer to execute.
 
 
-//Language Settings
+#Language Settings
+
 LANGUAGE = Languages:
 
-//OTHER
+#OTHER
 
 PRIVACY_SETTINGS = Privacy Policy
 LEGAL_SETTINGS = Legal
@@ -591,7 +592,7 @@ EDIT_POINT = Edit Channel Point
 POINT_NAME_INPUT = Name:
 MESSAGE_INPUT_POINT_DESC = The text that is sent when a point is redeemed
 
-//MEDIASHARE
+#MEDIASHARE
 
 MEDIA_SHARE_ADDED = @%s, "%s" has been added to the Media Share queue.
 MEDIA_SHARE_TOO_LONG = @%s, "%s" is too long, the max time is %s seconds.
@@ -606,3 +607,20 @@ MEDIA_SHARE_AUTOMATICALLY_PLAY_DESC = Automatically plays new videos that are sh
 MEDIA_SHARE_REMOVE_WHEN_DONE = Automatically Remove Watched Videos
 MEDIA_SHARE_DISABLE_REPEATED_SHARES = Disable Repeated Shares
 MEDIA_SHARE_DISABLE_REPEATED_SHARES_ALL_TIME = Disable Repeated Shares All Time
+SKIP_MEDIA_TOOLTIP = Skip/Next Video
+CLEAR_MEDIA_TOOLTIP = Clear Video Queue
+CLEAR_MEDIA_TITLE = Clear Video Queue?
+CLEAR_MEDIA_INFO = This will clear the videos from the queue.
+CLEAR_MEDIA_SUBINFO = Do you want to clear the video queue?
+TOGGLE_MEDIA_TOOLTIP = Toggle Media Share
+MEDIA_SHARE_OFF_TOGGLE_MESSAGE = Media share is now disabled.
+MEDIA_SHARE_ON_TOGGLE_MESSAGE = Media share is now enabled.
+MEDIA_SHARE_NO_VIDEO = @%s, Please specify a video name or URL to share.
+MEDIA_SHARE_NO_QUEUE = @%s, The video queue is already empty.
+MEDIA_SHARE_CLEARED = @%s, The video queue has been cleared.
+MEDIA_SHARE_SHORTCUTS_SETTINGS = Keybinds
+MS_SKIP_SHORTCUT = Skip/Next Video
+MS_PAUSE_SHORTCUT = Toggle Play/Pause
+MEDIA_SHARE_COMMAND_PREFIX = Media Share Command Prefix
+MEDIA_SHARE_SKIPPED = @%s, Skipped "%s".
+MEDIA_SHARE_ALREADY_SENT = @%s, %s has already been played.

@@ -51,7 +51,7 @@ public class SettingsTab {
 	private static final JPanel botSection = new TitleSeparator("$BOT_SECTION_TITLE$");
 	private static final JPanel GDSection = new TitleSeparator("$GD_SECTION_TITLE$");
 	private static final JPanel noticesSection = new TitleSeparator("$NOTICES_SECTION_TITLE$");
-	private static final JPanel mediaShareSection = new TitleSeparator("$MEDIA_SHARE_SECTION_TITLE$");
+	private static final JPanel mediaShareSection = new TitleSeparator("$MEDIA_SHARE_SECTION_TITLE$ (Beta)");
 	private static final JPanel userSection = new TitleSeparator("$USER_SECTION_TITLE$");
 
 	public static JButtonUI settingsUI = new JButtonUI(){{
@@ -123,7 +123,7 @@ public class SettingsTab {
 		mediaSharePage.setVisible(true);
 		return null;
 	});
-	private static final SettingsButton mediaShareKeybinds = createButton("$MEDIA_SHARE_SHORTCUTS_SETTINGS$", "\uF03D", () -> {
+	private static final SettingsButton mediaShareKeybinds = createButton("$MEDIA_SHARE_SHORTCUTS_SETTINGS$", "\uF105", () -> {
 		mediaShareKeybindsPage.setVisible(true);
 		return null;
 	});
@@ -263,10 +263,10 @@ public class SettingsTab {
 		if(SettingsHandler.getSettings("isDev").asBoolean()) {
 			buttons.add(developer, gbc);
 		}
-		//buttons.add(createSeparator(), gbc);
-		//buttons.add(mediaShareSection, gbc);
-		//buttons.add(mediaShare, gbc);
-		//buttons.add(mediaShareKeybinds, gbc);
+		buttons.add(createSeparator(), gbc);
+		buttons.add(mediaShareSection, gbc);
+		buttons.add(mediaShare, gbc);
+		buttons.add(mediaShareKeybinds, gbc);
 		buttons.add(createSeparator(), gbc);
 		buttons.add(noticesSection, gbc);
 		buttons.add(legal, gbc);

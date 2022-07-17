@@ -260,11 +260,10 @@ public class VideoButton extends CurvedButtonAlt {
 		selectUI.setBackground(Defaults.COLOR4);
 		selectUI.setHover(Defaults.COLOR5);
 		selectUI.setSelect(Defaults.COLOR4);
-		for (Component component : getComponents()) {
-			if (component instanceof JLabel) {
-				component.setForeground(Defaults.FOREGROUND_A);
-			}
-		}
+		title.setForeground(Defaults.FOREGROUND_A);
+		creator.setForeground(Defaults.FOREGROUND_B);
+
+
 		moveDown.setForeground(Defaults.FOREGROUND_A);
 		moveUp.setForeground(Defaults.FOREGROUND_A);
 

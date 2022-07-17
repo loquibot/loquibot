@@ -33,12 +33,15 @@ public class CommandConfigCheckbox extends JPanel {
         String prefix = "";
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
+        String mediaShareCommandPrefix = "!";
 
         if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
         if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
+        if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
         if(commandData.isDefault()) prefix = defaultCommandPrefix;
         if(commandData.isGD()) prefix = geometryDashCommandPrefix;
+        if(commandData.isMediaShare()) prefix = mediaShareCommandPrefix;
 
         themedCheckbox = new ThemedConfigCheckbox(prefix + commandData.getCommand(), StringEscapeUtils.escapeHtml4(commandData.getDescription().replace("%p", prefix)), () -> openCommandSettings(commandData), true, commandData);
 

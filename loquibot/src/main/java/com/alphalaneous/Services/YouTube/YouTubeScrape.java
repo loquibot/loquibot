@@ -9,22 +9,64 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 
 public class YouTubeScrape {
 
+    public static YouTubeVideo getDirectVideo(String query) throws IOException {
+
+
+        String link = "https://www.youtube.com/watch?v=" + query;
+        String thumbnailURL = "https://i1.ytimg.com/vi/" + query + "/hqdefault.jpg";
+
+        Document doc = Jsoup.connect(link).get();
+        Elements elements = doc.getElementsByTag("script");
+        String data = "";
+        Elements metaElements = doc.getElementsByTag("meta");
+
+        String time = "";
+        for(Element element : metaElements){
+            if(element.attributes().get("itemprop").equals("duration")){
+                time = element.attributes().get("content");
+                break;
+            }
+        }
+        Duration dur = Duration.parse(time);
+        long seconds = dur.getSeconds();
+
+        for (Element element : elements) {
+            if(element.data().startsWith("var ytInitialData")){
+                data = element.data().substring("var ytInitialData = ".length(), element.data().length()-1);
+                break;
+            }
+        }
+
+        JSONObject jsonData = new JSONObject(data);
+
+        JSONObject playerOverlays = jsonData.getJSONObject("playerOverlays");
+        JSONObject playerOverlayRenderer = playerOverlays.getJSONObject("playerOverlayRenderer");
+
+        JSONObject videoDetails = playerOverlayRenderer.getJSONObject("videoDetails");
+        JSONObject playerOverlayVideoDetailsRenderer = videoDetails.getJSONObject("playerOverlayVideoDetailsRenderer");
+
+        JSONObject titleObj = playerOverlayVideoDetailsRenderer.getJSONObject("title");
+        String title = titleObj.getString("simpleText");
+
+        JSONObject subtitle = playerOverlayVideoDetailsRenderer.getJSONObject("subtitle");
+        JSONArray runs = subtitle.getJSONArray("runs");
+        String username = runs.getJSONObject(0).getString("text");
+
+        return new YouTubeVideo(title, username, query, thumbnailURL, 0, (int) seconds);
+    }
+
     public static ArrayList<YouTubeVideo> searchYouTube(String query) throws IOException {
 
-        String link;
-
-        if(Moderation.checkIfNormalLink(query)){
-            link = query;
-        }
-        else{
-            link = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
-        }
+        String link = "https://www.youtube.com/results?search_query=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
 
         Document doc = Jsoup.connect(link).get();
         Elements elements = doc.getElementsByTag("script");
@@ -51,7 +93,6 @@ public class YouTubeScrape {
         for(Object object : contents3){
 
             JSONObject mainObject = (JSONObject)object;
-            //System.out.println(mainObject.toString(2));
             if(mainObject.has("videoRenderer")) {
                 JSONObject videoRenderer = mainObject.getJSONObject("videoRenderer");
                 JSONObject thumbnail = videoRenderer.getJSONObject("thumbnail");

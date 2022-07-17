@@ -1,5 +1,6 @@
 package com.alphalaneous.Utils;
 
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
@@ -90,7 +91,7 @@ public class KeyListener extends SwingKeyAdapter {
 
 				}
 				if(key == SettingsHandler.getSettings("mediaSharePauseKeybind").asInteger()){
-
+					MediaShare.togglePause();
 				}
 			}
 			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {

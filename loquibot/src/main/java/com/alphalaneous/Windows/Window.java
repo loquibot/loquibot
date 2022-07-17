@@ -1,6 +1,7 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
@@ -12,8 +13,10 @@ import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Tabs.SettingsTab;
 import com.alphalaneous.Theming.ThemedColor;
 import com.alphalaneous.Utils.Defaults;
+import org.jdesktop.swingx.border.DropShadowBorder;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -38,9 +41,20 @@ public class Window {
     private static final JPanel dialogBackgroundPanel = new JPanel();
     private static final JPanel backgroundColor = new JPanel();
     private static final JPanel componentLayer = new JPanel();
-    private static final RoundedJButton updateButton = new RoundedJButton("\uF11A", "Update Available");
-
+    private static final RoundedJButton updateButton = MediaShareTab.createButton("\uF11A", "Update Available");
+    private static JPanel controlsPanel;
     private static final int width = 800, height = 660;
+    private static RoundedJButton playButton = MediaShareTab.createButton("\uF184","Play/Pause");
+    private static JLabel duration = new JLabel();
+    private static JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 300, 0);
+    private static RoundedJButton button = MediaShareTab.createButton("\uF18F", "View Media Controls");
+
+    private static JPanel blankPanel = new JPanel(){{
+        setBackground(new Color(0,0,0,0));
+        setPreferredSize(new Dimension(40,40));
+        setOpaque(false);
+    }};
+
 
     public static void initFrame() {
 
@@ -75,15 +89,11 @@ public class Window {
         tabPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         tabPanel.setBackground(new ThemedColor("color6", tabPanel, ThemedColor.BACKGROUND));
 
-        updatePanel.setBounds(0, windowFrame.getHeight()-85, 50, 50);
-        updatePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        updatePanel.setBounds(0, windowFrame.getHeight()-135, 50, 100);
+        updatePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
         updatePanel.setBackground(new ThemedColor("color6", updatePanel, ThemedColor.BACKGROUND));
 
-        updateButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
         updateButton.setForeground(Color.GREEN);
-        updateButton.setBackground(Defaults.COLOR3);
-        updateButton.setUI(Defaults.defaultUI);
-        updateButton.setBorder(BorderFactory.createEmptyBorder());
         updateButton.setPreferredSize(new Dimension(40, 40));
         updateButton.setVisible(false);
 
@@ -99,6 +109,8 @@ public class Window {
         });
 
         updatePanel.add(updateButton);
+        updatePanel.add(blankPanel);
+
 
         mainContent.setLayout(null);
         mainContent.setBounds(50, 0, width - 50, height);
@@ -154,9 +166,115 @@ public class Window {
         layeredContentPanel.add(fullPanel, 0, -1);
         layeredContentPanel.add(dialogBackgroundPanel, 1, -1);
         windowFrame.add(layeredContentPanel);
+
+
+        controlsPanel = new JPanel(){
+            public final int pixels = 10;
+            {
+                Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
+                setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+                setBackground(Defaults.COLOR6);
+                setOpaque(false);
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                int shade = 0;
+                int topOpacity = 80;
+
+                Graphics2D g2d = (Graphics2D) g.create();
+                LoadingPane.applyRenderingProperties(g2d);
+
+                for (int i = 0; i < pixels; i++) {
+                    g.setColor(new Color(shade, shade, shade, ((topOpacity / pixels) * i)));
+                    g.drawRect(i, i, this.getWidth() - ((i * 2)+1), this.getHeight() - ((i * 2) + 1));
+                }
+                g.setColor(getBackground());
+                g.fillRoundRect(pixels-5, pixels-5,this.getWidth()-pixels*2+10, this.getHeight()-pixels*2+10, 10,10);
+            }
+        };
+
+        controlsPanel.addMouseListener(new MouseAdapter() {});
+        controlsPanel.setBounds(65, getWindow().getHeight()-60, getWindow().getWidth()-160, 60);
+        layeredContentPanel.add(controlsPanel, 1, -1);
+        controlsPanel.setVisible(false);
+
+        controlsPanel.setLayout(null);
+
+        playButton.setBounds(10,10,40,40);
+        controlsPanel.add(playButton);
+
+        playButton.addActionListener(e -> MediaShare.togglePause());
+
+        button.setPreferredSize(new Dimension(40,40));
+        updatePanel.add(button);
+
+        button.addActionListener(e -> controlsPanel.setVisible(!controlsPanel.isVisible()));
+
+        duration.setBounds(60, 10, 200,40);
+        duration.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+        duration.setForeground(Defaults.FOREGROUND_B);
+        Window.setTime("0:00 / 0:00");
+
+        slider.setBounds(150, 10, 570, 40);
+        slider.setUI(new LightSliderUI(slider));
+        slider.setOpaque(false);
+        slider.setBackground(new Color(0,0,0,0));
+        slider.setBorder(BorderFactory.createEmptyBorder());
+        slider.setEnabled(false);
+        slider.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                dragging = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                dragging = false;
+            }
+        });
+        slider.addChangeListener(e -> {
+            if(dragging) MediaShare.setTime(slider.getValue()/10d);
+
+        });
+        controlsPanel.add(duration);
+        controlsPanel.add(slider);
+
+        controlsPanel.setVisible(false);
+
+    }
+    private static boolean dragging = false;
+
+    public static void setSliderValue(int value){
+        if(!dragging){
+            slider.setValue(value);
+        }
+    }
+
+    public static void setSliderInfo(boolean playing, int length){
+        if(!playing) {
+            slider.setValue(0);
+            slider.setEnabled(false);
+        }
+        else{
+            slider.setEnabled(true);
+            slider.setMaximum(length*10);
+        }
+    }
+
+    public static void setPlayButtonIcon(boolean playing){
+        if(playing) playButton.setText("\uF186");
+        else playButton.setText("\uF184");
+    }
+
+    public static void setTime(String time){
+        duration.setText(time);
     }
 
     public static void showUpdateButton(){
+        blankPanel.setVisible(false);
         updateButton.setVisible(true);
     }
 
@@ -167,7 +285,13 @@ public class Window {
         buttonUI.setBackground(Defaults.COLOR3);
         buttonUI.setHover(Defaults.COLOR5);
         buttonUI.setSelect(Defaults.COLOR2);
+        duration.setForeground(Defaults.FOREGROUND_B);
         updateButton.setBackground(Defaults.COLOR3);
+        controlsPanel.setBackground(Defaults.COLOR6);
+        button.setBackground(Defaults.COLOR);
+        playButton.setBackground(Defaults.COLOR);
+        button.setForeground(Defaults.FOREGROUND_A);
+        playButton.setForeground(Defaults.FOREGROUND_A);
         for(ListButton button : buttons){
             button.refreshUI();
         }
@@ -176,7 +300,12 @@ public class Window {
 
     public static void loadTopComponent() {
         mainContent.getComponent(0).setVisible(true);
-        ((ListButton) tabPanel.getComponent(0)).runMethod();
+        for(Component component : tabPanel.getComponents()){
+            if(component instanceof ListButton){
+                ((ListButton) component).runMethod();
+                break;
+            }
+        }
     }
 
     private static final ArrayList<ListButton> buttons = new ArrayList<>();
@@ -276,6 +405,12 @@ public class Window {
         windowFrame.setTitle(title);
     }
 
+
+    public static void showMediaControls() {
+        controlsPanel.setVisible(true);
+    }
+
+
     public static void addContextMenu(ContextMenu panel) {
         contextMenu = panel;
 
@@ -335,8 +470,8 @@ public class Window {
             public void componentResized(ComponentEvent evt) {
                 //closeDialog();
                 //resizing = true;
-                tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 85);
-                updatePanel.setBounds(0, windowFrame.getHeight()-85, 50, 50);
+                tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 135);
+                updatePanel.setBounds(0, windowFrame.getHeight()-135, 50, 100);
                 layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
                 mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
                 RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
@@ -350,6 +485,9 @@ public class Window {
                 if (dialogComponent != null) {
                     dialogComponent.setBounds(windowFrame.getWidth() / 2 - dialogComponent.getWidth() / 2-8, windowFrame.getHeight() / 2 - dialogComponent.getHeight() / 2 - 20, dialogComponent.getWidth(), dialogComponent.getHeight());
                 }
+                controlsPanel.setBounds(65, getWindow().getHeight()-110, getWindow().getWidth()-160, 60);
+                slider.setBounds(150, 10, getWindow().getWidth()-330, 40);
+
                 SettingsPage.resizeAll(windowFrame.getWidth(), windowFrame.getHeight());
                 ListView.resizeAll(new Dimension(windowFrame.getWidth(), windowFrame.getHeight()));
                 CommandConfigCheckbox.resizeAll(windowFrame.getWidth());
@@ -414,8 +552,8 @@ public class Window {
             int newH = Integer.parseInt(dim[1]);
 
             windowFrame.setSize(newW, newH);
-            tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 85);
-            updatePanel.setBounds(0, windowFrame.getHeight()-85, 50, 50);
+            tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 135);
+            updatePanel.setBounds(0, windowFrame.getHeight()-135, 50, 100);
             layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
             mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
             RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());

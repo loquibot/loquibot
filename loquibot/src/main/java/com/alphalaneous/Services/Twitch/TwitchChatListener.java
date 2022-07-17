@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class TwitchChatListener extends ChatBot {
 
-	private static boolean sentStartupMessage = false;
+	public static boolean sentStartupMessage = false;
 	private static TwitchChatListener currentListener;
 
 
@@ -32,10 +32,7 @@ public class TwitchChatListener extends ChatBot {
 	@Override
 	public void onOpen(ServerHandshake serverHandshake) {
 		System.out.println("> Connected to Twitch IRC");
-		if(!sentStartupMessage) {
-			Main.sendMessage(Utilities.format("🔷 | $STARTUP_MESSAGE$"));
-			sentStartupMessage = true;
-		}
+
 	}
 
 	@Override

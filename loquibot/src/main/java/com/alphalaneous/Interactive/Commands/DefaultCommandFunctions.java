@@ -2,30 +2,110 @@ package com.alphalaneous.Interactive.Commands;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
+import com.alphalaneous.Interactive.MediaShare.MediaShare;
+import com.alphalaneous.Moderation.Moderation;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
+import com.alphalaneous.Services.YouTube.YouTubeScrape;
+import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.CommandConfigCheckbox;
 import com.alphalaneous.Moderation.LinkPermit;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Swing.Components.VideoButton;
+import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Utils.Board;
 import com.alphalaneous.Utils.Utilities;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class DefaultCommandFunctions {
-    
+
+    public static String runMSClear(ChatMessage message){
+        MediaShare.clearMedia(true);
+        return Utilities.format("$MEDIA_SHARE_CLEARED$", message.getSenderElseDisplay());
+    }
+
+    public static String runMSSkip(ChatMessage message){
+        if(MediaShareTab.getQueueSize() > 0){
+
+            String title = MediaShareTab.getVideo(VideoButton.selectedID).getVideoData().getTitle();
+
+            MediaShare.removeMedia(VideoButton.selectedID);
+            return Utilities.format("$MEDIA_SHARE_SKIPPED$", message.getSenderElseDisplay(), title);
+        }
+        else{
+            return Utilities.format("$MEDIA_SHARE_NO_QUEUE$", message.getSenderElseDisplay());
+        }
+    }
+
+    public static String runMSShare(ChatMessage message){
+
+        if(message.getArgs().length == 1){
+            return Utilities.format("$MEDIA_SHARE_NO_VIDEO$", message.getSenderElseDisplay());
+        }
+        if (SettingsHandler.getSettings("mediaShareEnabled").asBoolean() && MediaShare.sharingEnabled) {
+            try {
+
+                String data = message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim();
+                YouTubeVideo video;
+
+                if(Moderation.checkIfNormalLink(data)){
+                    String ID = null;
+
+                    if(data.startsWith("https://www.youtube.com/watch?")){
+                        String end = data.substring("https://www.youtube.com/watch?".length());
+                        String[] params = end.split("&");
+                        for(String s : params){
+                            if(s.toLowerCase().startsWith("v=")){
+                                ID = s.substring(2);
+                                break;
+                            }
+                        }
+                    }
+                    if(data.startsWith("https://www.youtu.be/")){
+                        String end = data.substring("https://www.youtu.be/".length());
+                        ID = end.split("\\?")[0];
+                    }
+                    if(data.startsWith("https://www.youtube.com/shorts/")){
+                        String end = data.substring("https://www.youtube.com/shorts/".length());
+                        ID = end.split("\\?")[0];
+                    }
+
+                    if(ID != null) {
+                        video = YouTubeScrape.getDirectVideo(ID);
+                    }
+                    else{
+                        video = YouTubeScrape.searchYouTube(message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim()).get(0);
+                    }
+                }
+                else {
+                    video = YouTubeScrape.searchYouTube(message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim()).get(0);
+                }
+                video.setRequester(message.getSenderElseDisplay());
+                video.setYT(message.isYouTube());
+                MediaShare.addMedia(video);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+
     public static String runBlock(ChatMessage message){
-        if(message.getArgs().length == 0){
+        if(message.getArgs().length == 1){
             return Utilities.format("$BLOCK_NO_ID_MESSAGE$", message.getSenderElseDisplay());
         }
         return RequestsUtils.block(message.getSenderElseDisplay(), message.getArgs());
     }
     public static String runBlockUser(ChatMessage message){
-        if(message.getArgs().length == 0){
+        if(message.getArgs().length == 1){
             return Utilities.format("$BLOCK_NO_USER_MESSAGE$", message.getSenderElseDisplay());
         }
         return RequestsUtils.blockUser(message.getSenderElseDisplay(), message.getArgs());
@@ -84,10 +164,12 @@ public class DefaultCommandFunctions {
         catch (Exception e){
             intArg = RequestsUtils.getSelection() + 1;
         }
-        if (message.getArgs().length <= 1 || message.getArgs().length >= RequestsUtils.getSize()) {
+
+        if (intArg > RequestsUtils.getSize()) {
             intArg = RequestsUtils.getSelection() + 1;
         }
-        if (RequestsUtils.getSize() > 0 && intArg <= RequestsUtils.getSize()) {
+        if (RequestsUtils.getSize() > 1 && intArg <= RequestsUtils.getSize()) {
+
             return Utilities.format("$INFO_COMMAND_MESSAGE$", message.getSenderElseDisplay(),
                     RequestsUtils.getLevel(intArg - 1, "name"),
                     RequestsUtils.getLevel(intArg - 1, "id"),
@@ -249,12 +331,12 @@ public class DefaultCommandFunctions {
             return Utilities.format("$SPECIFY_ID_MESSAGE$", message.getSenderElseDisplay());
         }
         String userID = message.getTag("user-id");
-        long luserID = 0;
+        long lUserID = 0;
         if(userID != null){
-            luserID = Long.parseLong(userID);
+            lUserID = Long.parseLong(userID);
         }
 
-        Requests.request(message.getSenderElseDisplay(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), luserID, message);
+        Requests.request(message.getSenderElseDisplay(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), lUserID, message);
         return "";
     }
     public static String runSong(ChatMessage message){

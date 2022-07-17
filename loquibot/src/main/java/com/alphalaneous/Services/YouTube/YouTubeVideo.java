@@ -12,6 +12,7 @@ public class YouTubeVideo {
     private ImageIcon image;
     private String requester;
     private final long viewCount;
+    private boolean isYT;
 
     YouTubeVideo(String title, String username, String videoID, String thumbnailURL, long viewCount, int time){
         this.title = title;
@@ -20,6 +21,14 @@ public class YouTubeVideo {
         this.username = username;
         this.viewCount = viewCount;
         this.time = time;
+    }
+
+    public void setYT(boolean isYT){
+        this.isYT = isYT;
+    }
+
+    public boolean isYT(){
+        return isYT;
     }
 
     public void setRequester(String requester){

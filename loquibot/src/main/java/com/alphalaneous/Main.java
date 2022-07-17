@@ -1,6 +1,7 @@
 package com.alphalaneous;
 
 import com.alphalaneous.ChatBot.ServerBot;
+import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Services.GeometryDash.Requests;
@@ -26,7 +27,6 @@ import com.alphalaneous.Settings.ChannelPoints;
 import com.alphalaneous.Settings.Outputs;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Logs.LoggedID;
-import com.alphalaneous.Swing.Components.ComponentTree;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
@@ -85,8 +85,6 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-
-        //CommandCreatorTool commandCreatorTool = new CommandCreatorTool("test");
 
         new Thread(() -> {
             Utilities.sleep(21600000);
@@ -156,7 +154,7 @@ public class Main {
 
         System.out.println("> Start");
 
-        //Saves defaults of UI Elements before switching to Nimbus
+        //Save defaults of UI Elements before switching to Nimbus
         //Sets to Nimbus, then sets defaults back
         setUI();
         LoadGD.load();
@@ -225,6 +223,7 @@ public class Main {
 
             new JFXPanel(); //Initialize JavaFX Graphics Toolkit (Hacky Solution)
 
+            Platform.setImplicitExit(false);
             Platform.runLater(MediaShare::init);
 
             System.out.println("> Panels Created");
@@ -340,12 +339,11 @@ public class Main {
                 }
             }
             programLoaded = true;
-
-            //JSONObject messageObj = new JSONObject();
-            //messageObj.put("request_type", "get_current_streamers");
-            //ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
+            if(!TwitchChatListener.sentStartupMessage) {
+                Main.sendMessage(Utilities.format("🔷 | $STARTUP_MESSAGE$"));
+                TwitchChatListener.sentStartupMessage = true;
+            }
             startSaveLoop();
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -369,11 +367,6 @@ public class Main {
         catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-
-    private static void updateTree(){
-        ComponentTree.updateTree(Window.getWindow().getRootPane());
     }
 
     public static ArrayList<Image> getIconImages() {
@@ -532,6 +525,7 @@ public class Main {
             CommandData.saveCustomCommands();
             CommandData.saveDefaultCommands();
             CommandData.saveGeometryDashCommands();
+            CommandData.saveMediaShareCommands();
             TimerData.saveCustomTimers();
             KeywordData.saveCustomKeywords();
             ChannelPointData.saveCustomPoints();
@@ -561,24 +555,7 @@ public class Main {
         if(!SettingsHandler.getSettings("runAtStartup").asBoolean()) {
             Utilities.disposeTray();
             if (!SettingsHandler.getSettings("onboarding").asBoolean() && loaded) {
-                Window.setVisible(false);
-                Window.setSettings();
-                try {
-                    if(TwitchListener.getCurrentTwitchListener() != null) {
-                        TwitchListener.getCurrentTwitchListener().disconnectBot();
-                    }
-                    if(TwitchChatListener.getCurrentListener() != null) {
-                        TwitchChatListener.getCurrentListener().disconnect();
-                    }
-                    if(ServerBot.getCurrentServerBot() != null) {
-                        ServerBot.getCurrentServerBot().disconnect();
-                    }
-                    GlobalScreen.unregisterNativeHook();
-                } catch (Exception e) {
-                    System.out.println("Failed closing properly, forcing close");
-                    e.printStackTrace();
-                    System.exit(0);
-                }
+                forceClose();
             }
             System.exit(0);
         }

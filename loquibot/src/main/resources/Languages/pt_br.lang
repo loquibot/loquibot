@@ -1,5 +1,5 @@
 
-//All
+#All
 
 BACK_BUTTON = Voltar
 YES = Sim
@@ -10,7 +10,7 @@ SAVE = Salvar
 STARTUP_MESSAGE = Obrigado por usar o loquibot da Alphalaneous! Sugere-se ao VIP ou Mod loquibot para evitar que ocorram limites de chat.
 STARTUP_MESSAGE_MOD_VIP = Obrigado por usar o loquibot da Alphalaneous!
 
-//SuperOP Window
+#SuperOP Window
 
 ENTER_ID = Digite o código:
 GLOBALLY_BLOCK_ID = Bloqueado
@@ -19,7 +19,7 @@ ENTER_GLOBALLY_BLOCK_REASON = Digite o motivo:
 SURE_GLOBALLY_UNBLOCK = Tem certeza?
 GLOBALLY_SUBMIT = Enviar
 
-//Commands Editor
+#Commands Editor
 
 COMMAND_NAME = Nome da ação:
 BASIC_EDITOR = Editor Básico
@@ -37,7 +37,7 @@ DELETE_COMMAND_INFO = Isto não pode ser desfeito.
 INVALID_NAME = Nome inválido!
 INVALID_NAME_INFO = Certifique-se de ter definido um nome!
 
-//Startup Dialogs 
+#Startup Dialogs 
 
 LOADING_LOQUIBOT = Carregando loquibot...
 LOADING_LOQUIBOT_INFO = Isso pode demorar alguns segundos
@@ -46,7 +46,7 @@ CONNECTING_LOQUIBOT_INFO = Isso pode demorar alguns segundos
 CONNECTING_LOQUIBOT_SUBINFO = Se estiver preso aqui, tente pressionar reconectar ou reiniciar o loquibot.
 RECONNECT = Reconectar
 
-//Utilities
+#Utilities
 
 COMMAND_EXISTS = @%s, Esse comando já existe.
 COMMAND_DOESNT_EXIST = @%s, Esse comando não existe.
@@ -59,7 +59,7 @@ POINTS_EDIT_SUCCESS = @%s, %s foi editado com sucesso.
 POINTS_ADDED_SUCCESS = @%s, %s foi adicionado com sucesso.
 POINTS_DELETE_SUCCESS = @%s, %s foi deletado com sucesso.
 
-//Commands
+#Commands
 
 CLEAR_MESSAGE = @%s, Limpou a fila com sucesso!
 CURRENT_MESSAGE = @%s, O nível atual é %s por %s (%s) Solicitado por %s.
@@ -120,7 +120,7 @@ SPECIFY_ID_REMOVE_MESSAGE = @%S, TODO
 TOO_FEW_OBJECTS_MESSAGE = @%s, Seu nível foi removido por conter poucos objetos.
 TOO_MANY_OBJECTS_MESSAGE = @%s, Seu nível foi removido por conter muitos objetos.
 
-//Requests Responses
+#Requests Responses
 
 ALREADY_IN_QUEUE_MESSAGE = @%s, Esse nível está na posição %s.
 ALREADY_IN_QUEUE_MESSAGE_ALT = @%s, esse nível já está na fila.
@@ -158,7 +158,7 @@ REQUESTS_OFF_TOGGLE_MESSAGE = Os pedidos já estão desligados!
 REQUESTS_ON_TOGGLE_MESSAGE = Os pedidos já estão disponíveis!
 GLOBALLY_BLOCKED_LEVEL_MESSAGE = @%s, esse nível está globalmente bloqueado! Razão: %s
 
-//Command Responses
+#Command Responses
 
 NO_USER_MESSAGE = @%s, especifique um usuário para permitir.
 PERMIT_SUCCESS_MESSAGE = @%s, @%s permitido com sucesso para enviar links por 1 minuto.
@@ -185,7 +185,7 @@ INVALID_ACTION_MESSAGE = @%s, digite uma ação válida (adicionar, editar, excl
 STOP_SOUNDS_MESSAGE = @%s, Todos os sons de reprodução foram interrompidos.
 
 
-//Title Separators
+#Title Separators
 
 BOT_SECTION_TITLE = CONFIGURAÇÕES DE BOT
 GD_SECTION_TITLE = CONFIGURAÇÕES DE GD
@@ -193,7 +193,7 @@ USER_SECTION_TITLE = CONFIGURAÇÕES DO USUÁRIO
 COMMANDS_SECTION_TITLE = COMANDOS
 CHAT_SECTION_TITLE = BATE-PAPO (Chat)
 
-//Settings
+#Settings
 
 GENERAL_SETTINGS = Solicitações
 CHAOS_SETTINGS = Modo Caos
@@ -218,10 +218,10 @@ CUSTOM_KEYWORDS_SETTINGS = Palavras-chave
 GEOMETRY_DASH_COMMANDS_SETTINGS = Geometry Dash
 TIMERS_SETTINGS = Temporizadores
 SPAM_PROTECTION_SETTINGS = Proteção contra SPAM
-MESSAGE_SETTINGS = Messagems
+MESSAGE_SETTINGS = Messagens
 BLOCKED_KEYWORDS_SETTINGS = Frases bloqueadas
 
-//General Bot Settings
+#General Bot Settings
 
 MULTI_THREAD = Comandos multithread
 ANTI_DOX = Modo de Prevenção Dox
@@ -229,7 +229,7 @@ GLOBAL_COOLDOWN = Resfriamento de mensagem global (ms)
 DEFAULT_COMMAND_PREFIX = Prefixo de comando padrão
 GEOMETRY_DASH_COMMAND_PREFIX = Geometry Dash Prefixo de Comando
 
-//General Settings
+#General Settings
 
 FOLLOWERS_ONLY = Somente seguidores
 SUBSCRIBERS_ONLY = Somente Subs
@@ -257,7 +257,7 @@ MODS_BYPASS = Filtros de desvio de mods
 QUEUE_COMMAND_LABEL = Contagem de nível de comando da fila:
 BASIC_MODE = Modo Basico
 
-//Chaos Mode Settings
+#Chaos Mode Settings
 
 ENABLE_CHAOS_MODE = Ativar Modo Caos
 MOD_ONLY_CHAOS = Apenas Mod
@@ -272,13 +272,13 @@ MAXIMUM_SIZE = Tamanho máximo
 MINIMUM_SPEED = Velocidade Mínima
 MAXIMUM_SPEED = Velocidade máxima
 
-//Outputs Settings
+#Outputs Settings
 
 OUTPUTS_TEXT = Texto de saída:
 NO_LEVELS_TEXT = Nenhum níveu Texto:
 FILE_LOCATION = Localização de arquivo:
 
-//Accounts Settings
+#Accounts Settings
 
 GEOMETRY_DASH = Geometry Dash: %s
 TWITCH = Twitch: %s
@@ -289,14 +289,14 @@ USERNAME = Nome do usuário:
 PASSWORD = Senha:
 LOGIN = Conecte-se
 
-//Channel Point Settings
+#Channel Point Settings
 
 CHANNEL_POINTS_UNAVAILABLE = Os Pontos do Canal não estão disponíveis no momento.
 ADD_CHANNEL_POINTS_TOOLTIP = Adicionar ação de ponto do canal
 REFRESH_CHANNEL_POINTS_TOOLTIP = Atualizar recompensas de pontos do canal
 POINTS_LIST = Ações de pontos do canal
 
-//Commands Settings
+#Commands Settings
 
 DISABLE_COMMAND = Desativar comando
 MOD_ONLY = Apenas Moderatores
@@ -306,7 +306,7 @@ COOLDOWN =%s segundos
 COMMANDS_LIST = Comandos
 ADD_COMMAND_TOOLTIP = Adicionar comando
 
-//Requests Settings
+#Requests Settings
 
 RATED_LEVELS_ONLY = Somente níveis avaliados
 UNRATED_LEVELS_ONLY = Somente níveis não classificados
@@ -345,7 +345,7 @@ ALLOWED_TEXT = Permitido:
 DISALLOWED_TEXT = Não permitido:
 ADD_WORD_TOOLTIP = Adicionar palavra
 
-//Shortcuts Settings
+#Shortcuts Settings
 
 OPEN_SHORTCUT = Para frente
 SKIP_SHORTCUT = Pular/Próximo
@@ -355,7 +355,7 @@ COPY_SHORTCUT = Cópia
 BLOCK_SHORTCUT = Quadra
 CLEAR_SHORTCUT = Limpar
 
-//Personalization Settings
+#Personalization Settings
 
 ALWAYS_ON_TOP = Sempre no topo
 ON_TOP_DESCRIPTION = Força a janela a estar acima de tudo.
@@ -373,28 +373,28 @@ THEME_TEXT = Tema:
 DISABLE_NOTIFICATIONS = Desativar as notificações
 DISABLE_NOTIFICATIONS_DESCRIPTION = Desativa as notificações enviadas pelo loquibot.
 
-//Blocked IDs Settings
+#Blocked IDs Settings
 
 BLOCKED_IDS = IDs bloqueados
 ADD_ID_TOOLTIP = Adicionar ID
 UNBLOCK_ID_DIALOG_TITLE = Desbloquear %s?
 UNBLOCK_ID_DIALOG_INFO = Isso desbloqueará o ID e permitirá que ele seja solicitado novamente.
 
-//Blocked Users Settings
+#Blocked Users Settings
 
 BLOCKED_USERS = Usuários bloqueados
 ADD_USER_TOOLTIP = Adicionar usuário
 UNBLOCK_USER_DIALOG_TITLE = Desbloquear %s?
 UNBLOCK_USER_DIALOG_INFO = Isso desbloqueará o ID e permitirá que ele seja solicitado novamente.
 
-//Blocked Creators Settings
+#Blocked Creators Settings
 
 BLOCKED_CREATORS = Criadores bloqueados
 ADD_CREATOR_TOOLTIP = Adicionar criador
 UNBLOCK_CREATOR_DIALOG_TITLE = Desbloquear %s?
 UNBLOCK_CREATOR_DIALOG_INFO = Isso desbloqueará o criador e permitirá seus níveis novamente.
 
-//Logged IDs Settings
+#Logged IDs Settings
 
 LOGGED_IDS = IDs registrados
 REMOVE_LOG_DIALOG_TITLE = Remover %s dos registros?
@@ -404,7 +404,7 @@ CLEAR_LOGS_DIALOG_INFO = Isso removerá todos os níveis registrados e permitir�
 CLEAR_LOGS_TOOLTIP = Limpar registros
 
 
-//Windowed Interface
+#Windowed Interface
 
 DELETE = Excluir
 BAN = Banir usuário
@@ -417,7 +417,7 @@ DISCORD_BUTTON = Discórdia
 NEWEST_FIRST = Os mais novos primeiro
 TOP_COMMENTS = Melhores Comentários
 
-//Windowed Tooltips
+#Windowed Tooltips
 
 SWITCH_PAGES = Alternar páginas
 SKIP_LEVEL_TOOLTIP = Próximo/Pular Nível
@@ -432,7 +432,7 @@ HIDE_COMMENTS_TOOLTIP = Ocultar comentários
 MODERATE_TOOLTIP = Mensagem e Moderação
 SUPEROP_TOOLTIP = Ações do SuperOP
 
-//Comments Tooltips
+#Comments Tooltips
 
 PREV_PAGE = Página anterior
 NEXT_PAGE = Próxima página
@@ -440,7 +440,7 @@ TOP_COMMENTS = Melhores Comentários
 LATEST_COMMENTS = Últimos Comentários
 
 
-//Popups
+#Popups
 
 CLEAR_QUEUE_TITLE = Limpar a fila?
 CLEAR_QUEUE_INFO = Isso limpará os níveis da fila.
@@ -451,15 +451,15 @@ BLOCK_ID_TITLE = Bloquear %s (%s)?
 BLOCK_ID_INFO = Isso impedirá que o nível selecionado seja adicionado.
 BLOCK_ID_SUBINFO = Isso pode ser desfeito nas configurações.
 
-//Settings Main
+#Settings Main
 
 HOME_BUTTON = Casa
 
-//Window Titles
+#Window Titles
 
 COMMENTS_TITLE = Comentários
 
-//Settings Descriptions
+#Settings Descriptions
 
 GD_MODE_DESC = Habilita recursos relacionados ao Geometry Dash.
 FOLLOWERS_ONLY_DESC = Somente seguidores podem solicitar níveis.
@@ -491,7 +491,7 @@ ANTI_DOX_DESC = Substitui o nome do seu PC por asteriscos se ele for exibido no 
 GLOBAL_COOLDOWN_DESC = Define um cooldown para todas as mensagens enviadas pelo bot.
 BASIC_MODE_DESC = Desativa toda a conectividade do servidor GD para solicitações.
 
-//Spam Protection Settings
+#Spam Protection Settings
 
 CAPITAL_LETTER_SPAM = Filtro de letras maiúsculas
 CAPITAL_LETTERS = Letras maiúsculas
@@ -504,7 +504,7 @@ GIBBERISH_SPAM = Filtro sem sentido
 BIG_FOLLOWS_SPAM = Excluir automaticamente após comprar mensagens de spam
 AUTO_DELETE_GD_LEVEL_IDS = Excluir IDs de nível GD automaticamente
 
-//Basic Mode
+#Basic Mode
 
 NEXT_MESSAGE_BASIC = @%s, O próximo nível é %s.
 NOW_PLAYING_TOP_MESSAGE_BASIC = @%s, %s está sendo reproduzido agora!
@@ -512,7 +512,7 @@ CONFIRMATION_MESSAGE_BASIC = @%s, %s foi adicionado à fila na posição %s!
 CONFIRMATION_MESSAGE_BASIC_ALT = @%s, %s foi adicionado à fila!
 NOW_PLAYING_MESSAGE_BASIC = Agora jogando %s, solicitado por %s!
 
-//Antispam
+#Antispam
 
 ANTISPAM_COUNT_INPUT = Contar:
 ANTISPAM_COUNT_INPUT_DESC = Mínimo %s antes da verificação de porcentagem.
@@ -525,7 +525,7 @@ ANTISPAM_TIMEOUT_DURATION_INPUT_DESC = Quantidade de tempo que o usuário será 
 GIBBERISH_THRESHOLD_INPUT = Limite de detecção de gibberish
 GIBBERISH_THRESHOLD_INPUT_DESC = Precisão de detecção sem sentido (muito exigente).
 
-//Custom Theme Settings
+#Custom Theme Settings
 
 BACKGROUND_MAIN = Fundo
 BACKGROUND_SECONDARY = Antecedentes Secundários
@@ -538,7 +538,7 @@ FOREGROUND_MAIN = Primeiro plano
 FOREGROUND_SECONDARY = Primeiro plano secundário
 IS_LIGHT_SETTING = Ícones escuros
 
-//Command Editor New
+#Command Editor New
 
 EDIT_COMMAND = Comando Editar
 EDIT_KEYWORD = Editar palavra-chave
@@ -556,7 +556,7 @@ COOLDOWN_LABEL = Esfriar:
 ALIAS_INPUT = Apelido:
 ALIAS_INPUT_DESC = Outros nomes de comando que ativarão este comando (separados por vírgula).
 
-//Timer Editor
+#Timer Editor
 
 EDIT_TIMER = Editar temporizador
 ADD_TIMER = Adicionar temporizador
@@ -574,10 +574,10 @@ INTERVAL_DESCRIPTION = Intervalo onde o temporizador se repete. (Exatamente por 
 LINES_DESCRIPTION = Quantidade de mensagens dentro de 5 minutos para que um temporizador seja executado.
 
 
-//Language Settings
+#Language Settings
 LANGUAGE = Línguas:
 
-//OTHER
+#OTHER
 
 PRIVACY_SETTINGS = Política de Privacidade
 LEGAL_SETTINGS = Jurídico
