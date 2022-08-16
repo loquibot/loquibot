@@ -25,7 +25,7 @@ public class VideoDetails extends JPanel {
     private final JLabel usernameLabel;
     private final JLabel requesterLabel;
     private final JButtonUI clearUI = new JButtonUI();
-    private final JButton playButton = createButton("\uF184", "play");
+    private final CurvedButton playButton = createButton("\uF184", "play");
 
     public VideoDetails(YouTubeVideo data){
 
@@ -80,8 +80,8 @@ public class VideoDetails extends JPanel {
         //else commentScrollPane.setBounds(0,descHeight + 200,510, height-240 - descHeight);
     }
 
-    private JButton createButton(String icon, String tooltip) {
-        JButton button = new RoundedJButton(icon, tooltip);
+    private CurvedButton createButton(String icon, String tooltip) {
+        CurvedButton button = new CurvedButton(icon, tooltip);
         button.setFont(Defaults.SYMBOLS.deriveFont(18f));
         button.setMargin(new Insets(0, 0, 0, 0));
         button.setBorder(BorderFactory.createEmptyBorder());

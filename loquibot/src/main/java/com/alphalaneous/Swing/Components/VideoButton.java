@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 
-public class VideoButton extends CurvedButtonAlt {
+public class VideoButton extends CurvedButton {
 
 	private static final JButtonUI selectUI = new JButtonUI();
 	public static int selectedID = 0;
@@ -33,7 +33,6 @@ public class VideoButton extends CurvedButtonAlt {
 
 	public VideoButton(YouTubeVideo data) {
 		super("");
-		setCurve(Defaults.globalArc);
 		setOpaque(false);
 
 		this.videoData = data;
@@ -42,10 +41,6 @@ public class VideoButton extends CurvedButtonAlt {
 
 		title.setBackground(new Color(0,0,0,0));
 		title.setOpaque(false);
-
-
-
-		//System.out.println(data.getTitle());
 
 		creator.setText(data.getUsername());
 

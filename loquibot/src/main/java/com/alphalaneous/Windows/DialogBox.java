@@ -1,6 +1,6 @@
 package com.alphalaneous.Windows;
 
-import com.alphalaneous.Swing.Components.CurvedButtonAlt;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
@@ -118,7 +118,7 @@ public class DialogBox {
 
 
         for (String option : options) {
-            CurvedButtonAlt button = createButton(option);
+            CurvedButton button = createButton(option);
             button.setForeground(Defaults.FOREGROUND_A);
             button.setBackground(Defaults.COLOR);
             button.addActionListener(e -> {
@@ -140,9 +140,9 @@ public class DialogBox {
         return result.get();
     }
 
-    private static CurvedButtonAlt createButton(String text) {
+    private static CurvedButton createButton(String text) {
 
-        CurvedButtonAlt button = new CurvedButtonAlt(text);
+        CurvedButton button = new CurvedButton(text);
 
         button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 

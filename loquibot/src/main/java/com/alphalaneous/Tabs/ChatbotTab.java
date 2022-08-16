@@ -251,7 +251,7 @@ public class ChatbotTab {
 		}
 	}
 
-	private static class FunctionButton extends CurvedButtonAlt {
+	private static class FunctionButton extends CurvedButton {
 
 		private final Callable<Void> method;
 		private final String text;
@@ -322,9 +322,9 @@ public class ChatbotTab {
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
-			for (Component component : buttons.getComponents()) {
+			for (CurvedButton component : buttons) {
 				if (component instanceof FunctionButton) {
-					((JButton) component).setUI(SettingsTab.settingsUI);
+					component.setUI(SettingsTab.settingsUI);
 					component.setBackground(new Color(0,0,0,0));
 				}
 			}

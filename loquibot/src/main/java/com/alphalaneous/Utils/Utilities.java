@@ -6,12 +6,10 @@ import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.SettingsHandler;
-import com.alphalaneous.Settings.Commands;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,9 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,6 +77,7 @@ public class Utilities {
 		trayIcon.setPopupMenu(popup);
 	}
 	public static void openURL(URI uri){
+
 		try {
 			Runtime rt = Runtime.getRuntime();
 			rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
@@ -111,91 +108,6 @@ public class Utilities {
 		return builder.toString();
 	}
 
-	public static void addCommand(String username, String... args) {
-		String newCommandName = args[1].replace("\\\\", "").replace("/", "");
-		StringBuilder message = new StringBuilder();
-		boolean i = false;
-		for (String msg : args) {
-			if(!i) {
-				message.append(" ").append(msg);
-				i = true;
-			}
-		}
-		message = new StringBuilder(StringUtils.replaceOnce(message.toString(), args[1], "").trim());
-		String command;
-		if (message.toString().startsWith("eval:")) {
-			command = "function command(){" + message.toString().replace("eval:", "").trim() + "}";
-		} else {
-			command = "function command() { return \"" + message.toString() + "\";}";
-		}
-		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\" + newCommandName + ".js");
-		if (!Files.exists(file)) {
-			try {
-				if (!Files.exists(Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\"))) {
-					Files.createDirectory(Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\"));
-				}
-				Files.createFile(file);
-				Files.write(file, command.getBytes());
-				Main.sendMessage(Utilities.format("✔ | $COMMAND_ADDED_SUCCESS$", username, newCommandName));
-				Commands.refresh();
-				saveOption(newCommandName, "ADVANCED_EDITOR");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			Main.sendMessage(Utilities.format("❗ | $COMMAND_EXISTS$", username));
-		}
-	}
-
-	public static void editCommand(String username, String... args) {
-		String newCommandName = args[1];
-		StringBuilder message = new StringBuilder();
-		boolean i = false;
-		for (String msg : args) {
-			if(!i) {
-				message.append(" ").append(msg);
-				i = true;
-			}
-		}
-		message = new StringBuilder(StringUtils.replaceOnce(message.toString(), args[1], "").trim());
-		String command;
-		if (message.toString().startsWith("eval:")) {
-			command = "function command(){" + message.toString().replace("eval:", "").trim() + "}";
-		} else {
-			command = "function command() { return \"" + message + "\";}";
-		}
-		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\" + newCommandName + ".js");
-		if (Files.exists(file)) {
-			try {
-				Files.write(file, command.getBytes());
-				Main.sendMessage(Utilities.format("✔ | $COMMAND_EDIT_SUCCESS$", username, newCommandName));
-				saveOption(newCommandName, "ADVANCED_EDITOR");
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			Main.sendMessage(Utilities.format("❗ | $COMMAND_DOESNT_EXIST$", username));
-		}
-	}
-
-	public static void deleteCommand(String username, String command) {
-		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\Commands\\" + command + ".js");
-		if (Files.exists(file)) {
-			try {
-				Files.delete(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Main.sendMessage(Utilities.format("✔ | $COMMAND_DELETE_SUCCESS$", username, command));
-			Commands.refresh();
-			deleteCommandA(command);
-		} else {
-			Main.sendMessage(Utilities.format("❗ | $COMMAND_DOESNT_EXIST$", username, command));
-
-		}
-	}
-
 	public static String fetchURL(String url) {
 		return TwitchAPI.fetchURL(url);
 	}
@@ -208,6 +120,46 @@ public class Utilities {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return format;
+		}
+	}
+
+	public static void load(String file, HashMap<String, String> location){
+		Path path = Paths.get(Defaults.saveDirectory + file);
+		if (Files.exists(path)) {
+			Scanner sc = null;
+			try {
+				sc = new Scanner(path.toFile());
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			assert sc != null;
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				if (line.contains("=")) {
+					location.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
+				}
+			}
+			sc.close();
+		}
+	}
+
+	public static void save(String file, HashMap<String, String> values){
+		Path fileA = Paths.get(Defaults.saveDirectory + file);
+
+		try {
+			if (!Files.exists(fileA)) Files.createFile(fileA);
+
+			Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
+			StringBuilder pairs = new StringBuilder();
+			while (it.hasNext()) {
+				Map.Entry<String, String> pair = it.next();
+				pairs.append(pair.getKey()).append(" = ").append(pair.getValue()).append("\n");
+			}
+
+			Files.write(fileA, pairs.toString().getBytes());
+		} catch (IOException e1) {
+			DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
+
 		}
 	}
 
@@ -265,38 +217,6 @@ public class Utilities {
 		}
 	}
 
-	private static void delStuff(String command, String identifier) {
-
-		boolean exists = false;
-		Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt");
-		try {
-			if (Files.exists(file)) {
-				Scanner sc = new Scanner(file);
-				while (sc.hasNextLine()) {
-					if (String.valueOf(command).equals(sc.nextLine())) {
-						exists = true;
-						break;
-					}
-				}
-				sc.close();
-				if (exists) {
-					Path temp = Paths.get(Defaults.saveDirectory + "\\loquibot\\_temp" + identifier + "_");
-					PrintWriter out = new PrintWriter(new FileWriter(temp.toFile()));
-					Files.lines(file)
-							.filter(line -> !line.contains(command))
-							.forEach(out::println);
-					out.flush();
-					out.close();
-					Files.delete(file);
-					Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\" + identifier + ".txt"), StandardCopyOption.REPLACE_EXISTING);
-				}
-			}
-		} catch (Exception f) {
-			f.printStackTrace();
-		}
-
-	}
-
 	public static void disposeTray() {
 		tray.remove(trayIcon);
 	}
@@ -306,95 +226,6 @@ public class Utilities {
 			trayIcon.displayMessage(title, message, TrayIcon.MessageType.NONE);
 		}
 
-	}
-
-	private static void saveOption(String command, String optionType) {
-		try {
-			String typeA = null;
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt"))) {
-				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt").toFile());
-				while (sc3.hasNextLine()) {
-					String line = sc3.nextLine();
-					if (line.split("=").length > 1) {
-						if (line.split("=")[0].trim().equalsIgnoreCase(command)) {
-							typeA = line.split("=")[1].trim();
-							break;
-						}
-					}
-				}
-				sc3.close();
-			} else {
-				Files.createFile(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt"));
-			}
-			if (typeA != null) {
-				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt"));
-				StringBuilder inputBuffer = new StringBuilder();
-				String line;
-				while ((line = file.readLine()) != null) {
-					inputBuffer.append(line);
-					inputBuffer.append('\n');
-				}
-				file.close();
-
-				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt");
-				fileOut.write(inputBuffer.toString().replace(command + " = " + typeA, command + " = " + optionType).getBytes());
-				fileOut.close();
-			} else {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/loquibot/" + "commands" + "/options.txt").toFile(), true));
-				writer.newLine();
-				writer.write(command + " = " + optionType);
-				writer.close();
-			}
-		} catch (Exception f) {
-			f.printStackTrace();
-		}
-	}
-
-	private static void delCooldown(String command) {
-		try {
-			int cooldown = -1;
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"))) {
-				Scanner sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile());
-				while (sc3.hasNextLine()) {
-					String line = sc3.nextLine();
-					if (line.split("=").length > 1) {
-						if (line.split("=")[0].trim().equalsIgnoreCase(command)) {
-							cooldown = Integer.parseInt(line.split("=")[1].trim());
-							break;
-						}
-					}
-				}
-				sc3.close();
-			} else {
-				Files.createFile(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt"));
-			}
-			if (cooldown != -1) {
-				BufferedReader file = new BufferedReader(new FileReader(Defaults.saveDirectory + "/loquibot/cooldown.txt"));
-				StringBuilder inputBuffer = new StringBuilder();
-				String line;
-				while ((line = file.readLine()) != null) {
-					inputBuffer.append(line);
-					inputBuffer.append('\n');
-				}
-				file.close();
-
-				FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "/loquibot/cooldown.txt");
-				fileOut.write(inputBuffer.toString().replace(command + " = " + cooldown, command + " = " + 0).getBytes());
-				fileOut.close();
-			} else {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(Defaults.saveDirectory + "/loquibot/cooldown.txt").toFile(), true));
-				writer.newLine();
-				writer.write(command + " = " + 0);
-				writer.close();
-
-			}
-		} catch (Exception f) {
-			f.printStackTrace();
-		}
-	}
-
-	private static void deleteCommandA(String command) {
-		saveOption(command, "SEND_MESSAGE");
 	}
 
 	public static long getID(String message) {
@@ -420,17 +251,12 @@ public class Utilities {
 		return -1;
 	}
 
-	static boolean copyFromJar(InputStream source , String destination) {
-		boolean success = true;
-
+	static void copyFromJar(InputStream source , String destination) {
 		try {
 			Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			success = false;
 		}
-
-		return success;
 
 	}
 

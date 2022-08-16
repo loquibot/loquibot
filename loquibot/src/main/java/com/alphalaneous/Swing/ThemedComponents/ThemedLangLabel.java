@@ -15,9 +15,7 @@ public class ThemedLangLabel extends LangLabel {
 	}
 
 	public static void refreshAll() {
-		for (ThemedLangLabel label : labels) {
-			label.refresh();
-		}
+		for (ThemedLangLabel label : labels) label.refresh();
 	}
 
 	public void refresh() {

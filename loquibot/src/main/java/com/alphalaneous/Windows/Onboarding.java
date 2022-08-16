@@ -6,7 +6,7 @@ import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.JButtonUI;
-import com.alphalaneous.Swing.Components.RoundedJButton;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Utils.Utilities;
@@ -102,7 +102,6 @@ public class Onboarding {
 				SettingsHandler.writeSettings("onboarding", "false");
 			}
 		});
-		moveOn.refresh();
 		moveOn.setVisible(false);
 
 		CurvedButton nextButton = new CurvedButton("Next");
@@ -115,7 +114,7 @@ public class Onboarding {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				try {
-					nextButton.setLForeground(Defaults.FOREGROUND_A);
+					nextButton.setForeground(Defaults.FOREGROUND_A);
 					new Thread(() -> {
 						TwitchAPI.setOauth();
 						while (!TwitchAPI.success.get()) {
@@ -136,7 +135,7 @@ public class Onboarding {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				try {
-					nextButton.setLForeground(Defaults.FOREGROUND_A);
+					nextButton.setForeground(Defaults.FOREGROUND_A);
 					new Thread(() -> {
 						try {
 							YouTubeAccount.setCredential(true);
@@ -184,8 +183,6 @@ public class Onboarding {
 				}
 			}
 		});
-		nextButton.refresh();
-
 
 		//Conner is cute
 
@@ -213,7 +210,7 @@ public class Onboarding {
 
 	@SuppressWarnings("unused")
 	private static JButton createButton(String icon, String tooltip) {
-		JButton button = new RoundedJButton(icon, tooltip);
+		CurvedButton button = new CurvedButton(icon, tooltip);
 		button.setPreferredSize(new Dimension(50, 50));
 		button.setUI(defaultUI);
 		button.setBackground(Defaults.COLOR);

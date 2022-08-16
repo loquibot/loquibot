@@ -65,7 +65,7 @@ public class ListView extends JPanel {
     }
 
     private FancyTextArea input;
-    private CurvedButtonAlt button;
+    private CurvedButton button;
     public void addInput(String icon, FancyTextArea input, Function function){
         this.input = input;
         input.setBounds(getWidth()-350-input.getWidth(), 30, input.getWidth(), input.getHeight());
@@ -74,7 +74,7 @@ public class ListView extends JPanel {
     }
 
     public void addButton(String icon, Function function){
-        CurvedButtonAlt button = new CurvedButtonAlt(icon);
+        CurvedButton button = new CurvedButton(icon);
         this.button = button;
         button.setBackground(new ThemedColor("color2", button, ThemedColor.BACKGROUND));
         button.setFont(Defaults.SYMBOLS.deriveFont(18f));
@@ -135,7 +135,7 @@ public class ListView extends JPanel {
             if(component instanceof ListButton){
                 ((ListButton)component).setOpaque(false);
                 ((ListButton)component).setUI(settingsButtonUI);
-                ((ListButton)component).setLForeground(Defaults.FOREGROUND_A);
+                ((ListButton)component).setForeground(Defaults.FOREGROUND_A);
             }
         }
         if(button != null) {

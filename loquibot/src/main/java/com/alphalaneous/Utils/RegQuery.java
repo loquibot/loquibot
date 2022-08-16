@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RegQuery {
 
@@ -79,6 +82,7 @@ public class RegQuery {
 
 
     public static int getTheme() {
+
         if(SettingsHandler.getSettings("noReg").asBoolean()) return -1;
         try {
             Process process = Runtime.getRuntime().exec(PERSONALIZE);

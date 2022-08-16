@@ -22,9 +22,9 @@ public class OfficerWindow {
 
     private static final FancyTextArea idInput = new FancyTextArea(true,false);
     private static final FancyTextArea reasonInput = new FancyTextArea(false,true);
-    private static final CurvedButtonAlt submitButton = createCurvedButton("$GLOBALLY_SUBMIT$");
-    private static final CurvedButtonAlt blockID = createCurvedButton("$GLOBALLY_BLOCK_ID$");
-    private static final CurvedButtonAlt unblockID = createCurvedButton("$GLOBALLY_UNBLOCK_ID$");
+    private static final CurvedButton submitButton = createCurvedButton("$GLOBALLY_SUBMIT$");
+    private static final CurvedButton blockID = createCurvedButton("$GLOBALLY_BLOCK_ID$");
+    private static final CurvedButton unblockID = createCurvedButton("$GLOBALLY_UNBLOCK_ID$");
 
 
     private static final LangLabel enterIDLabel = new LangLabel("$ENTER_ID$");
@@ -40,19 +40,19 @@ public class OfficerWindow {
         /*panel.setBounds(0,0,700,440);
         panel.setLayout(null);
 
-        CurvedButtonAlt blockIDButton = createCurvedButton("Block ID");
+        CurvedButton blockIDButton = createCurvedButton("Block ID");
 
         blockIDButton.setBounds(10,50,100,30);
 
-        CurvedButtonAlt blockUserButton = createCurvedButton("Block User");
+        CurvedButton blockUserButton = createCurvedButton("Block User");
 
         blockUserButton.setBounds(10,90,100,30);
 
-        CurvedButtonAlt IDBlocklistButton = createCurvedButton("ID Blocklist");
+        CurvedButton IDBlocklistButton = createCurvedButton("ID Blocklist");
 
         IDBlocklistButton.setBounds(10,130,100,30);
 
-        CurvedButtonAlt userBlocklistButton = createCurvedButton("User Blocklist");
+        CurvedButton userBlocklistButton = createCurvedButton("User Blocklist");
 
         userBlocklistButton.setBounds(10,170,100,30);
 
@@ -225,8 +225,8 @@ public class OfficerWindow {
         }
         DialogBox.showDialogBox(panel);
     }
-    private static CurvedButtonAlt createCurvedButton(String text) {
-        CurvedButtonAlt button = new CurvedButtonAlt(text);
+    private static CurvedButton createCurvedButton(String text) {
+        CurvedButton button = new CurvedButton(text);
         button.setFont(Defaults.MAIN_FONT.deriveFont(14f));
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setBackground(Defaults.COLOR2);

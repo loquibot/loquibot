@@ -9,7 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
-public class Lega {
+public class Legal {
 
     private static final BufferedReader legalFileReader = new BufferedReader(
             new InputStreamReader(Objects.requireNonNull(

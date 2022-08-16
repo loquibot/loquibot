@@ -20,6 +20,20 @@
       "description" : "Clears the Media Share queue | Usage: \"%pclearmedia\"",
       "runMethod" : true,
       "message" : "runMSClear"
+    },
+    {
+      "name" : "play",
+      "level" : "moderator",
+      "description" : "Plays the media | Usage: \"%pplay\"",
+      "runMethod" : true,
+      "message" : "runMSPlay"
+    },
+    {
+      "name" : "pause",
+      "level" : "moderator",
+      "description" : "Pauses the media | Usage: \"%pplay\"",
+      "runMethod" : true,
+      "message" : "runMSPause"
     }
   ]
 }

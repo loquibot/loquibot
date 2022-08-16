@@ -1,7 +1,8 @@
 package com.alphalaneous.Swing.ThemedComponents;
 
 import com.alphalaneous.Interfaces.Function;
-import com.alphalaneous.Swing.Components.CurvedButtonAlt;
+import com.alphalaneous.Swing.Components.CurvedButton;
+import com.alphalaneous.Swing.Components.GraphicsFunctions;
 import com.alphalaneous.Swing.Components.JButtonUI;
 import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Interactive.Commands.CommandData;
@@ -23,7 +24,7 @@ public class ThemedConfigCheckbox extends JPanel {
     private final JPanel infoPanel = new JPanel();
     private final JPanel titlePanel = new JPanel();
     private final JLabel descriptionText = new JLabel();
-    private final CurvedButtonAlt configButton = new CurvedButtonAlt("\uF00F");
+    private final CurvedButton configButton = new CurvedButton("\uF00F");
     private final LangLabel text = new LangLabel("");
     private final JLabel check = new JLabel("\uE922");
     private final JLabel checkSymbol = new JLabel("\uE73E");
@@ -329,16 +330,8 @@ public class ThemedConfigCheckbox extends JPanel {
         hover.setBounds(20, 20, 30, 30);
     }
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
 
-        g.setColor(getBackground());
-
-        RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2.setRenderingHints(qualityHints);
-        g2.fillRoundRect(0, 0, getSize().width, getSize().height, Defaults.globalArc, Defaults.globalArc);
-
-
+        GraphicsFunctions.roundCorners(g, getBackground(), getSize());
         super.paintComponent(g);
     }
 

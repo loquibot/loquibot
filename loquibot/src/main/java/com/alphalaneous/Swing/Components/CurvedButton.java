@@ -1,74 +1,101 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Utils.Defaults;
-import com.alphalaneous.Swing.ThemedComponents.ThemedJButton;
+import com.alphalaneous.Utils.Language;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
+import java.util.Map;
 
-public class CurvedButton extends ThemedJButton {
+public class CurvedButton extends JButton {
 
-	private final LangLabel text = new LangLabel("");
+	@Override
+	public JToolTip createToolTip() {
+		return tooltip;
+	}
+
+	private final String identifier;
 
 	public static ArrayList<CurvedButton> buttons = new ArrayList<>();
 
+	private final JToolTip tooltip = new FancyTooltip(this);
+
+	private final String tooltipText;
+
+
 	public CurvedButton(String label) {
-		setLayout(null);
+		this(label, null);
+	}
+	public CurvedButton(String label, String tooltipText) {
+		this.identifier = label;
+		this.tooltipText = tooltipText;
 		setOpaque(false);
-		text.setTextLang(label);
-		text.setForeground(getForeground());
 		setBorder(BorderFactory.createEmptyBorder());
-		add(text);
-		Dimension size = getPreferredSize();
-		size.width = size.height = Math.max(size.width, size.height);
-		setPreferredSize(size);
+		setText(label);
+		setForeground(getForeground());
 		setBackground(Defaults.COLOR2);
 		setContentAreaFilled(false);
+
+
+		if(tooltipText != null){
+			if(!tooltipText.equalsIgnoreCase("")) {
+				setToolTipText(Language.setLocale(tooltipText));
+			}
+		}
+
+
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				Font originalFont = getFont();
+
+				Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) originalFont.getAttributes();
+				attributes.put(TextAttribute.SIZE, originalFont.getSize() + 2);
+				setFont(originalFont.deriveFont(attributes));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				Font originalFont = getFont();
+				Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) originalFont.getAttributes();
+				attributes.put(TextAttribute.SIZE, originalFont.getSize() - 2);
+				setFont(originalFont.deriveFont(attributes));
+			}
+		});
 		buttons.add(this);
 	}
 
-	public String getLText(){
-		return text.getText();
+	public void refreshLocale(){
+		setToolTipText(Language.setLocale(tooltipText));
+		setText(Language.setLocale(identifier));
 	}
 
-	protected void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
+	@Override
+	public void setText(String textA){
+		super.setText(Language.setLocale(textA));
+	}
 
-		g.setColor(getBackground());
-
-		RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g2.setRenderingHints(qualityHints);
-		g2.fillRoundRect(0, 0, getSize().width, getSize().height, Defaults.globalArc,  Defaults.globalArc);
-
-
-		super.paintComponent(g);
+	public String getIdentifier(){
+		return identifier.replace("$", "");
 	}
 
 	private Shape shape;
 
+	@Override
+	protected void paintComponent(Graphics g) {
+		GraphicsFunctions.roundCorners(g, getBackground(), getSize());
+		super.paintComponent(g);
+	}
+	@Override
 	public boolean contains(int x, int y) {
 		if (shape == null || !shape.getBounds().equals(getBounds())) {
 			shape = new RoundRectangle2D.Float(0,0,getWidth(),getHeight(), Defaults.globalArc, Defaults.globalArc);
 		}
 		return shape.contains(x, y);
-	}
-	public void setLForeground(Color color){
-		text.setForeground(color);
-
-	}
-	public void refresh(){
-		text.setForeground(getForeground());
-		text.setFont(getFont());
-		text.setBounds((getPreferredSize().width/2)-(text.getPreferredSize().width/2), (getPreferredSize().height/2)-(text.getPreferredSize().height/2)-1, text.getPreferredSize().width+5, text.getPreferredSize().height+5);
-		setOpaque(false);
-
-	}
-	public static void refreshAll(){
-		for(CurvedButton button : buttons){
-			button.refresh();
-		}
 	}
 }

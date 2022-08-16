@@ -6,7 +6,9 @@ import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.ChannelPointReward;
 import com.alphalaneous.Main;
+import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Swing.BasicBrowserWindow;
 import com.alphalaneous.Swing.Components.LevelButton;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Settings.Account;
@@ -173,6 +175,7 @@ public class TwitchAPI {
 									if(ChatterActivity.checkIfActive(RequestsTab.getLevelsPanel().getButton(k).getRequester())){
 										if(!RequestsTab.getLevelsPanel().getButton(k).getLevelData().isYouTube()) {
 											RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
+											TwitchAPI.viewerList.add(RequestsTab.getLevelsPanel().getButton(k).getRequester());
 										}
 									}
 								}
@@ -183,8 +186,9 @@ public class TwitchAPI {
 									if (SettingsHandler.getSettings("removeIfOffline").asBoolean()) {
 										for (LevelButton button : Requests.getRemovedForOffline()) {
 											if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
-												if(Requests.getPosFromID(button.getID()) != -1) {
+												if(Requests.getPosFromID(button.getID()) == -1) {
 													RequestsTab.addRequest(button);
+													Requests.removeFromRemovedForOffline(button);
 													if (RequestsTab.getQueueSize() == 1) {
 														RequestsTab.getLevelsPanel().setSelect(0);
 														LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
@@ -415,7 +419,9 @@ public class TwitchAPI {
 			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
 					twitch.getClientId(), callbackUri, Scopes.USER_READ
 			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
-			Utilities.openURL(authUrl);
+
+			BasicBrowserWindow basicBrowserWindow = new BasicBrowserWindow(authUrl.toString());
+
 			if (twitch.auth().awaitAccessToken()) {
 				SettingsHandler.writeSettings("oauth", twitch.auth().getAccessToken());
 				SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
@@ -427,6 +433,7 @@ public class TwitchAPI {
 				System.out.println(twitch.auth().getAuthenticationError());
 
 			}
+			basicBrowserWindow.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

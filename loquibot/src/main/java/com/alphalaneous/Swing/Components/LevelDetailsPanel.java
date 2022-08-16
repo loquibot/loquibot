@@ -42,7 +42,11 @@ public class LevelDetailsPanel {
         }
         new Thread(() -> Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data).toString())).start();
         if(data == null) Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(null).toString());
-        else new Thread(() -> Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1).getLevelData()).toString())).start();
+        else {
+            if (RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1 < RequestsTab.getQueueSize()) {
+                new Thread(() -> Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1).getLevelData()).toString())).start();
+            }
+        }
 
         tries = 0;
         mainPanel.repaint();
@@ -77,6 +81,5 @@ public class LevelDetailsPanel {
 
             }
         }
-
     }
 }

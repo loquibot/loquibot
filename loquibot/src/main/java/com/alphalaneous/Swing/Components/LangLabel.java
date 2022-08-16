@@ -19,10 +19,6 @@ public class LangLabel extends JLabel {
 		setText(newText);
 		labelList.add(this);
 	}
-	/*@Override
-	public void setFont(Font font){
-		super.setFont(Defaults.getPreferredFontForText(getText()).deriveFont(14f));
-	}*/
 
 	public void setAvailableFont(float size){
 		super.setFont(Defaults.getPreferredFontForText(getText()).deriveFont(size));

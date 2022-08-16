@@ -7,7 +7,7 @@ import com.alphalaneous.Windows.Window;
 import javax.swing.*;
 import java.awt.*;
 
-public class ContextButton extends CurvedButtonAlt {
+public class ContextButton extends CurvedButton {
 
     public ContextButton(String label, Function function) {
         super(label);

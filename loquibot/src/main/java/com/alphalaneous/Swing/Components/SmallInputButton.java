@@ -22,8 +22,6 @@ public class SmallInputButton extends JPanel {
         if(SettingsHandler.getSettings(setting).exists()) input.setText(SettingsHandler.getSettings(setting).asString());
         else input.setText(defaultValue);
 
-
-
         input.getTextInput().addKeyListener(new SwingKeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {

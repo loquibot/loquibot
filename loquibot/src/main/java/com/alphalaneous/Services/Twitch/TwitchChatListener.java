@@ -1,6 +1,5 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.*;
 import com.alphalaneous.ChatBot.BotHandler;
 import com.alphalaneous.ChatBot.ChatterActivity;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
@@ -63,13 +62,9 @@ public class TwitchChatListener extends ChatBot {
 	}
 
 	private void waitOnMessage(ChatMessage chatMessage) {
+		BotHandler.onMessage(chatMessage);
 		CommandHandler.run(chatMessage);
 		KeywordHandler.run(chatMessage);
-		long userID;
-		if (chatMessage.getTag("user-id") != null) {
-			userID = Long.parseLong(chatMessage.getTag("user-id"));
-			BotHandler.onMessage(chatMessage.getSender(), chatMessage.getMessage(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getCheerCount(), chatMessage.getTag("id"), userID, chatMessage);
-		}
 	}
 
 	@Override

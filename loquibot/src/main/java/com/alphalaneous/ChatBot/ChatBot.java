@@ -93,7 +93,7 @@ public abstract class ChatBot {
 				Utilities.sleep(10);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.out.println("> Couldn't connect to Chat Listener");
 		}
 		chatReader.send("CAP REQ :twitch.tv/tags");
 		chatReader.send("CAP REQ :twitch.tv/commands");

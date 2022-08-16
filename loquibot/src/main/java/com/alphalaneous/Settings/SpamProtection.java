@@ -1,6 +1,6 @@
 package com.alphalaneous.Settings;
 
-import com.alphalaneous.Swing.Components.CurvedButtonAlt;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.FancyTextArea;
 import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Swing.Components.SettingsPage;
@@ -65,17 +65,17 @@ public class SpamProtection {
         timeoutDurationInout.setBounds(10,260,400, 60);
         panel.add(timeoutDurationInout);
 
-        CurvedButtonAlt curvedButtonAlt = new CurvedButtonAlt("$OKAY$");
-        curvedButtonAlt.setBounds(150,340,100,40);
-        curvedButtonAlt.setUI(Defaults.settingsButtonUI);
-        curvedButtonAlt.setBackground(Defaults.COLOR2);
-        curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
-        curvedButtonAlt.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-        curvedButtonAlt.setBorder(BorderFactory.createEmptyBorder());
+        CurvedButton CurvedButton = new CurvedButton("$OKAY$");
+        CurvedButton.setBounds(150,340,100,40);
+        CurvedButton.setUI(Defaults.settingsButtonUI);
+        CurvedButton.setBackground(Defaults.COLOR2);
+        CurvedButton.setForeground(Defaults.FOREGROUND_A);
+        CurvedButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+        CurvedButton.setBorder(BorderFactory.createEmptyBorder());
 
-        curvedButtonAlt.addActionListener(e -> DialogBox.closeDialogBox());
+        CurvedButton.addActionListener(e -> DialogBox.closeDialogBox());
 
-        panel.add(curvedButtonAlt);
+        panel.add(CurvedButton);
 
         DialogBox.showDialogBox(panel);
     }
@@ -104,17 +104,17 @@ public class SpamProtection {
         timeoutDurationInout.setBounds(10,190,400, 60);
         panel.add(timeoutDurationInout);
 
-        CurvedButtonAlt curvedButtonAlt = new CurvedButtonAlt("$OKAY$");
-        curvedButtonAlt.setBounds(150,270,100,40);
-        curvedButtonAlt.setUI(Defaults.settingsButtonUI);
-        curvedButtonAlt.setBackground(Defaults.COLOR2);
-        curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
-        curvedButtonAlt.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-        curvedButtonAlt.setBorder(BorderFactory.createEmptyBorder());
+        CurvedButton CurvedButton = new CurvedButton("$OKAY$");
+        CurvedButton.setBounds(150,270,100,40);
+        CurvedButton.setUI(Defaults.settingsButtonUI);
+        CurvedButton.setBackground(Defaults.COLOR2);
+        CurvedButton.setForeground(Defaults.FOREGROUND_A);
+        CurvedButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+        CurvedButton.setBorder(BorderFactory.createEmptyBorder());
 
-        curvedButtonAlt.addActionListener(e -> DialogBox.closeDialogBox());
+        CurvedButton.addActionListener(e -> DialogBox.closeDialogBox());
 
-        panel.add(curvedButtonAlt);
+        panel.add(CurvedButton);
 
         DialogBox.showDialogBox(panel);
     }
@@ -138,17 +138,17 @@ public class SpamProtection {
         timeoutDurationInout.setBounds(10,120,400, 60);
         panel.add(timeoutDurationInout);
 
-        CurvedButtonAlt curvedButtonAlt = new CurvedButtonAlt("$OKAY$");
-        curvedButtonAlt.setBounds(150,200,100,40);
-        curvedButtonAlt.setUI(Defaults.settingsButtonUI);
-        curvedButtonAlt.setBackground(Defaults.COLOR2);
-        curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
-        curvedButtonAlt.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-        curvedButtonAlt.setBorder(BorderFactory.createEmptyBorder());
+        CurvedButton CurvedButton = new CurvedButton("$OKAY$");
+        CurvedButton.setBounds(150,200,100,40);
+        CurvedButton.setUI(Defaults.settingsButtonUI);
+        CurvedButton.setBackground(Defaults.COLOR2);
+        CurvedButton.setForeground(Defaults.FOREGROUND_A);
+        CurvedButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+        CurvedButton.setBorder(BorderFactory.createEmptyBorder());
 
-        curvedButtonAlt.addActionListener(e -> DialogBox.closeDialogBox());
+        CurvedButton.addActionListener(e -> DialogBox.closeDialogBox());
 
-        panel.add(curvedButtonAlt);
+        panel.add(CurvedButton);
 
         DialogBox.showDialogBox(panel);
     }

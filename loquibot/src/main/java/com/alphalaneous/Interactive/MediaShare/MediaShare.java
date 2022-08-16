@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSException;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.swing.*;
@@ -43,21 +44,17 @@ public class MediaShare {
 
     static class MediaSharePanel extends JPanel{
         private final JLabel background = new JLabel();
-        private final MultiLineLabel title;
-        private final JLabel timeLabel = new JLabel("0 / 0");
         private final WebView webView = new WebView();
         private final YouTubeVideo video;
         private final VideoProgressBar videoProgressBar;
 
-
+        private static float volume = SettingsHandler.getSettings("mediaVolume").asFloat();
         private static MediaSharePanel currentVideo;
-        private static double prevDur;
-        private static YouTubeVideo prevVideo;
 
         public MediaSharePanel(YouTubeVideo video){
             currentVideo = this;
             this.video = video;
-            this.title = new MultiLineLabel(video.getTitle(), 470, Defaults.MAIN_FONT.deriveFont(16f));
+            MultiLineLabel title = new MultiLineLabel(video.getTitle(), 470, Defaults.MAIN_FONT.deriveFont(16f));
             videoProgressBar = new VideoProgressBar(video.getDuration());
             videoProgressBar.setBounds(0,0,480,340);
             JPanel panel = new JPanel();
@@ -72,13 +69,7 @@ public class MediaShare {
             background.setBounds(0,0,480, 340);
 
             title.setBounds(10,280, 480, 50);
-            //title.setFont(Defaults.MAIN_FONT.deriveFont(20f));
             title.setForeground(Defaults.FOREGROUND_A);
-
-            timeLabel.setBounds(10,250, 480, 20);
-            timeLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-            timeLabel.setForeground(Defaults.FOREGROUND_A);
-
 
             MouseAdapter ma = new MouseAdapter() {
                 int lastX, lastY;
@@ -99,7 +90,6 @@ public class MediaShare {
             };
             panel.addMouseListener(ma);
             panel.addMouseMotionListener(ma);
-            //panel.add(timeLabel);
             panel.add(title);
             panel.add(panel1);
             panel.add(background);
@@ -123,23 +113,20 @@ public class MediaShare {
             return webView.getEngine();
         }
         private Thread thread;
-        private final int[] tries = {0};
-        boolean playing = false;
         boolean paused = false;
-
         public void play(){
             Platform.runLater(() -> {
-                playing = true;
+
                 frame.setSize(480, 340);
 
                 setBackground(video.getImage().getImage());
                 getEngine().load("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
-                System.out.println("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
                 Window.setPlayButtonIcon(true);
                 Window.setSliderInfo(true, video.getDuration());
+                System.out.println("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
 
+                final boolean[] setInitialVolume = {false};
 
-                //System.out.println("https://www.youtube-nocookie.com/embed/" + video.getVideoID() + "?&autoplay=1&controls=0");
                 thread = new Thread(() -> {
                     while (true) {
                         Platform.runLater(() -> {
@@ -148,11 +135,10 @@ public class MediaShare {
                                 removeElementByClassName(getEngine(), "ytp-chrome-top ytp-show-cards-title");
                                 removeElementByClassName(getEngine(), "ytp-gradient-top");
 
-                                com.sun.webkit.dom.HTMLDivElementImpl offsetParent = (com.sun.webkit.dom.HTMLDivElementImpl) getEngine().executeScript("document.getElementsByClassName('ytp-large-play-button ytp-button')[0].offsetParent");
-                                if(offsetParent != null){
-                                    showMediaShare(video);
-                                }
-
+                                    com.sun.webkit.dom.HTMLDivElementImpl offsetParent = (com.sun.webkit.dom.HTMLDivElementImpl) getEngine().executeScript("document.getElementsByClassName('ytp-large-play-button ytp-button')[0].offsetParent");
+                                    if (offsetParent != null) {
+                                        showMediaShare(video);
+                                    }
                                 double duration = (double) getEngine().executeScript("document.getElementsByTagName('video')[0].duration");
                                 int errorLength = (int) getEngine().executeScript("document.getElementsByClassName('ytp-error').length");
                                 if(errorLength == 1){
@@ -160,14 +146,22 @@ public class MediaShare {
                                     showMediaShare(MediaShareTab.getVideo(pos + 1).getVideoData());
                                     MediaShareTab.setVideoSelect(pos + 1);
                                     VideoDetailsPanel.setPanel(MediaShareTab.getVideo(pos + 1).getVideoData());
-                                    playing = false;
-                                    tries[0] = 0;
                                     stop();
                                 }
-
-                                double time = (double) getEngine().executeScript("document.getElementsByTagName('video')[0].currentTime");
+                                double time;
+                                try{
+                                    time = (double) getEngine().executeScript("document.getElementsByTagName('video')[0].currentTime");
+                                }
+                                catch (ClassCastException e){
+                                    time = (int) getEngine().executeScript("document.getElementsByTagName('video')[0].currentTime");
+                                }
                                 setTimeText(time);
                                 Window.setSliderValue((int) (time*10));
+
+                                if(!setInitialVolume[0]){
+                                    setVolume(volume);
+                                    setInitialVolume[0] = true;
+                                }
 
                                 String formattedDuration = DurationFormatUtils.formatDuration((int)time * 1000L, "m:ss");
 
@@ -176,28 +170,19 @@ public class MediaShare {
 
                                 Window.setTime(formattedDuration + " / " + formattedLength);
 
-                                if (prevVideo == video) tries[0]++;
-                                if (time >= duration && (prevDur != duration || tries[0] >= 5)) {
+                                if (time >= duration) {
 
                                     System.out.println("Finished");
-
-
-                                    prevDur = duration;
-                                    prevVideo = video;
-
 
                                     int pos = MediaShareTab.getVideoPosition(video);
 
                                     int posNew = pos + 1;
-
 
                                     if(SettingsHandler.getSettings("mediaShareRemoveWhenDone").asBoolean()){
                                         MediaShareTab.removeVideo(pos);
                                         posNew = pos;
                                     }
                                     if (MediaShareTab.getQueueSize() > posNew) {
-                                        playing = false;
-                                        tries[0] = 0;
                                         showMediaShare(MediaShareTab.getVideo(posNew).getVideoData());
                                         MediaShareTab.setVideoSelect(posNew);
                                         VideoDetailsPanel.setPanel(MediaShareTab.getVideo(posNew).getVideoData());
@@ -205,16 +190,16 @@ public class MediaShare {
                                     if(MediaShareTab.getQueueSize() == 0){
                                         VideoDetailsPanel.setPanel(null);
                                     }
-                                    else{
-                                        playing = false;
-                                        tries[0] = 0;
-                                    }
                                     stop();
                                 }
                                 if(!paused) {
                                     getEngine().executeScript("document.getElementsByTagName('video')[0].play();");
                                 }
-                                } catch (Exception ignored) {}
+                            }
+                            catch (JSException ignored){}
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         });
                         Utilities.sleep(100);
                     }
@@ -223,20 +208,19 @@ public class MediaShare {
             });
         }
         public void stop(){
-            if(thread != null) {
-                thread.stop();
-            }
-            playing = false;
+
             Window.setPlayButtonIcon(false);
             Window.setTime("0:00 / 0:00");
             Window.setSliderInfo(false, 0);
-            getEngine().load("about:blank");
+            getEngine().executeScript("document.getElementsByTagName('video')[0].volume = 0;");
+
+            //getEngine().load("about:blank");
+            if(thread != null) {
+                thread.stop();
+            }
             frame.remove(this);
             frame.setSize(0,0);
             currentVideo = null;
-        }
-        public boolean isPlaying(){
-            return playing;
         }
         public void togglePause(){
             boolean paused = (boolean) getEngine().executeScript("document.getElementsByTagName('video')[0].paused;");
@@ -251,6 +235,21 @@ public class MediaShare {
 
         }
 
+
+        public void pauseMedia(){
+            if(!paused) getEngine().executeScript("document.getElementsByTagName('video')[0].pause();");
+        }
+        public void playMedia(){
+            if(paused) getEngine().executeScript("document.getElementsByTagName('video')[0].play();");
+        }
+
+        public void setVolume(float value){
+
+            if((value >= 0 || value <= 1)) {
+                getEngine().executeScript("document.getElementsByTagName('video')[0].volume = " + value);
+            }
+        }
+
         public static MediaSharePanel getCurrentVideo(){
             return currentVideo;
         }
@@ -259,6 +258,23 @@ public class MediaShare {
 
     public static void setTime(double time){
         Platform.runLater(() -> MediaSharePanel.getCurrentVideo().getEngine().executeScript("document.getElementsByTagName('video')[0].currentTime = " + time + ";"));
+    }
+
+    public static void pause(){
+        if(MediaSharePanel.getCurrentVideo() != null) {
+            Platform.runLater(() -> MediaSharePanel.getCurrentVideo().pauseMedia());
+            Window.setPlayButtonIcon(MediaSharePanel.getCurrentVideo().paused);
+        }
+    }
+    public static void play(){
+        if(MediaSharePanel.getCurrentVideo() != null) {
+            Platform.runLater(() -> MediaSharePanel.getCurrentVideo().playMedia());
+            Window.setPlayButtonIcon(MediaSharePanel.getCurrentVideo().paused);
+        }
+    }
+
+    public static void setVolume(float value){
+        Platform.runLater(() -> MediaSharePanel.getCurrentVideo().setVolume(value));
     }
 
     public static void togglePause(){
@@ -405,8 +421,9 @@ public class MediaShare {
         return newImage;
     }
     public static void removeElementByClassName(WebEngine engine, String className){
-
-        engine.executeScript("document.getElementsByClassName('" + className + "')[0].innerHTML = null;");
-
+        try {
+            engine.executeScript("document.getElementsByClassName('" + className + "')[0].innerHTML = null;");
+        }
+        catch (Exception ignored){}
     }
 }

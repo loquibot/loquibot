@@ -1,7 +1,6 @@
 package com.alphalaneous.Services.GeometryDash;
 
 import com.alphalaneous.*;
-import com.alphalaneous.ChatBot.BotHandler;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Logs.LoggedID;
 import com.alphalaneous.Swing.Components.*;
@@ -51,13 +50,11 @@ public class RequestFunctions {
     }
 
     public static void skipFunction() {
-        if (!SettingsHandler.getSettings("basicMode").asBoolean()) skipFunction(LevelButton.selectedID);
-        else skipFunction(BasicLevelButton.selectedID);
+        skipFunction(LevelButton.selectedID);
     }
 
     public static void skipFunction(boolean setPos) {
-        if (!SettingsHandler.getSettings("basicMode").asBoolean()) skipFunction(LevelButton.selectedID, setPos);
-        else skipFunction(BasicLevelButton.selectedID, setPos);
+        skipFunction(LevelButton.selectedID, setPos);
 
     }
 
@@ -69,7 +66,7 @@ public class RequestFunctions {
         if (RequestsUtils.bwomp) {
             new Thread(() -> {
                 try {
-                    BufferedInputStream inp = new BufferedInputStream(Objects.requireNonNull(BotHandler.class
+                    BufferedInputStream inp = new BufferedInputStream(Objects.requireNonNull(RequestFunctions.class
                             .getResource("bwomp.mp3")).openStream());
                     Player mp3player = new Player(inp);
                     mp3player.play();
@@ -108,15 +105,15 @@ public class RequestFunctions {
 
 
                 if (pos == 0 && RequestsTab.getQueueSize() > 0) {
-                    if (!SettingsHandler.getSettings("disableNP").asBoolean()) {
+                    if (!SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                RequestsTab.getRequest(0).getLevelData().getRequester()));
+                                RequestsTab.getRequest(0).getLevelData().getDisplayName()));
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
-                                RequestsTab.getRequest(0).getLevelData().getRequester()), SettingsHandler.getSettings("announceNP").asBoolean());
+                                RequestsTab.getRequest(0).getLevelData().getDisplayName()), SettingsHandler.getSettings("announceNP").asBoolean());
                     }
                 }
             }
@@ -128,14 +125,6 @@ public class RequestFunctions {
         else LevelDetailsPanel.setPanel(RequestsTab.getRequest(RequestsUtils.getSelection()).getLevelData());
 
         RequestFunctions.saveFunction();
-    }
-
-    static void containsBadStuffCheck() {
-        if (RequestsTab.getRequest(0).getLevelData().getContainsImage()) {
-            Utilities.notify("Image Hack", RequestsTab.getRequest(0).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(0).getLevelData().getGDLevel().id() + ") possibly contains the image hack!");
-        } else if (RequestsTab.getRequest(0).getLevelData().getContainsVulgar()) {
-            Utilities.notify("Vulgar Language", RequestsTab.getRequest(0).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(0).getLevelData().getGDLevel().id() + ") contains vulgar language!");
-        }
     }
 
     public static void undoFunction() {
@@ -196,16 +185,16 @@ public class RequestFunctions {
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
 
-                    if (!SettingsHandler.getSettings("disableNP").asBoolean()) {
+                    if (!SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
-                                RequestsTab.getRequest(num).getLevelData().getRequester()));
+                                RequestsTab.getRequest(num).getLevelData().getDisplayName()));
 
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
-                                RequestsTab.getRequest(num).getLevelData().getRequester()), SettingsHandler.getSettings("announceNP").asBoolean());
+                                RequestsTab.getRequest(num).getLevelData().getDisplayName()), SettingsHandler.getSettings("announceNP").asBoolean());
 
                     }
                     Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));

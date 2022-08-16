@@ -79,7 +79,7 @@ public class YouTubeChatListener {
                         listChatMessages(
                                 liveChatId,
                                 response.getNextPageToken(),
-                                15000);
+                                5000);
                         Utilities.sleep(1);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -106,15 +106,16 @@ public class YouTubeChatListener {
     private static void waitOnMessage(ChatMessage chatMessage, boolean multi) {
         if(multi) {
             new Thread(() -> {
+                BotHandler.onMessage(chatMessage);
                 CommandHandler.run(chatMessage);
                 KeywordHandler.run(chatMessage);
             }).start();
         }
         else{
+            BotHandler.onMessage(chatMessage);
             CommandHandler.run(chatMessage);
             KeywordHandler.run(chatMessage);
         }
-        BotHandler.onMessage(chatMessage.getSender(), chatMessage.getMessage(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getCheerCount(), null, 0, chatMessage);
         Utilities.sleep(500);
     }
 }

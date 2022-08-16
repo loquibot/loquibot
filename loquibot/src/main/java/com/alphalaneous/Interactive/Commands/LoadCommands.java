@@ -139,8 +139,10 @@ public class LoadCommands {
             jsonObject = new JSONObject(jsonData);
         }
         catch (Exception e){
-            jsonObject = new JSONObject();
+            jsonData = "{\"commands\": []}";
+            jsonObject = new JSONObject(jsonData);
         }
+
         JSONArray commandsArray = jsonObject.getJSONArray("commands");
         ArrayList<CommandData> commandDataArrayList = new ArrayList<>();
         for(int i = 0; i < commandsArray.length(); i++){

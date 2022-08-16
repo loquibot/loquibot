@@ -70,7 +70,7 @@ public class ChatMessage {
             if (YouTubeAccount.ID.equals(sender)) return "owner";
         }
         else {
-            if (TwitchAccount.login.toLowerCase(Locale.ROOT).equalsIgnoreCase(sender)) return "owner";
+            if (TwitchAccount.login.toLowerCase().equalsIgnoreCase(sender)) return "owner";
         }
         if(isMod) return "moderator";
         if(isVIP) return "twitch_vip";

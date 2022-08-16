@@ -16,7 +16,6 @@ public class RectangleScrollbarUI extends BasicScrollBarUI {
 
     private final JButtonUI buttonUI = new JButtonUI();
 
-
     public RectangleScrollbarUI() {
         buttonUI.setBackground(Defaults.COLOR2);
         buttonUI.setHover(Defaults.COLOR5);

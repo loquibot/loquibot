@@ -30,21 +30,15 @@ public class LightSliderUI extends BasicSliderUI {
         thumbRect.setSize(thumbRect.width, thumbRect.height);
     }
 
-    /**
-     * Creates a listener to handle track events in the specified slider.
-     */
     @Override
     protected TrackListener createTrackListener(JSlider slider) {
         return new RangeTrackListener();
     }
 
-
     @Override
     protected void calculateThumbLocation() {
-        // Call superclass method for lower thumb location.
         super.calculateThumbLocation();
 
-        // Adjust upper value to snap to ticks if necessary.
         if (slider.getSnapToTicks()) {
             int upperValue = slider.getValue() + slider.getExtent();
             int snappedValue = upperValue;
@@ -59,7 +53,6 @@ public class LightSliderUI extends BasicSliderUI {
             }
 
             if (tickSpacing != 0) {
-                // If it's not on a tick, change the value
                 if ((upperValue - slider.getMinimum()) % tickSpacing != 0) {
                     float temp = (float) (upperValue - slider.getMinimum()) / (float) tickSpacing;
                     int whichTick = Math.round(temp);
@@ -72,8 +65,6 @@ public class LightSliderUI extends BasicSliderUI {
             }
         }
 
-        // Calculate upper thumb location.  The thumb is centered over its
-        // value on the track.
         if (slider.getOrientation() == JSlider.HORIZONTAL) {
             int upperPosition = xPositionForValue(slider.getValue() + slider.getExtent());
             thumbRect.x = upperPosition - (thumbRect.width / 2);
@@ -86,21 +77,9 @@ public class LightSliderUI extends BasicSliderUI {
         }
         slider.repaint();
     }
-
-    /**
-     * Returns the size of a thumb.
-     * Parent method not use size from LaF
-     *
-     * @return size of trumb
-     */
     @Override
     protected Dimension getThumbSize() {
-        Dimension size = new Dimension();
-
-        size.width = 20;
-        size.height = 20;
-
-        return size;
+        return new Dimension(20,20);
     }
 
 
@@ -131,11 +110,6 @@ public class LightSliderUI extends BasicSliderUI {
         g2d.setStroke(old);
     }
 
-
-    /**
-     * Overrides superclass method to do nothing.  Thumb painting is handled
-     * within the <code>paint()</code> method.
-     */
     @Override
     public void paintThumb(Graphics g) {
         Rectangle knobBounds = thumbRect;
@@ -154,9 +128,6 @@ public class LightSliderUI extends BasicSliderUI {
         g2d.dispose();
     }
 
-    /**
-     * Listener to handle mouse movements in the slider track.
-     */
     public class RangeTrackListener extends TrackListener {
 
         @Override
@@ -164,7 +135,7 @@ public class LightSliderUI extends BasicSliderUI {
             if (!slider.isEnabled()) {
                 return;
             }
-            currentMouseX -= thumbRect.width / 2; // Because we want the mouse location correspond to middle of the "thumb", not left side of it.
+            currentMouseX -= thumbRect.width / 2;
             moveUpperThumb();
         }
 
@@ -191,7 +162,6 @@ public class LightSliderUI extends BasicSliderUI {
                         offset = currentMouseX - thumbRect.x;
                         break;
                 }
-                //upperThumbSelected = true;
                 upperDragging = true;
                 return;
             }
@@ -229,9 +199,6 @@ public class LightSliderUI extends BasicSliderUI {
             return false;
         }
 
-        /**
-         * Moves the location of the upper thumb, and sets its corresponding  value in the slider.
-         */
         public void moveUpperThumb() {
             int thumbMiddle;
             if (slider.getOrientation() == JSlider.HORIZONTAL) {

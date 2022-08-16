@@ -1,6 +1,7 @@
 package com.alphalaneous.Services.YouTube;
 
 import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Utils.LoquiBrowser;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -51,13 +52,17 @@ public class Auth {
 
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
 
-        Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+        LoquiBrowser browser = new LoquiBrowser();
+
+        Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver, browser).authorize("user");
 
         if(refresh) {
             Path originalPath = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore);
             Path tempPath = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore + "_temp");
             Files.move(tempPath, originalPath, StandardCopyOption.REPLACE_EXISTING);
         }
+
+        browser.close();
         return credential;
     }
 

@@ -27,21 +27,20 @@ public class ChannelPoints {
 
     private static ListView listView = new ListView("$POINTS_LIST$");
     private static final LangLabel notAvailable = new LangLabel("$CHANNEL_POINTS_UNAVAILABLE$");
-    private static SettingsComponent notAvailableComponent;
+    private static final SettingsComponent notAvailableComponent = new SettingsComponent(notAvailable, new Dimension(1500,32)){
+        @Override
+        protected void refreshUI(){
+            notAvailable.setForeground(Defaults.FOREGROUND_A);
+        }
+    };;
 
     public static JPanel createPanel(){
         listView = new ListView("$POINTS_LIST$"); // Redundancy fixes weird text bug
         notAvailable.setForeground(Defaults.FOREGROUND_A);
         notAvailable.setFont(Defaults.MAIN_FONT.deriveFont(16f));
-        notAvailableComponent = new SettingsComponent(notAvailable, new Dimension(1500,32)){
-            @Override
-            protected void refreshUI(){
-                notAvailable.setForeground(Defaults.FOREGROUND_A);
-            }
-        };
         listView.addButton("\uF078", ChannelPoints::refresh);
 
-        //refresh();
+        refresh();
         return listView;
     }
 
@@ -150,7 +149,6 @@ public class ChannelPoints {
                 openPointSettings(data, true);
             }
         });
-        button.refresh();
         return button;
     }
 
@@ -199,7 +197,7 @@ public class ChannelPoints {
         KeywordConfigCheckbox.TextInput messageInput = new KeywordConfigCheckbox.TextInput("$MESSAGE_INPUT$", "$MESSAGE_INPUT_POINT_DESC$", message, 3);
         messageInput.setBounds(10,120,600, messageInput.getPreferredSize().height);
 
-        CurvedButtonAlt saveButton = new CurvedButtonAlt("$SAVE$");
+        CurvedButton saveButton = new CurvedButton("$SAVE$");
 
         saveButton.setUI(Defaults.settingsButtonUI);
         saveButton.setBackground(Defaults.COLOR2);
@@ -229,7 +227,7 @@ public class ChannelPoints {
 
         });
 
-        CurvedButtonAlt helpButton = new CurvedButtonAlt("\uF0A3");
+        CurvedButton helpButton = new CurvedButton("\uF0A3");
 
         helpButton.setUI(Defaults.settingsButtonUI);
         helpButton.setBackground(Defaults.COLOR2);
@@ -246,7 +244,7 @@ public class ChannelPoints {
         });
 
 
-        CurvedButtonAlt cancelButton = new CurvedButtonAlt("$CANCEL$");
+        CurvedButton cancelButton = new CurvedButton("$CANCEL$");
 
         cancelButton.setUI(Defaults.settingsButtonUI);
         cancelButton.setBackground(Defaults.COLOR2);

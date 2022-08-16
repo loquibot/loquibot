@@ -42,10 +42,10 @@ public class RequestsLog {
     public static CurvedButton createButton(String text){
         ListButton button = new ListButton(text, 80);
         button.addActionListener(e -> new Thread(() -> {
-            String option = DialogBox.showDialogBox("$REMOVE_LOG_DIALOG_TITLE$", "$REMOVE_LOG_DIALOG_INFO$", "", new String[]{"$YES$", "$NO$"}, new Object[]{button.getLText()});
+            String option = DialogBox.showDialogBox("$REMOVE_LOG_DIALOG_TITLE$", "$REMOVE_LOG_DIALOG_INFO$", "", new String[]{"$YES$", "$NO$"}, new Object[]{button.getText()});
 
             if (option.equalsIgnoreCase("YES")) {
-                LoggedID.removeID(Integer.parseInt(button.getLText()));
+                LoggedID.removeID(Integer.parseInt(button.getText()));
                 listView.removeElement(button);
             }
         }).start());

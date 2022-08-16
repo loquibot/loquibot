@@ -3,6 +3,7 @@ package com.alphalaneous.Swing.Components;
 import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class FancyTooltip extends JToolTip {

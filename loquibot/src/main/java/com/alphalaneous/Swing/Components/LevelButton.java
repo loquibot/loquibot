@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 
 
-public class LevelButton extends CurvedButtonAlt {
+public class LevelButton extends CurvedButton {
 
 	private static final JButtonUI selectUI = new JButtonUI();
 	public static int selectedID = 0;
@@ -31,7 +31,7 @@ public class LevelButton extends CurvedButtonAlt {
 	private final String requester;
 	public boolean selected;
 
-	private final RoundedJButton analyzeButton = new RoundedJButton("\uE7BA", "WARNING");
+	private final CurvedButton analyzeButton = new CurvedButton("\uE7BA", "WARNING");
 	private final JButton moveUp = new JButton("\uE010");
 	private final JButton moveDown = new JButton("\uE011");
 
@@ -48,7 +48,6 @@ public class LevelButton extends CurvedButtonAlt {
 
 	public LevelButton(LevelData data) {
 		super("");
-		setCurve(Defaults.globalArc);
 		setOpaque(false);
 		this.name = data.getGDLevel().name();
 		this.ID = data.getGDLevel().id();
@@ -401,7 +400,6 @@ public class LevelButton extends CurvedButtonAlt {
 
 	public void setViewership(boolean viewer) {
 		if(!levelData.isYouTube()) {
-			RequestsTab.getRequest(Requests.getPosFromID(ID)).getLevelData().setViewership(viewership);
 
 			if (viewer) {
 				lRequester.setForeground(Defaults.FOREGROUND_B);

@@ -41,7 +41,6 @@ public class CheckIfRunning extends WebSocketClient {
 
     @Override
     public void onError(Exception e) {
-        e.printStackTrace();
         System.out.println("> New Instance");
     }
 }

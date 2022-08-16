@@ -1,6 +1,5 @@
 package com.alphalaneous.Services.GeometryDash;
 
-import com.alphalaneous.Swing.Components.LevelButton;
 import jdash.common.entity.GDLevel;
 
 import javax.swing.*;
@@ -10,23 +9,16 @@ import javax.swing.*;
  */
 public class LevelData {
 
-	private static boolean savingLogs = false;
-
 	private String requester;
 	private GDLevel levelData;
-	private int password;
 	private String message;
 	private String messageID;
 	private String youtubeURL;
-	private boolean viewership = true;
 	private boolean featured;
 	private boolean epic;
 	private boolean containsVulgar;
 	private boolean containsImage;
-	private boolean analyzed = false;
-	private boolean persist;
 	private ImageIcon playerIcon;
-	private LevelButton levelButton;
 	private boolean isYouTube;
 	private String displayName;
 
@@ -60,14 +52,6 @@ public class LevelData {
 		this.youtubeURL = url;
 	}
 
-	public void setLevelButton(LevelButton levelButton){
-		this.levelButton = levelButton;
-	}
-
-	public LevelButton getLevelButton(){
-		return levelButton;
-	}
-
 	public GDLevel getGDLevel(){
 		return levelData;
 	}
@@ -90,22 +74,6 @@ public class LevelData {
 
 	public void setMessageID(String messageID) {
 		this.messageID = messageID;
-	}
-
-	public int getPassword() {
-		return password;
-	}
-
-	public void setPassword(int password) {
-		this.password = password;
-	}
-
-	public boolean getViewership() {
-		return viewership;
-	}
-
-	public void setViewership(boolean viewership) {
-		this.viewership = viewership;
 	}
 
 	public String getRequester() {
@@ -136,14 +104,6 @@ public class LevelData {
 		return containsImage;
 	}
 
-	public boolean getAnalyzed() {
-		return analyzed;
-	}
-
-	public boolean getNotPersist() {
-		return !persist;
-	}
-
 	public String getYoutubeURL(){
 		return youtubeURL;
 	}
@@ -156,10 +116,6 @@ public class LevelData {
 		this.playerIcon = playerIcon;
 	}
 
-	public void setAnalyzed() {
-		this.analyzed = true;
-	}
-
 	public void setContainsVulgar() {
 		this.containsVulgar = true;
 	}
@@ -167,11 +123,6 @@ public class LevelData {
 	public void setContainsImage() {
 		this.containsImage = true;
 	}
-
-	public void setPersist(boolean persist) {
-		this.persist = persist;
-	}
-
 
 	public void setFeatured() {
 		this.featured = true;

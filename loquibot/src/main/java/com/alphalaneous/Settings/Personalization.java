@@ -1,6 +1,6 @@
 package com.alphalaneous.Settings;
 
-import com.alphalaneous.Swing.Components.CurvedButtonAlt;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Utils.Defaults;
@@ -95,7 +95,7 @@ public class Personalization {
     }
 
     private static JPanel panel;
-    private static final CurvedButtonAlt curvedButtonAlt = new CurvedButtonAlt("$OKAY$");
+    private static final CurvedButton CurvedButton = new CurvedButton("$OKAY$");
 
     public static void showCustomizationMenu(){
         panel = new JPanel();
@@ -121,8 +121,8 @@ public class Personalization {
                 Themes.writeTheme("is_light", String.valueOf(checkbox.getSelectedState()));
                 Defaults.setCustom();
                 panel.setBackground(Defaults.COLOR3);
-                curvedButtonAlt.setBackground(Defaults.COLOR2);
-                curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
+                CurvedButton.setBackground(Defaults.COLOR2);
+                CurvedButton.setForeground(Defaults.FOREGROUND_A);
                 ColorComponent.refreshAll();
                 DialogBox.refreshUI();
             }
@@ -131,16 +131,16 @@ public class Personalization {
         checkbox.refresh();
         panel.add(checkbox);
 
-        curvedButtonAlt.setBounds(100,410,100,40);
-        curvedButtonAlt.setUI(Defaults.settingsButtonUI);
-        curvedButtonAlt.setBackground(Defaults.COLOR2);
-        curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
-        curvedButtonAlt.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-        curvedButtonAlt.setBorder(BorderFactory.createEmptyBorder());
+        CurvedButton.setBounds(100,410,100,40);
+        CurvedButton.setUI(Defaults.settingsButtonUI);
+        CurvedButton.setBackground(Defaults.COLOR2);
+        CurvedButton.setForeground(Defaults.FOREGROUND_A);
+        CurvedButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+        CurvedButton.setBorder(BorderFactory.createEmptyBorder());
 
-        curvedButtonAlt.addActionListener(e -> DialogBox.closeDialogBox());
+        CurvedButton.addActionListener(e -> DialogBox.closeDialogBox());
 
-        panel.add(curvedButtonAlt);
+        panel.add(CurvedButton);
 
         DialogBox.showDialogBox(panel);
     }
@@ -172,8 +172,8 @@ public class Personalization {
                         Themes.writeTheme(setting, String.format("%06x", 0xFFFFFF & color.getRGB()));
                         Defaults.setCustom();
                         panel.setBackground(Defaults.COLOR3);
-                        curvedButtonAlt.setBackground(Defaults.COLOR2);
-                        curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
+                        CurvedButton.setBackground(Defaults.COLOR2);
+                        CurvedButton.setForeground(Defaults.FOREGROUND_A);
                         ColorComponent.refreshAll();
                         DialogBox.refreshUI();
                     }

@@ -8,7 +8,7 @@ import java.awt.*;
 
 import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
 
-public class ListButton extends CurvedButton{
+public class ListButton extends CurvedButton {
 
     public ListButton(String label, int width) {
         super(label);
@@ -21,6 +21,5 @@ public class ListButton extends CurvedButton{
         setBorder(BorderFactory.createEmptyBorder());
         setFont(Defaults.MAIN_FONT.deriveFont(14f));
         setPreferredSize(new Dimension(width, 35));
-        refresh();
     }
 }

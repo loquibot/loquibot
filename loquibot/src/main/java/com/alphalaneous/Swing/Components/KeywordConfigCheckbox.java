@@ -71,7 +71,7 @@ public class KeywordConfigCheckbox extends JPanel {
 
     private static final JPanel commandSettingsPanel = new JPanel();
 
-    private static final CurvedButtonAlt userLevelButton = new CurvedButtonAlt("");
+    private static final CurvedButton userLevelButton = new CurvedButton("");
     private static String userLevel = "everyone";
 
     public static void openKeywordSettings(KeywordData data){
@@ -177,7 +177,7 @@ public class KeywordConfigCheckbox extends JPanel {
         commandSettingsPanel.add(slider);
         commandSettingsPanel.add(sliderValue);
 
-        CurvedButtonAlt saveButton = new CurvedButtonAlt("$SAVE$");
+        CurvedButton saveButton = new CurvedButton("$SAVE$");
 
         saveButton.setUI(Defaults.settingsButtonUI);
         saveButton.setBackground(Defaults.COLOR2);
@@ -226,7 +226,7 @@ public class KeywordConfigCheckbox extends JPanel {
             }
         });
 
-        CurvedButtonAlt helpButton = new CurvedButtonAlt("\uF0A3");
+        CurvedButton helpButton = new CurvedButton("\uF0A3");
 
         helpButton.setUI(Defaults.settingsButtonUI);
         helpButton.setBackground(Defaults.COLOR2);
@@ -243,7 +243,7 @@ public class KeywordConfigCheckbox extends JPanel {
         });
 
 
-        CurvedButtonAlt cancelButton = new CurvedButtonAlt("$CANCEL$");
+        CurvedButton cancelButton = new CurvedButton("$CANCEL$");
 
         cancelButton.setUI(Defaults.settingsButtonUI);
         cancelButton.setBackground(Defaults.COLOR2);
@@ -255,7 +255,7 @@ public class KeywordConfigCheckbox extends JPanel {
             DialogBox.closeDialogBox();
         });
 
-        CurvedButtonAlt deleteButton = new CurvedButtonAlt("\uF0CE");
+        CurvedButton deleteButton = new CurvedButton("\uF0CE");
 
         deleteButton.setUI(Defaults.settingsButtonUI);
         deleteButton.setBackground(Defaults.COLOR2);
@@ -342,7 +342,7 @@ public class KeywordConfigCheckbox extends JPanel {
             }
             default: text = "Everyone";
         }
-        userLevelButton.setTextLang(text);
+        userLevelButton.setText(text);
         KeywordConfigCheckbox.userLevel = userLevel;
     }
 

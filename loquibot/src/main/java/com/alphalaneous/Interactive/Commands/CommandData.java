@@ -40,7 +40,7 @@ public class CommandData {
         registeredCommands.remove(this);
         if(aliases != null) {
             for (Object alias : aliases) {
-                registeredAliases.remove(((String) alias).toLowerCase(Locale.ROOT), this);
+                registeredAliases.remove(((String) alias).toLowerCase(), this);
             }
         }
     }
@@ -97,7 +97,7 @@ public class CommandData {
     public void setAliases(List<Object> aliases) {
         this.aliases = aliases;
         for(Object alias : aliases){
-            registeredAliases.put(((String) alias).toLowerCase(Locale.ROOT).trim(), this);
+            registeredAliases.put(((String) alias).toLowerCase().trim(), this);
         }
     }
 

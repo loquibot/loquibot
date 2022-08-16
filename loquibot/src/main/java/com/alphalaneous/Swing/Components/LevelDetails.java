@@ -61,10 +61,10 @@ public class LevelDetails extends JPanel {
     private final SmoothScrollPane commentScrollPane = new SmoothScrollPane(commentsPanel);
     private int page = 0;
     private final GridBagConstraints gbc = new GridBagConstraints();
-    private final JButton prev = createButton("\uF305", "$PREV_PAGE$");
-    private final JButton next = createButton("\uF304", "$NEXT_PAGE$");
-    private final JButton topComments = createButton("\uF138", "$TOP_COMMENTS$");
-    private final JButton newest = createButton("\uF22B", "$LATEST_COMMENTS$");
+    private final CurvedButton prev = createButton("\uF305", "$PREV_PAGE$");
+    private final CurvedButton next = createButton("\uF304", "$NEXT_PAGE$");
+    private final CurvedButton topComments = createButton("\uF138", "$TOP_COMMENTS$");
+    private final CurvedButton newest = createButton("\uF22B", "$LATEST_COMMENTS$");
     private final LoadingPane loadingPane = new LoadingPane();
     private int descHeight = 30;
     private boolean top = false;
@@ -250,7 +250,6 @@ public class LevelDetails extends JPanel {
             }
         });
         youTubeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        youTubeButton.refresh();
 
         youTubeButton.setBounds(20, descHeight + 150, 470, 100);
 
@@ -455,8 +454,8 @@ public class LevelDetails extends JPanel {
         else commentScrollPane.setBounds(0,descHeight + 200,510, height-240 - descHeight);
     }
 
-    private JButton createButton(String icon, String tooltip) {
-        JButton button = new RoundedJButton(icon, tooltip);
+    private CurvedButton createButton(String icon, String tooltip) {
+        CurvedButton button = new CurvedButton(icon, tooltip);
         button.setFont(Defaults.SYMBOLS.deriveFont(16f));
         button.setMargin(new Insets(0, 0, 0, 0));
         button.setBorder(BorderFactory.createEmptyBorder());

@@ -42,7 +42,12 @@ public class Comment extends JPanel {
 
         Optional<Integer> percentOptional = comment.percentage();
         Optional<GDUser> commentAuthorOptional = comment.author();
-        Optional<String> creatorNameOptional = RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().creatorName();
+        Optional<String> creatorNameOptional = Optional.empty();
+
+        if(RequestsTab.getRequest(LevelButton.selectedID) != null){
+            creatorNameOptional = RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().creatorName();
+        }
+
 
         if (commentAuthorOptional.isPresent()){
             commentAuthorUser = commentAuthorOptional.get();

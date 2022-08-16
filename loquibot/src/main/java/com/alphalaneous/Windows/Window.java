@@ -41,13 +41,17 @@ public class Window {
     private static final JPanel dialogBackgroundPanel = new JPanel();
     private static final JPanel backgroundColor = new JPanel();
     private static final JPanel componentLayer = new JPanel();
-    private static final RoundedJButton updateButton = MediaShareTab.createButton("\uF11A", "Update Available");
+    private static final CurvedButton updateButton = MediaShareTab.createButton("\uF11A", "Update Available");
     private static JPanel controlsPanel;
     private static final int width = 800, height = 660;
-    private static RoundedJButton playButton = MediaShareTab.createButton("\uF184","Play/Pause");
+    private static CurvedButton playButton = MediaShareTab.createButton("\uF184","Play/Pause");
     private static JLabel duration = new JLabel();
     private static JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 300, 0);
-    private static RoundedJButton button = MediaShareTab.createButton("\uF18F", "View Media Controls");
+    private static JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 10000, 0);
+    private static JLabel volumeLabel = new JLabel("\uF0E2");
+
+
+    private static CurvedButton button = MediaShareTab.createButton("\uF18F", "View Media Controls");
 
     private static JPanel blankPanel = new JPanel(){{
         setBackground(new Color(0,0,0,0));
@@ -66,7 +70,7 @@ public class Window {
         });
         windowFrame.setIconImages(Main.getIconImages());
         windowFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        windowFrame.setSize(width, height + 30);
+
         windowFrame.setMinimumSize(new Dimension(900, 500));
         //windowFrame.setContentLayout(null);
 
@@ -216,7 +220,7 @@ public class Window {
         duration.setForeground(Defaults.FOREGROUND_B);
         Window.setTime("0:00 / 0:00");
 
-        slider.setBounds(150, 10, 570, 40);
+        slider.setBounds(150, 10, 500, 40);
         slider.setUI(new LightSliderUI(slider));
         slider.setOpaque(false);
         slider.setBackground(new Color(0,0,0,0));
@@ -239,9 +243,34 @@ public class Window {
             if(dragging) MediaShare.setTime(slider.getValue()/10d);
 
         });
+
+        volumeLabel.setFont(Defaults.SYMBOLS.deriveFont(20f));
+        volumeLabel.setForeground(Defaults.FOREGROUND_A);
+        volumeLabel.setBounds(480, 10, 40, 40);
+
+        volumeSlider.setBounds(510, 10, 100, 40);
+        volumeSlider.setUI(new LightSliderUI(slider));
+        volumeSlider.setOpaque(false);
+        volumeSlider.setBackground(new Color(0,0,0,0));
+        volumeSlider.setBorder(BorderFactory.createEmptyBorder());
+
+
+        float volume = 1;
+        if(SettingsHandler.getSettings("mediaVolume").exists()){
+            volume = SettingsHandler.getSettings("mediaVolume").asFloat();
+        }
+
+        volumeSlider.setValue((int) (volume * 10000));
+        volumeSlider.addChangeListener(e -> {
+            MediaShare.setVolume(volumeSlider.getValue()/10000f);
+            SettingsHandler.writeSettings("mediaVolume", String.valueOf(volumeSlider.getValue()/10000f));
+        });
+
+
         controlsPanel.add(duration);
         controlsPanel.add(slider);
-
+        controlsPanel.add(volumeSlider);
+        controlsPanel.add(volumeLabel);
         controlsPanel.setVisible(false);
 
     }
@@ -292,6 +321,7 @@ public class Window {
         playButton.setBackground(Defaults.COLOR);
         button.setForeground(Defaults.FOREGROUND_A);
         playButton.setForeground(Defaults.FOREGROUND_A);
+        volumeLabel.setForeground(Defaults.FOREGROUND_A);
         for(ListButton button : buttons){
             button.refreshUI();
         }
@@ -486,7 +516,9 @@ public class Window {
                     dialogComponent.setBounds(windowFrame.getWidth() / 2 - dialogComponent.getWidth() / 2-8, windowFrame.getHeight() / 2 - dialogComponent.getHeight() / 2 - 20, dialogComponent.getWidth(), dialogComponent.getHeight());
                 }
                 controlsPanel.setBounds(65, getWindow().getHeight()-110, getWindow().getWidth()-160, 60);
-                slider.setBounds(150, 10, getWindow().getWidth()-330, 40);
+                slider.setBounds(150, 10, getWindow().getWidth()-480, 40);
+                volumeSlider.setBounds(getWindow().getWidth()-280, 10, 100, 40);
+                volumeLabel.setBounds(getWindow().getWidth()-310, 10, 40, 40);
 
                 SettingsPage.resizeAll(windowFrame.getWidth(), windowFrame.getHeight());
                 ListView.resizeAll(new Dimension(windowFrame.getWidth(), windowFrame.getHeight()));
@@ -560,6 +592,9 @@ public class Window {
             MediaShareTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
             SettingsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
             ChatbotTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
+        }
+        else {
+            windowFrame.setSize(width, height + 30);
         }
     }
 

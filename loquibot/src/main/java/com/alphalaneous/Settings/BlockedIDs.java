@@ -107,14 +107,14 @@ public class BlockedIDs {
     public static CurvedButton createButton(String text){
         ListButton button = new ListButton(text, 80);
         button.addActionListener(e -> new Thread(() ->{
-            String option = DialogBox.showDialogBox("$UNBLOCK_ID_DIALOG_TITLE$", "$UNBLOCK_ID_DIALOG_INFO$", "", new String[]{"$YES$", "$NO$"}, new Object[]{button.getLText()});
+            String option = DialogBox.showDialogBox("$UNBLOCK_ID_DIALOG_TITLE$", "$UNBLOCK_ID_DIALOG_INFO$", "", new String[]{"$YES$", "$NO$"}, new Object[]{button.getText()});
             if (option.equalsIgnoreCase("YES")) {
                 if (Files.exists(file)) {
                     try {
                         Path temp = Paths.get(Defaults.saveDirectory + "\\loquibot\\_tempIDs_");
                         PrintWriter out = new PrintWriter(new FileWriter(temp.toFile()));
                         Files.lines(file)
-                                .filter(line -> !line.contains(button.getLText()))
+                                .filter(line -> !line.contains(button.getText()))
                                 .forEach(out::println);
                         out.flush();
                         out.close();

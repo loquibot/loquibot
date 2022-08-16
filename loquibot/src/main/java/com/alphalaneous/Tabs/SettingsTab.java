@@ -36,7 +36,7 @@ public class SettingsTab {
 	private static final JPanel mediaSharePage = MediaShare.createPanel();
 	private static final JPanel mediaShareKeybindsPage = MediaShareShortcuts.createPanel();
 
-	private static final JPanel legalPage = Lega.createPanel();
+	private static final JPanel legalPage = Legal.createPanel();
 	private static final JPanel privacyPage = Privacy.createPanel();
 	private static final JPanel warrantyPage = Warranty.createPanel();
 	private static final JPanel termsPage = Terms.createPanel();
@@ -413,7 +413,7 @@ public class SettingsTab {
 		}
 	}
 
-	private static class SettingsButton extends CurvedButtonAlt {
+	private static class SettingsButton extends CurvedButton {
 
 		private final Callable<Void> method;
 		private final String text;
@@ -467,9 +467,9 @@ public class SettingsTab {
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
-			for (Component component : buttons.getComponents()) {
+			for (CurvedButton component : buttons) {
 				if (component instanceof SettingsButton) {
-					((JButton) component).setUI(settingsUI);
+					component.setUI(settingsUI);
 					component.setBackground(new Color(0,0,0,0));
 				}
 			}

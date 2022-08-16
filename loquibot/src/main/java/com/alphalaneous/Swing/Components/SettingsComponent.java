@@ -19,11 +19,10 @@ public class SettingsComponent extends JPanel {
     }
 
     protected void resizeComponent(Dimension dimension){
-
     }
     protected void refreshUI(){
-
     }
+
     public static void refreshAll(){
         for(SettingsComponent component : components){
             component.refreshUI();

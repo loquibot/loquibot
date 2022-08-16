@@ -24,12 +24,10 @@ public class SettingsTitle extends JPanel {
         add(settingsTitleLabel);
         titleList.add(this);
     }
-    public void refresh(){
+    public void refreshUI(){
         settingsTitleLabel.setForeground(Defaults.FOREGROUND_A);
     }
     public static void refreshAll(){
-        for(SettingsTitle title : titleList){
-            title.refresh();
-        }
+        for(SettingsTitle title : titleList) title.refreshUI();
     }
 }

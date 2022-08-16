@@ -1,7 +1,7 @@
 package com.alphalaneous;
 
 import com.alphalaneous.ChatBot.ServerBot;
-import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.GD.Global;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Services.GeometryDash.Requests;
@@ -9,7 +9,6 @@ import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.ChannelPointData;
 import com.alphalaneous.Interactive.ChannelPoints.LoadPoints;
-import com.alphalaneous.Interactive.Commands.Command;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
@@ -85,6 +84,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
+        setUI();
 
         new Thread(() -> {
             Utilities.sleep(21600000);
@@ -93,6 +93,7 @@ public class Main {
             }
         }).start();
 
+        new JFXPanel(); //Initialize JavaFX Graphics Toolkit (Hacky Solution)
 
         SettingsHandler.loadSettings();
 
@@ -154,13 +155,10 @@ public class Main {
 
         System.out.println("> Start");
 
-        //Save defaults of UI Elements before switching to Nimbus
-        //Sets to Nimbus, then sets defaults back
-        setUI();
         LoadGD.load();
         Themes.loadTheme();
 
-        System.out.println("> Settings Loaded");
+        System.out.println("> Themes Loaded");
 
         if (SettingsHandler.getSettings("onboarding").exists()) {
             try {
@@ -203,35 +201,56 @@ public class Main {
 
             System.out.println("> Main Threads Started");
 
-            Window.initFrame();
-            CommandEditor.createPanel();
+            Window.loadSettings();
+            System.out.println("> Window Settings Loaded");
+            try {
+                Window.initFrame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            System.out.println("> Window initialized");
             RequestsTab.createPanel();
+            System.out.println("> Requests Tab created");
             MediaShareTab.createPanel();
+            System.out.println("> Media Share Tab created");
             ChatbotTab.createPanel();
+            System.out.println("> Chatbot Tab created");
             SettingsTab.createPanel();
+            System.out.println("> Settings Tab created");
             OfficerWindow.create();
+            System.out.println("> Officers Window created");
             Window.loadTopComponent();
+            System.out.println("> Top Tab shown");
             LoadCommands.loadCommands();
+            System.out.println("> Commands Loaded");
             LoadTimers.loadTimers();
+            System.out.println("> Timers Loaded");
             LoadPoints.loadPoints();
+            System.out.println("> Channel Points Loaded");
             LoadKeywords.loadKeywords();
+            System.out.println("> Keywords Loaded");
             LoggedID.loadLoggedIDs();
+            System.out.println("> IDs Loaded");
             TimerHandler.startTimerHandler();
+            System.out.println("> Timer Handler Started");
 
             LevelDetailsPanel.setPanel(null);
             VideoDetailsPanel.setPanel(null);
 
-            new JFXPanel(); //Initialize JavaFX Graphics Toolkit (Hacky Solution)
 
             Platform.setImplicitExit(false);
             Platform.runLater(MediaShare::init);
 
-            System.out.println("> Panels Created");
+            System.out.println("> All Panels Created");
 
             UpdateChecker.checkForUpdates();
-            Window.loadSettings();
+            System.out.println("> Started Update Checker");
+
             Defaults.initializeThemeInfo();
+            System.out.println("> Theme Info Initialized");
             Themes.refreshUI();
+            System.out.println("> UI Refreshed");
 
 
             starting.setVisible(false);
@@ -261,27 +280,31 @@ public class Main {
 
 
 
-            new Thread(Variables::loadVars).start();
+            Variables.loadVars();
             System.out.println("> Command Variables Loaded");
 
             new Thread(() -> {
                 serverBot = new ServerBot();
                 serverBot.connect();
             }).start();
+            System.out.println("> ServerBot Started");
 
             if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
                 new Thread(() -> YouTubeChatListener.startChatListener(null)).start();
+                System.out.println("> YouTube Chat Listener Started");
             }
 
             if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
                 new Thread(() -> {
                     chatReader = new TwitchChatListener(TwitchAccount.login);
                     chatReader.connect(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.login);
+                    System.out.println("> Twitch Chat Listener Started");
                 }).start();
                 new Thread(() -> {
                     try {
                         channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
                         channelPointListener.connect();
+                        System.out.println("> Channel Point Listener Started");
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
@@ -297,19 +320,6 @@ public class Main {
                 SettingsHandler.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
                 //OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
             }
-            Path initialJS = Paths.get(Defaults.saveDirectory + "\\loquibot\\initial.js");
-            if (Files.exists(initialJS)) {
-                new Thread(() -> {
-                    try {
-                        if (!Files.readString(initialJS, StandardCharsets.UTF_8).equalsIgnoreCase("")) {
-                            Command.run(TwitchAccount.display_name, true, true, new String[]{"dummy"}, Files.readString(initialJS, StandardCharsets.UTF_8), 0, null, -1);
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }).start();
-            } else {
-                Files.createFile(initialJS);
-            }
 
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\saved.json");
             if (Files.exists(file)) {
@@ -321,6 +331,7 @@ public class Main {
                 catch (Exception ignored){
                 }
             }
+            System.out.println("> Saved IDs Loaded");
             allowRequests = true;
             RequestFunctions.saveFunction();
             RequestsTab.getLevelsPanel().setSelect(0);
@@ -340,10 +351,51 @@ public class Main {
             }
             programLoaded = true;
             if(!TwitchChatListener.sentStartupMessage) {
-                Main.sendMessage(Utilities.format("🔷 | $STARTUP_MESSAGE$"));
+                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE$"));
                 TwitchChatListener.sentStartupMessage = true;
             }
             startSaveLoop();
+            System.out.println("> Save loop Started");
+
+            Global.onEnterLevel(() -> {
+                if(SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
+                    if (Memory.isInFocus()) {
+                        String levelName = com.alphalaneous.GD.Level.getLevelName();
+                        long levelID = com.alphalaneous.GD.Level.getID();
+
+                        if (lastID == levelID) {
+                            return;
+                        }
+
+                        lastID = levelID;
+
+                        String username = null;
+                        int pos = Requests.getPosFromID(levelID);
+                        if (pos != -1) {
+                            username = RequestsTab.getRequest(pos).getLevelData().getDisplayName();
+                        }
+
+                        if (username != null) {
+                            Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                    levelName,
+                                    levelID,
+                                    username));
+                            Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                    levelName,
+                                    levelID,
+                                    username), SettingsHandler.getSettings("announceNP").asBoolean());
+                        } else {
+                            Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
+                                    levelName,
+                                    levelID));
+                            Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
+                                    levelName,
+                                    levelID), SettingsHandler.getSettings("announceNP").asBoolean());
+                        }
+                    }
+                }
+            });
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -351,6 +403,9 @@ public class Main {
             close(true, false);
         }
     }
+
+    static long lastID = 0;
+
 
     public static void sendMessageConnectedService(String message){
         if(streamDeckSocket != null) {
@@ -360,12 +415,13 @@ public class Main {
 
     public static void restart(){
         try {
-            Main.forceClose();
             Runtime.getRuntime().exec(SettingsHandler.getSettings("installPath").asString());
-            System.exit(0);
+            Main.forceClose();
         }
         catch (Exception e){
+            System.out.println("> Failed restart, closing...");
             e.printStackTrace();
+            System.exit(0);
         }
     }
 
@@ -468,7 +524,6 @@ public class Main {
     }
 
     public static void sendMessage(String message) {
-        System.out.println(message);
         sendMessage(message, false, null);
     }
     public static void sendMessage(String message, boolean doAnnounce) {
@@ -519,6 +574,7 @@ public class Main {
 
     public static void save(){
         try {
+            Window.setSettings();
             Variables.saveVars();
             SettingsHandler.saveSettings();
             Themes.saveTheme();
@@ -553,7 +609,7 @@ public class Main {
         }
         Main.save();
         if(!SettingsHandler.getSettings("runAtStartup").asBoolean()) {
-            Utilities.disposeTray();
+            com.alphalaneous.Utils.Utilities.disposeTray();
             if (!SettingsHandler.getSettings("onboarding").asBoolean() && loaded) {
                 forceClose();
             }
@@ -566,7 +622,7 @@ public class Main {
 
     public static void forceClose(){
         Main.save();
-        Utilities.disposeTray();
+        com.alphalaneous.Utils.Utilities.disposeTray();
         Window.setVisible(false);
         Window.setSettings();
         try {
@@ -583,8 +639,8 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Failed closing properly, forcing close");
             e.printStackTrace();
-            System.exit(0);
         }
+        System.exit(0);
     }
 
 

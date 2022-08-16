@@ -7,7 +7,7 @@ import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.FancyTextArea;
 import com.alphalaneous.Swing.Components.JButtonUI;
-import com.alphalaneous.Swing.Components.RoundedJButton;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.VideoButton;
 import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Swing.Components.VideosPanel;
@@ -64,15 +64,15 @@ public class MediaShareTab {
         buttonUI.setHover(Defaults.COLOR5);
         buttonUI.setSelect(Defaults.COLOR4);
 
-        JButton skip = createButton("\uF31B", "$SKIP_MEDIA_TOOLTIP$");
+        CurvedButton skip = createButton("\uF31B", "$SKIP_MEDIA_TOOLTIP$");
         skip.addActionListener(e ->MediaShare.removeMedia(VideoButton.selectedID));
 
         undo.addActionListener(e -> RequestFunctions.undoFunction());
 
-        JButton randNext = createButton("\uF2D8", "$NEXT_RANDOM_TOOLTIP$");
+        CurvedButton randNext = createButton("\uF2D8", "$NEXT_RANDOM_TOOLTIP$");
         randNext.addActionListener(e -> RequestFunctions.randomFunction());
 
-        JButton clear = createButton("\uF0CE", "$CLEAR_MEDIA_TOOLTIP$");
+        CurvedButton clear = createButton("\uF0CE", "$CLEAR_MEDIA_TOOLTIP$");
         clear.addActionListener(e -> MediaShare.clearMedia(false));
 
         toggleMedia.addActionListener(e -> toggle());
@@ -285,13 +285,13 @@ public class MediaShareTab {
 
     }
 
-    public static RoundedJButton createButton(String icon, String tooltip) {
-        RoundedJButton button = new RoundedJButton(icon, tooltip);
+    public static CurvedButton createButton(String icon, String tooltip) {
+        CurvedButton button = new CurvedButton(icon, tooltip);
         button.setPreferredSize(new Dimension(50, 50));
         button.setUI(defaultUI);
         button.setBackground(Defaults.COLOR);
-        button.setColorB("main");
-        button.setColorF("foreground");
+        //button.setColorB("main");
+        //button.setColorF("foreground");
         button.setOpaque(false);
         button.setForeground(Defaults.FOREGROUND_A);
         button.setBorder(BorderFactory.createEmptyBorder());

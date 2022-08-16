@@ -61,9 +61,7 @@ public class TimerConfigCheckbox extends JPanel {
     }
 
     public static void resizeAll(int width){
-        for(TimerConfigCheckbox commandConfigCheckbox : commandConfigCheckboxes){
-            commandConfigCheckbox.resize(width);
-        }
+        for(TimerConfigCheckbox commandConfigCheckbox : commandConfigCheckboxes) commandConfigCheckbox.resize(width);
     }
 
     private static final JPanel timerSettingsPanel = new JPanel();
@@ -180,7 +178,7 @@ public class TimerConfigCheckbox extends JPanel {
 
         TextInput runCommandInput = new TextInput("$RUN_COMMAND_INPUT$", "$RUN_COMMAND_INPUT_DESC$", Objects.requireNonNullElse(runCommand, ""), 1);
 
-        CurvedButtonAlt saveButton = new CurvedButtonAlt("$SAVE$");
+        CurvedButton saveButton = new CurvedButton("$SAVE$");
 
         saveButton.setUI(Defaults.settingsButtonUI);
         saveButton.setBackground(Defaults.COLOR2);
@@ -229,7 +227,7 @@ public class TimerConfigCheckbox extends JPanel {
             }
         });
 
-        CurvedButtonAlt helpButton = new CurvedButtonAlt("\uF0A3");
+        CurvedButton helpButton = new CurvedButton("\uF0A3");
 
         helpButton.setUI(Defaults.settingsButtonUI);
         helpButton.setBackground(Defaults.COLOR2);
@@ -246,7 +244,7 @@ public class TimerConfigCheckbox extends JPanel {
         });
 
 
-        CurvedButtonAlt cancelButton = new CurvedButtonAlt("$CANCEL$");
+        CurvedButton cancelButton = new CurvedButton("$CANCEL$");
 
         cancelButton.setUI(Defaults.settingsButtonUI);
         cancelButton.setBackground(Defaults.COLOR2);
@@ -258,7 +256,7 @@ public class TimerConfigCheckbox extends JPanel {
             DialogBox.closeDialogBox();
         });
 
-        CurvedButtonAlt deleteButton = new CurvedButtonAlt("\uF0CE");
+        CurvedButton deleteButton = new CurvedButton("\uF0CE");
 
         deleteButton.setUI(Defaults.settingsButtonUI);
         deleteButton.setBackground(Defaults.COLOR2);

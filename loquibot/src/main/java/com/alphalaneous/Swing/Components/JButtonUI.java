@@ -21,19 +21,21 @@ public class JButtonUI extends BasicButtonUI implements java.io.Serializable, Mo
 	private Color hoverColor = Defaults.COLOR3;
 	private Color selectColor = Defaults.COLOR4;
 
-
+	@Override
 	public void installUI(JComponent c) {
 		super.installUI(c);
 		c.addMouseListener(this);
 		c.addKeyListener(this);
 	}
 
+	@Override
 	public void uninstallUI(JComponent c) {
 		super.uninstallUI(c);
 		c.removeMouseListener(this);
 		c.removeKeyListener(this);
 	}
 
+	@Override
 	public Dimension getPreferredSize(JComponent c) {
 		Dimension d = super.getPreferredSize(c);
 		if (m_borderRaised != null && d!= null) {
@@ -43,14 +45,17 @@ public class JButtonUI extends BasicButtonUI implements java.io.Serializable, Mo
 		return d;
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		JComponent c = (JComponent) e.getComponent();
 		c.setBackground(selectColor);
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		JComponent c = (JComponent) e.getComponent();
 		if (mouseHover) {
@@ -60,6 +65,7 @@ public class JButtonUI extends BasicButtonUI implements java.io.Serializable, Mo
 		}
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		mouseHover = true;
 		JComponent c = (JComponent) e.getComponent();
@@ -67,6 +73,7 @@ public class JButtonUI extends BasicButtonUI implements java.io.Serializable, Mo
 		c.repaint();
 	}
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 		mouseHover = false;
 		JComponent c = (JComponent) e.getComponent();
@@ -85,16 +92,13 @@ public class JButtonUI extends BasicButtonUI implements java.io.Serializable, Mo
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
 	}
 }

@@ -2,7 +2,6 @@ package com.alphalaneous.Utils;
 
 import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Services.GeometryDash.GDAPI;
-import com.alphalaneous.Interactive.Commands.Command;
 import com.alphalaneous.Main;
 import com.alphalaneous.Windows.DialogBox;
 import jdash.client.exception.GDClientException;
@@ -47,10 +46,6 @@ public class Board {
 	public static void playNewgrounds(String songID) {
 		GDSong song = GDAPI.getSong(Long.parseLong(songID));
 		if(song.downloadUrl().isPresent()) Sounds.playSound(song.downloadUrl().get(), true, false, false, true);
-	}
-
-	public static String eval(String function) {
-		return Command.run("function command(){" + function + "}");
 	}
 
 	public static void showPopup(String title, String text) {

@@ -52,6 +52,11 @@ public class Requests {
         return removedForOffline;
     }
 
+    public static void removeFromRemovedForOffline(LevelButton button){
+        removedForOffline.remove(button);
+    }
+
+
     public static void addRemovedForOffline(LevelButton button){
         button.resetGonePoints();
         removedForOffline.add(button);
@@ -78,6 +83,7 @@ public class Requests {
         else System.out.println("> Adding Request: "+ message);
         ChatMessage finalChatMessage = chatMessage;
         String finalUser = user;
+        ChatMessage finalChatMessage1 = chatMessage;
         new Thread(() -> {
             try {
                 if(!finalChatMessage.isYouTube() && Moderation.checkIfLink(message)){
@@ -226,6 +232,7 @@ public class Requests {
                     if (SettingsHandler.getSettings("userLimitEnabled").asBoolean()) {
                         int size = 0;
                         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+                            System.out.println(RequestsTab.getRequest(i).getLevelData().getRequester() + " | " + finalChatMessage.getSender());
                             if (RequestsTab.getRequest(i).getLevelData().getRequester().equalsIgnoreCase(finalChatMessage.getSender())) {
                                 size++;
                             }
@@ -248,15 +255,13 @@ public class Requests {
                         return;
                     }
                 }
-                if (userStreamLimitMap.containsKey(finalChatMessage.getSender())) {
-                    userStreamLimitMap.put(finalChatMessage.getSender(), userStreamLimitMap.get(finalChatMessage.getSender()) + 1);
-                } else {
-                    userStreamLimitMap.put(finalChatMessage.getSender(), 1);
-                }
+
 
                 LevelData levelData = new LevelData();
                 levelData.setYouTube(finalChatMessage.isYouTube());
                 if (levelData.isYouTube()) levelData.setDisplayName(finalChatMessage.getDisplayName());
+                else levelData.setDisplayName(finalChatMessage.getSender());
+
                 if (!bypass) {
                     if (checkList(level.creatorName(), "\\loquibot\\blockedGDUsers.txt")) {
                         sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", finalUser), levelData.isYouTube());
@@ -355,8 +360,18 @@ public class Requests {
                         }
                     }).start();
                 }
+                if (userStreamLimitMap.containsKey(finalChatMessage.getSender())) {
+                    userStreamLimitMap.put(finalChatMessage.getSender(), userStreamLimitMap.get(finalChatMessage.getSender()) + 1);
+                } else {
+                    userStreamLimitMap.put(finalChatMessage.getSender(), 1);
+                }
+                if(levelData.isYouTube()){
+                    levelData.setRequester(finalChatMessage1.getSender());
+                }
+                else{
+                    levelData.setRequester(finalUser);
+                }
 
-                levelData.setRequester(finalUser);
                 levelData.setMessage(message);
                 levelData.setMessageID(messageID);
 
@@ -382,15 +397,15 @@ public class Requests {
                 if (Main.sendMessages && !SettingsHandler.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
                     if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
                         sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
-                                levelData.getRequester(),
+                                levelData.getDisplayName(),
                                 level.name(),
                                 level.id(),
-                                RequestsTab.getQueueSize()), SettingsHandler.getSettings("whisperConfirm").asBoolean(), finalUser,levelData.isYouTube());
+                                RequestsTab.getQueueSize()), finalUser,levelData.isYouTube());
                     } else {
                         sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
-                                levelData.getRequester(),
+                                levelData.getDisplayName(),
                                 level.name(),
-                                level.id()), SettingsHandler.getSettings("whisperConfirm").asBoolean(), finalUser,levelData.isYouTube());
+                                level.id()), finalUser,levelData.isYouTube());
                     }
                 }
 
@@ -399,15 +414,29 @@ public class Requests {
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
 
-                    if (Main.sendMessages && !SettingsHandler.getSettings("disableNP").asBoolean()) {
+                    if (Main.sendMessages && !SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
-                                RequestsTab.getRequest(0).getLevelData().getRequester(),
+                                RequestsTab.getRequest(0).getLevelData().getDisplayName(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().id()), SettingsHandler.getSettings("announceNP").asBoolean());
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
-                                RequestsTab.getRequest(0).getLevelData().getRequester(),
+                                RequestsTab.getRequest(0).getLevelData().getDisplayName(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                    }
+                    else if(SettingsHandler.getSettings("inGameNowPlaying").asBoolean() && !SettingsHandler.getSettings("disableConfirm").asBoolean()){
+                        if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
+                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
+                                    levelData.getDisplayName(),
+                                    level.name(),
+                                    level.id(),
+                                    RequestsTab.getQueueSize()), finalUser,levelData.isYouTube());
+                        } else {
+                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
+                                    levelData.getDisplayName(),
+                                    level.name(),
+                                    level.id()), finalUser,levelData.isYouTube());
+                        }
                     }
 
                 }
@@ -573,9 +602,9 @@ public class Requests {
         else Main.sendMessage("🟡 | " + message);
     }
 
-    private static void sendSuccess(String message, boolean whisper, String user, boolean isYT) {
+    private static void sendSuccess(String message, String user, boolean isYT) {
         if(isYT) Main.sendYTMessage("🟢 | " + message);
-        else Main.sendMessage("🟢 | " + message, whisper, user);
+        else Main.sendMessage("🟢 | " + message, false, user);
     }
 
     private static boolean checkList(Object object, String path) {
@@ -602,162 +631,10 @@ public class Requests {
         return false;
     }
 
-    private static void parse(byte[] level, long levelID) {
-        boolean image = false;
-        all:
-        for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-
-            if (RequestsTab.getRequest(k).getLevelData().getGDLevel().id() == levelID) {
-                StringBuilder decompressed = null;
-                try {
-                    decompressed = decompress(level);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                int imageIDCount = 0;
-                String color = "";
-                assert decompressed != null;
-                String[] values = decompressed.toString().split(";");
-                if ((values.length < SettingsHandler.getSettings("minObjects").asInteger()) && SettingsHandler.getSettings("minObjectsOption").asBoolean()) {
-                    Main.sendMessage(Utilities.format("🟡 | $TOO_FEW_OBJECTS_MESSAGE$", RequestsTab.getRequest(k).getLevelData().getRequester()));
-                    //LevelsPanel.removeButton(k);
-                    RequestsTab.removeRequest(k);
-                    return;
-                }
-                if ((values.length > SettingsHandler.getSettings("maxObjects").asInteger()) && SettingsHandler.getSettings("maxObjectsOption").asBoolean()) {
-                    Main.sendMessage(Utilities.format("🟡 | $TOO_MANY_OBJECTS_MESSAGE$", RequestsTab.getRequest(k).getLevelData().getRequester()));
-                    //LevelsPanel.removeButton(k);
-                    RequestsTab.removeRequest(k);
-                    return;
-                }
-                for (String value1 : values) {
-                    if (SettingsHandler.getSettings("lowCPUMode").asBoolean()) {
-                        Utilities.sleep(50);
-                    }
-                    if (value1.startsWith("1,1110") || value1.startsWith("1,211") || value1.startsWith("1,914")) {
-                        String value = value1.replaceAll("(,[^,]*),", "$1;");
-                        String[] attributes = value.split(";");
-                        double scale = 0;
-                        boolean hsv = false;
-                        boolean zOrder = false;
-                        String tempColor = "";
-                        String text = "";
-                        for (String attribute : attributes) {
-
-                            if (attribute.startsWith("32")) {
-                                if (Double.parseDouble(attribute.split(",")[1]) < 1) {
-                                    scale = Double.parseDouble(attribute.split(",")[1]);
-                                }
-                            }
-                            if (attribute.startsWith("41")) {
-                                hsv = true;
-                            }
-                            if (attribute.startsWith("21")) {
-                                tempColor = attribute.split(",")[1];
-                            }
-                            if (attribute.startsWith("25")) {
-                                zOrder = true;
-                            }
-                            if (attribute.startsWith("31")) {
-                                String formatted = attribute.split(",")[1].replace("_", "/").replace("-", "+");
-                                text = new String(Base64.getDecoder().decode(formatted));
-                            }
-                        }
-                        InputStream is = Main.class.getClassLoader()
-                                .getResourceAsStream("Resources/blockedWords.txt");
-                        assert is != null;
-                        InputStreamReader isr = new InputStreamReader(is);
-                        BufferedReader br = new BufferedReader(isr);
-                        String line;
-                        try {
-                            out:
-                            while ((line = br.readLine()) != null) {
-                                String[] text1 = text.toUpperCase().split(" ");
-                                for (String s : text1) {
-                                    if (s.equalsIgnoreCase(line)) {
-                                        RequestsTab.getRequest(k).getLevelData().setContainsVulgar();
-                                        break out;
-                                    }
-                                }
-                            }
-                            if (scale != 0.0 && hsv) {
-                                if (tempColor.equalsIgnoreCase(color) && !zOrder) {
-                                    imageIDCount++;
-                                }
-                            }
-                            if (imageIDCount >= 1000) {
-                                image = true;
-                            }
-                            color = tempColor;
-                            is.close();
-                            isr.close();
-                            br.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            break all;
-                        }
-                    }
-                    Utilities.sleep(0);
-                }
-                try {
-                    URL ids = new URL("https://raw.githubusercontent.com/Alphatism/loquibot/Master/GD%20Request%20Bot/External/false%20positives.txt");
-                    Scanner s = new Scanner(ids.openStream());
-                    while (s.hasNextLine()) {
-                        String lineA = s.nextLine();
-                        if (lineA.equalsIgnoreCase(String.valueOf(levelID))) {
-                            image = false;
-                            break;
-                        }
-                    }
-                    s.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (image) {
-                    RequestsTab.getRequest(k).getLevelData().setContainsImage();
-                }
-                Utilities.sleep(250);
-                try {
-                    RequestsTab.getRequest(k).getLevelData().setAnalyzed();
-                    RequestsTab.getLevelsPanel().updateUI(RequestsTab.getRequest(k).getLevelData().getGDLevel().id());
-                } catch (IndexOutOfBoundsException ignored) {
-                }
-                if (k == 0) {
-                    RequestFunctions.containsBadStuffCheck();
-                }
-                break;
-            }
-        }
-    }
-
-    private static StringBuilder decompress(byte[] compressed) throws IOException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
-        GZIPInputStream gis = new GZIPInputStream(bis);
-        BufferedReader br = new BufferedReader(new InputStreamReader(gis, StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        bis.close();
-        br.close();
-        gis.close();
-        bis.close();
-        return sb;
-    }
-
     public static void request(String user, boolean isMod, boolean isSub, String message, String messageID, long userID, ChatMessage chatMessage) {
         addRequest(0, user, isMod, isSub, message, messageID, userID, true, chatMessage);
     }
 
-    public static int getPosFromIDBasic(long ID) {
-        for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-            if (RequestsTab.getLevelsPanel().getButtonBasic(i).getID() == ID) {
-                return i;
-            }
-        }
-        return -1;
-    }
     public static int getPosFromID(long ID) {
         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
             if (RequestsTab.getLevelsPanel().getButton(i).getID() == ID) {

@@ -12,9 +12,9 @@ import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Swing.ThemedComponents.ThemedCheckbox;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
 import com.alphalaneous.Swing.ThemedComponents.ThemedIconCheckbox;
-import com.alphalaneous.Windows.CommandEditor;
 import com.alphalaneous.Tabs.SettingsTab;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.OfficerWindow;
 import com.alphalaneous.Windows.Window;
@@ -60,7 +60,6 @@ public class Themes {
 		ThemedCheckbox.refreshAll();
 		FancyTextArea.refreshAll();
 		FancyPasswordField.refreshAll();
-		RoundedJButton.refreshAll();
 		CommandListElement.refreshAll();
 		SettingsPage.refreshAll();
 		SettingsComponent.refreshAll();
@@ -72,28 +71,10 @@ public class Themes {
 		VideoDetailsPanel.refreshUI();
 		SettingsTab.refreshUI();
 		ChatbotTab.refreshUI();
-		CommandEditor.refreshUI();
 	}
 
 	public static void loadTheme() {
-		Path path = Paths.get(Defaults.saveDirectory + "/loquibot/theme.properties");
-		if (Files.exists(path)) {
-			Scanner sc = null;
-			try {
-				sc = new Scanner(path.toFile());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			assert sc != null;
-			while (sc.hasNextLine()) {
-				String line = sc.nextLine();
-				if (line.contains("=")) {
-					themeSettings.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
-				}
-			}
-			sc.close();
-		}
-
+		Utilities.load("/loquibot/theme.properties", themeSettings);
 	}
 
 	public static boolean getIsLight(){
@@ -129,29 +110,7 @@ public class Themes {
 
 	public static void saveTheme() {
 		if(themeSettings.size() > 0) {
-			Path file = Paths.get(Defaults.saveDirectory + "/loquibot/theme.properties");
-
-			try {
-				if (!Files.exists(file)) {
-					Files.createFile(file);
-				}
-				Iterator it = themeSettings.entrySet().iterator();
-				StringBuilder pairs = new StringBuilder();
-				while (it.hasNext()) {
-					Map.Entry pair = (Map.Entry) it.next();
-					pairs.append(pair.getKey()).append(" = ").append(pair.getValue()).append("\n");
-					it.remove();
-				}
-				if (!Files.exists(file)) {
-					Files.createFile(file);
-				}
-				Files.write(
-						file,
-						pairs.toString().getBytes());
-			} catch (IOException e1) {
-				DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
-
-			}
+			Utilities.save("/loquibot/theme.properties", themeSettings);
 		}
 	}
 }

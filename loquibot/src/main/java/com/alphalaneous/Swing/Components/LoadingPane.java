@@ -11,8 +11,8 @@ public class LoadingPane extends JPanel {
     private double angle;
     private double extent;
 
-    private double angleDelta = -1;
-    private double extentDelta = -5;
+    private final double angleDelta = -1;
+    private final double extentDelta = -5;
 
     private boolean flip = false;
 

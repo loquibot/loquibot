@@ -10,16 +10,11 @@ public class AlphaContainer extends JComponent
     public AlphaContainer(JComponent component)
     {
         this.component = component;
-        setLayout( new BorderLayout() );
-        setOpaque( false );
-        component.setOpaque( false );
-        add( component );
+        setLayout(new BorderLayout());
+        setOpaque(false);
+        component.setOpaque(false);
+        add(component);
     }
-
-    /**
-     *  Paint the background using the background Color of the
-     *  contained component
-     */
     @Override
     public void paintComponent(Graphics g)
     {

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.*;
 
 public class Defaults {
 
@@ -191,10 +192,15 @@ public class Defaults {
 
 	public static void setSystem(boolean refresh) {
 		final int[] prevTheme = new int[1];
+		ExecutorService executor = Executors.newCachedThreadPool();
+		Callable<Object> task = RegQuery::getTheme;
+		Future<Object> future = executor.submit(task);
+
 		try {
-			prevTheme[0] = RegQuery.getTheme();
-		} catch (NullPointerException e) {
+			prevTheme[0] = (int) future.get(10, TimeUnit.SECONDS);
+		} catch (Exception e) {
 			prevTheme[0] = 1;
+			future.cancel(true);
 		}
 		if(SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("SYSTEM_MODE")) {
 			if (prevTheme[0] == 0) {
@@ -206,7 +212,18 @@ public class Defaults {
 		else{
 			setDark(refresh);
 		}
-		int color = RegQuery.getColor();
+
+		ExecutorService executorC = Executors.newCachedThreadPool();
+		Callable<Object> taskC = RegQuery::getColor;
+		Future<Object> futureC = executorC.submit(taskC);
+		int color = 0;
+
+		try {
+			color = (int) futureC.get(10, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			futureC.cancel(true);
+		}
+
 		ACCENT = Color.decode(String.valueOf(color));
 		if(refresh) Themes.refreshUI();
 
@@ -234,17 +251,35 @@ public class Defaults {
 				try {
 					if (os.contains("WIN")) {
 						int theme = 0;
-						Integer color;
+						int color = 0;
+
+						ExecutorService executor = Executors.newCachedThreadPool();
+						Callable<Object> task = RegQuery::getTheme;
+						Future<Object> future = executor.submit(task);
+
 						try {
-							theme = RegQuery.getTheme();
-							color = RegQuery.getColor();
-							if (!ACCENT.equals(Color.decode(String.valueOf(color)))) {
-								ACCENT = Color.decode(String.valueOf(color));
-								Themes.refreshUI();
-							}
-						} catch (NullPointerException e) {
-							e.printStackTrace();
+							theme = (int) future.get(10, TimeUnit.SECONDS);
+
+						} catch (Exception e) {
+							future.cancel(true);
 						}
+
+						ExecutorService executorC = Executors.newCachedThreadPool();
+						Callable<Object> taskC = RegQuery::getColor;
+						Future<Object> futureC = executorC.submit(taskC);
+
+						try {
+							color = (int) futureC.get(10, TimeUnit.SECONDS);
+						} catch (Exception e) {
+							futureC.cancel(true);
+						}
+
+						if (!ACCENT.equals(Color.decode(String.valueOf(color)))) {
+							ACCENT = Color.decode(String.valueOf(color));
+							Themes.refreshUI();
+						}
+
+
 						if(SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("SYSTEM_MODE")) {
 							if (theme == 0 && prevTheme[0] == 1) {
 								Defaults.setDark(false);

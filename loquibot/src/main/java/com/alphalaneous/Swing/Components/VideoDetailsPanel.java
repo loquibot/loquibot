@@ -58,6 +58,7 @@ public class VideoDetailsPanel {
     public static JPanel getPanel(){
         return mainPanel;
     }
+
     public static void setPositionAndHeight(int x, int height){
         mainPanel.setBounds(x, 0, 360, height);
         if(mainPanel.getComponents().length > 0) {

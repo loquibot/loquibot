@@ -26,9 +26,14 @@ import java.util.List;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class DefaultCommandFunctions {
 
+    public static String runMSPlay(ChatMessage message){
+        MediaShare.play();
+        return Utilities.format("$MEDIA_SHARE_PLAYED$", message.getSenderElseDisplay());
+    }
+
     public static String runMSClear(ChatMessage message){
-        MediaShare.clearMedia(true);
-        return Utilities.format("$MEDIA_SHARE_CLEARED$", message.getSenderElseDisplay());
+        MediaShare.pause();
+        return Utilities.format("$MEDIA_SHARE_PAUSED$", message.getSenderElseDisplay());
     }
 
     public static String runMSSkip(ChatMessage message){
@@ -68,12 +73,18 @@ public class DefaultCommandFunctions {
                             }
                         }
                     }
-                    if(data.startsWith("https://www.youtu.be/")){
-                        String end = data.substring("https://www.youtu.be/".length());
+
+                    String link = data.split("://")[1];
+                    if(link.startsWith("www.")){
+                        link = link.substring(4);
+                    }
+
+                    if(link.startsWith("youtu.be/")){
+                        String end = link.substring("youtu.be/".length());
                         ID = end.split("\\?")[0];
                     }
-                    if(data.startsWith("https://www.youtube.com/shorts/")){
-                        String end = data.substring("https://www.youtube.com/shorts/".length());
+                    if(link.startsWith("youtube.com/shorts/")){
+                        String end = link.substring("youtube.com/shorts/".length());
                         ID = end.split("\\?")[0];
                     }
 
@@ -139,12 +150,6 @@ public class DefaultCommandFunctions {
         return "";
     }
 
-    public static String runEval(ChatMessage message){
-        if(message.getSenderElseDisplay().equalsIgnoreCase("Alphalaneous") || message.isMod()){
-            return Board.eval(message.getMessage());
-        }
-        return "";
-    }
     public static String runGDPing(ChatMessage message){
         return "GD ping: " + Board.testSearchPing() + " ms";
     }
@@ -254,7 +259,7 @@ public class DefaultCommandFunctions {
         }
         ArrayList<Integer> userPosition = new ArrayList<>();
         for(var i = 0; i < RequestsUtils.getSize(); i++){
-            if(RequestsUtils.getLevel(i, "requester").equalsIgnoreCase(message.getSenderElseDisplay())){
+            if(RequestsUtils.getLevel(i, "requester").equalsIgnoreCase(message.getSender())){
                 userPosition.add(i);
             }
         }
@@ -398,8 +403,13 @@ public class DefaultCommandFunctions {
         return RequestsUtils.unblockUser( message.getSenderElseDisplay(), message.getArgs());
     }
     public static String runWrongLevel(ChatMessage message){
-        return RequestsUtils.removeLatest(message.getSenderElseDisplay());
+        return RequestsUtils.removeLatest(message);
     }
+
+    public static String runReplace(ChatMessage message){
+        return RequestsUtils.replaceLatest(message);
+    }
+
     public static String runAddcom(ChatMessage message){
 
         if(message.getArgs().length == 1){

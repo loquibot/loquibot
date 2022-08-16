@@ -26,9 +26,12 @@ import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
 
 public class Account {
 
-    private static AccountPanel geometryDashPanel = null;
-    private static AccountPanel twitchPanel = null;
-    private static AccountPanel youTubePanel = null;
+    private static AccountPanel geometryDashPanel = new AccountPanel(
+            () -> Window.addContextMenu(createGDContextMenu()));;
+    private static AccountPanel twitchPanel = new AccountPanel(
+            () -> Window.addContextMenu(createTwitchContextMenu()));;
+    private static AccountPanel youTubePanel = new AccountPanel(
+            () -> Window.addContextMenu(createYouTubeContextMenu()));;
 
     private static final CurvedButton loginButton = new CurvedButton("$LOGIN$");
     private static final CurvedButton cancelButton = new CurvedButton("$CANCEL$");
@@ -40,7 +43,7 @@ public class Account {
     private static final FancyPasswordField passwordTextArea = new FancyPasswordField();
     private static final Color red = new Color(255, 0, 0);
     private static final JPanel logonFrame = new JPanel();
-    private static final CurvedButtonAlt firstLoginButton = new CurvedButtonAlt("GD Account Login");
+    private static final CurvedButton firstLoginButton = new CurvedButton("GD Account Login");
 
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$ACCOUNTS_SETTINGS$");
@@ -80,7 +83,6 @@ public class Account {
         loginButton.setBackground(Defaults.COLOR2);
         loginButton.setForeground(Defaults.FOREGROUND_A);
         loginButton.setPreferredSize(new Dimension(232, 40));
-        loginButton.refresh();
         loginButton.addActionListener(e -> {
             try {
                 boolean successfulLogin = GDAPI.login(usernameTextArea.getText(), String.valueOf(passwordTextArea.getPassword()));
@@ -111,18 +113,11 @@ public class Account {
         cancelButton.setBackground(Defaults.COLOR2);
         cancelButton.setForeground(Defaults.FOREGROUND_A);
         cancelButton.setPreferredSize(new Dimension(230, 40));
-        cancelButton.refresh();
         cancelButton.addActionListener(e -> DialogBox.closeDialogBox());
 
         logonFrame.add(cancelButton);
 
-        geometryDashPanel = new AccountPanel(
-                () -> Window.addContextMenu(createGDContextMenu()));
         geometryDashPanel.hideRefreshButton();
-        twitchPanel = new AccountPanel(
-                () -> Window.addContextMenu(createTwitchContextMenu()));
-        youTubePanel = new AccountPanel(
-                () -> Window.addContextMenu(createYouTubeContextMenu()));
 
         youTubePanel.setIcon(Assets.YouTube);
         twitchPanel.setIcon(Assets.Twitch);
@@ -204,10 +199,10 @@ public class Account {
         logonFrame.setBackground(Defaults.COLOR3);
         cancelButton.setUI(settingsButtonUI);
         cancelButton.setBackground(Defaults.COLOR2);
-        cancelButton.setLForeground(Defaults.FOREGROUND_A);
+        cancelButton.setForeground(Defaults.FOREGROUND_A);
         loginButton.setUI(settingsButtonUI);
         loginButton.setBackground(Defaults.COLOR2);
-        loginButton.setLForeground(Defaults.FOREGROUND_A);
+        loginButton.setForeground(Defaults.FOREGROUND_A);
         firstLoginButton.setUI(settingsButtonUI);
         firstLoginButton.setBackground(Defaults.COLOR2);
         firstLoginButton.setForeground(Defaults.FOREGROUND_A);
@@ -364,7 +359,6 @@ public class Account {
             dropDownButton.setFont(Defaults.SYMBOLS.deriveFont(6f));
             dropDownButton.setBounds(420,35,30,30);
             dropDownButton.setPreferredSize(new Dimension(30,30));
-            dropDownButton.refresh();
             dropDownButton.addActionListener(e -> dropDownFunction.run());
             setPreferredSize(new Dimension(475,100));
 
@@ -428,7 +422,6 @@ public class Account {
             accountTypeLabel.setForeground(Defaults.FOREGROUND_B);
             dropDownButton.setBackground(new Color(0,0,0,0));
             dropDownButton.setForeground(Defaults.FOREGROUND_A);
-            dropDownButton.refresh();
             ui.setBackground(new Color(0,0,0,0));
             ui.setHover(Defaults.COLOR1);
             ui.setSelect(Defaults.COLOR4);

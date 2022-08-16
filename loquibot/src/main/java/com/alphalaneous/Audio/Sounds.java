@@ -1,6 +1,5 @@
 package com.alphalaneous.Audio;
 
-import com.alphalaneous.ChatBot.BotHandler;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
@@ -87,7 +86,7 @@ public class Sounds {
 						} else if (isFile) {
 							inp = new BufferedInputStream(new FileInputStream(location));
 						} else {
-							inp = new BufferedInputStream(BotHandler.class
+							inp = new BufferedInputStream(Sounds.class
 									.getResource(location).openStream());
 						}
 						mp3player = new Player(inp);

@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class GetLiveChatID {
 
+    static boolean shownError = false;
+
     public static String getLiveChatId(YouTube youtube) throws IOException {
         try {
             YouTube.LiveBroadcasts.List broadcastList = youtube
@@ -45,8 +47,9 @@ public class GetLiveChatID {
             }
         }
         catch (GoogleJsonResponseException e) {
-            if (Window.getWindow().isVisible()) {
+            if (Window.getWindow().isVisible() && !shownError) {
                 DialogBox.showDialogBox("Error", "This user isn't enabled for livestreaming! :(", "", new String[]{"Okay"});
+                shownError = true;
             }
         }
         return null;

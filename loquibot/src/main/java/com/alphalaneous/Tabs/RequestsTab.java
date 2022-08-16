@@ -6,7 +6,6 @@ import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.*;
-import com.alphalaneous.Interactive.Commands.Command;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
@@ -63,17 +62,17 @@ public class RequestsTab {
     private static final FancyTextArea messageTextArea = new FancyTextArea(false, false);
     private static final FancyTextArea idTextArea = new FancyTextArea(true, false);
 
-    private static final CurvedButtonAlt addIDButton = createCurvedButton("Add ID");
+    private static final CurvedButton addIDButton = createCurvedButton("Add ID");
 
     //private static final CommentsPanel commentsPanel = new CommentsPanel();
     private static final LevelsPanel levelsPanel = new LevelsPanel();
     //private static final InfoPanel levelInfoPanel = new InfoPanel();
 
-    private static final JButton officerMenuButton = createButton("\uF4F3", "$OFFICER_TOOLTIP$");
+    private static final CurvedButton officerMenuButton = createButton("\uF4F3", "$OFFICER_TOOLTIP$");
 
-    private static final JButton undo = createButton("\uF32A", "$UNDO_LEVEL_TOOLTIP$");
+    private static final CurvedButton undo = createButton("\uF32A", "$UNDO_LEVEL_TOOLTIP$");
 
-    private static final JButton toggleRequests = createButton("\uF186", "$TOGGLE_REQUESTS_TOOLTIP$");
+    private static final CurvedButton toggleRequests = createButton("\uF186", "$TOGGLE_REQUESTS_TOOLTIP$");
 
     public static void createPanel() {
 
@@ -81,7 +80,7 @@ public class RequestsTab {
         buttonUI.setHover(Defaults.COLOR5);
         buttonUI.setSelect(Defaults.COLOR4);
 
-        JButton skip = createButton("\uF31B", "$SKIP_LEVEL_TOOLTIP$");
+        CurvedButton skip = createButton("\uF31B", "$SKIP_LEVEL_TOOLTIP$");
         skip.addActionListener(e -> RequestFunctions.skipFunction());
 
         skip.addMouseListener(new MouseAdapter() {
@@ -97,10 +96,10 @@ public class RequestsTab {
 
         undo.addActionListener(e -> RequestFunctions.undoFunction());
 
-        JButton randNext = createButton("\uF2D8", "$NEXT_RANDOM_TOOLTIP$");
+        CurvedButton randNext = createButton("\uF2D8", "$NEXT_RANDOM_TOOLTIP$");
         randNext.addActionListener(e -> RequestFunctions.randomFunction());
 
-        JButton clear = createButton("\uF0CE", "$CLEAR_TOOLTIP$");
+        CurvedButton clear = createButton("\uF0CE", "$CLEAR_TOOLTIP$");
         clear.addActionListener(e -> RequestFunctions.clearFunction());
 
         toggleRequests.addActionListener(e -> toggle());
@@ -108,19 +107,19 @@ public class RequestsTab {
         officerMenuButton.setVisible(false);
         officerMenuButton.setFont(Defaults.SYMBOLS.deriveFont(24f));
 
-        CurvedButtonAlt delete = createCurvedButton("$DELETE$");
+        CurvedButton delete = createCurvedButton("$DELETE$");
         delete.addActionListener(e -> Main.sendMessage("/delete " + RequestsTab.getRequest(selectedID).getLevelData().getMessageID()));
 
-        CurvedButtonAlt timeout = createCurvedButton("$TIMEOUT$");
+        CurvedButton timeout = createCurvedButton("$TIMEOUT$");
         timeout.addActionListener(e -> Main.sendMessage("/timeout " + selectedUsername + " 600"));
 
-        CurvedButtonAlt ban = createCurvedButton("$BAN$");
+        CurvedButton ban = createCurvedButton("$BAN$");
         ban.addActionListener(e -> Main.sendMessage("/ban " + selectedUsername));
 
-        CurvedButtonAlt purge = createCurvedButton("$PURGE$");
+        CurvedButton purge = createCurvedButton("$PURGE$");
         purge.addActionListener(e -> Main.sendMessage("/timeout " + selectedUsername + " 1"));
 
-        CurvedButtonAlt cancel = createCurvedButton("$CANCEL$");
+        CurvedButton cancel = createCurvedButton("$CANCEL$");
         cancel.addActionListener(e -> DialogBox.closeDialogBox());
 
         int width = 465;
@@ -347,7 +346,7 @@ public class RequestsTab {
             } else {
                 Requests.requestsEnabled = true;
                 Main.sendMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), doAnnounce);
-                Main.sendYTMessage(Utilities.format("🟥 | $REQUESTS_ON_TOGGLE_MESSAGE$"));
+                Main.sendYTMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"));
             }
         }
         if (Requests.requestsEnabled) {
@@ -401,20 +400,6 @@ public class RequestsTab {
         levelsPanel.setSelect(pos);
     }
 
-
-    public static void sendCommandResponse(Path path) {
-        new Thread(() -> {
-
-            try {
-                String response = Command.run(Files.readString(path, StandardCharsets.UTF_8));
-                if (!response.equalsIgnoreCase("")) {
-                    Main.sendMessage(response);
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }).start();
-    }
 
     public static void showMainPanel() {
         windowPanel.setVisible(true);
@@ -502,25 +487,25 @@ public class RequestsTab {
     }
 
 
-    private static CurvedButtonAlt createCurvedButton(String text) {
-        CurvedButtonAlt button = new CurvedButtonAlt(text);
+    private static CurvedButton createCurvedButton(String text) {
+        CurvedButton button = new CurvedButton(text);
         button.setFont(Defaults.MAIN_FONT.deriveFont(14f));
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setBackground(Defaults.COLOR);
         button.setUI(defaultUI);
         button.setForeground(Defaults.FOREGROUND_A);
         button.setOpaque(false);
-        button.setPreferredSize(new Dimension(button.getPreferredSize().width + 40, 50));
+        button.setPreferredSize(new Dimension(button.getPreferredSize().width-10, 50));
         return button;
     }
 
-    private static RoundedJButton createButton(String icon, String tooltip) {
-        RoundedJButton button = new RoundedJButton(icon, tooltip);
+    private static CurvedButton createButton(String icon, String tooltip) {
+        CurvedButton button = new CurvedButton(icon, tooltip);
         button.setPreferredSize(new Dimension(50, 50));
         button.setUI(defaultUI);
         button.setBackground(Defaults.COLOR);
-        button.setColorB("main");
-        button.setColorF("foreground");
+        //button.setColorB("main");
+        //button.setColorF("foreground");
         button.setOpaque(false);
         button.setForeground(Defaults.FOREGROUND_A);
         button.setBorder(BorderFactory.createEmptyBorder());

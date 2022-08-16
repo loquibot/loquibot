@@ -23,6 +23,11 @@ public class GDAPI {
     private static GDClient client = GDClient.create();
     private static final SpriteFactory spriteFactory = SpriteFactory.create();
 
+
+    public static GDClient getClient(){
+        return client;
+    }
+
     public static ImageIcon getIcon(GDUserProfile user){
         return getIcon(user, 30);
     }

@@ -3,6 +3,8 @@ package com.alphalaneous.Services.GeometryDash;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Utils.Utilities;
+import jdash.common.entity.GDUser;
+import jdash.common.entity.GDUserProfile;
 
 import javax.swing.*;
 import java.util.Base64;
@@ -44,7 +46,6 @@ public class LoadGD {
             loaded = true;
             System.out.println("> LoadGD Loaded");
         });
-
         loadThread.start();
         waitThread = new Thread(() -> {
             Utilities.sleep(60000);

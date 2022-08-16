@@ -215,32 +215,32 @@ public class SettingsPage extends JPanel {
 
     private static class Button extends JPanel {
         private final String text;
-        private final CurvedButtonAlt curvedButtonAlt = new CurvedButtonAlt("");
+        private final CurvedButton CurvedButton = new CurvedButton("");
 
         Button(String text, Function function){
             this.text = text;
-            curvedButtonAlt.setTextLang(text);
-            curvedButtonAlt.setFont(Defaults.MAIN_FONT.deriveFont(14f));
-            curvedButtonAlt.setUI(Defaults.settingsButtonUI);
-            curvedButtonAlt.setBackground(Defaults.COLOR2);
-            curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
-            curvedButtonAlt.setBounds(28, 0, 460, 30);
+            CurvedButton.setText(text);
+            CurvedButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+            CurvedButton.setUI(Defaults.settingsButtonUI);
+            CurvedButton.setBackground(Defaults.COLOR2);
+            CurvedButton.setForeground(Defaults.FOREGROUND_A);
+            CurvedButton.setBounds(28, 0, 460, 30);
 
-            curvedButtonAlt.addActionListener(e -> {
+            CurvedButton.addActionListener(e -> {
                 if(function != null) function.run();
             });
             setLayout(null);
             setPreferredSize(new Dimension(460, 40));
             setBackground(new Color(0,0,0,0));
-            add(curvedButtonAlt);
+            add(CurvedButton);
         }
         public void refreshUI() {
             setBackground(new Color(0,0,0,0));
-            curvedButtonAlt.setBackground(Defaults.COLOR2);
-            curvedButtonAlt.setForeground(Defaults.FOREGROUND_A);
+            CurvedButton.setBackground(Defaults.COLOR2);
+            CurvedButton.setForeground(Defaults.FOREGROUND_A);
         }
         public void resize(int width){
-            curvedButtonAlt.setBounds(28, 0, width-340, 30);
+            CurvedButton.setBounds(28, 0, width-340, 30);
             setPreferredSize(new Dimension(width-340, 40));
         }
         public String getText(){

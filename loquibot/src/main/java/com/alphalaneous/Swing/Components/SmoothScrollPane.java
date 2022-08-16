@@ -11,8 +11,6 @@ public class SmoothScrollPane extends JScrollPane {
 
     boolean verticalScrollEnabled = true;
     boolean horizontalScrollEnabled = false;
-
-
     public SmoothScrollPane(JComponent component){
         super(component);
         setBorder(BorderFactory.createEmptyBorder());
@@ -32,12 +30,6 @@ public class SmoothScrollPane extends JScrollPane {
 
         setWheelScrollingEnabled(false);
         setDoubleBuffered(true);
-        /*setLayout(new ScrollPaneLayout() {
-            @Override
-            public void layoutContainer(Container parent) {
-
-            }
-        });*/
         addMouseWheelListener(new MouseAdapter() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {

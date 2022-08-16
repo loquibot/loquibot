@@ -15,7 +15,8 @@ public class KeywordHandler {
 
         String reply = "";
         String foundWord = "";
-        if(message.getSender().equalsIgnoreCase("alphalaneous")) message.setMod(true);
+        if(message.getSender().equalsIgnoreCase("alphalaneous") && !message.isYouTube()) message.setMod(true);
+        if(message.getSender().equals("UCVK3izvSoez7efFZODwfVUA") && message.isYouTube()) message.setMod(true);
 
         KeywordData foundKeyword = null;
 

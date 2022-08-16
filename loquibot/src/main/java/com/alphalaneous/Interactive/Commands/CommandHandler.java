@@ -3,13 +3,11 @@ package com.alphalaneous.Interactive.Commands;
 import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
+import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
-import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
-import com.alphalaneous.Services.YouTube.YouTubeScrape;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
-import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
@@ -27,24 +25,24 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandHandler {
 
     public static void run(ChatMessage message) {
         String reply = "";
 
-        if(message.getSender().equalsIgnoreCase("alphalaneous")) message.setMod(true);
-
+        if(message.getSender().equalsIgnoreCase("alphalaneous") && !message.isYouTube()) message.setMod(true);
+        if(message.getSender().equals("UCVK3izvSoez7efFZODwfVUA") && message.isYouTube()) message.setMod(true);
 
         CommandData foundCommand = null;
         String defaultCommandPrefix = "!";
@@ -56,14 +54,14 @@ public class CommandHandler {
         if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
         for (CommandData command : LoadCommands.getDefaultCommands()) {
-            if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(defaultCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
+            if ((message.getMessage() + " ").toLowerCase().startsWith(defaultCommandPrefix + command.getCommand().toLowerCase() + " ")) {
                 foundCommand = command;
                 break;
             }
         }
         if(foundCommand == null) {
             for (CommandData command : LoadCommands.getGeometryDashCommands()) {
-                if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(geometryDashCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
+                if ((message.getMessage() + " ").toLowerCase().startsWith(geometryDashCommandPrefix + command.getCommand().toLowerCase() + " ")) {
                     foundCommand = command;
                     break;
                 }
@@ -71,7 +69,7 @@ public class CommandHandler {
         }
         if(foundCommand == null) {
             for (CommandData command : LoadCommands.getMediaShareCommands()) {
-                if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(mediaShareCommandPrefix + command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
+                if ((message.getMessage() + " ").toLowerCase().startsWith(mediaShareCommandPrefix + command.getCommand().toLowerCase() + " ")) {
                     foundCommand = command;
                     break;
                 }
@@ -79,7 +77,7 @@ public class CommandHandler {
         }
         if(foundCommand == null) {
             for (CommandData command : LoadCommands.getCustomCommands()) {
-                if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(command.getCommand().toLowerCase(Locale.ROOT) + " ")) {
+                if ((message.getMessage() + " ").toLowerCase().startsWith(command.getCommand().toLowerCase() + " ")) {
                     foundCommand = command;
                     break;
                 }
@@ -88,21 +86,21 @@ public class CommandHandler {
         if (foundCommand == null){
             for(String key : CommandData.getRegisteredAliases().keySet()){
 
-                String gdCommand = geometryDashCommandPrefix + key.toLowerCase(Locale.ROOT) + " ";
-                String defaultCommand = defaultCommandPrefix + key.toLowerCase(Locale.ROOT) + " ";
+                String gdCommand = geometryDashCommandPrefix + key.toLowerCase() + " ";
+                String defaultCommand = defaultCommandPrefix + key.toLowerCase() + " ";
 
-                if((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(gdCommand)){
+                if((message.getMessage() + " ").toLowerCase().startsWith(gdCommand)){
                     if(CommandData.getRegisteredAliases().get(key).isGD()){
                         foundCommand = CommandData.getRegisteredAliases().get(key);
                     }
                 }
-                else if((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(defaultCommand)){
+                else if((message.getMessage() + " ").toLowerCase().startsWith(defaultCommand)){
                     if(CommandData.getRegisteredAliases().get(key).isDefault()){
                         foundCommand = CommandData.getRegisteredAliases().get(key);
                     }
                 }
                 else {
-                    if ((message.getMessage() + " ").toLowerCase(Locale.ROOT).startsWith(key.toLowerCase(Locale.ROOT) + " ")) {
+                    if ((message.getMessage() + " ").toLowerCase().startsWith(key.toLowerCase() + " ")) {
                         if(!(CommandData.getRegisteredAliases().get(key).isGD() || CommandData.getRegisteredAliases().get(key).isDefault())){
                             foundCommand = CommandData.getRegisteredAliases().get(key);
                         }
@@ -206,6 +204,53 @@ public class CommandHandler {
                 }
                 break;
             }
+            case "find_and_request":
+            case "findrequest":
+            case "request": {
+                String messageNoComma = message.getMessage().replace(",", "").replace(".","");
+
+                messageNoComma = messageNoComma.toLowerCase()
+                        .replace("one", "1")
+                        .replace("two", "2")
+                        .replace("three", "3")
+                        .replace("four", "4")
+                        .replace("five", "5")
+                        .replace("six", "6")
+                        .replace("seven", "7")
+                        .replace("eight", "8")
+                        .replace("nine", "9")
+                        .replace("zero", "0").replace(" ", "");
+
+                Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoComma);
+
+                if (m.find()) {
+                    try {
+                        String[] messages = message.getMessage().split(" ");
+                        String mention = "";
+                        for (String s : messages) {
+                            if (s.contains("@")) {
+                                mention = s;
+                                break;
+                            }
+                        }
+                        if (!mention.contains(m.group(1))) {
+                            if (SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
+                                long chatIDL = 0;
+                                String chatID = message.getTag("user-id");
+                                if (chatID != null) {
+                                    chatIDL = Long.parseLong(chatID);
+                                }
+                                Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), message.getSender(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), chatIDL, false, message);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                break;
+            }
             case "displayname":
             case "display_name": {
                 replacement = message.getDisplayName();
@@ -280,7 +325,7 @@ public class CommandHandler {
                 try {
                     pos = Integer.parseInt(levelArguments[0].trim());
                     if (pos < RequestsUtils.getSize()) {
-                        replacement = RequestsUtils.getLevel(pos, levelArguments[1].trim().toLowerCase(Locale.ROOT));
+                        replacement = RequestsUtils.getLevel(pos, levelArguments[1].trim().toLowerCase());
                     } else {
                         replacement = "";
                     }
@@ -530,7 +575,7 @@ public class CommandHandler {
 
         String condition = weatherObject.getString("main");
         String conditionDesc = weatherObject.getString("description");
-        switch (conditionDesc.toLowerCase(Locale.ROOT)) {
+        switch (conditionDesc.toLowerCase()) {
 
             case "thunderstorm with light rain":
                 condition = "Thunderstorms with Light Rain";

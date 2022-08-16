@@ -10,7 +10,6 @@ public class VideosPanel extends JPanel {
 
     private final JPanel buttonPanel = new JPanel();
     private int buttonWidth = 400;
-
     private final GridBagConstraints gbc = new GridBagConstraints();
     private final JPanel borderPanel = new JPanel(new BorderLayout());
     private final JScrollPane scrollPane = new SmoothScrollPane(borderPanel);

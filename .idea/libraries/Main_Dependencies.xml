@@ -24,6 +24,7 @@
       <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/twitch-api-wrapper-0.3-jar-with-dependencies.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/VBS_Shortcut_1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/jlayer-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Loquibot/loquibot Dependencies/dash4j.jar!/" />
     </CLASSES>
     <JAVADOC />
     <NATIVE>

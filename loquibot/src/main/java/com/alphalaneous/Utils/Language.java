@@ -1,9 +1,9 @@
 package com.alphalaneous.Utils;
 
-import com.alphalaneous.Swing.Components.CurvedButtonAlt;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.LangButton;
 import com.alphalaneous.Swing.Components.LangLabel;
-import com.alphalaneous.Swing.Components.RoundedJButton;
+import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.FileUtils.FileList;
 import com.alphalaneous.FileUtils.GetInternalFiles;
 import com.alphalaneous.Tabs.ChatbotTab;
@@ -181,17 +181,14 @@ public class Language {
         }).start();
     }
     private static void reloadLocale(){
-        for (int i = 0; i < LangButton.buttonList.size(); i++) {
-            LangButton.buttonList.get(i).refreshLocale();
+        for (LangButton button : LangButton.buttonList) {
+            button.refreshLocale();
         }
-        for (int i = 0; i < LangLabel.labelList.size(); i++) {
-            LangLabel.labelList.get(i).refreshLocale();
+        for (LangLabel langLabel : LangLabel.labelList) {
+            langLabel.refreshLocale();
         }
-        for (int i = 0; i < RoundedJButton.buttons.size(); i++) {
-            RoundedJButton.buttons.get(i).refreshLocale();
-        }
-        for (int i = 0; i < CurvedButtonAlt.buttonList.size(); i++) {
-            CurvedButtonAlt.buttonList.get(i).refreshLocale();
+        for (CurvedButton button : CurvedButton.buttons) {
+            button.refreshLocale();
         }
     }
 }

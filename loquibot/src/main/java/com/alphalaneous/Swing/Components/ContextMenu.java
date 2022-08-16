@@ -29,7 +29,6 @@ public class ContextMenu extends JPanel {
 
     }
     public void addButton(ContextButton button){
-
         height += 37; //Brute forced the right value, no idea why it's 37
         setBounds(0,0,175,height+5);
         add(button, gbc);
@@ -38,13 +37,7 @@ public class ContextMenu extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        GraphicsFunctions.roundCorners(g, getBackground(), getSize());
         super.paintComponent(g);
-        Dimension arcs = new Dimension(20,20);
-        int width = getWidth();
-        int height = getHeight();
-        Graphics2D graphics = (Graphics2D) g;
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setColor(getBackground());
-        graphics.fillRoundRect(0, 0, width, height, arcs.width, arcs.height);
     }
 }

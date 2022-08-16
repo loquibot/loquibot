@@ -327,7 +327,7 @@ public class RequestsUtils {
 							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().get();
 						break;
 					case "requester":
-						result = RequestsTab.getRequest(level).getLevelData().getRequester();
+						result = RequestsTab.getRequest(level).getLevelData().getDisplayName();
 						break;
 					case "difficulty":
 						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().difficulty().toString();
@@ -388,9 +388,6 @@ public class RequestsUtils {
 					case "vulgar":
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getContainsVulgar());
 						break;
-					case "password":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getPassword());
-						break;
 					default:
 						result = "Error: Invalid type.";
 
@@ -433,17 +430,71 @@ public class RequestsUtils {
 				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().id() == RequestsTab.getRequest(intArg - 1).getLevelData().getGDLevel().id()
 						&& (isMod || String.valueOf(user).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester()))) {
 					response = "@" + user + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
-					int sel = LevelButton.selectedID-1;
+
+					int sel = LevelButton.selectedID;
+
+					if(i == sel){
+						break;
+					}
+
 					RequestsTab.removeRequest(i);
 
+					if(i < sel){
+						RequestsTab.getLevelsPanel().setSelect(sel-1, false, false);
+					}
+
 					RequestFunctions.saveFunction();
-					RequestsTab.getLevelsPanel().setSelect(sel);
 					if (i == 0) {
 						StringSelection selection = new StringSelection(
 								String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
 						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 						clipboard.setContents(selection, selection);
 					}
+					break;
+				}
+			} catch (Exception ignored) {
+			}
+		}
+		RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
+		return response;
+	}
+
+	public static String replaceLatest(ChatMessage chatMessage){
+		String response = "";
+		for (int i = RequestsTab.getQueueSize() - 1; i >= 0; i--) {
+			try {
+				if (String.valueOf(chatMessage.getSender()).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester())) {
+					if (i == LevelButton.selectedID) {
+						return "";
+					}
+					String prevLevelName = RequestsTab.getRequest(i).getLevelData().getGDLevel().name();
+					long prevLevelID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
+
+					RequestsTab.removeRequest(i);
+
+					Requests.request(chatMessage.getSender(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getMessage(), chatMessage.getTag("id"),  Long.parseLong(chatMessage.getTag("user-id")), chatMessage);
+
+					for (int j = RequestsTab.getQueueSize(); j >= 0; j--) {
+						try {
+
+							System.out.println(chatMessage.getSender() + " | " + RequestsTab.getRequest(j).getRequester());
+
+							if (chatMessage.getSender().equalsIgnoreCase(RequestsTab.getRequest(j).getRequester())) {
+
+								System.out.println(j + " | " + i);
+
+								RequestsTab.movePosition(j, i);
+								RequestFunctions.saveFunction();
+								break;
+							}
+						} catch (Exception ignored) {
+						}
+					}
+
+
+					response = "@" + chatMessage.getSenderElseDisplay() + ", " + prevLevelName + " (" + prevLevelID + ") has been replaced with + " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + "(" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ").";
+					RequestFunctions.saveFunction();
+					break;
 				}
 			} catch (Exception ignored) {
 			}
@@ -453,15 +504,15 @@ public class RequestsUtils {
 	}
 
 	@SuppressWarnings("unused")
-	public static String removeLatest(String user) {
+	public static String removeLatest(ChatMessage message) {
 		String response = "";
 		for (int i = RequestsTab.getQueueSize() - 1; i >= 0; i--) {
 			try {
-				if (String.valueOf(user).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester())) {
+				if (String.valueOf(message.getSender()).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester())) {
 					if (i == LevelButton.selectedID) {
 						return "";
 					}
-					response = "@" + user + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
+					response = "@" + message.getSenderElseDisplay() + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
 					RequestsTab.removeRequest(i);
 					RequestFunctions.saveFunction();
 					break;
@@ -520,15 +571,8 @@ public class RequestsUtils {
 
 	public static int getPosFromID(long ID) {
 		for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-			if(!SettingsHandler.getSettings("basicMode").asBoolean()) {
-				if (RequestsTab.getLevelsPanel().getButton(i).getID() == ID) {
-					return i;
-				}
-			}
-			else {
-				if (RequestsTab.getLevelsPanel().getButtonBasic(i).getID() == ID) {
-					return i;
-				}
+			if (RequestsTab.getLevelsPanel().getButton(i).getID() == ID) {
+				return i;
 			}
 		}
 		return -1;
@@ -782,7 +826,7 @@ public class RequestsUtils {
 
 			int pages = ((existingCommands.size() - 1) / 20) + 1;
 
-			if (page > pages) return "@" + message.getSender() + ", No commands on page " + page;
+			if (page > pages) return "@" + message.getSenderElseDisplay() + ", No commands on page " + page;
 			if (page < 1) page = 1;
 			response.append(Utilities.format("@%s, Command List Page %s of %s | Type !help <command> for command help.", message.getSender(), page, pages)).append(" | ");
 

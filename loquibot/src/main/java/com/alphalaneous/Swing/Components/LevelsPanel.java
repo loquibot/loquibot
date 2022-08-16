@@ -79,10 +79,10 @@ public class LevelsPanel extends JPanel {
     }
 
     public LevelButton getButton(int i) {
-        return ((LevelButton) buttonPanel.getComponent(i));
-    }
-    public BasicLevelButton getButtonBasic(int i) {
-        return ((BasicLevelButton) buttonPanel.getComponent(i));
+        if(buttonPanel.getComponents().length > 0) {
+            return ((LevelButton) buttonPanel.getComponent(i));
+        }
+        return null;
     }
 
     public void removeRequest(int pos){
@@ -91,21 +91,31 @@ public class LevelsPanel extends JPanel {
 
     public void movePosition(int position, int newPosition) {
         long selectID = -1;
+        int selectPos = -1;
         if (newPosition >= RequestsTab.getQueueSize()) {
             newPosition = RequestsTab.getQueueSize() - 1;
         }
         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
             if (getButton(i).selected) {
                 selectID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
+                selectPos = i;
+                break;
             }
         }
         System.out.println("Position: " + position + " | newPosition: " + newPosition);
+
         buttonPanel.add(buttonPanel.getComponents()[position], gbc, newPosition);
-        for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+
+        if(newPosition < selectID){
+            setSelect(selectPos+1, false, false);
+        }
+
+
+        /*for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
             if (selectID == RequestsTab.getRequest(i).getLevelData().getGDLevel().id()) {
                 setSelect(i, false, false);
             }
-        }
+        }*/
         RequestFunctions.saveFunction();
     }
     public void setSelect(int position){
