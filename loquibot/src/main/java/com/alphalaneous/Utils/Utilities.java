@@ -29,8 +29,6 @@ import java.util.regex.Pattern;
 
 public class Utilities {
 
-
-
 	static {
 		try {
 			image = ImageIO.read(Objects.requireNonNull(Main.class.getClassLoader()

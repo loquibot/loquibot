@@ -7,7 +7,6 @@ public class LoquiBrowser implements AuthorizationCodeInstalledApp.Browser {
 
     BrowserWindow browserWindow;
 
-
     @Override
     public void browse(String s) {
         browserWindow = new BrowserWindow(s, true);
@@ -18,6 +17,4 @@ public class LoquiBrowser implements AuthorizationCodeInstalledApp.Browser {
     public void close(){
         if(browserWindow != null) browserWindow.close();
     }
-
-
 }

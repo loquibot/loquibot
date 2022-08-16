@@ -12,7 +12,6 @@ public class LightSliderUI extends BasicSliderUI {
 
     private final Color rangeColor = Defaults.ACCENT;
     private final BasicStroke stroke = new BasicStroke(2f);
-
     private transient boolean upperDragging;
 
     public LightSliderUI(JSlider b) {

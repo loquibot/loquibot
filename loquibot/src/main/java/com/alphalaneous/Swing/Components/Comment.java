@@ -172,9 +172,6 @@ public class Comment extends JPanel {
         setBackground(new Color(0,0,0,0));
         setPreferredSize(new Dimension(width, 28 + content.getPreferredSize().height));
     }
-    public int getContentHeight(){
-        return content.getPreferredSize().height;
-    }
 
     public void refresh(){
         setBackground(Defaults.COLOR3);

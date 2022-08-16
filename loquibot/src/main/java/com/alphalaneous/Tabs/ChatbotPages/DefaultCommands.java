@@ -16,10 +16,7 @@ public class DefaultCommands {
 	public static JPanel createPanel() {
 		listView = new ListView("$DEFAULT_COMMANDS_SETTINGS$");
 
-
-
 		return listView;
-
 	}
 
 	public static void loadCommands(){

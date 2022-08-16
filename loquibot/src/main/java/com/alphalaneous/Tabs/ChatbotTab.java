@@ -175,10 +175,6 @@ public class ChatbotTab {
 
 	}
 
-	public static void showSettings() {
-		chatbotPanel.setVisible(true);
-	}
-
 	private static JPanel createSeparator(){
 
 		JPanel panel = new JPanel(){
@@ -254,15 +250,13 @@ public class ChatbotTab {
 	private static class FunctionButton extends CurvedButton {
 
 		private final Callable<Void> method;
-		private final String text;
 		private ImageIcon icon;
 		private final LangLabel iconLabel;
 		private static final ArrayList<FunctionButton> functionButtons = new ArrayList<>();
-		private LangLabel label;
+		private final LangLabel label;
 
 		FunctionButton(String text, String icon, Callable<Void> method){
 			super("");
-			this.text = text;
 			this.method = method;
 
 			label = new LangLabel(text);

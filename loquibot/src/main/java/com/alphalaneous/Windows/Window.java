@@ -13,6 +13,8 @@ import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Tabs.SettingsTab;
 import com.alphalaneous.Theming.ThemedColor;
 import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Utils.Utilities;
+import com.sun.jna.platform.WindowUtils;
 import org.jdesktop.swingx.border.DropShadowBorder;
 
 import javax.swing.*;
@@ -44,16 +46,16 @@ public class Window {
     private static final CurvedButton updateButton = MediaShareTab.createButton("\uF11A", "Update Available");
     private static JPanel controlsPanel;
     private static final int width = 800, height = 660;
-    private static CurvedButton playButton = MediaShareTab.createButton("\uF184","Play/Pause");
-    private static JLabel duration = new JLabel();
-    private static JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 300, 0);
-    private static JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 10000, 0);
-    private static JLabel volumeLabel = new JLabel("\uF0E2");
+    private static final CurvedButton playButton = MediaShareTab.createButton("\uF184","Play/Pause");
+    private static final JLabel duration = new JLabel();
+    private static final JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 300, 0);
+    private static final JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 10000, 0);
+    private static final JLabel volumeLabel = new JLabel("\uF0E2");
 
 
-    private static CurvedButton button = MediaShareTab.createButton("\uF18F", "View Media Controls");
+    private static final CurvedButton button = MediaShareTab.createButton("\uF18F", "View Media Controls");
 
-    private static JPanel blankPanel = new JPanel(){{
+    private static final JPanel blankPanel = new JPanel(){{
         setBackground(new Color(0,0,0,0));
         setPreferredSize(new Dimension(40,40));
         setOpaque(false);
@@ -72,7 +74,6 @@ public class Window {
         windowFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         windowFrame.setMinimumSize(new Dimension(900, 500));
-        //windowFrame.setContentLayout(null);
 
         if(SettingsHandler.getSettings("window").exists()){
             String position = SettingsHandler.getSettings("window").asString();
@@ -88,7 +89,6 @@ public class Window {
 
         layeredContentPanel.setBounds(0, 0, width, height);
 
-        //tabPanel.setOpaque(false);
         tabPanel.setBounds(0, 0, 50, height-60);
         tabPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         tabPanel.setBackground(new ThemedColor("color6", tabPanel, ThemedColor.BACKGROUND));
@@ -140,7 +140,7 @@ public class Window {
             }
         });
         dialogBackgroundPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
-        //panel.setOpaque(false);
+
         backgroundColor.setBackground(new Color(0, 0, 0, 125));
         backgroundColor.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
         backgroundColor.setLayout(null);
@@ -170,7 +170,6 @@ public class Window {
         layeredContentPanel.add(fullPanel, 0, -1);
         layeredContentPanel.add(dialogBackgroundPanel, 1, -1);
         windowFrame.add(layeredContentPanel);
-
 
         controlsPanel = new JPanel(){
             public final int pixels = 10;
@@ -265,7 +264,6 @@ public class Window {
             MediaShare.setVolume(volumeSlider.getValue()/10000f);
             SettingsHandler.writeSettings("mediaVolume", String.valueOf(volumeSlider.getValue()/10000f));
         });
-
 
         controlsPanel.add(duration);
         controlsPanel.add(slider);

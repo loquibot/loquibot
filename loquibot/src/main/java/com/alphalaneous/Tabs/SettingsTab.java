@@ -65,11 +65,6 @@ public class SettingsTab {
 		generalPage.setVisible(true);
 		return null;
 	});
-	private static final SettingsButton messages = createButton("$MESSAGE_SETTINGS$", "\uF26F", () -> {
-		messagePage.setVisible(true);
-		//TestListView.loadIDs();
-		return null;
-	});
 	private static final SettingsButton outputs = createButton("$OUTPUTS_SETTINGS$", "\uF68D", () -> {
 		overlayPage.setVisible(true);
 		return null;
@@ -78,14 +73,7 @@ public class SettingsTab {
 		accountsPage.setVisible(true);
 		return null;
 	});
-	private static final SettingsButton commands = createButton("$COMMANDS_SETTINGS$", "\uF0B4", () -> {
-		//commandsPage.setVisible(true);
-		return null;
-	});
-	private static final SettingsButton cheers = createButton("$CHEERS_SETTINGS$", "\uF157", () -> {
-		//cheersPage.setVisible(true);
-		return null;
-	});
+
 	private static final SettingsButton filters = createButton("$FILTERS_SETTINGS$", "\uF309", () -> {
 		requestsPage.setVisible(true);
 		return null;
@@ -336,11 +324,6 @@ public class SettingsTab {
 
 	}
 
-	public static void showSettings() {
-		click(accounts);
-		settingsPanel.setVisible(true);
-	}
-
 	private static JPanel createSeparator(){
 
 		JPanel panel = new JPanel(){
@@ -416,13 +399,11 @@ public class SettingsTab {
 	private static class SettingsButton extends CurvedButton {
 
 		private final Callable<Void> method;
-		private final String text;
 		private final LangLabel label;
 
 
 		SettingsButton(String text, String icon, Callable<Void> method){
 			super("");
-			this.text = text;
 			this.method = method;
 
 			label = new LangLabel(text);

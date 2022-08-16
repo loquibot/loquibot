@@ -3,7 +3,6 @@ package com.alphalaneous.Utils;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.LangButton;
 import com.alphalaneous.Swing.Components.LangLabel;
-import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.FileUtils.FileList;
 import com.alphalaneous.FileUtils.GetInternalFiles;
 import com.alphalaneous.Tabs.ChatbotTab;

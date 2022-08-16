@@ -42,7 +42,6 @@ public class LogWindow {
         pane.setSelectedTextColor(Color.WHITE);
         pane.setFont(new Font("Consolas", Font.PLAIN, 14));
         setTabs(pane, 4);
-        //AlphaContainer alphaContainer = new AlphaContainer(pane);
 
         JTextPane commandArea = new JTextPane();
         commandArea.setBackground(new Color(39, 39, 39));
@@ -75,25 +74,19 @@ public class LogWindow {
             }
         });
 
-
-        //AlphaContainer commandAlphaContainer = new AlphaContainer(commandArea);
         scrollPane = new JScrollPane(pane);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(new Color(0,0,0));
-        //scrollPane.setPreferredSize(new Dimension(800, 476));
         scrollPane.setBorder(null);
 
         frame.add(scrollPane);
         frame.add(commandArea, BorderLayout.SOUTH);
-
-
 
         WindowUtils.setWindowAlpha(frame, 0.9f);
 
         MessageConsole mc = new MessageConsole(pane);
         mc.redirectOut(Color.WHITE, System.out);
         mc.redirectErr(Color.RED, null);
-
     }
 
     public static void toggleLogWindow(){
@@ -114,7 +107,6 @@ public class LogWindow {
         ArrayList<String> args = new ArrayList<>();
         Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(argString);
         while (m.find()) args.add(m.group(1).replace("\"", ""));
-
 
         switch (command){
 
@@ -148,14 +140,9 @@ public class LogWindow {
                 System.out.println("! That command doesn't exist!");
             }
         }
-
-        //System.out.println(text);
     }
 
-
-
-    public static void setTabs( final JTextPane textPane, int charactersPerTab)
-    {
+    public static void setTabs( final JTextPane textPane, int charactersPerTab) {
         FontMetrics fm = textPane.getFontMetrics( textPane.getFont() );
         int charWidth = fm.charWidth( ' ' );
         int tabWidth = charWidth * charactersPerTab;

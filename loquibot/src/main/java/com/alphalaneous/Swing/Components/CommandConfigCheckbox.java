@@ -282,12 +282,7 @@ public class CommandConfigCheckbox extends JPanel {
         helpButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
         helpButton.setBorder(BorderFactory.createEmptyBorder());
 
-        helpButton.addActionListener(e -> {
-            new Thread(() -> {
-                new BrowserWindow("https://loquibot.com/Docs.html");
-
-            }).start();
-        });
+        helpButton.addActionListener(e -> new Thread(() -> new BrowserWindow("https://loquibot.com/Docs.html")).start());
 
 
         CurvedButton cancelButton = new CurvedButton("$CANCEL$");
@@ -298,9 +293,7 @@ public class CommandConfigCheckbox extends JPanel {
         cancelButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
         cancelButton.setBorder(BorderFactory.createEmptyBorder());
 
-        cancelButton.addActionListener(e -> {
-            DialogBox.closeDialogBox();
-        });
+        cancelButton.addActionListener(e -> DialogBox.closeDialogBox());
 
         CurvedButton deleteButton = new CurvedButton("\uF0CE");
 

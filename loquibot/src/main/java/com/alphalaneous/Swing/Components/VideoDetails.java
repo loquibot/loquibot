@@ -75,11 +75,6 @@ public class VideoDetails extends JPanel {
         refreshUI();
     }
 
-    public void resizeAll(int height){
-        //if(youTubeButton.isVisible()) commentScrollPane.setBounds(0,descHeight + 310,510, height-350 - descHeight);
-        //else commentScrollPane.setBounds(0,descHeight + 200,510, height-240 - descHeight);
-    }
-
     private CurvedButton createButton(String icon, String tooltip) {
         CurvedButton button = new CurvedButton(icon, tooltip);
         button.setFont(Defaults.SYMBOLS.deriveFont(18f));

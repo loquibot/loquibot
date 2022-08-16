@@ -22,9 +22,7 @@ import java.io.IOException;
 
 public class BrowserWindow extends JFrame {
     private static final CefAppBuilder builder = new CefAppBuilder();
-    private static CefApp     cefApp_ = null;
     private static CefClient  client_ = null;
-
     private static boolean initialized = false;
     public static void init() {
         builder.setInstallDir(new File(Defaults.saveDirectory + "/loquibot/browser"));
@@ -33,6 +31,7 @@ public class BrowserWindow extends JFrame {
         CefSettings settings = new CefSettings();
         settings.windowless_rendering_enabled = false;
 
+        CefApp cefApp_;
         try {
             cefApp_ = builder.build();
             cefApp_.setSettings(settings);

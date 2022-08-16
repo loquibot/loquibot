@@ -1,8 +1,5 @@
 package com.alphalaneous.Swing.Components;
 
-import com.alphalaneous.Swing.Components.ContextButton;
-import com.alphalaneous.Swing.Components.ContextMenu;
-
 import javax.swing.*;
 
 public class TextContextMenu extends ContextMenu {

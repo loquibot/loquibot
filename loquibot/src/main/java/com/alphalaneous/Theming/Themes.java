@@ -15,20 +15,11 @@ import com.alphalaneous.Swing.ThemedComponents.ThemedIconCheckbox;
 import com.alphalaneous.Tabs.SettingsTab;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Utils.Utilities;
-import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.OfficerWindow;
 import com.alphalaneous.Windows.Window;
 
 import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
 
 import static com.alphalaneous.Utils.Defaults.defaultUI;
 import static com.alphalaneous.Utils.Defaults.settingsButtonUI;

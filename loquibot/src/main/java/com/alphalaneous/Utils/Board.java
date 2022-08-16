@@ -80,7 +80,7 @@ public class Board {
 			return String.valueOf(timeAfter - time);
 		} catch (GDClientException e) {
 			if(e.getCause().toString().equals("ActionFailedException") || e.getCause().toString().equals("HttpResponseException"))
-			return "Servers Down!";
+				return "Servers Down!";
 		}
 		return "Servers Down!";
 	}

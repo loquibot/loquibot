@@ -6,7 +6,6 @@ import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.JButtonUI;
-import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Utils.Utilities;
@@ -30,8 +29,8 @@ public class Onboarding {
 	private static final JButtonUI defaultUI = new JButtonUI();
 	private static final JLabel tutorialImage = new JLabel();
 
-	private static int width = 465;
-	private static int height = 512;
+	private static final int width = 465;
+	private static final int height = 512;
 
 	public static void createPanel() {
 
@@ -41,10 +40,8 @@ public class Onboarding {
 
 		tutorialImage.setBounds(0,0,width,height-60);
 
-
 		if(!Defaults.isLight) tutorialImage.setIcon(Assets.tutorial);
 		else tutorialImage.setIcon(invertImage(Assets.tutorial));
-
 
 		tutorialImage.setIcon(Assets.tutorial);
 		everything.add(tutorialImage);

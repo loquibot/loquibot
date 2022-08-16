@@ -125,17 +125,13 @@ public class ListView extends JPanel {
         setBounds(0,0,dimension.width - subtractWidth, dimension.height - subtractHeight);
         updateUI();
     }
-    public static JButtonUI buttonUI = new JButtonUI(){{
-        setBackground(Defaults.COLOR2);
-        setHover(Defaults.COLOR5);
-        setSelect(Defaults.COLOR2);
-    }};
+
     public void refreshUI(){
         for(Component component : buttonsPanel.getComponents()){
             if(component instanceof ListButton){
                 ((ListButton)component).setOpaque(false);
                 ((ListButton)component).setUI(settingsButtonUI);
-                ((ListButton)component).setForeground(Defaults.FOREGROUND_A);
+                component.setForeground(Defaults.FOREGROUND_A);
             }
         }
         if(button != null) {

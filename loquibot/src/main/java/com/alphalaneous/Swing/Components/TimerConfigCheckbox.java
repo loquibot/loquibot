@@ -124,9 +124,7 @@ public class TimerConfigCheckbox extends JPanel {
         intervalSlider.setUI(new LightSliderUI(intervalSlider));
         intervalSlider.setBackground(Defaults.COLOR3);
         intervalSlider.setBorder(BorderFactory.createEmptyBorder());
-        intervalSlider.addChangeListener(e -> {
-            intervalValue.setTextLangFormat("$INTERVAL$", intervalSlider.getValue());
-        });
+        intervalSlider.addChangeListener(e -> intervalValue.setTextLangFormat("$INTERVAL$", intervalSlider.getValue()));
         intervalSlider.setValue(interval);
         timerSettingsPanel.add(intervalText);
         timerSettingsPanel.add(intervalSlider);
@@ -157,9 +155,7 @@ public class TimerConfigCheckbox extends JPanel {
         linesSlider.setUI(new LightSliderUI(intervalSlider));
         linesSlider.setBackground(Defaults.COLOR3);
         linesSlider.setBorder(BorderFactory.createEmptyBorder());
-        linesSlider.addChangeListener(e -> {
-            linesSliderValue.setTextLangFormat("$LINES_TEXT$", linesSlider.getValue());
-        });
+        linesSlider.addChangeListener(e -> linesSliderValue.setTextLangFormat("$LINES_TEXT$", linesSlider.getValue()));
         linesSlider.setValue(lines);
 
         timerSettingsPanel.add(linesText);
@@ -233,9 +229,7 @@ public class TimerConfigCheckbox extends JPanel {
         helpButton.setFont(Defaults.SYMBOLS.deriveFont(14f));
         helpButton.setBorder(BorderFactory.createEmptyBorder());
 
-        helpButton.addActionListener(e -> {
-            new BrowserWindow("https://loquibot.com/Docs.html");
-        });
+        helpButton.addActionListener(e -> new BrowserWindow("https://loquibot.com/Docs.html"));
 
 
         CurvedButton cancelButton = new CurvedButton("$CANCEL$");
@@ -246,9 +240,7 @@ public class TimerConfigCheckbox extends JPanel {
         cancelButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
         cancelButton.setBorder(BorderFactory.createEmptyBorder());
 
-        cancelButton.addActionListener(e -> {
-            DialogBox.closeDialogBox();
-        });
+        cancelButton.addActionListener(e -> DialogBox.closeDialogBox());
 
         CurvedButton deleteButton = new CurvedButton("\uF0CE");
 

@@ -64,7 +64,6 @@ public class VideoDetailsPanel {
         if(mainPanel.getComponents().length > 0) {
             if(mainPanel.getComponents()[0] instanceof VideoDetails) {
                 mainPanel.getComponents()[0].setBounds(0, 0, 360, height);
-                ((VideoDetails) mainPanel.getComponents()[0]).resizeAll(height);
             }
             if(mainPanel.getComponents()[0] instanceof JLabel){
                 mainPanel.getComponents()[0].setBounds(95, height/2-30, 360, 50);

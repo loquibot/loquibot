@@ -1,13 +1,11 @@
 package com.alphalaneous.Utils;
 
-import com.alphalaneous.GD.Level;
 import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.VideoButton;
-import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -85,12 +83,6 @@ public class KeyListener extends SwingKeyAdapter {
 				}
 				if(key == SettingsHandler.getSettings("mediaShareSkipKeybind").asInteger()){
 					MediaShare.removeMedia(VideoButton.selectedID);
-				}
-				if(key == SettingsHandler.getSettings("mediaShareUndoKeybind").asInteger()){
-
-				}
-				if(key == SettingsHandler.getSettings("mediaShareRandomKeybind").asInteger()){
-
 				}
 				if(key == SettingsHandler.getSettings("mediaSharePauseKeybind").asInteger()){
 					MediaShare.togglePause();

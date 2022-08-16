@@ -1,11 +1,11 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Utils.Language;
-import com.alphalaneous.Swing.ThemedComponents.ThemedJButton;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
-public class LangButton extends ThemedJButton {
+public class LangButton extends JButton {
 	private String text;
 	public static ArrayList<LangButton> buttonList = new ArrayList<>();
 

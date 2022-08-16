@@ -19,12 +19,8 @@ import java.awt.event.*;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
 
 import static com.alphalaneous.Utils.Defaults.defaultUI;
@@ -400,11 +396,6 @@ public class RequestsTab {
         levelsPanel.setSelect(pos);
     }
 
-
-    public static void showMainPanel() {
-        windowPanel.setVisible(true);
-    }
-
     public static void showModPane(int pos) {
         if (getQueueSize() != 0) {
 
@@ -422,9 +413,7 @@ public class RequestsTab {
     }
 
     public static void refreshUI() {
-        //commentsPanel.refreshUI();
         levelsPanel.refreshUI();
-        //levelInfoPanel.refreshUI();
         AlphalaneousLabel.setForeground(Defaults.FOREGROUND_A);
         attributionsFrame.setBackground(Defaults.COLOR3);
         selectUI.setBackground(Defaults.COLOR4);
@@ -434,7 +423,6 @@ public class RequestsTab {
         buttonUI.setHover(Defaults.COLOR5);
         buttonUI.setSelect(Defaults.COLOR4);
         sideButtons.setBackground(Defaults.COLOR6);
-        //contentPanel.setBackground(Defaults.COLOR);
         buttonPanel.setBackground(Defaults.COLOR3);
         infoPanel.setBackground(Defaults.COLOR3);
         messageTextArea.refresh_();
@@ -469,13 +457,10 @@ public class RequestsTab {
     public static void resize(int width, int height){
         windowPanel.setBounds(0,0, width, height);
         contentPanel.setBounds(0,0,width,height);
-        //commentsPanel.resizeHeight(width - 425, height);
         buttonPanel.setBounds(width-130, 0, buttonPanel.getWidth(), height);
         iconPanel.setBounds(width - 125, height - 95, 80, 50);
         levelsPanel.resizePanel(width - 650, height-47);
         LevelDetailsPanel.setPositionAndHeight(width-650, height);
-        //levelInfoPanel.resetBounds(0, levelsPanel.getHeight(), levelsPanel.getWidth(), levelInfoPanel.getWindow().getHeight());
-
     }
 
     public static void setOfficerVisible(){

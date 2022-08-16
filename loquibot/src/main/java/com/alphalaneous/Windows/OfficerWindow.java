@@ -25,13 +25,9 @@ public class OfficerWindow {
     private static final CurvedButton submitButton = createCurvedButton("$GLOBALLY_SUBMIT$");
     private static final CurvedButton blockID = createCurvedButton("$GLOBALLY_BLOCK_ID$");
     private static final CurvedButton unblockID = createCurvedButton("$GLOBALLY_UNBLOCK_ID$");
-
-
     private static final LangLabel enterIDLabel = new LangLabel("$ENTER_ID$");
     private static final LangLabel reasonLabel = new LangLabel("$ENTER_GLOBALLY_BLOCK_REASON$");
     private static final LangLabel areYouSureLabel = new LangLabel("$SURE_GLOBALLY_UNBLOCK$");
-
-
 
     private static boolean unblock = false;
 

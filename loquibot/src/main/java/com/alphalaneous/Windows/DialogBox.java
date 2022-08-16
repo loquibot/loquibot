@@ -1,6 +1,7 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.Swing.Components.CurvedButton;
+import com.alphalaneous.Swing.Components.GraphicsFunctions;
 import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
@@ -33,14 +34,7 @@ public class DialogBox {
         DialogBox.disableClickThrough = disableClickThrough;
         panel = new JPanel() {
             protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                g2.setRenderingHints(qualityHints);
-                g.setColor(getBackground());
-                g2.fillRoundRect(1, 1, getSize().width - 2, getSize().height - 2, 20, 20);
-                g.setColor(Defaults.ACCENT);
-                g2.drawRoundRect(0, 0, getSize().width - 1, getSize().height - 1, 20, 20);
+                GraphicsFunctions.roundedDialog(g, getBackground(), getSize());
                 super.paintComponent(g);
             }
         };
@@ -57,14 +51,7 @@ public class DialogBox {
     public static String showDialogBox(String title, String info, String subInfo, String[] options, Object[] args) {
         panel = new JPanel() {
             protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                g2.setRenderingHints(qualityHints);
-                g.setColor(getBackground());
-                g2.fillRoundRect(1, 1, getSize().width - 2, getSize().height - 2, 20, 20);
-                g.setColor(Defaults.ACCENT);
-                g2.drawRoundRect(0, 0, getSize().width - 1, getSize().height - 1, 20, 20);
+                GraphicsFunctions.roundedDialog(g, getBackground(), getSize());
                 super.paintComponent(g);
             }
         };
