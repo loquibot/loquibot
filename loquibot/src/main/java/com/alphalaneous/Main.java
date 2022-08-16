@@ -26,6 +26,7 @@ import com.alphalaneous.Settings.ChannelPoints;
 import com.alphalaneous.Settings.Outputs;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Logs.LoggedID;
+import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
@@ -71,6 +72,7 @@ public class Main {
             throw new RuntimeException(e);
         }
         LogWindow.createWindow();
+        new Thread(BrowserWindow::init).start();
     }
 
     public static boolean programLoaded = false;

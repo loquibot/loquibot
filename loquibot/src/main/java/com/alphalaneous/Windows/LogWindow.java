@@ -2,11 +2,9 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Services.GeometryDash.Requests;
-import com.alphalaneous.Swing.Components.AlphaContainer;
-import com.alphalaneous.Swing.Components.SmoothScrollPane;
+import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utils.Utilities;
-import com.sun.jna.platform.DesktopWindow;
 import com.sun.jna.platform.WindowUtils;
 import org.json.JSONObject;
 
@@ -17,13 +15,10 @@ import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -145,7 +140,10 @@ public class LogWindow {
                 }
                 break;
             }
-
+            case "/browser": {
+                new BrowserWindow("https://google.com");
+                break;
+            }
             default: {
                 System.out.println("! That command doesn't exist!");
             }

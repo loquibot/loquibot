@@ -3,6 +3,7 @@ package com.alphalaneous.Services.GeometryDash;
 import com.alphalaneous.*;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Logs.LoggedID;
+import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Settings.BlockedIDs;
 import com.alphalaneous.Settings.Outputs;
@@ -21,8 +22,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,11 +41,9 @@ public class RequestFunctions {
     private static boolean didUndo = false;
 
     public static void openGDBrowser(int pos) {
-        try {
-            Utilities.openURL(new URI("http://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
-        } catch (URISyntaxException ex) {
-            ex.printStackTrace();
-        }
+        BrowserWindow browserWindow = new BrowserWindow("http://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().id());
+        browserWindow.setSize((int) (1920/1.4), (int) (1080/1.4));
+        browserWindow.setTitle("GDBrowser by Colon");
     }
 
     public static void skipFunction() {

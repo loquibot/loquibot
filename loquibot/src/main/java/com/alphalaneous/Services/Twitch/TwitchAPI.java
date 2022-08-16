@@ -6,9 +6,8 @@ import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.ChannelPointReward;
 import com.alphalaneous.Main;
-import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Settings.SettingsHandler;
-import com.alphalaneous.Swing.BasicBrowserWindow;
+import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Swing.Components.LevelButton;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Settings.Account;
@@ -420,7 +419,7 @@ public class TwitchAPI {
 					twitch.getClientId(), callbackUri, Scopes.USER_READ
 			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
 
-			BasicBrowserWindow basicBrowserWindow = new BasicBrowserWindow(authUrl.toString());
+			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
 
 			if (twitch.auth().awaitAccessToken()) {
 				SettingsHandler.writeSettings("oauth", twitch.auth().getAccessToken());
@@ -433,7 +432,7 @@ public class TwitchAPI {
 				System.out.println(twitch.auth().getAuthenticationError());
 
 			}
-			basicBrowserWindow.close();
+			browserWindow.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

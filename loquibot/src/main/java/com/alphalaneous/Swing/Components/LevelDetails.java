@@ -304,7 +304,7 @@ public class LevelDetails extends JPanel {
         prev.addActionListener(e -> {
             if(page > 0){
                 page--;
-                refreshComments(page, top, data.getGDLevel().id());
+                new Thread(() -> refreshComments(page, top, data.getGDLevel().id())).start();
             }
         });
 
@@ -316,7 +316,7 @@ public class LevelDetails extends JPanel {
             boolean success = refreshComments(page, top, data.getGDLevel().id());
             if(!success) {
                 page--;
-                refreshComments(page, top, data.getGDLevel().id());
+                new Thread(() -> refreshComments(page, top, data.getGDLevel().id())).start();
             }
         });
 
@@ -326,7 +326,7 @@ public class LevelDetails extends JPanel {
         topComments.addActionListener(e -> {
             page = 0;
             top = true;
-            refreshComments(page, true, data.getGDLevel().id());
+            new Thread(() -> refreshComments(page, true, data.getGDLevel().id())).start();
         });
 
         topComments.setBounds(135, commentScrollPane.getY()-40, 30, 30);
@@ -335,7 +335,7 @@ public class LevelDetails extends JPanel {
         newest.addActionListener(e -> {
             page = 0;
             top = false;
-            refreshComments(page, false, data.getGDLevel().id());
+            new Thread(() -> refreshComments(page, false, data.getGDLevel().id())).start();
         });
 
         newest.setBounds(170, commentScrollPane.getY()-40, 30, 30);

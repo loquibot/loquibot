@@ -1,11 +1,11 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Interactive.Timers.LoadTimers;
+import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Tabs.ChatbotPages.TimerSettings;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
 import com.alphalaneous.Utils.Defaults;
-import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -13,8 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -236,11 +234,7 @@ public class TimerConfigCheckbox extends JPanel {
         helpButton.setBorder(BorderFactory.createEmptyBorder());
 
         helpButton.addActionListener(e -> {
-            try {
-                Utilities.openURL(new URI("https://loquibot.com/Docs.html"));
-            } catch (URISyntaxException ex) {
-                ex.printStackTrace();
-            }
+            new BrowserWindow("https://loquibot.com/Docs.html");
         });
 
 

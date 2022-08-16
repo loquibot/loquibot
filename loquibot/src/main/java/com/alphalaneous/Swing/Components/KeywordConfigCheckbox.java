@@ -1,11 +1,11 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Interactive.Keywords.LoadKeywords;
+import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
 import com.alphalaneous.Utils.Defaults;
-import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 import org.apache.commons.text.StringEscapeUtils;
@@ -16,8 +16,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class KeywordConfigCheckbox extends JPanel {
@@ -235,11 +233,7 @@ public class KeywordConfigCheckbox extends JPanel {
         helpButton.setBorder(BorderFactory.createEmptyBorder());
 
         helpButton.addActionListener(e -> {
-            try {
-                Utilities.openURL(new URI("https://loquibot.com/Docs.html"));
-            } catch (URISyntaxException ex) {
-                ex.printStackTrace();
-            }
+            new BrowserWindow("https://loquibot.com/Docs.html");
         });
 
 

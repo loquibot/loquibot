@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: me.friwi:jogl-all:v2.4.0-rc-20210111">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/me/friwi/jogl-all/v2.4.0-rc-20210111/jogl-all-v2.4.0-rc-20210111.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/me/friwi/jogl-all/v2.4.0-rc-20210111/jogl-all-v2.4.0-rc-20210111-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/me/friwi/jogl-all/v2.4.0-rc-20210111/jogl-all-v2.4.0-rc-20210111-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
