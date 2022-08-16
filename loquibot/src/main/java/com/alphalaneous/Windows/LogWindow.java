@@ -6,6 +6,8 @@ import com.alphalaneous.Swing.Components.AlphaContainer;
 import com.alphalaneous.Swing.Components.SmoothScrollPane;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utils.Utilities;
+import com.sun.jna.platform.DesktopWindow;
+import com.sun.jna.platform.WindowUtils;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -21,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,35 +31,30 @@ import java.util.regex.Pattern;
 public class LogWindow {
 
     private static final JFrame frame = new JFrame();
-    private static SmoothScrollPane scrollPane;
-
+    private static JScrollPane scrollPane;
     public static void createWindow(){
 
         frame.setSize(new Dimension(800,500));
-        frame.setUndecorated(true);
         frame.setLayout(new BorderLayout());
-        frame.setIconImages(Main.getIconImages());
         frame.setTitle("loquibot - Console");
-        frame.setBackground(new Color(0,0,0,200));
-        frame.getRootPane().setOpaque(false);
-
+        frame.setBackground(new Color(12, 12, 12));
 
         JTextPane pane = new JTextPane();
-        pane.setBackground(new Color(0,0,0,0));
+        pane.setBackground(new Color(12, 12, 12));
         pane.setBorder(BorderFactory.createEmptyBorder());
         pane.setForeground(Color.WHITE);
-        pane.setSelectionColor(Color.WHITE);
-        pane.setSelectedTextColor(Color.BLACK);
+        pane.setSelectionColor(new Color(132, 132, 132));
+        pane.setSelectedTextColor(Color.WHITE);
         pane.setFont(new Font("Consolas", Font.PLAIN, 14));
         setTabs(pane, 4);
-        AlphaContainer alphaContainer = new AlphaContainer(pane);
+        //AlphaContainer alphaContainer = new AlphaContainer(pane);
 
         JTextPane commandArea = new JTextPane();
-        commandArea.setBackground(new Color(0,0,0));
+        commandArea.setBackground(new Color(39, 39, 39));
         commandArea.setBorder(BorderFactory.createEmptyBorder());
         commandArea.setForeground(Color.WHITE);
-        commandArea.setSelectionColor(Color.WHITE);
-        commandArea.setSelectedTextColor(Color.BLACK);
+        commandArea.setSelectionColor(new Color(132, 132, 132));
+        commandArea.setSelectedTextColor(Color.WHITE);
         commandArea.setFont(new Font("Consolas", Font.PLAIN, 14));
         commandArea.setPreferredSize(new Dimension(800, 24));
 
@@ -83,25 +81,19 @@ public class LogWindow {
         });
 
 
-        AlphaContainer commandAlphaContainer = new AlphaContainer(commandArea);
-        scrollPane = new SmoothScrollPane(alphaContainer);
-        scrollPane.setHorizontalScrollEnabled(true);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBackground(new Color(0,0,0,200));
-        scrollPane.setPreferredSize(new Dimension(800, 476));
+        //AlphaContainer commandAlphaContainer = new AlphaContainer(commandArea);
+        scrollPane = new JScrollPane(pane);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBackground(new Color(0,0,0));
+        //scrollPane.setPreferredSize(new Dimension(800, 476));
         scrollPane.setBorder(null);
 
-        frame.add(scrollPane, BorderLayout.NORTH);
-        frame.add(commandAlphaContainer, BorderLayout.SOUTH);
+        frame.add(scrollPane);
+        frame.add(commandArea, BorderLayout.SOUTH);
 
-        frame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                scrollPane.setPreferredSize(new Dimension(800, frame.getPreferredSize().height-24));
 
-            }
-        });
+
+        WindowUtils.setWindowAlpha(frame, 0.9f);
 
         MessageConsole mc = new MessageConsole(pane);
         mc.redirectOut(Color.WHITE, System.out);
@@ -110,7 +102,10 @@ public class LogWindow {
     }
 
     public static void toggleLogWindow(){
+        frame.setLocationRelativeTo(Window.getWindow());
         frame.setVisible(!frame.isVisible());
+        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+        frame.setIconImages(Main.getIconImages());
     }
 
     public static JFrame getWindow(){

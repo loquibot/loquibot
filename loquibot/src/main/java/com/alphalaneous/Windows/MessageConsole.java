@@ -24,10 +24,9 @@ import javax.swing.text.*;
  */
 public class MessageConsole
 {
-	private JTextComponent textComponent;
-	private Document document;
-	private boolean isAppend;
-	private DocumentListener limitLinesListener;
+	private final JTextComponent textComponent;
+	private final Document document;
+	private final boolean isAppend;
 
 	public MessageConsole(JTextComponent textComponent)
 	{

@@ -62,7 +62,14 @@ import java.util.logging.Logger;
 public class Main {
 
     static {
+        System.setProperty("sun.java2d.noddraw", "true");
         BackwardsCompatibilityLayer.setNewLocation();
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
         LogWindow.createWindow();
     }
 
