@@ -52,9 +52,9 @@ public class Auth {
 
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
 
-        LoquiBrowser browser = new LoquiBrowser();
+        //LoquiBrowser browser = new LoquiBrowser();
 
-        Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver, browser).authorize("user");
+        Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
 
         if(refresh) {
             Path originalPath = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore);
@@ -62,7 +62,7 @@ public class Auth {
             Files.move(tempPath, originalPath, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        browser.close();
+        //browser.close();
         return credential;
     }
 

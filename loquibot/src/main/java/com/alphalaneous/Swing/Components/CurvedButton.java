@@ -47,6 +47,9 @@ public class CurvedButton extends JButton {
 				setToolTipText(Language.setLocale(tooltipText));
 			}
 		}
+		else{
+			setToolTipText(null);
+		}
 
 
 		addMouseListener(new MouseAdapter() {
@@ -71,7 +74,14 @@ public class CurvedButton extends JButton {
 	}
 
 	public void refreshLocale(){
-		setToolTipText(Language.setLocale(tooltipText));
+		if(tooltipText != null){
+			if(!tooltipText.equalsIgnoreCase("")) {
+				setToolTipText(Language.setLocale(tooltipText));
+			}
+		}
+		else{
+			setToolTipText(null);
+		}
 		setText(Language.setLocale(identifier));
 	}
 

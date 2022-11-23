@@ -437,6 +437,32 @@ public class TwitchAPI {
 			e.printStackTrace();
 		}
 	}
+
+	public static String getOauth() {
+		try {
+			Twitch twitch = new Twitch();
+			URI callbackUri = new URI("http://localhost:23522");
+
+			twitch.setClientId(clientID);
+
+			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
+					twitch.getClientId(), callbackUri, Scopes.USER_READ
+			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
+
+			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
+
+			if (twitch.auth().awaitAccessToken()) {
+				return twitch.auth().getAccessToken();
+			} else {
+				System.out.println(twitch.auth().getAuthenticationError());
+			}
+			browserWindow.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public static String setTitle(String title){
 		JSONObject newChannelInfo = new JSONObject();
 		newChannelInfo.put("title", title);

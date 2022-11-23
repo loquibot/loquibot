@@ -1,5 +1,6 @@
 package com.alphalaneous.Tabs;
 
+import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Settings.*;
 import com.alphalaneous.Settings.Logs.RequestsLog;
@@ -20,6 +21,8 @@ public class SettingsTab {
 	private static final JPanel content = new JPanel();
 	public static final JButtonUI selectUI = new JButtonUI();
 	private static final JPanel generalPage = Requests.createPanel();
+
+	private static final JPanel modsPage = Modifications.createPanel();
 	private static final JPanel messagePage = Messages.createPanel();
 	private static final JPanel overlayPage = Outputs.createPanel();
 	private static final JPanel accountsPage = Account.createPanel();
@@ -32,6 +35,8 @@ public class SettingsTab {
 	private static final JPanel blockedCreatorsPage = BlockedCreators.createPanel();
 	private static final JPanel loggedIDsPage = RequestsLog.createPanel();
 	private static final JPanel devPage = Developer.createPanel();
+
+	private static final JPanel reportedIDsPage = ReportedIDs.createPanel();
 
 	private static final JPanel mediaSharePage = MediaShare.createPanel();
 	private static final JPanel mediaShareKeybindsPage = MediaShareShortcuts.createPanel();
@@ -63,6 +68,10 @@ public class SettingsTab {
 
 	private static final SettingsButton requests = createButton("$REQUESTS_SETTINGS$", "\uF26F", () -> {
 		generalPage.setVisible(true);
+		return null;
+	});
+	private static final SettingsButton mods = createButton("$MODS_SETTINGS$", "\uF1B2", () -> {
+		modsPage.setVisible(true);
 		return null;
 	});
 	private static final SettingsButton outputs = createButton("$OUTPUTS_SETTINGS$", "\uF68D", () -> {
@@ -103,8 +112,13 @@ public class SettingsTab {
 		RequestsLog.loadIDs();
 		return null;
 	});
-	private static final SettingsButton developer = createButton("$DEVELOPER_SETTINGS$", "\uF0D6", () -> {
+	private static final SettingsButton developer = createButton("$DEVELOPER_SETTINGS$", "\uF114", () -> {
 		devPage.setVisible(true);
+		return null;
+	});
+	private static final SettingsButton reportedIDs = createButton("$REPORTED_ID_SETTINGS$", "\uF04A", () -> {
+		reportedIDsPage.setVisible(true);
+		ReportedIDs.loadIDs();
 		return null;
 	});
 	private static final SettingsButton mediaShare = createButton("$MEDIA_SHARE_SETTINGS$", "\uF03D", () -> {
@@ -184,6 +198,7 @@ public class SettingsTab {
 		content.setLayout(null);
 
 		content.add(generalPage);
+		content.add(modsPage);
 		content.add(messagePage);
 		content.add(overlayPage);
 		content.add(accountsPage);
@@ -196,6 +211,7 @@ public class SettingsTab {
 		content.add(blockedCreatorsPage);
 		content.add(loggedIDsPage);
 		content.add(devPage);
+		content.add(reportedIDsPage);
 		content.add(mediaSharePage);
 		content.add(mediaShareKeybindsPage);
 		content.add(languagePage);
@@ -205,6 +221,7 @@ public class SettingsTab {
 		content.add(termsPage);
 
 		generalPage.setVisible(true);
+		modsPage.setVisible(false);
 		overlayPage.setVisible(false);
 		messagePage.setVisible(false);
 		accountsPage.setVisible(false);
@@ -217,6 +234,7 @@ public class SettingsTab {
 		blockedCreatorsPage.setVisible(false);
 		loggedIDsPage.setVisible(false);
 		devPage.setVisible(false);
+		reportedIDsPage.setVisible(false);
 		mediaSharePage.setVisible(false);
 		mediaShareKeybindsPage.setVisible(false);
 		legalPage.setVisible(false);
@@ -240,6 +258,7 @@ public class SettingsTab {
 		buttons.add(createSeparator(), gbc);
 		buttons.add(GDSection, gbc);
 		buttons.add(requests, gbc);
+		buttons.add(mods, gbc);
 		//buttons.add(messages, gbc);
 		buttons.add(filters, gbc);
 		buttons.add(outputs, gbc);
@@ -251,10 +270,12 @@ public class SettingsTab {
 		if(SettingsHandler.getSettings("isDev").asBoolean()) {
 			buttons.add(developer, gbc);
 		}
-		buttons.add(createSeparator(), gbc);
-		buttons.add(mediaShareSection, gbc);
-		buttons.add(mediaShare, gbc);
-		buttons.add(mediaShareKeybinds, gbc);
+		buttons.add(reportedIDs, gbc);
+		reportedIDs.setVisible(false);
+		//buttons.add(createSeparator(), gbc);
+		//buttons.add(mediaShareSection, gbc);
+		//buttons.add(mediaShare, gbc);
+		//buttons.add(mediaShareKeybinds, gbc);
 		buttons.add(createSeparator(), gbc);
 		buttons.add(noticesSection, gbc);
 		buttons.add(legal, gbc);
@@ -273,6 +294,9 @@ public class SettingsTab {
 		Window.add(settingsPanel, Assets.settings, () -> click(accounts));
 		refreshSettingsButtons();
 
+	}
+	public static void showReportedIDsTab(){
+		reportedIDs.setVisible(true);
 	}
 
 	public static void refreshUI() {

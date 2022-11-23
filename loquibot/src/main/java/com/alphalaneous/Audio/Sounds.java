@@ -58,6 +58,7 @@ public class Sounds {
 		for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
 			((Sound) ((Map.Entry) stringSoundEntry).getValue()).stopSound();
 		}
+		Sounds.sounds.clear();
 	}
 
 	public static class Sound {
@@ -91,6 +92,7 @@ public class Sounds {
 						}
 						mp3player = new Player(inp);
 						mp3player.play();
+						inp.close();
 					}
 
 				} catch (Exception f) {
@@ -99,7 +101,7 @@ public class Sounds {
 
 				}
 				complete = true;
-				Sounds.sounds.remove(UUID, this);
+				//Sounds.sounds.remove(UUID, this);
 			}).start();
 
 		}

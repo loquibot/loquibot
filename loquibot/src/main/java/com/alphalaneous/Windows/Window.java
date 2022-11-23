@@ -75,11 +75,13 @@ public class Window {
 
         windowFrame.setMinimumSize(new Dimension(900, 500));
 
-        if(SettingsHandler.getSettings("window").exists()){
+        if(SettingsHandler.getSettings("window").exists() && !SettingsHandler.getSettings("alwaysCenter").asBoolean()){
+
             String position = SettingsHandler.getSettings("window").asString();
             int winX = Integer.parseInt(position.split(",")[0]);
             int winY = Integer.parseInt(position.split(",")[1]);
             windowFrame.setLocation(winX, winY);
+
         }
         else{
             windowFrame.setLocationRelativeTo(null);
@@ -210,7 +212,7 @@ public class Window {
         playButton.addActionListener(e -> MediaShare.togglePause());
 
         button.setPreferredSize(new Dimension(40,40));
-        updatePanel.add(button);
+        //updatePanel.add(button);
 
         button.addActionListener(e -> controlsPanel.setVisible(!controlsPanel.isVisible()));
 

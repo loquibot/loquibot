@@ -217,7 +217,7 @@ public class MediaShareTab {
         contentPanel.add(buttonPanel);
         windowPanel.add(contentPanel);
         windowPanel.setBounds(0,0, 100, 100);
-        Window.add(windowPanel, "\uF03D");
+        //Window.add(windowPanel, "\uF03D");
     }
 
 

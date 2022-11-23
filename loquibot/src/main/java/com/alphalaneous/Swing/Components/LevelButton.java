@@ -180,7 +180,7 @@ public class LevelButton extends CurvedButton {
 			lName.setFont(Defaults.MAIN_FONT.deriveFont(14f));
 			lName.setBounds(50, -1, (int) lName.getPreferredSize().getWidth() + 5, 30);
 
-			logo.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 25, 0, 30, 30);
+			logo.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 25, 0, 30, 90);
 
 			int pos = 0;
 
@@ -481,7 +481,7 @@ public class LevelButton extends CurvedButton {
 	void resizeButton() {
 		moveUp.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 34, 0, 25, 30);
 		moveDown.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 34, 30, 25, 30);
-		logo.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 25, 0, 30, 30);
+		logo.setBounds(RequestsTab.getLevelsPanel().getButtonWidth() - 25, 0, 30, 90);
 
 		info.setBounds(50, 60, RequestsTab.getLevelsPanel().getButtonWidth() - 100, 50);
 		setPreferredSize(new Dimension(RequestsTab.getLevelsPanel().getButtonWidth()-50, getHeight()));

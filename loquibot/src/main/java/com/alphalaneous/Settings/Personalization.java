@@ -33,6 +33,8 @@ public class Personalization {
 
         settingsPage.addCheckbox("$ALWAYS_ON_TOP$", "$ON_TOP_DESCRIPTION$", "onTop", Personalization::setOnTop);
         settingsPage.addCheckbox("$DISABLE_FOCUS$", "$DISABLE_FOCUS_DESCRIPTION$", "disableFocus", Personalization::setFocusable);
+        settingsPage.addCheckbox("$ALWAYS_CENTER$", "$ALWAYS_CENTER_DESCRIPTION$","alwaysCenter");
+
         settingsPage.addCheckbox("$RUN_AT_STARTUP$", "$RUN_AT_STARTUP_DESCRIPTION$","runAtStartup", () -> {
             if(SettingsHandler.getSettings("installPath").exists()){
                 Paths.get(SettingsHandler.getSettings("installPath").asString());

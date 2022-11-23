@@ -7,6 +7,7 @@ import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Tabs.SettingsTab;
 import com.alphalaneous.Utils.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,8 +25,13 @@ public class ServerBot {
 	private BufferedReader in;
 	private static ServerBot currentServerBot;
 	private boolean disconnected = false;
+	private boolean isOfficer = false;
 	public ServerBot(){
 		currentServerBot = this;
+	}
+
+	public boolean isOfficer(){
+		return isOfficer;
 	}
 
 	public static ServerBot getCurrentServerBot(){
@@ -68,6 +74,7 @@ public class ServerBot {
 			String event = "";
 			try {
 				JSONObject object = new JSONObject(inputLine);
+				if(object.isEmpty()) continue;
 				if (object.get("event") != null) {
 					event = object.get("event").toString().replaceAll("\"", "");
 				}
@@ -79,6 +86,8 @@ public class ServerBot {
 						System.out.println("> Connected to loquibot Servers");
 						String channel = object.getString("username");
 						if(object.optBoolean("is_officer")){
+							isOfficer = true;
+							SettingsTab.showReportedIDsTab();
 							RequestsTab.setOfficerVisible();
 						}
 						if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
@@ -100,6 +109,15 @@ public class ServerBot {
 							long ID = IDs.getJSONObject(i).getLong("id");
 							String reason = IDs.getJSONObject(i).getString("reason");
 							Requests.globallyBlockedIDs.put(ID, reason);
+						}
+						break;
+					}
+					case "reported_ids_updated" : {
+						JSONArray IDs = object.getJSONObject("ids").getJSONArray("reportedIDs");
+						Requests.reportedIDs.clear();
+						for (int i = 0; i < IDs.length(); i++) {
+							System.out.println(IDs.getJSONObject(i));
+							Requests.reportedIDs.add(IDs.getJSONObject(i));
 						}
 						break;
 					}

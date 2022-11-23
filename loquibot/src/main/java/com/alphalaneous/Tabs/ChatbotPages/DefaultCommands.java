@@ -25,7 +25,7 @@ public class DefaultCommands {
 		}
 		ArrayList<CommandData> commands = new ArrayList<>(LoadCommands.getDefaultCommands());
 		if(SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) commands.addAll(LoadCommands.getGeometryDashCommands());
-		commands.addAll(LoadCommands.getMediaShareCommands());
+		//commands.addAll(LoadCommands.getMediaShareCommands());
 
 		ArrayList<CommandData> alphabetizedCommands = Utilities.alphabetizeCommandData(commands);
 

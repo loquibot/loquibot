@@ -1,7 +1,8 @@
 package com.alphalaneous;
 
 import com.alphalaneous.ChatBot.ServerBot;
-import com.alphalaneous.GD.Global;
+import com.alphalaneous.Memory.Global;
+import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Services.GeometryDash.Requests;
@@ -40,10 +41,10 @@ import com.alphalaneous.Utils.*;
 import com.alphalaneous.Utils.KeyListener;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -93,6 +94,32 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
+
+        //Default Path = C:\Program Files (x86)\Steam\steamapps\common\Geometry Dash\GeometryDash.exe
+        /*
+        Have option to search for path (may take a moment)
+        Find Mod Loader
+         */
+        //
+
+        /*String path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Geometry Dash\\GeometryDash.exe";
+        boolean skip = false;
+        if(!Files.exists(Paths.get(path))){
+            path = Find.findGDPath();
+            if(path == null) {
+                DialogBox.showDialogBox("Error", "Geometry Dash Not Installed!", "", new String[] {"Okay"});
+                skip = true;
+            }
+        }
+        if(!skip) {
+            if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\hackpro.dll"))) {
+                System.out.println("Is MegaHack");
+            }
+            if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\ToastedMarshmellow.dll"))) {
+                System.out.println("Is HackerMode");
+            }
+        }*/
+
         setUI();
 
         new Thread(() -> {
@@ -113,8 +140,8 @@ public class Main {
             SettingsHandler.writeSettings("twitchEnabled", "true");
         }
 
-        FindLoquibot.setup();
-        FindLoquibot.findPath();
+        Find.setup();
+        Find.findPath();
 
         try {
             URI originalURI = new URI("ws://127.0.0.1:18562");
@@ -366,11 +393,27 @@ public class Main {
             startSaveLoop();
             System.out.println("> Save loop Started");
 
+            if(!SettingsHandler.getSettings("dontShowDonate").asBoolean()) {
+                new Thread(() -> {
+                    String choice = DialogBox.showDialogBox("Help Out Alpha!", "Hosting loquibot costs me some money.", "Any donation is appreciated!", new String[]{"Donate", "No", "Don't Show"});
+                    if (choice.equalsIgnoreCase("Donate")) {
+                        try {
+                            com.alphalaneous.Utils.Utilities.openURL(new URI("https://streamlabs.com/alphalaneous/tip"));
+                        } catch (URISyntaxException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    if (choice.equalsIgnoreCase("Don't Show")) {
+                        SettingsHandler.writeSettings("dontShowDonate", "true");
+                    }
+                }).start();
+            }
+
             Global.onEnterLevel(() -> {
                 if(SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
-                    if (Memory.isInFocus()) {
-                        String levelName = com.alphalaneous.GD.Level.getLevelName();
-                        long levelID = com.alphalaneous.GD.Level.getID();
+                    if (MemoryHelper.isInFocus()) {
+                        String levelName = com.alphalaneous.Memory.Level.getLevelName();
+                        long levelID = com.alphalaneous.Memory.Level.getID();
 
                         if (lastID == levelID) {
                             return;
@@ -590,7 +633,7 @@ public class Main {
             CommandData.saveCustomCommands();
             CommandData.saveDefaultCommands();
             CommandData.saveGeometryDashCommands();
-            CommandData.saveMediaShareCommands();
+            //CommandData.saveMediaShareCommands();
             TimerData.saveCustomTimers();
             KeywordData.saveCustomKeywords();
             ChannelPointData.saveCustomPoints();

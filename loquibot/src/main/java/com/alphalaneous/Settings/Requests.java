@@ -20,7 +20,6 @@ public class Requests {
         settingsPage.addCheckbox("$AUTOMATIC_SONG_DOWNLOADS$", "", "autoDL");
         settingsPage.addCheckbox("$ANNOUNCE_NOW_PLAYING$", "", "announceNP", true, null);
         settingsPage.addCheckbox("$DISABLE_NOW_PLAYING$", "", "disableNP");
-        settingsPage.addCheckbox("$IN_GAME_NOW_PLAYING$", "$IN_GAME_NOW_PLAYING_DESC$", "inGameNowPlaying");
         settingsPage.addCheckbox("$DISABLE_QUEUE_FULL$", "", "disableQF");
         settingsPage.addCheckbox("$DISABLE_CONFIRMATION$", "", "disableConfirm");
         settingsPage.addCheckbox("$DISABLE_SHOW_POSITION$", "$DISABLE_SHOW_POSITION_DESC$", "disableShowPosition");

@@ -241,8 +241,8 @@ public class DefaultCommandFunctions {
             if(message.getArgs().length == 1){
                 return Utilities.format("$NO_USER_MESSAGE$", message.getSenderElseDisplay());
             }
-            LinkPermit.giveLinkPermit(message.getArgs()[1]);
-            return Utilities.format("$PERMIT_SUCCESS_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+            LinkPermit.giveLinkPermit(message.getArgs()[1].replace("@", ""));
+            return Utilities.format("$PERMIT_SUCCESS_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1].replace("@", ""));
         }
         return "";
     }

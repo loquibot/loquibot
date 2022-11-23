@@ -47,11 +47,11 @@ public class CommandHandler {
         CommandData foundCommand = null;
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
-        String mediaShareCommandPrefix = "!";
+        //String mediaShareCommandPrefix = "!";
 
         if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
         if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
-        if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
+        //if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
         for (CommandData command : LoadCommands.getDefaultCommands()) {
             if ((message.getMessage() + " ").toLowerCase().startsWith(defaultCommandPrefix + command.getCommand().toLowerCase() + " ")) {
@@ -67,14 +67,14 @@ public class CommandHandler {
                 }
             }
         }
-        if(foundCommand == null) {
-            for (CommandData command : LoadCommands.getMediaShareCommands()) {
-                if ((message.getMessage() + " ").toLowerCase().startsWith(mediaShareCommandPrefix + command.getCommand().toLowerCase() + " ")) {
-                    foundCommand = command;
-                    break;
-                }
-            }
-        }
+        //if(foundCommand == null) {
+            //for (CommandData command : LoadCommands.getMediaShareCommands()) {
+            //    if ((message.getMessage() + " ").toLowerCase().startsWith(mediaShareCommandPrefix + command.getCommand().toLowerCase() + " ")) {
+            //        foundCommand = command;
+            //        break;
+            //    }
+            //}
+        //}
         if(foundCommand == null) {
             for (CommandData command : LoadCommands.getCustomCommands()) {
                 if ((message.getMessage() + " ").toLowerCase().startsWith(command.getCommand().toLowerCase() + " ")) {

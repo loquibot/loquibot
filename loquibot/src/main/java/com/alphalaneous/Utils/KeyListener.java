@@ -1,15 +1,18 @@
 package com.alphalaneous.Utils;
 
 import com.alphalaneous.Interactive.MediaShare.MediaShare;
+import com.alphalaneous.Memory.Hacks;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Main;
+import com.alphalaneous.Settings.Modifications;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.KeybindButton;
+import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Swing.Components.VideoButton;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.SwingKeyAdapter;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.SwingKeyAdapter;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -86,6 +89,14 @@ public class KeyListener extends SwingKeyAdapter {
 				}
 				if(key == SettingsHandler.getSettings("mediaSharePauseKeybind").asInteger()){
 					MediaShare.togglePause();
+				}
+				if(key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()){
+					boolean isNoclip = SettingsHandler.getSettings("safeNoclipHack").asBoolean();
+
+					SettingsHandler.writeSettings("safeNoclipHack", String.valueOf(!isNoclip));
+					SettingsPage.CheckBox.resetCheckbox("safeNoclipHack");
+					Modifications.setSafeMode();
+					Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
 				}
 			}
 			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {

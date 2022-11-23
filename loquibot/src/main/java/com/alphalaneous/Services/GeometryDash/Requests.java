@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -42,6 +43,8 @@ public class Requests {
 
     public static volatile boolean requestsEnabled = true;
     public static HashMap<Long, String> globallyBlockedIDs = new HashMap<>();
+    public static List<JSONObject> reportedIDs = Collections.synchronizedList(new ArrayList<>());
+
     private static final HashMap<Long, Integer> addedLevels = new HashMap<>();
     private static final HashMap<String, Integer> userStreamLimitMap = new HashMap<>();
     private static final Path logged = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
@@ -263,16 +266,18 @@ public class Requests {
                 else levelData.setDisplayName(finalChatMessage.getSender());
 
                 if (!bypass) {
-                    if (checkList(level.creatorName(), "\\loquibot\\blockedGDUsers.txt")) {
-                        sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", finalUser), levelData.isYouTube());
-                        return;
+                    if(level.creatorName().isPresent()) {
+                        if (checkList(level.creatorName().get(), "\\loquibot\\blockedGDUsers.txt")) {
+                            sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", finalUser), levelData.isYouTube());
+                            return;
+                        }
                     }
                     if (SettingsHandler.getSettings("rated").asBoolean() && !(level.stars() > 0)) {
                         sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", finalUser), levelData.isYouTube());
                         return;
                     }
                     if (SettingsHandler.getSettings("unrated").asBoolean() && level.stars() > 0) {
-                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", finalUser),levelData.isYouTube());
+                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", finalUser), levelData.isYouTube());
                         return;
                     }
                     if (SettingsHandler.getSettings("minObjectsOption").asBoolean() && level.objectCount() < SettingsHandler.getSettings("minObjects").asInteger()) {
@@ -608,17 +613,22 @@ public class Requests {
     }
 
     private static boolean checkList(Object object, String path) {
-        String value = String.valueOf(object);
+        String value = null;
         if (object instanceof String) {
             value = (String) object;
         }
+        else{
+            value = String.valueOf(object);
+        }
+
         Path pathA = Paths.get(Defaults.saveDirectory + path);
         if (Files.exists(pathA)) {
             Scanner sc;
             try {
                 sc = new Scanner(pathA.toFile());
                 while (sc.hasNextLine()) {
-                    if (value.equals(sc.nextLine())) {
+                    String line = sc.nextLine().trim();
+                    if (value.equalsIgnoreCase(line)) {
                         sc.close();
                         return true;
                     }

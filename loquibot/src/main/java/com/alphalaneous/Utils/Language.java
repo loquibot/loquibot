@@ -110,7 +110,11 @@ public class Language {
                     }
                 }
             }
-
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        try {
             GetInternalFiles getInternalFiles = new GetInternalFiles("Languages/");
             FileList files = getInternalFiles.getFiles();
 

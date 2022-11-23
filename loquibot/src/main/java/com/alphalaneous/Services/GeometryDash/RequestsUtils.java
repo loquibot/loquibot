@@ -22,6 +22,7 @@ import jdash.common.Difficulty;
 import jdash.common.Length;
 import jdash.common.entity.GDLevel;
 import jdash.common.entity.GDSong;
+import jdash.common.entity.GDUserStats;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -40,8 +41,19 @@ public class RequestsUtils {
 
 	static boolean bwomp = false;
 
-	public static JSONObject getInfoObject(LevelData data){
+
+	public static JSONObject getInfoObject(LevelData data) {
+		return getInfoObject(data, false);
+
+	}
+		public static JSONObject getInfoObject(LevelData data, boolean forGD){
 		JSONObject object = new JSONObject();
+		if(forGD){
+			object.put("service", "gd");
+		}
+		else{
+			object.put("service", "StreamDeck");
+		}
 		if(data != null) {
 			object.put("type", "level");
 			object.put("difficulty", data.getSimpleDifficulty());
@@ -50,22 +62,43 @@ public class RequestsUtils {
 			if(data.getGDLevel().creatorName().isPresent()){
 				creator = data.getGDLevel().creatorName().get();
 			}
+
+
+
 			object.put("name", data.getGDLevel().name());
 			object.put("creator", creator);
+
+			if(data.getDisplayName() == null){
+				object.put("requester", "-");
+			}
+			else {
+				object.put("requester", data.getDisplayName());
+			}
+
 			int songID = 0;
 			if(data.getGDLevel().songId().isPresent()){
 				songID = data.getGDLevel().songId().get().intValue();
 			}
 			object.put("songID", songID);
-			object.put("creatorID", data.getGDLevel().creatorPlayerId());
 			object.put("stars", data.getGDLevel().stars());
 			object.put("likes", data.getGDLevel().likes());
 			object.put("downloads", data.getGDLevel().downloads());
 			object.put("length", data.getGDLevel().length());
-			object.put("status", "notempty");
+			object.put("accountID", 0);
+
+			if(!creator.equalsIgnoreCase("-")) {
+				for(int i = 0; i < 5; i++) {
+					try {
+						GDUserStats gdUserStats = GDAPI.getGDUserStats(creator);
+						object.put("accountID", gdUserStats.accountId());
+						break;
+					} catch (Exception e) {
+						System.out.println("Fails: " + i);
+					}
+				}
+			}
 		}
 		else {
-			object.put("type", "level");
 			object.put("status", "empty");
 		}
 		return object;
@@ -94,7 +127,6 @@ public class RequestsUtils {
 			object.put("likes", data.getGDLevel().likes());
 			object.put("downloads", data.getGDLevel().downloads());
 			object.put("length", data.getGDLevel().length());
-			object.put("status", "notempty");
 		}
 		else {
 			object.put("type", "nextlevel");
@@ -126,7 +158,6 @@ public class RequestsUtils {
 			object.put("likes", data.getGDLevel().likes());
 			object.put("downloads", data.getGDLevel().downloads());
 			object.put("length", data.getGDLevel().length());
-			object.put("status", "notempty");
 		}
 		else {
 			object.put("type", "nextlevel");
@@ -658,7 +689,7 @@ public class RequestsUtils {
 	public static String blockUser(String user, String[] arguments) {
 		String response;
 		try {
-			String blockedUser = arguments[1];
+			String blockedUser = arguments[1].replace("@", "");
 			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blockedUsers.txt");
 			if (!Files.exists(file)) {
 				Files.createFile(file);
@@ -672,8 +703,8 @@ public class RequestsUtils {
 			}
 			sc.close();
 
-			response = Utilities.format("$BLOCK_USER_MESSAGE$", user, arguments[1]);
-			BlockedUsers.addBlockedUser(arguments[1]);
+			response = Utilities.format("$BLOCK_USER_MESSAGE$", user, blockedUser);
+			BlockedUsers.addBlockedUser(blockedUser);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -685,7 +716,7 @@ public class RequestsUtils {
 	@SuppressWarnings("unused")
 	public static String unblockUser(String user, String[] arguments) {
 		String response = "";
-		String unblocked = arguments[1];
+		String unblocked = arguments[1].replace("@", "");
 
 		try {
 			boolean exists = false;
@@ -701,7 +732,7 @@ public class RequestsUtils {
 				sc.close();
 				if (exists) {
 
-					response = Utilities.format("$UNBLOCK_USER_MESSAGE$", user, arguments[1]);
+					response = Utilities.format("$UNBLOCK_USER_MESSAGE$", user, unblocked);
 					BlockedUsers.removeBlockedUser(unblocked);
 				} else {
 					response = Utilities.format("$UNBLOCK_USER_DOESNT_EXISTS_MESSAGE$", user);
@@ -763,11 +794,11 @@ public class RequestsUtils {
 
 			String defaultCommandPrefix = "!";
 			String geometryDashCommandPrefix = "!";
-			String mediaShareCommandPrefix = "!";
+			//String mediaShareCommandPrefix = "!";
 
 			if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
 			if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
-			if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
+			//if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
 
 			for (CommandData commandData : LoadCommands.getDefaultCommands()) {
@@ -780,11 +811,11 @@ public class RequestsUtils {
 					existingCommands.add(geometryDashCommandPrefix + commandData.getCommand());
 				}
 			}
-			for (CommandData commandData : LoadCommands.getMediaShareCommands()) {
-				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
-					existingCommands.add(mediaShareCommandPrefix + commandData.getCommand());
-				}
-			}
+			//for (CommandData commandData : LoadCommands.getMediaShareCommands()) {
+			//	if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+			//		existingCommands.add(mediaShareCommandPrefix + commandData.getCommand());
+			//	}
+			//}
 			for (CommandData commandData : LoadCommands.getCustomCommands()) {
 				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
 					existingCommands.add(commandData.getCommand());

@@ -109,7 +109,7 @@ public class ListView extends JPanel {
         buttonsPanel.updateUI();
     }
     public Component[] getAddedComponents(){
-        return getComponents();
+        return buttonsPanel.getComponents();
     }
 
     public void resizeComponent(Dimension dimension){

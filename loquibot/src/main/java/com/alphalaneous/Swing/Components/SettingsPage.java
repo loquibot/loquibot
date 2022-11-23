@@ -215,11 +215,12 @@ public class SettingsPage extends JPanel {
 
     private static class Button extends JPanel {
         private final String text;
-        private final CurvedButton CurvedButton = new CurvedButton("");
+        private final CurvedButton CurvedButton;
 
         Button(String text, Function function){
             this.text = text;
-            CurvedButton.setText(text);
+            CurvedButton = new CurvedButton(text);
+            CurvedButton.setToolTipText("");
             CurvedButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
             CurvedButton.setUI(Defaults.settingsButtonUI);
             CurvedButton.setBackground(Defaults.COLOR2);
@@ -230,6 +231,7 @@ public class SettingsPage extends JPanel {
                 if(function != null) function.run();
             });
             setLayout(null);
+            setOpaque(false);
             setPreferredSize(new Dimension(460, 40));
             setBackground(new Color(0,0,0,0));
             add(CurvedButton);
@@ -457,12 +459,19 @@ public class SettingsPage extends JPanel {
         }
     }
 
-    private static class CheckBox extends JPanel {
+    public static class CheckBox extends JPanel {
 
         private final ThemedCheckbox themedCheckbox;
         private final LangLabel descriptionText = new LangLabel("");
 
+        private final String setting;
+        private final boolean defaultOption;
+
+        private static ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+
         CheckBox(String text, String description, String setting, boolean defaultOption, Function function){
+            this.setting = setting;
+            this.defaultOption = defaultOption;
             themedCheckbox = new ThemedCheckbox(text);
             if (SettingsHandler.getSettings(setting).exists()) themedCheckbox.setChecked(SettingsHandler.getSettings(setting).asBoolean());
             else {
@@ -498,11 +507,28 @@ public class SettingsPage extends JPanel {
             setBackground(new Color(0,0,0,0));
             themedCheckbox.refresh();
             add(themedCheckbox);
+            checkBoxes.add(this);
         }
         public void refreshUI(){
             setBackground(new Color(0,0,0,0));
             descriptionText.setForeground(Defaults.FOREGROUND_B);
         }
+        public void resetCheck(){
+            if (SettingsHandler.getSettings(setting).exists()) themedCheckbox.setChecked(SettingsHandler.getSettings(setting).asBoolean());
+            else {
+                themedCheckbox.setChecked(defaultOption);
+            }
+        }
+
+        public static void resetCheckbox(String setting){
+            for(CheckBox checkBox : checkBoxes){
+                if(checkBox.setting.equals(setting)){
+                    checkBox.resetCheck();
+                }
+            }
+        }
+
+
     }
     public static class CheckBoxConfig extends JPanel {
 

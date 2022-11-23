@@ -148,6 +148,25 @@ public class RequestFunctions {
         RequestFunctions.saveFunction();
     }
 
+    public static int undoFunctionGetPos() {
+        if (undoQueue.size() != 0) {
+            didUndo = true;
+            int selectPosition = LevelButton.selectedID;
+            LevelButton levelButton = (LevelButton) undoQueue.keySet().toArray()[undoQueue.size() - 1];
+            int position = (int) undoQueue.values().toArray()[undoQueue.size() - 1];
+            if (position >= RequestsTab.getQueueSize()) {
+                position = RequestsTab.getQueueSize();
+            }
+            RequestsTab.addRequest(levelButton, position);
+            undoQueue.remove(levelButton);
+            return position;
+        }
+        RequestFunctions.saveFunction();
+        return LevelButton.selectedID;
+
+    }
+
+
     public static void randomFunction() {
         if (Main.programLoaded) {
             Random random = new Random();
@@ -343,17 +362,6 @@ public class RequestFunctions {
 
                     if (option.equalsIgnoreCase("YES")) {
                         BlockedIDs.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
-                        Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blocked.txt");
-
-                        try {
-                            if (!Files.exists(file)) {
-                                Files.createFile(file);
-                            }
-                            Files.write(file, (RequestsTab.getRequest(pos).getLevelData().getGDLevel().id() + "\n").getBytes(), StandardOpenOption.APPEND);
-                        } catch (IOException e1) {
-                            DialogBox.showDialogBox("Error!", e1.toString(), "There was an error writing to the file!", new String[]{"OK"});
-
-                        }
                         RequestsTab.removeRequest(pos);
                         RequestFunctions.saveFunction();
                         RequestsTab.getLevelsPanel().setSelect(0);

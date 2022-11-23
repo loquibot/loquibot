@@ -43,6 +43,7 @@ public class DialogBox {
         panel.setLayout(null);
         panel.setBackground(Defaults.COLOR3);
         component.setBounds(10,10,component.getWidth(), component.getHeight());
+        component.setBackground(Defaults.COLOR3);
         panel.setBounds(0,0,component.getWidth() + 20, component.getHeight()+20);
         panel.add(component);
         Window.showDialog(panel, disableClickThrough);

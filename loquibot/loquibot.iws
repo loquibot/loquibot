@@ -1,418 +1,656 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-<project version="4" relativePaths="false"> 
-  <component name="LvcsProjectConfiguration"> 
-    <option name="ADD_LABEL_ON_PROJECT_OPEN" value="true"/>  
-    <option name="ADD_LABEL_ON_PROJECT_COMPILATION" value="true"/>  
-    <option name="ADD_LABEL_ON_FILE_PACKAGE_COMPILATION" value="true"/>  
-    <option name="ADD_LABEL_ON_PROJECT_MAKE" value="true"/>  
-    <option name="ADD_LABEL_ON_RUNNING" value="true"/>  
-    <option name="ADD_LABEL_ON_DEBUGGING" value="true"/>  
-    <option name="ADD_LABEL_ON_UNIT_TEST_PASSED" value="true"/>  
-    <option name="ADD_LABEL_ON_UNIT_TEST_FAILED" value="true"/> 
-  </component>  
-  <component name="PropertiesComponent"> 
-    <property name="MemberChooser.copyJavadoc" value="false"/>  
-    <property name="GoToClass.includeLibraries" value="false"/>  
-    <property name="MemberChooser.showClasses" value="true"/>  
-    <property name="MemberChooser.sorted" value="false"/>  
-    <property name="GoToFile.includeJavaFiles" value="false"/>  
-    <property name="GoToClass.toSaveIncludeLibraries" value="false"/> 
-  </component>  
-  <component name="ToolWindowManager"> 
-    <frame x="-4" y="-4" width="1032" height="746" extended-state="6"/>  
-    <editor active="false"/>  
-    <layout> 
-      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="-1"/>  
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="7"/>  
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="0"/>  
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="1"/>  
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1"/>  
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="-1"/>  
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6"/>  
-      <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="-1"/>  
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1"/>  
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="2"/>  
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2"/>  
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="4"/>  
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="sliding" type="sliding" visible="false" weight="0.4" order="0"/>  
-      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2"/>  
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="0"/>  
-      <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="3"/>  
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="5"/> 
-    </layout> 
-  </component>  
-  <component name="ErrorTreeViewConfiguration"> 
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false"/>  
-    <option name="HIDE_WARNINGS" value="false"/> 
-  </component>  
-  <component name="StructureViewFactory"> 
-    <option name="SORT_MODE" value="0"/>  
-    <option name="GROUP_INHERITED" value="true"/>  
-    <option name="AUTOSCROLL_MODE" value="true"/>  
-    <option name="SHOW_FIELDS" value="true"/>  
-    <option name="AUTOSCROLL_FROM_SOURCE" value="false"/>  
-    <option name="GROUP_GETTERS_AND_SETTERS" value="true"/>  
-    <option name="SHOW_INHERITED" value="false"/>  
-    <option name="HIDE_NOT_PUBLIC" value="false"/> 
-  </component>  
-  <component name="ProjectViewSettings"> 
-    <navigator currentView="ProjectPane" flattenPackages="false" showMembers="false" showStructure="false" autoscrollToSource="false" splitterProportion="0.5"/>  
-    <view id="ProjectPane"> 
-      <expanded_node type="directory" url="file://$PROJECT_DIR$"/> 
-    </view>  
-    <view id="SourcepathPane"/>  
-    <view id="ClasspathPane"/> 
-  </component>  
-  <component name="Commander"> 
-    <leftPanel view="Project"/>  
-    <rightPanel view="Project"/>  
-    <splitter proportion="0.5"/> 
-  </component>  
-  <component name="AspectsView"/>  
-  <component name="SelectInManager"/>  
-  <component name="HierarchyBrowserManager"> 
-    <option name="SHOW_PACKAGES" value="false"/>  
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false"/>  
-    <option name="SORT_ALPHABETICALLY" value="false"/> 
-  </component>  
-  <component name="TodoView" selected-index="0"> 
-    <todo-panel id="selected-file"> 
-      <are-packages-shown value="false"/>  
-      <flatten-packages value="false"/>  
-      <is-autoscroll-to-source value="true"/> 
-    </todo-panel>  
-    <todo-panel id="all"> 
-      <are-packages-shown value="true"/>  
-      <flatten-packages value="false"/>  
-      <is-autoscroll-to-source value="true"/> 
-    </todo-panel> 
-  </component>  
-  <component name="editorManager"/>  
-  <component name="editorHistoryManager"/>  
-  <component name="DaemonCodeAnalyzer"> 
-    <disable_hints/> 
-  </component>  
-  <component name="InspectionManager"> 
-    <option name="AUTOSCROLL_TO_SOURCE" value="false"/>  
-    <option name="SPLITTER_PROPORTION" value="0.5"/>  
-    <profile name="Default"/> 
-  </component>  
-  <component name="BookmarkManager"/>  
-  <component name="DebuggerManager"> 
-    <line_breakpoints/>  
-    <exception_breakpoints> 
-      <breakpoint_any> 
-        <option name="NOTIFY_CAUGHT" value="true"/>  
-        <option name="NOTIFY_UNCAUGHT" value="true"/>  
-        <option name="ENABLED" value="false"/>  
-        <option name="SUSPEND_VM" value="true"/>  
-        <option name="COUNT_FILTER_ENABLED" value="false"/>  
-        <option name="COUNT_FILTER" value="0"/>  
-        <option name="CONDITION_ENABLED" value="false"/>  
-        <option name="CONDITION"/>  
-        <option name="LOG_ENABLED" value="false"/>  
-        <option name="LOG_EXPRESSION_ENABLED" value="false"/>  
-        <option name="LOG_MESSAGE"/>  
-        <option name="CLASS_FILTERS_ENABLED" value="false"/>  
-        <option name="INVERSE_CLASS_FILLTERS" value="false"/>  
-        <option name="SUSPEND_POLICY" value="SuspendAll"/> 
-      </breakpoint_any> 
-    </exception_breakpoints>  
-    <field_breakpoints/>  
-    <method_breakpoints/> 
-  </component>  
-  <component name="DebuggerSettings"> 
-    <option name="TRACING_FILTERS_ENABLED" value="true"/>  
-    <option name="TOSTRING_CLASSES_ENABLED" value="false"/>  
-    <option name="VALUE_LOOKUP_DELAY" value="700"/>  
-    <option name="DEBUGGER_TRANSPORT" value="0"/>  
-    <option name="FORCE_CLASSIC_VM" value="true"/>  
-    <option name="HIDE_DEBUGGER_ON_PROCESS_TERMINATION" value="false"/>  
-    <option name="SKIP_SYNTHETIC_METHODS" value="true"/>  
-    <option name="SKIP_CONSTRUCTORS" value="false"/>  
-    <option name="STEP_THREAD_SUSPEND_POLICY" value="SuspendThread"/>  
-    <default_breakpoint_settings> 
-      <option name="NOTIFY_CAUGHT" value="true"/>  
-      <option name="NOTIFY_UNCAUGHT" value="true"/>  
-      <option name="WATCH_MODIFICATION" value="true"/>  
-      <option name="WATCH_ACCESS" value="true"/>  
-      <option name="WATCH_ENTRY" value="true"/>  
-      <option name="WATCH_EXIT" value="true"/>  
-      <option name="ENABLED" value="true"/>  
-      <option name="SUSPEND_VM" value="true"/>  
-      <option name="COUNT_FILTER_ENABLED" value="false"/>  
-      <option name="COUNT_FILTER" value="0"/>  
-      <option name="CONDITION_ENABLED" value="false"/>  
-      <option name="CONDITION"/>  
-      <option name="LOG_ENABLED" value="false"/>  
-      <option name="LOG_EXPRESSION_ENABLED" value="false"/>  
-      <option name="LOG_MESSAGE"/>  
-      <option name="CLASS_FILTERS_ENABLED" value="false"/>  
-      <option name="INVERSE_CLASS_FILLTERS" value="false"/>  
-      <option name="SUSPEND_POLICY" value="SuspendAll"/> 
-    </default_breakpoint_settings>  
-    <filter> 
-      <option name="PATTERN" value="com.sun.*"/>  
-      <option name="ENABLED" value="true"/> 
-    </filter>  
-    <filter> 
-      <option name="PATTERN" value="java.*"/>  
-      <option name="ENABLED" value="true"/> 
-    </filter>  
-    <filter> 
-      <option name="PATTERN" value="javax.*"/>  
-      <option name="ENABLED" value="true"/> 
-    </filter>  
-    <filter> 
-      <option name="PATTERN" value="org.omg.*"/>  
-      <option name="ENABLED" value="true"/> 
-    </filter>  
-    <filter> 
-      <option name="PATTERN" value="sun.*"/>  
-      <option name="ENABLED" value="true"/> 
-    </filter>  
-    <filter> 
-      <option name="PATTERN" value="junit.*"/>  
-      <option name="ENABLED" value="true"/> 
-    </filter> 
-  </component>  
-  <component name="CompilerWorkspaceConfiguration"> 
-    <option name="COMPILE_IN_BACKGROUND" value="false"/>  
-    <option name="AUTO_SHOW_ERRORS_IN_EDITOR" value="true"/> 
-  </component>  
-  <component name="RunManager"> 
-    <activeType name="Application"/>  
-    <configuration selected="false" default="true" type="Applet" factoryName="Applet"> 
-      <module name=""/>  
-      <option name="MAIN_CLASS_NAME"/>  
-      <option name="HTML_FILE_NAME"/>  
-      <option name="HTML_USED" value="false"/>  
-      <option name="WIDTH" value="400"/>  
-      <option name="HEIGHT" value="300"/>  
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy"/>  
-      <option name="VM_PARAMETERS"/> 
-    </configuration>  
-    <configuration selected="false" default="true" type="Remote" factoryName="Remote"> 
-      <option name="USE_SOCKET_TRANSPORT" value="true"/>  
-      <option name="SERVER_MODE" value="false"/>  
-      <option name="SHMEM_ADDRESS" value="javadebug"/>  
-      <option name="HOST" value="localhost"/>  
-      <option name="PORT" value="5005"/> 
-    </configuration>  
-    <configuration selected="false" default="true" type="Application" factoryName="Application"> 
-      <option name="MAIN_CLASS_NAME"/>  
-      <option name="VM_PARAMETERS"/>  
-      <option name="PROGRAM_PARAMETERS"/>  
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>  
-      <module name=""/> 
-    </configuration>  
-    <configuration selected="false" default="true" type="JUnit" factoryName="JUnit"> 
-      <module name=""/>  
-      <option name="PACKAGE_NAME"/>  
-      <option name="MAIN_CLASS_NAME"/>  
-      <option name="METHOD_NAME"/>  
-      <option name="TEST_OBJECT" value="class"/>  
-      <option name="VM_PARAMETERS"/>  
-      <option name="PARAMETERS"/>  
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>  
-      <option name="ADDITIONAL_CLASS_PATH"/>  
-      <option name="TEST_SEARCH_SCOPE"> 
-        <value defaultName="wholeProject"/> 
-      </option> 
-    </configuration> 
-  </component>  
-  <component name="VcsManagerConfiguration"> 
-    <option name="ACTIVE_VCS_NAME" value=""/>  
-    <option name="STATE" value="0"/> 
-  </component>  
-  <component name="VssConfiguration"> 
-    <CheckoutOptions> 
-      <option name="COMMENT" value=""/>  
-      <option name="DO_NOT_GET_LATEST_VERSION" value="false"/>  
-      <option name="REPLACE_WRITABLE" value="false"/>  
-      <option name="RECURSIVE" value="false"/> 
-    </CheckoutOptions>  
-    <CheckinOptions> 
-      <option name="COMMENT" value=""/>  
-      <option name="KEEP_CHECKED_OUT" value="false"/>  
-      <option name="RECURSIVE" value="false"/> 
-    </CheckinOptions>  
-    <AddOptions> 
-      <option name="COMMENT" value=""/>  
-      <option name="STORE_ONLY_LATEST_VERSION" value="false"/>  
-      <option name="CHECK_OUT_IMMEDIATELY" value="false"/>  
-      <option name="FILE_TYPE" value="0"/> 
-    </AddOptions>  
-    <UndocheckoutOptions> 
-      <option name="MAKE_WRITABLE" value="false"/>  
-      <option name="REPLACE_LOCAL_COPY" value="0"/>  
-      <option name="RECURSIVE" value="false"/> 
-    </UndocheckoutOptions>  
-    <DiffOptions> 
-      <option name="IGNORE_WHITE_SPACE" value="false"/>  
-      <option name="IGNORE_CASE" value="false"/> 
-    </DiffOptions>  
-    <GetOptions> 
-      <option name="REPLACE_WRITABLE" value="0"/>  
-      <option name="MAKE_WRITABLE" value="false"/>  
-      <option name="RECURSIVE" value="false"/> 
-    </GetOptions>  
-    <option name="CLIENT_PATH" value=""/>  
-    <option name="SRCSAFEINI_PATH" value=""/>  
-    <option name="USER_NAME" value=""/>  
-    <option name="PWD" value=""/>  
-    <option name="SHOW_CHECKOUT_OPTIONS" value="true"/>  
-    <option name="SHOW_ADD_OPTIONS" value="true"/>  
-    <option name="SHOW_UNDOCHECKOUT_OPTIONS" value="true"/>  
-    <option name="SHOW_DIFF_OPTIONS" value="true"/>  
-    <option name="SHOW_GET_OPTIONS" value="true"/>  
-    <option name="USE_EXTERNAL_DIFF" value="false"/>  
-    <option name="EXTERNAL_DIFF_PATH" value=""/>  
-    <option name="REUSE_LAST_COMMENT" value="false"/>  
-    <option name="PUT_FOCUS_INTO_COMMENT" value="false"/>  
-    <option name="SHOW_CHECKIN_OPTIONS" value="true"/>  
-    <option name="LAST_COMMIT_MESSAGE" value=""/>  
-    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8"/> 
-  </component>  
-  <component name="CheckinPanelState"/>  
-  <component name="WebViewSettings"> 
-    <webview flattenPackages="false" showMembers="false" autoscrollToSource="false"/> 
-  </component>  
-  <component name="EjbViewSettings"> 
-    <EjbView showMembers="false" autoscrollToSource="false"/> 
-  </component>  
-  <component name="AppServerRunManager"/>  
-  <component name="StarteamConfiguration"> 
-    <option name="SERVER" value=""/>  
-    <option name="PORT" value="49201"/>  
-    <option name="USER" value=""/>  
-    <option name="PASSWORD" value=""/>  
-    <option name="PROJECT" value=""/>  
-    <option name="VIEW" value=""/>  
-    <option name="ALTERNATIVE_WORKING_PATH" value=""/>  
-    <option name="PUT_FOCUS_INTO_COMMENT" value="false"/>  
-    <option name="SHOW_CHECKIN_OPTIONS" value="true"/>  
-    <option name="LAST_COMMIT_MESSAGE" value=""/>  
-    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8"/> 
-  </component>  
-  <component name="Cvs2Configuration"> 
-    <option name="ON_FILE_ADDING" value="0"/>  
-    <option name="ON_FILE_REMOVING" value="0"/>  
-    <option name="PRUNE_EMPTY_DIRECTORIES" value="true"/>  
-    <option name="SHOW_UPDATE_OPTIONS" value="true"/>  
-    <option name="SHOW_ADD_OPTIONS" value="true"/>  
-    <option name="SHOW_REMOVE_OPTIONS" value="true"/>  
-    <option name="MERGING_MODE" value="0"/>  
-    <option name="MERGE_WITH_BRANCH1_NAME" value="HEAD"/>  
-    <option name="MERGE_WITH_BRANCH2_NAME" value="HEAD"/>  
-    <option name="RESET_STICKY" value="false"/>  
-    <option name="CREATE_NEW_DIRECTORIES" value="true"/>  
-    <option name="DEFAULT_TEXT_FILE_SUBSTITUTION" value="kv"/>  
-    <option name="PROCESS_UNKNOWN_FILES" value="false"/>  
-    <option name="PROCESS_DELETED_FILES" value="false"/>  
-    <option name="SHOW_EDIT_DIALOG" value="true"/>  
-    <option name="RESERVED_EDIT" value="false"/>  
-    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6"/>  
-    <option name="SHOW_CHECKOUT_OPTIONS" value="true"/>  
-    <option name="CHECKOUT_DATE_OR_REVISION_SETTINGS"> 
-      <value> 
-        <option name="BRANCH" value=""/>  
-        <option name="DATE" value=""/>  
-        <option name="USE_BRANCH" value="false"/>  
-        <option name="USE_DATE" value="false"/> 
-      </value> 
-    </option>  
-    <option name="UPDATE_DATE_OR_REVISION_SETTINGS"> 
-      <value> 
-        <option name="BRANCH" value=""/>  
-        <option name="DATE" value=""/>  
-        <option name="USE_BRANCH" value="false"/>  
-        <option name="USE_DATE" value="false"/> 
-      </value> 
-    </option>  
-    <option name="SHOW_CHANGES_REVISION_SETTINGS"> 
-      <value> 
-        <option name="BRANCH" value=""/>  
-        <option name="DATE" value=""/>  
-        <option name="USE_BRANCH" value="false"/>  
-        <option name="USE_DATE" value="false"/> 
-      </value> 
-    </option>  
-    <option name="SHOW_OUTPUT" value="false"/>  
-    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false"/>  
-    <option name="UPDATE_GROUP_BY_PACKAGES" value="false"/>  
-    <option name="ADD_WATCH_INDEX" value="0"/>  
-    <option name="REMOVE_WATCH_INDEX" value="0"/>  
-    <option name="UPDATE_KEYWORD_SUBSTITUTION"/>  
-    <option name="MAKE_NEW_FILES_READONLY" value="false"/>  
-    <option name="SHOW_CORRUPTED_PROJECT_FILES" value="0"/>  
-    <option name="TAG_AFTER_FILE_COMMIT" value="false"/>  
-    <option name="TAG_AFTER_FILE_COMMIT_NAME" value=""/>  
-    <option name="TAG_AFTER_PROJECT_COMMIT" value="false"/>  
-    <option name="TAG_AFTER_PROJECT_COMMIT_NAME" value=""/>  
-    <option name="PUT_FOCUS_INTO_COMMENT" value="false"/>  
-    <option name="SHOW_CHECKIN_OPTIONS" value="true"/>  
-    <option name="FORCE_NON_EMPTY_COMMENT" value="false"/>  
-    <option name="LAST_COMMIT_MESSAGE" value=""/>  
-    <option name="SAVE_LAST_COMMIT_MESSAGE" value="true"/>  
-    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8"/>  
-    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false"/>  
-    <option name="OPTIMIZE_IMPORTS_BEFORE_FILE_COMMIT" value="false"/>  
-    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false"/>  
-    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false"/>  
-    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8"/>  
-    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5"/> 
-  </component>  
-  <component name="CvsTabbedWindow"/>  
-  <component name="SvnConfiguration"> 
-    <option name="USER" value=""/>  
-    <option name="PASSWORD" value=""/>  
-    <option name="AUTO_ADD_FILES" value="0"/>  
-    <option name="AUTO_DEL_FILES" value="0"/> 
-  </component>  
-  <component name="PerforceConfiguration"> 
-    <option name="PORT" value="magic:1666"/>  
-    <option name="USER" value=""/>  
-    <option name="PASSWORD" value=""/>  
-    <option name="CLIENT" value=""/>  
-    <option name="TRACE" value="false"/>  
-    <option name="PERFORCE_STATUS" value="true"/>  
-    <option name="CHANGELIST_OPTION" value="false"/>  
-    <option name="SYSTEMROOT" value=""/>  
-    <option name="P4_EXECUTABLE" value="p4"/>  
-    <option name="SHOW_BRANCH_HISTORY" value="false"/>  
-    <option name="GENERATE_COMMENT" value="false"/>  
-    <option name="SYNC_OPTION" value="Sync"/>  
-    <option name="PUT_FOCUS_INTO_COMMENT" value="false"/>  
-    <option name="SHOW_CHECKIN_OPTIONS" value="true"/>  
-    <option name="FORCE_NON_EMPTY_COMMENT" value="true"/>  
-    <option name="LAST_COMMIT_MESSAGE" value=""/>  
-    <option name="SAVE_LAST_COMMIT_MESSAGE" value="true"/>  
-    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8"/>  
-    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false"/>  
-    <option name="OPTIMIZE_IMPORTS_BEFORE_FILE_COMMIT" value="false"/>  
-    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false"/>  
-    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false"/>  
-    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8"/>  
-    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5"/> 
-  </component> 
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="loquibot:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="840b40a5-ffa6-4c46-8ca1-362157216e5c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Modifications.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/ReportedIDs.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/xinput9_1_0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loquibot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/loquibot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loquibot.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/loquibot.ipr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loquibot.iws" beforeDir="false" afterPath="$PROJECT_DIR$/loquibot.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/loquibot_jar/loquibot.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/loquibot_jar/loquibot.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Audio/Sounds.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Audio/Sounds.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/ChatBot/ServerBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/ChatBot/ServerBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/Commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/Commands/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestFunctions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/Requests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/Requests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestsUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/Twitch/TwitchAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/Twitch/TwitchAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/YouTube/Auth.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/YouTube/Auth.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Developer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Developer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Personalization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Personalization.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Requests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Requests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/CurvedButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/CurvedButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/KeybindButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/KeybindButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelContextMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelContextMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/ListView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/ListView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/SettingsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/SettingsPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/SmallInputButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/SmallInputButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/ChatbotPages/DefaultCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/ChatbotPages/DefaultCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/MediaShareTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/MediaShareTab.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/SettingsTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/SettingsTab.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/ConnectorSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/ConnectorSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/FindLoquibot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/Find.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/KeyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/KeyListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/Language.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/Language.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/DialogBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/DialogBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/Window.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Languages/en_us.lang" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Languages/en_us.lang" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Languages/en_us.lang" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Languages/en_us.lang" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Audio/Sounds$Sound.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Audio/Sounds$Sound.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Audio/Sounds.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Audio/Sounds.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/ChatBot/ServerBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/ChatBot/ServerBot.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/Commands/CommandHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/Commands/CommandHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestFunctions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestFunctions.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/Requests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/Requests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/Twitch/TwitchAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/Twitch/TwitchAPI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/YouTube/Auth.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/YouTube/Auth.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Developer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Developer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization$ColorComponent$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization$ColorComponent$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization$ColorComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization$ColorComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Requests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Requests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/CurvedButton$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/CurvedButton$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/CurvedButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/CurvedButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/KeybindButton$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/KeybindButton$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelContextMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelContextMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/ListView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/ListView.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$Button.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$Button.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBox$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBox$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBox.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBox.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBoxConfig$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBoxConfig$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBoxConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckBoxConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckedTextInput$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckedTextInput$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckedTextInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$CheckedTextInput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$RadioOption$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$RadioOption$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$RadioOption.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$RadioOption.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$TextInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$TextInput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SmallInputButton$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SmallInputButton$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/ChatbotPages/DefaultCommands.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/ChatbotPages/DefaultCommands.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/MediaShareTab.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/MediaShareTab.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$SettingsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$SettingsButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$TitleSeparator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$TitleSeparator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/ConnectorSocket.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/ConnectorSocket.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/FindLoquibot.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/KeyListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/KeyListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/Language.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/Language.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/DialogBox$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/DialogBox$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/DialogBox$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/DialogBox$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/DialogBox.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/DialogBox.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$ListButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$ListButton.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Commander">
+    <leftPanel view="Project" />
+    <rightPanel view="Project" />
+    <splitter proportion="0.5" />
+  </component>
+  <component name="Cvs2Configuration">
+    <option name="ON_FILE_ADDING" value="0" />
+    <option name="ON_FILE_REMOVING" value="0" />
+    <option name="PRUNE_EMPTY_DIRECTORIES" value="true" />
+    <option name="SHOW_UPDATE_OPTIONS" value="true" />
+    <option name="SHOW_ADD_OPTIONS" value="true" />
+    <option name="SHOW_REMOVE_OPTIONS" value="true" />
+    <option name="MERGING_MODE" value="0" />
+    <option name="MERGE_WITH_BRANCH1_NAME" value="HEAD" />
+    <option name="MERGE_WITH_BRANCH2_NAME" value="HEAD" />
+    <option name="RESET_STICKY" value="false" />
+    <option name="CREATE_NEW_DIRECTORIES" value="true" />
+    <option name="DEFAULT_TEXT_FILE_SUBSTITUTION" value="kv" />
+    <option name="PROCESS_UNKNOWN_FILES" value="false" />
+    <option name="PROCESS_DELETED_FILES" value="false" />
+    <option name="SHOW_EDIT_DIALOG" value="true" />
+    <option name="RESERVED_EDIT" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+    <option name="SHOW_CHECKOUT_OPTIONS" value="true" />
+    <option name="CHECKOUT_DATE_OR_REVISION_SETTINGS">
+      <value>
+        <option name="BRANCH" value="" />
+        <option name="DATE" value="" />
+        <option name="USE_BRANCH" value="false" />
+        <option name="USE_DATE" value="false" />
+      </value>
+    </option>
+    <option name="UPDATE_DATE_OR_REVISION_SETTINGS">
+      <value>
+        <option name="BRANCH" value="" />
+        <option name="DATE" value="" />
+        <option name="USE_BRANCH" value="false" />
+        <option name="USE_DATE" value="false" />
+      </value>
+    </option>
+    <option name="SHOW_CHANGES_REVISION_SETTINGS">
+      <value>
+        <option name="BRANCH" value="" />
+        <option name="DATE" value="" />
+        <option name="USE_BRANCH" value="false" />
+        <option name="USE_DATE" value="false" />
+      </value>
+    </option>
+    <option name="SHOW_OUTPUT" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="ADD_WATCH_INDEX" value="0" />
+    <option name="REMOVE_WATCH_INDEX" value="0" />
+    <option name="UPDATE_KEYWORD_SUBSTITUTION" />
+    <option name="MAKE_NEW_FILES_READONLY" value="false" />
+    <option name="SHOW_CORRUPTED_PROJECT_FILES" value="0" />
+    <option name="TAG_AFTER_FILE_COMMIT" value="false" />
+    <option name="TAG_AFTER_FILE_COMMIT_NAME" value="" />
+    <option name="TAG_AFTER_PROJECT_COMMIT" value="false" />
+    <option name="TAG_AFTER_PROJECT_COMMIT_NAME" value="" />
+    <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
+    <option name="SHOW_CHECKIN_OPTIONS" value="true" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
+    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_FILE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+  </component>
+  <component name="DebuggerManager">
+    <line_breakpoints converted="true" />
+    <exception_breakpoints converted="true">
+      <breakpoint_any>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="SUSPEND_VM" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CONDITION" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="LOG_MESSAGE" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INVERSE_CLASS_FILLTERS" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+      </breakpoint_any>
+    </exception_breakpoints>
+    <field_breakpoints converted="true" />
+    <method_breakpoints converted="true" />
+  </component>
+  <component name="DebuggerSettings">
+    <option name="TRACING_FILTERS_ENABLED" value="true" />
+    <option name="TOSTRING_CLASSES_ENABLED" value="false" />
+    <option name="VALUE_LOOKUP_DELAY" value="700" />
+    <option name="DEBUGGER_TRANSPORT" value="0" />
+    <option name="FORCE_CLASSIC_VM" value="true" />
+    <option name="HIDE_DEBUGGER_ON_PROCESS_TERMINATION" value="false" />
+    <option name="SKIP_SYNTHETIC_METHODS" value="true" />
+    <option name="SKIP_CONSTRUCTORS" value="false" />
+    <option name="STEP_THREAD_SUSPEND_POLICY" value="SuspendThread" />
+    <default_breakpoint_settings>
+      <option name="NOTIFY_CAUGHT" value="true" />
+      <option name="NOTIFY_UNCAUGHT" value="true" />
+      <option name="WATCH_MODIFICATION" value="true" />
+      <option name="WATCH_ACCESS" value="true" />
+      <option name="WATCH_ENTRY" value="true" />
+      <option name="WATCH_EXIT" value="true" />
+      <option name="ENABLED" value="true" />
+      <option name="SUSPEND_VM" value="true" />
+      <option name="COUNT_FILTER_ENABLED" value="false" />
+      <option name="COUNT_FILTER" value="0" />
+      <option name="CONDITION_ENABLED" value="false" />
+      <option name="CONDITION" />
+      <option name="LOG_ENABLED" value="false" />
+      <option name="LOG_EXPRESSION_ENABLED" value="false" />
+      <option name="LOG_MESSAGE" />
+      <option name="CLASS_FILTERS_ENABLED" value="false" />
+      <option name="INVERSE_CLASS_FILLTERS" value="false" />
+      <option name="SUSPEND_POLICY" value="SuspendAll" />
+    </default_breakpoint_settings>
+    <filter>
+      <option name="PATTERN" value="com.sun.*" />
+      <option name="ENABLED" value="true" />
+    </filter>
+    <filter>
+      <option name="PATTERN" value="java.*" />
+      <option name="ENABLED" value="true" />
+    </filter>
+    <filter>
+      <option name="PATTERN" value="javax.*" />
+      <option name="ENABLED" value="true" />
+    </filter>
+    <filter>
+      <option name="PATTERN" value="org.omg.*" />
+      <option name="ENABLED" value="true" />
+    </filter>
+    <filter>
+      <option name="PATTERN" value="sun.*" />
+      <option name="ENABLED" value="true" />
+    </filter>
+    <filter>
+      <option name="PATTERN" value="junit.*" />
+      <option name="ENABLED" value="true" />
+    </filter>
+  </component>
+  <component name="EjbViewSettings">
+    <EjbView showMembers="false" autoscrollToSource="false" />
+  </component>
+  <component name="ErrorTreeViewConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="HIDE_WARNINGS" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HierarchyBrowserManager">
+    <option name="SHOW_PACKAGES" value="false" />
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="SORT_ALPHABETICALLY" value="false" />
+  </component>
+  <component name="InspectionManager">
+    <option name="AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="SPLITTER_PROPORTION" value="0.5" />
+    <profile name="Default" />
+  </component>
+  <component name="LvcsProjectConfiguration">
+    <option name="ADD_LABEL_ON_PROJECT_OPEN" value="true" />
+    <option name="ADD_LABEL_ON_PROJECT_COMPILATION" value="true" />
+    <option name="ADD_LABEL_ON_FILE_PACKAGE_COMPILATION" value="true" />
+    <option name="ADD_LABEL_ON_PROJECT_MAKE" value="true" />
+    <option name="ADD_LABEL_ON_RUNNING" value="true" />
+    <option name="ADD_LABEL_ON_DEBUGGING" value="true" />
+    <option name="ADD_LABEL_ON_UNIT_TEST_PASSED" value="true" />
+    <option name="ADD_LABEL_ON_UNIT_TEST_FAILED" value="true" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="PerforceConfiguration">
+    <option name="PORT" value="magic:1666" />
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="CLIENT" value="" />
+    <option name="TRACE" value="false" />
+    <option name="PERFORCE_STATUS" value="true" />
+    <option name="CHANGELIST_OPTION" value="false" />
+    <option name="SYSTEMROOT" value="" />
+    <option name="P4_EXECUTABLE" value="p4" />
+    <option name="SHOW_BRANCH_HISTORY" value="false" />
+    <option name="GENERATE_COMMENT" value="false" />
+    <option name="SYNC_OPTION" value="Sync" />
+    <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
+    <option name="SHOW_CHECKIN_OPTIONS" value="true" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="true" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
+    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_FILE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+  </component>
+  <component name="ProjectId" id="2DsRHnhk108gVVaJ2wBKDALPmcm" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewSettings">
+    <navigator currentView="ProjectPane" flattenPackages="false" showMembers="false" showStructure="false" autoscrollToSource="false" splitterProportion="0.5" />
+    <view id="ProjectPane">
+      <expanded_node type="directory" url="file://$PROJECT_DIR$" />
+    </view>
+    <view id="SourcepathPane" />
+    <view id="ClasspathPane" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Project.color&quot;: &quot;1c140e&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;zulu-13&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ashton/Documents/GitHub/Dash4j&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15429688&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Ashton\Documents\GitHub\loquibot\loquibot\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.alphalaneous.Settings" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration selected="false" default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.alphalaneous.Main" />
+      <module name="loquibot" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="loquibot.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/loquibot_jar/loquibot.jar" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.loquibot.jar" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="StarteamConfiguration">
+    <option name="SERVER" value="" />
+    <option name="PORT" value="49201" />
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="PROJECT" value="" />
+    <option name="VIEW" value="" />
+    <option name="ALTERNATIVE_WORKING_PATH" value="" />
+    <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
+    <option name="SHOW_CHECKIN_OPTIONS" value="true" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
+  </component>
+  <component name="StructureViewFactory">
+    <option name="SORT_MODE" value="0" />
+    <option name="GROUP_INHERITED" value="true" />
+    <option name="AUTOSCROLL_MODE" value="true" />
+    <option name="SHOW_FIELDS" value="true" />
+    <option name="AUTOSCROLL_FROM_SOURCE" value="false" />
+    <option name="GROUP_GETTERS_AND_SETTERS" value="true" />
+    <option name="SHOW_INHERITED" value="false" />
+    <option name="HIDE_NOT_PUBLIC" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="AUTO_ADD_FILES" value="0" />
+    <option name="AUTO_DEL_FILES" value="0" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="840b40a5-ffa6-4c46-8ca1-362157216e5c" name="Changes" comment="" />
+      <created>1661485720869</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1661485720869</updated>
+      <workItem from="1661485722018" duration="159000" />
+      <workItem from="1661485889820" duration="722000" />
+      <workItem from="1661486622975" duration="603000" />
+      <workItem from="1661487253187" duration="14000" />
+      <workItem from="1661487358388" duration="451000" />
+      <workItem from="1661489139268" duration="32000" />
+      <workItem from="1661489267365" duration="603000" />
+      <workItem from="1661489903976" duration="473000" />
+      <workItem from="1661543076754" duration="76000" />
+      <workItem from="1661544133588" duration="155000" />
+      <workItem from="1661572703791" duration="31000" />
+      <workItem from="1661720617261" duration="2665000" />
+      <workItem from="1661835086855" duration="6000" />
+      <workItem from="1661912627600" duration="1699000" />
+      <workItem from="1661956796220" duration="3077000" />
+      <workItem from="1661965806392" duration="3036000" />
+      <workItem from="1661969041336" duration="121000" />
+      <workItem from="1661971528184" duration="2455000" />
+      <workItem from="1661974181844" duration="131000" />
+      <workItem from="1661976252619" duration="38000" />
+      <workItem from="1661978470007" duration="390000" />
+      <workItem from="1661984823824" duration="7000" />
+      <workItem from="1661984893920" duration="666000" />
+      <workItem from="1661985842503" duration="162000" />
+      <workItem from="1661986112012" duration="266000" />
+      <workItem from="1662497359372" duration="132000" />
+      <workItem from="1662505835033" duration="107000" />
+      <workItem from="1662505952171" duration="31000" />
+      <workItem from="1662505996959" duration="382000" />
+      <workItem from="1662506388888" duration="178000" />
+      <workItem from="1662506576486" duration="1900000" />
+      <workItem from="1662519263146" duration="7000" />
+      <workItem from="1662682194906" duration="227000" />
+      <workItem from="1662693414424" duration="10000" />
+      <workItem from="1663097323439" duration="279000" />
+      <workItem from="1663097646875" duration="616000" />
+      <workItem from="1663167102900" duration="4547000" />
+      <workItem from="1663174445909" duration="396000" />
+      <workItem from="1663177448859" duration="610000" />
+      <workItem from="1663346356326" duration="603000" />
+      <workItem from="1663354095045" duration="604000" />
+      <workItem from="1663358639734" duration="2162000" />
+      <workItem from="1663367323365" duration="1503000" />
+      <workItem from="1663378521202" duration="267000" />
+      <workItem from="1663379313116" duration="982000" />
+      <workItem from="1663445782795" duration="162000" />
+      <workItem from="1663517327175" duration="143000" />
+      <workItem from="1663517480103" duration="887000" />
+      <workItem from="1663542124132" duration="1130000" />
+      <workItem from="1663611503217" duration="607000" />
+      <workItem from="1663616228341" duration="1200000" />
+      <workItem from="1663625236724" duration="663000" />
+      <workItem from="1663691616316" duration="603000" />
+      <workItem from="1663708597734" duration="893000" />
+      <workItem from="1663794262829" duration="250000" />
+      <workItem from="1663963153137" duration="691000" />
+      <workItem from="1663964243876" duration="252000" />
+      <workItem from="1664153465490" duration="5000" />
+      <workItem from="1664153641938" duration="222000" />
+      <workItem from="1665251230460" duration="19000" />
+      <workItem from="1665263123730" duration="280000" />
+      <workItem from="1665421869975" duration="224000" />
+      <workItem from="1665422474584" duration="53000" />
+      <workItem from="1665422730158" duration="153000" />
+      <workItem from="1666216139461" duration="773000" />
+      <workItem from="1666217123492" duration="83000" />
+      <workItem from="1666285596499" duration="190000" />
+      <workItem from="1666562566620" duration="21000" />
+      <workItem from="1666563190083" duration="677000" />
+      <workItem from="1666653100739" duration="267000" />
+      <workItem from="1667338262301" duration="1972000" />
+      <workItem from="1668446685210" duration="436000" />
+      <workItem from="1668449071653" duration="3000" />
+      <workItem from="1668450495412" duration="215000" />
+      <workItem from="1668454454876" duration="1102000" />
+      <workItem from="1668630724219" duration="183000" />
+      <workItem from="1668733093860" duration="1936000" />
+      <workItem from="1669001700067" duration="406000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-4" y="-4" width="1032" height="746" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="-1" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="7" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="0" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="1" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="-1" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6" />
+      <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="-1" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="2" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="4" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="sliding" type="sliding" visible="false" weight="0.4" order="0" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="0" />
+      <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="3" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="5" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VssConfiguration">
+    <CheckoutOptions>
+      <option name="COMMENT" value="" />
+      <option name="DO_NOT_GET_LATEST_VERSION" value="false" />
+      <option name="REPLACE_WRITABLE" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </CheckoutOptions>
+    <CheckinOptions>
+      <option name="COMMENT" value="" />
+      <option name="KEEP_CHECKED_OUT" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </CheckinOptions>
+    <AddOptions>
+      <option name="COMMENT" value="" />
+      <option name="STORE_ONLY_LATEST_VERSION" value="false" />
+      <option name="CHECK_OUT_IMMEDIATELY" value="false" />
+      <option name="FILE_TYPE" value="0" />
+    </AddOptions>
+    <UndocheckoutOptions>
+      <option name="MAKE_WRITABLE" value="false" />
+      <option name="REPLACE_LOCAL_COPY" value="0" />
+      <option name="RECURSIVE" value="false" />
+    </UndocheckoutOptions>
+    <DiffOptions>
+      <option name="IGNORE_WHITE_SPACE" value="false" />
+      <option name="IGNORE_CASE" value="false" />
+    </DiffOptions>
+    <GetOptions>
+      <option name="REPLACE_WRITABLE" value="0" />
+      <option name="MAKE_WRITABLE" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </GetOptions>
+    <option name="CLIENT_PATH" value="" />
+    <option name="SRCSAFEINI_PATH" value="" />
+    <option name="USER_NAME" value="" />
+    <option name="PWD" value="" />
+    <option name="SHOW_CHECKOUT_OPTIONS" value="true" />
+    <option name="SHOW_ADD_OPTIONS" value="true" />
+    <option name="SHOW_UNDOCHECKOUT_OPTIONS" value="true" />
+    <option name="SHOW_DIFF_OPTIONS" value="true" />
+    <option name="SHOW_GET_OPTIONS" value="true" />
+    <option name="USE_EXTERNAL_DIFF" value="false" />
+    <option name="EXTERNAL_DIFF_PATH" value="" />
+    <option name="REUSE_LAST_COMMENT" value="false" />
+    <option name="PUT_FOCUS_INTO_COMMENT" value="false" />
+    <option name="SHOW_CHECKIN_OPTIONS" value="true" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
+  </component>
+  <component name="WebViewSettings">
+    <webview flattenPackages="false" showMembers="false" autoscrollToSource="false" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/loquibot$Main.ic" NAME="Main Coverage Results" MODIFIED="1662507759922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
 </project>
