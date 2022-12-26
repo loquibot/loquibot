@@ -10,65 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="840b40a5-ffa6-4c46-8ca1-362157216e5c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/LoquiExtension.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/VBSShortcut/ShortcutFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/loquibot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/loquibot.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/loquibot.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/loquibot.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/loquibot.iws" beforeDir="false" afterPath="$PROJECT_DIR$/loquibot.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/loquibot_jar/loquibot.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/loquibot_jar/loquibot.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/ChatBot/ServerBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/ChatBot/ServerBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Interactive/MediaShare/MediaShare.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/GDAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/GDAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/LevelData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/LevelData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestFunctions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/Requests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/Requests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/GeometryDash/RequestsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/Twitch/TwitchAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/Twitch/TwitchAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/YouTube/Auth.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Services/YouTube/Auth.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/MediaShare.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/MediaShareShortcuts.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Modifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Modifications.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/ReportedIDs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/ReportedIDs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/BrowserWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/BrowserWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/LevelsPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/VideoButton.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/VideoDetails.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/VideoDetailsPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/VideoProgressBar.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Swing/Components/VideosPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/MediaShareTab.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/SettingsTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Tabs/SettingsTab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Theming/Themes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Theming/Themes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/ConnectorSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/ConnectorSocket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/KeyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/KeyListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/LoquiBrowser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/RegQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/RegQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/Utilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Utils/Utilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/Onboarding.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/Onboarding.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Windows/Window.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Languages/en_us.lang" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Languages/en_us.lang" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Languages/en_us.lang" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Languages/en_us.lang" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/ChatBot/ServerBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/ChatBot/ServerBot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/Commands/DefaultCommandFunctions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/MediaShare/MediaShare$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/MediaShare/MediaShare$MediaSharePanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/MediaShare/MediaShare$MediaSharePanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Interactive/MediaShare/MediaShare.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/GDAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/GDAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/LevelData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/LevelData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestFunctions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestFunctions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/Requests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/Requests.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/GeometryDash/RequestsUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/Twitch/TwitchAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/Twitch/TwitchAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/YouTube/Auth.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Services/YouTube/Auth.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Personalization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alphalaneous/Settings/Personalization.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Account$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Account$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Account$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Account$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Account$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Account$3.class" afterDir="false" />
@@ -78,63 +25,8 @@
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Filters$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Filters$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Filters$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Filters$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Keybinds$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Keybinds$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/MediaShare.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/MediaShareShortcuts$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/MediaShareShortcuts.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Modifications$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Modifications$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Modifications.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Modifications.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/ReportedIDs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/ReportedIDs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/BrowserWindow$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/BrowserWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/BrowserWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelButton.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelsPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/LevelsPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$RadioOption$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/SettingsPage$RadioOption$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoButton$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoButton$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoButton$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoButton$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoButton.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoDetails$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoDetails.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoDetailsPanel$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoDetailsPanel$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoDetailsPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideoProgressBar.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Swing/Components/VideosPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/MediaShareTab$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/MediaShareTab$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/MediaShareTab$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/MediaShareTab.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$SettingsButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$SettingsButton.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$TitleSeparator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab$TitleSeparator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Tabs/SettingsTab.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Theming/Themes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Theming/Themes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/ConnectorSocket.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/ConnectorSocket.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/KeyListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/KeyListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/LoquiBrowser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/RegQuery$StreamReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/RegQuery$StreamReader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/RegQuery.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/RegQuery.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/Utilities$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/Utilities$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/Utilities.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Utils/Utilities.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$AccountButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding$AccountButton.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Onboarding.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$ListButton.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window$ListButton.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Windows/Window.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/alphalaneous/Settings/Personalization.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -379,30 +271,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Project.color&quot;: &quot;1c140e&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;zulu-13&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ashton/Documents/GitHub/Dash4j&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15429688&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Project.color": "1c140e",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "zulu-13",
+    "last_opened_file_path": "C:/Users/Ashton/Documents/Loquibot/loquibot Dependencies/ColorPicker.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15429688",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Ashton\Documents\GitHub\loquibot\loquibot\src\main\java\com\alphalaneous\VBSShortcut" />
       <recent name="C:\Users\Ashton\Documents\GitHub\loquibot\loquibot\src\main\resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -609,6 +502,7 @@
       <workItem from="1671689787510" duration="48000" />
       <workItem from="1671693492728" duration="797000" />
       <workItem from="1671706437162" duration="7000" />
+      <workItem from="1672039095707" duration="2033000" />
     </task>
     <servers />
   </component>

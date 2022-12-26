@@ -6,10 +6,10 @@ import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Swing.ThemedComponents.ThemedCheckbox;
 import com.alphalaneous.Theming.Themes;
+import com.alphalaneous.VBSShortcut.ShortcutFactory;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 import com.bric.swing.ColorPicker;
-import vbs_sc.ShortcutFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
