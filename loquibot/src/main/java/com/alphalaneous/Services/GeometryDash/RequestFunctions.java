@@ -41,9 +41,7 @@ public class RequestFunctions {
     private static boolean didUndo = false;
 
     public static void openGDBrowser(int pos) {
-        BrowserWindow browserWindow = new BrowserWindow("http://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().id());
-        browserWindow.setSize((int) (1920/1.4), (int) (1080/1.4));
-        browserWindow.setTitle("GDBrowser by Colon");
+        BrowserWindow browserWindow = new BrowserWindow("https://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().id());
     }
 
     public static void skipFunction() {

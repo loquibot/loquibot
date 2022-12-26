@@ -10,12 +10,14 @@ import com.alphalaneous.Settings.Logs.LoggedID;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import jdash.common.entity.GDLevel;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -92,7 +94,7 @@ public class ReportedIDs {
             reportTitle.setBounds(10,10,380,30);
             reportTitle.setForeground(Defaults.FOREGROUND_A);
             reportTitle.setFont(Defaults.MAIN_FONT.deriveFont(20f));
-            LangLabel label = new LangLabel("$REASON_INPUT$");
+            LangLabel label = new LangLabel("Info:");
             label.setBounds(10,50,380,30);
             label.setForeground(Defaults.FOREGROUND_A);
             label.setFont(Defaults.MAIN_FONT.deriveFont(14f));
@@ -100,10 +102,25 @@ public class ReportedIDs {
 
             CurvedButton cancelButton = new CurvedButton("$CANCEL$");
             cancelButton.addActionListener(f -> DialogBox.closeDialogBox());
-            cancelButton.setBounds(10,300, 185, 40);
+            cancelButton.setBounds(10,300, 115, 40);
             cancelButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
             cancelButton.setForeground(Defaults.FOREGROUND_A);
             cancelButton.setUI(Defaults.settingsButtonUI);
+
+            CurvedButton copyButton = new CurvedButton("$COPY$");
+            copyButton.addActionListener(f -> {
+                Toolkit.getDefaultToolkit()
+                        .getSystemClipboard()
+                        .setContents(
+                                new StringSelection(text),
+                                null
+                        );
+            });
+            copyButton.setBounds(135,300, 115, 40);
+            copyButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
+            copyButton.setForeground(Defaults.FOREGROUND_A);
+            copyButton.setUI(Defaults.settingsButtonUI);
+
 
             CurvedButton globallyBlockButton = new CurvedButton("$GLOBALLY_BLOCK_SUBMIT$");
             globallyBlockButton.addActionListener(f -> {
@@ -167,7 +184,7 @@ public class ReportedIDs {
 
                 }).start();
             });
-            globallyBlockButton.setBounds(205,300, 185, 40);
+            globallyBlockButton.setBounds(260,300, 130, 40);
             globallyBlockButton.setFont(Defaults.MAIN_FONT.deriveFont(14f));
             globallyBlockButton.setForeground(Defaults.FOREGROUND_A);
             globallyBlockButton.setUI(Defaults.settingsButtonUI);
@@ -176,6 +193,8 @@ public class ReportedIDs {
             panel.add(label);
             panel.add(reason);
             panel.add(cancelButton);
+            panel.add(copyButton);
+
             panel.add(globallyBlockButton);
 
             DialogBox.showDialogBox(panel, true);

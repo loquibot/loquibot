@@ -41,7 +41,7 @@ public class LevelButton extends CurvedButton {
 	private final JLabel lAnalyzed = new JLabel();
 	private final JPanel info = new JPanel(new GridLayout(0, 2, 1, 1));
 	private final JLabel logo = new JLabel();
-	private boolean viewership = false;
+	private boolean viewership = true;
 	private int gonePoints = 4;
 	private final LevelData levelData;
 
@@ -415,6 +415,7 @@ public class LevelButton extends CurvedButton {
 					markedForRemoval = true;
 				}
 			}
+			levelData.setViewership(viewership);
 		}
 	}
 	private boolean markedForRemoval = false;

@@ -43,10 +43,10 @@ public class ServerBot {
 		try {
 			if(SettingsHandler.getSettings("isDev").asBoolean()) {
 				if (SettingsHandler.getSettings("dev_Server").asString().equalsIgnoreCase("main"))
-					clientSocket = new Socket("142.93.12.163", 2963);
+					clientSocket = new Socket("24.199.87.19", 2963);
 				else clientSocket = new Socket("localhost", 2963);
 			}
-			else clientSocket = new Socket("142.93.12.163", 2963);
+			else clientSocket = new Socket("24.199.87.19", 2963);
 
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -70,7 +70,6 @@ public class ServerBot {
 			} catch (Exception e) {
 				break;
 			}
-			//System.out.println(inputLine);
 			String event = "";
 			try {
 				JSONObject object = new JSONObject(inputLine);
@@ -112,11 +111,23 @@ public class ServerBot {
 						}
 						break;
 					}
+					case "blocked_users_updated" : {
+						System.out.println("> Blocked Users Updated");
+						JSONArray IDs = object.getJSONObject("users").getJSONArray("globallyBlockedUsers");
+						Requests.globallyBlockedUsers.clear();
+						for (int i = 0; i < IDs.length(); i++) {
+							long ID = IDs.getJSONObject(i).getLong("id");
+							String reason = IDs.getJSONObject(i).getString("reason");
+							Requests.globallyBlockedUsers.put(ID, reason);
+						}
+						break;
+					}
 					case "reported_ids_updated" : {
+						System.out.println("> Reported IDs Updated");
+
 						JSONArray IDs = object.getJSONObject("ids").getJSONArray("reportedIDs");
 						Requests.reportedIDs.clear();
 						for (int i = 0; i < IDs.length(); i++) {
-							System.out.println(IDs.getJSONObject(i));
 							Requests.reportedIDs.add(IDs.getJSONObject(i));
 						}
 						break;

@@ -43,6 +43,8 @@ public class Requests {
 
     public static volatile boolean requestsEnabled = true;
     public static HashMap<Long, String> globallyBlockedIDs = new HashMap<>();
+    public static HashMap<Long, String> globallyBlockedUsers = new HashMap<>();
+
     public static List<JSONObject> reportedIDs = Collections.synchronizedList(new ArrayList<>());
 
     private static final HashMap<Long, Integer> addedLevels = new HashMap<>();
@@ -73,8 +75,9 @@ public class Requests {
         if(chatMessage == null) {
             chatMessage = new ChatMessage(new String[]{}, user, user, message, new String[]{}, isMod, isSub, false, 0, false);
         }
-
-
+        if (chatMessage.getTag("user-id") != null && !chatMessage.isYouTube() && globallyBlockedUsers.containsKey(Long.parseLong(chatMessage.getTag("user-id")))) {
+            return;
+        }
         if (globallyBlockedIDs.containsKey(IDa)) {
             sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", user, globallyBlockedIDs.get(IDa)), chatMessage.isYouTube());
             return;

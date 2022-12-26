@@ -10,6 +10,8 @@ import javax.swing.*;
 public class LevelData {
 
 	private String requester;
+
+	private boolean viewership = true;
 	private GDLevel levelData;
 	private String message;
 	private String messageID;
@@ -126,5 +128,13 @@ public class LevelData {
 
 	public void setFeatured() {
 		this.featured = true;
+	}
+
+	public boolean getViewership() {
+		return viewership;
+	}
+
+	public void setViewership(boolean viewership) {
+		this.viewership = viewership;
 	}
 }

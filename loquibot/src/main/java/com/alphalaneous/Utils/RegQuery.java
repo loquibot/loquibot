@@ -22,6 +22,9 @@ public class RegQuery {
     private static final String WALLPAPER = REGQUERY_UTIL +
             "\"HKEY_CURRENT_USER\\Control Panel\\Desktop\""
             + " /v WallPaper";
+    private static final String STEAM = REGQUERY_UTIL +
+            "\"HKEY_CURRENT_USER\\SOFTWARE\\Valve\\Steam\""
+            + " /v SteamPath";
     private static final String WALLPAPER_COLOR = REGQUERY_UTIL +
             "\"HKEY_CURRENT_USER\\Control Panel\\Colors\""
             + " /v Background";
@@ -46,6 +49,11 @@ public class RegQuery {
         catch (Exception e){
             return null;
         }
+    }
+
+
+    public static String getSteamLocation(){
+        return runRegQuery(STEAM, REGSTR_TOKEN);
     }
 
     public static Color getWallpaperColor(){

@@ -139,5 +139,7 @@ public class GDAPI {
         return Objects.requireNonNull(client.searchUsers(username, 0).collectList().block()).get(0);
     }
 
-
+    public static GDLevelDownload getGDLevel(long ID) {
+        return client.downloadLevel(ID).block();
+    }
 }

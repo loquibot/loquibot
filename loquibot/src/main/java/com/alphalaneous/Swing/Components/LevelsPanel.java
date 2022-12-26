@@ -95,6 +95,9 @@ public class LevelsPanel extends JPanel {
         if (newPosition >= RequestsTab.getQueueSize()) {
             newPosition = RequestsTab.getQueueSize() - 1;
         }
+
+        buttonPanel.add(buttonPanel.getComponents()[position], gbc, newPosition);
+
         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
             if (getButton(i).selected) {
                 selectID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
@@ -102,20 +105,11 @@ public class LevelsPanel extends JPanel {
                 break;
             }
         }
-        System.out.println("Position: " + position + " | newPosition: " + newPosition);
-
-        buttonPanel.add(buttonPanel.getComponents()[position], gbc, newPosition);
 
         if(newPosition < selectID){
-            setSelect(selectPos+1, false, false);
+            setSelect(selectPos, false, false);
         }
 
-
-        /*for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-            if (selectID == RequestsTab.getRequest(i).getLevelData().getGDLevel().id()) {
-                setSelect(i, false, false);
-            }
-        }*/
         RequestFunctions.saveFunction();
     }
     public void setSelect(int position){

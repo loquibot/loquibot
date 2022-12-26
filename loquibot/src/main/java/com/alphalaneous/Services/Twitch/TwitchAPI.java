@@ -432,7 +432,6 @@ public class TwitchAPI {
 				System.out.println(twitch.auth().getAuthenticationError());
 
 			}
-			browserWindow.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -456,7 +455,6 @@ public class TwitchAPI {
 			} else {
 				System.out.println(twitch.auth().getAuthenticationError());
 			}
-			browserWindow.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

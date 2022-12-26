@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Memory.Global;
 import com.alphalaneous.Memory.Hacks;
 import com.alphalaneous.Memory.Level;
@@ -8,9 +9,21 @@ import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsComponent;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Utilities;
+import com.alphalaneous.Utils.Find;
+import com.alphalaneous.Utils.RegQuery;
+import com.alphalaneous.Windows.DialogBox;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 public class Modifications {
 
@@ -29,7 +42,7 @@ public class Modifications {
             Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
                 });
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$SAFE_NOCLIP_SHORTCUT$", "safeNoclipKeybind")));
-
+        settingsPage.addButton("Install loquibot GD Mod", Modifications::installLoquiMod);
 
         return settingsPage;
     }
@@ -53,6 +66,110 @@ public class Modifications {
         }
     }
 
+    public static void installLoquiMod(){
+        new Thread(() -> {
+            String path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Geometry Dash\\GeometryDash.exe";
+            String installDir;
+            boolean skip = false;
+            if(!Files.exists(Paths.get(path))){
+
+                String steamPath = RegQuery.getSteamLocation();
+                if(steamPath != null){
+                    path = steamPath + "\\steamapps\\common\\Geometry Dash\\GeometryDash.exe";
+                }
+                if(!Files.exists(Paths.get(path))) {
+
+                    String exePath = MemoryHelper.getExePath();
+                    if(exePath.equalsIgnoreCase("")) {
+                        DialogBox.showDialogBox("Oops", "Please open Geometry Dash to install!", "", new String[]{"Okay"});
+                        skip = true;
+                    }
+                    else path = exePath;
+                }
+            }
+            if(!skip) {
+                String choice = DialogBox.showDialogBox("Woah, wait a sec", "This will restart GD to install!", "", new String[] {"Okay", "Cancel"});
+
+                if(choice.equalsIgnoreCase("Cancel")) return;
+
+                try {
+                    com.alphalaneous.Utils.Utilities.runCommand("taskkill", "/IM", "GeometryDash.exe", "/F");
+                }
+                catch (Exception e){
+                    System.out.println("GD Already Closed");
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\hackpro.dll"))) {
+                    System.out.println("Is MegaHack");
+                    installDir = "extensions";
+                }
+                else if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\ToastedMarshmellow.dll"))) {
+                    System.out.println("Is HackerMode");
+                    installDir = "GDHM\\dll";
+                }
+                else {
+                    URL inputUrl = Main.class.getClassLoader()
+                            .getResource("xinput9_1_0.dll");
+                    File dest = new File(Paths.get(path).getParent().toString() + "\\xinput9_1_0.dll");
+                    assert inputUrl != null;
+                    try {
+                        FileUtils.copyURLToFile(inputUrl, dest);
+                        installDir = "adaf-dll";
+                    }
+                    catch (IOException e){
+                        installDir = null;
+                    }
+                }
+
+                if(installDir != null){
+                    installMod(Paths.get(path).getParent().toString() + "\\" + installDir, Paths.get(path).getParent().toString());
+                    com.alphalaneous.Utils.Utilities.openSteamApp(322170, true);
+                }
+            }
+        }).start();
+
+    }
+    public static void installMod(String installDir, String GDDirectory) {
+        String loquiDir = GDDirectory + "\\LoquiExtension";
+        Path loquiPath = Path.of(loquiDir);
+        Path loquiZipPath = Path.of(GDDirectory + "\\LoquiExtension.zip");
+        try {
+            Path installPath = Path.of(installDir);
+            if(!Files.isDirectory(installPath)){
+                Files.createDirectory(installPath);
+            }
+            SettingsHandler.writeSettings("modVersion", "1.0");
+
+            FileUtils.copyURLToFile(Objects.requireNonNull(Main.class.getClassLoader()
+                    .getResource("LoquiExtension.zip")), new File(loquiZipPath.toUri()));
+            com.alphalaneous.Utils.Utilities.unzip(String.valueOf(loquiZipPath), loquiDir);
+
+
+            Files.move(Path.of(loquiDir + "\\LoquiExtension.dll"), Path.of(installPath + "\\LoquiExtension.dll"), StandardCopyOption.REPLACE_EXISTING);
+            if(!Files.exists(Path.of(GDDirectory + "\\minhook.x32.dll"))){
+                Files.move(Path.of(loquiDir + "\\minhook.x32.dll"), Path.of(installPath + "\\minhook.x32.dll"), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            FileUtils.copyDirectory(new File(GDDirectory + "\\LoquiExtension\\Resources (place contents in resources folder)"), new File(GDDirectory + "\\Resources"));
+
+        }
+        catch (Exception e){
+            DialogBox.showDialogBox("Error", "Failed to install mod!", e.getMessage(), new String[] {"Okay"});
+        }
+        try {
+            Files.deleteIfExists(loquiPath);
+            Files.deleteIfExists(loquiZipPath);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
     public static boolean getSafeMode(){
 
         boolean isSafe = false;

@@ -60,6 +60,7 @@ public class ConnectorSocket extends WebSocketServer {
 
         switch (s.toLowerCase()){
             case "next":
+
                 RequestFunctions.skipFunction();
                 break;
             case "random":
@@ -97,7 +98,9 @@ public class ConnectorSocket extends WebSocketServer {
             }
 
             case "random_get":{
-                RequestFunctions.randomFunction();
+                if(RequestsTab.getQueueSize() > 1) {
+                    RequestFunctions.randomFunction();
+                }
 
                 LevelData data1 = null;
                 LevelButton button = RequestsTab.getRequest(RequestsUtils.getSelection());
@@ -110,7 +113,9 @@ public class ConnectorSocket extends WebSocketServer {
                 break;
             }
             case "next_get":{
-                RequestFunctions.skipFunction();
+                if(RequestsTab.getQueueSize() > 1) {
+                    RequestFunctions.skipFunction();
+                }
 
                 LevelData data1 = null;
                 LevelButton button = RequestsTab.getRequest(RequestsUtils.getSelection());

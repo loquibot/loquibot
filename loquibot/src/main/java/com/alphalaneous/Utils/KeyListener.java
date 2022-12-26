@@ -1,6 +1,5 @@
 package com.alphalaneous.Utils;
 
-import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Memory.Hacks;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Main;
@@ -8,7 +7,6 @@ import com.alphalaneous.Settings.Modifications;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsPage;
-import com.alphalaneous.Swing.Components.VideoButton;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
@@ -83,12 +81,6 @@ public class KeyListener extends SwingKeyAdapter {
 				}
 				if (key == SettingsHandler.getSettings("clearKeybind").asInteger()) {
 					RequestFunctions.clearFunction();
-				}
-				if(key == SettingsHandler.getSettings("mediaShareSkipKeybind").asInteger()){
-					MediaShare.removeMedia(VideoButton.selectedID);
-				}
-				if(key == SettingsHandler.getSettings("mediaSharePauseKeybind").asInteger()){
-					MediaShare.togglePause();
 				}
 				if(key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()){
 					boolean isNoclip = SettingsHandler.getSettings("safeNoclipHack").asBoolean();

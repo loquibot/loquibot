@@ -14,7 +14,6 @@ import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Keywords.LoadKeywords;
-import com.alphalaneous.Interactive.MediaShare.MediaShare;
 import com.alphalaneous.Interactive.Timers.LoadTimers;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Interactive.Timers.TimerHandler;
@@ -27,9 +26,7 @@ import com.alphalaneous.Settings.ChannelPoints;
 import com.alphalaneous.Settings.Outputs;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Logs.LoggedID;
-import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
-import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Services.YouTube.YouTubeChatListener;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
@@ -73,7 +70,6 @@ public class Main {
             throw new RuntimeException(e);
         }
         LogWindow.createWindow();
-        new Thread(BrowserWindow::init).start();
     }
 
     public static boolean programLoaded = false;
@@ -93,32 +89,9 @@ public class Main {
     private static ConnectorSocket streamDeckSocket;
 
 
+
+
     public static void main(String[] args) throws IOException {
-
-        //Default Path = C:\Program Files (x86)\Steam\steamapps\common\Geometry Dash\GeometryDash.exe
-        /*
-        Have option to search for path (may take a moment)
-        Find Mod Loader
-         */
-        //
-
-        /*String path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Geometry Dash\\GeometryDash.exe";
-        boolean skip = false;
-        if(!Files.exists(Paths.get(path))){
-            path = Find.findGDPath();
-            if(path == null) {
-                DialogBox.showDialogBox("Error", "Geometry Dash Not Installed!", "", new String[] {"Okay"});
-                skip = true;
-            }
-        }
-        if(!skip) {
-            if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\hackpro.dll"))) {
-                System.out.println("Is MegaHack");
-            }
-            if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\ToastedMarshmellow.dll"))) {
-                System.out.println("Is HackerMode");
-            }
-        }*/
 
         setUI();
 
@@ -248,8 +221,6 @@ public class Main {
             System.out.println("> Window initialized");
             RequestsTab.createPanel();
             System.out.println("> Requests Tab created");
-            MediaShareTab.createPanel();
-            System.out.println("> Media Share Tab created");
             ChatbotTab.createPanel();
             System.out.println("> Chatbot Tab created");
             SettingsTab.createPanel();
@@ -272,11 +243,8 @@ public class Main {
             System.out.println("> Timer Handler Started");
 
             LevelDetailsPanel.setPanel(null);
-            VideoDetailsPanel.setPanel(null);
-
 
             Platform.setImplicitExit(false);
-            Platform.runLater(MediaShare::init);
 
             System.out.println("> All Panels Created");
 

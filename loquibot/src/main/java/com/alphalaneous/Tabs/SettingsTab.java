@@ -38,9 +38,6 @@ public class SettingsTab {
 
 	private static final JPanel reportedIDsPage = ReportedIDs.createPanel();
 
-	private static final JPanel mediaSharePage = MediaShare.createPanel();
-	private static final JPanel mediaShareKeybindsPage = MediaShareShortcuts.createPanel();
-
 	private static final JPanel legalPage = Legal.createPanel();
 	private static final JPanel privacyPage = Privacy.createPanel();
 	private static final JPanel warrantyPage = Warranty.createPanel();
@@ -119,14 +116,6 @@ public class SettingsTab {
 	private static final SettingsButton reportedIDs = createButton("$REPORTED_ID_SETTINGS$", "\uF04A", () -> {
 		reportedIDsPage.setVisible(true);
 		ReportedIDs.loadIDs();
-		return null;
-	});
-	private static final SettingsButton mediaShare = createButton("$MEDIA_SHARE_SETTINGS$", "\uF03D", () -> {
-		mediaSharePage.setVisible(true);
-		return null;
-	});
-	private static final SettingsButton mediaShareKeybinds = createButton("$MEDIA_SHARE_SHORTCUTS_SETTINGS$", "\uF105", () -> {
-		mediaShareKeybindsPage.setVisible(true);
 		return null;
 	});
 	private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
@@ -212,8 +201,6 @@ public class SettingsTab {
 		content.add(loggedIDsPage);
 		content.add(devPage);
 		content.add(reportedIDsPage);
-		content.add(mediaSharePage);
-		content.add(mediaShareKeybindsPage);
 		content.add(languagePage);
 		content.add(legalPage);
 		content.add(privacyPage);
@@ -235,8 +222,6 @@ public class SettingsTab {
 		loggedIDsPage.setVisible(false);
 		devPage.setVisible(false);
 		reportedIDsPage.setVisible(false);
-		mediaSharePage.setVisible(false);
-		mediaShareKeybindsPage.setVisible(false);
 		legalPage.setVisible(false);
 		languagePage.setVisible(false);
 		privacyPage.setVisible(false);

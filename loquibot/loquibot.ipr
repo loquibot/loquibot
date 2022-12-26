@@ -1063,6 +1063,17 @@
         <root url="jar://$MAVEN_REPOSITORY$/me/friwi/jogl-all/v2.4.0-rc-20210111/jogl-all-v2.4.0-rc-20210111-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: net.lingala.zip4j:zip4j:2.11.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.11.2/zip4j-2.11.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.11.2/zip4j-2.11.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.11.2/zip4j-2.11.2-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Maven: org.apache.commons:commons-compress:1.21">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar!/" />

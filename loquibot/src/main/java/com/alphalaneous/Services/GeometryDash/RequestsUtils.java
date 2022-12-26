@@ -21,6 +21,7 @@ import jdash.common.DemonDifficulty;
 import jdash.common.Difficulty;
 import jdash.common.Length;
 import jdash.common.entity.GDLevel;
+import jdash.common.entity.GDLevelDownload;
 import jdash.common.entity.GDSong;
 import jdash.common.entity.GDUserStats;
 import org.json.JSONObject;
@@ -29,6 +30,8 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.text.NumberFormat;
 import java.util.*;
@@ -55,15 +58,12 @@ public class RequestsUtils {
 			object.put("service", "StreamDeck");
 		}
 		if(data != null) {
-			object.put("type", "level");
 			object.put("difficulty", data.getSimpleDifficulty());
 			object.put("id", data.getGDLevel().id());
 			String creator = "-";
 			if(data.getGDLevel().creatorName().isPresent()){
 				creator = data.getGDLevel().creatorName().get();
 			}
-
-
 
 			object.put("name", data.getGDLevel().name());
 			object.put("creator", creator);
@@ -76,24 +76,45 @@ public class RequestsUtils {
 			}
 
 			int songID = 0;
+
 			if(data.getGDLevel().songId().isPresent()){
 				songID = data.getGDLevel().songId().get().intValue();
 			}
+			boolean isCustomSong = false;
+			if(data.getGDLevel().song().isPresent()){
+				isCustomSong = data.getGDLevel().song().get().isCustom();
+			}
+			object.put("isCustomSong", isCustomSong);
+
+			object.put("isViewer", data.getViewership());
 			object.put("songID", songID);
 			object.put("stars", data.getGDLevel().stars());
 			object.put("likes", data.getGDLevel().likes());
 			object.put("downloads", data.getGDLevel().downloads());
 			object.put("length", data.getGDLevel().length());
-			object.put("accountID", 0);
+			object.put("lengthValue", data.getGDLevel().length().ordinal());
+			object.put("isDemon", data.getGDLevel().isDemon());
+			object.put("isAuto", data.getGDLevel().isAuto());
+			object.put("isEpic", data.getGDLevel().isEpic());
+			object.put("featuredScore", data.getGDLevel().featuredScore());
+			object.put("difficulty", data.getGDLevel().difficulty().ordinal());
+			object.put("demonDifficulty", data.getGDLevel().demonDifficulty().ordinal());
 
-			if(!creator.equalsIgnoreCase("-")) {
-				for(int i = 0; i < 5; i++) {
+
+			object.put("accountID", 0);
+			if(forGD) {
+				if(!creator.equalsIgnoreCase("-")) {
 					try {
+						try {
+							GDLevel level = GDAPI.getLevel(data.getGDLevel().id());
+						}
+						catch (Exception e) {
+							object.put("exists", false);
+						}
 						GDUserStats gdUserStats = GDAPI.getGDUserStats(creator);
 						object.put("accountID", gdUserStats.accountId());
-						break;
 					} catch (Exception e) {
-						System.out.println("Fails: " + i);
+						System.out.println("Failed Account ID");
 					}
 				}
 			}
@@ -127,6 +148,22 @@ public class RequestsUtils {
 			object.put("likes", data.getGDLevel().likes());
 			object.put("downloads", data.getGDLevel().downloads());
 			object.put("length", data.getGDLevel().length());
+
+			if(!creator.equalsIgnoreCase("-")) {
+				try {
+					GDUserStats gdUserStats = GDAPI.getGDUserStats(creator);
+					object.put("accountID", gdUserStats.accountId());
+
+				} catch (Exception e) {
+					System.out.println("Failed Account ID");
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ignored) {
+				}
+
+			}
+
 		}
 		else {
 			object.put("type", "nextlevel");

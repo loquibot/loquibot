@@ -2,112 +2,22 @@ package com.alphalaneous.Interactive.Commands;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
-import com.alphalaneous.Interactive.MediaShare.MediaShare;
-import com.alphalaneous.Moderation.Moderation;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
-import com.alphalaneous.Services.YouTube.YouTubeScrape;
-import com.alphalaneous.Services.YouTube.YouTubeVideo;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.CommandConfigCheckbox;
 import com.alphalaneous.Moderation.LinkPermit;
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.Swing.Components.VideoButton;
-import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Utils.Board;
 import com.alphalaneous.Utils.Utilities;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class DefaultCommandFunctions {
-
-    public static String runMSPlay(ChatMessage message){
-        MediaShare.play();
-        return Utilities.format("$MEDIA_SHARE_PLAYED$", message.getSenderElseDisplay());
-    }
-
-    public static String runMSClear(ChatMessage message){
-        MediaShare.pause();
-        return Utilities.format("$MEDIA_SHARE_PAUSED$", message.getSenderElseDisplay());
-    }
-
-    public static String runMSSkip(ChatMessage message){
-        if(MediaShareTab.getQueueSize() > 0){
-
-            String title = MediaShareTab.getVideo(VideoButton.selectedID).getVideoData().getTitle();
-
-            MediaShare.removeMedia(VideoButton.selectedID);
-            return Utilities.format("$MEDIA_SHARE_SKIPPED$", message.getSenderElseDisplay(), title);
-        }
-        else{
-            return Utilities.format("$MEDIA_SHARE_NO_QUEUE$", message.getSenderElseDisplay());
-        }
-    }
-
-    public static String runMSShare(ChatMessage message){
-
-        if(message.getArgs().length == 1){
-            return Utilities.format("$MEDIA_SHARE_NO_VIDEO$", message.getSenderElseDisplay());
-        }
-        if (SettingsHandler.getSettings("mediaShareEnabled").asBoolean() && MediaShare.sharingEnabled) {
-            try {
-
-                String data = message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim();
-                YouTubeVideo video;
-
-                if(Moderation.checkIfNormalLink(data)){
-                    String ID = null;
-
-                    if(data.startsWith("https://www.youtube.com/watch?")){
-                        String end = data.substring("https://www.youtube.com/watch?".length());
-                        String[] params = end.split("&");
-                        for(String s : params){
-                            if(s.toLowerCase().startsWith("v=")){
-                                ID = s.substring(2);
-                                break;
-                            }
-                        }
-                    }
-
-                    String link = data.split("://")[1];
-                    if(link.startsWith("www.")){
-                        link = link.substring(4);
-                    }
-
-                    if(link.startsWith("youtu.be/")){
-                        String end = link.substring("youtu.be/".length());
-                        ID = end.split("\\?")[0];
-                    }
-                    if(link.startsWith("youtube.com/shorts/")){
-                        String end = link.substring("youtube.com/shorts/".length());
-                        ID = end.split("\\?")[0];
-                    }
-
-                    if(ID != null) {
-                        video = YouTubeScrape.getDirectVideo(ID);
-                    }
-                    else{
-                        video = YouTubeScrape.searchYouTube(message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim()).get(0);
-                    }
-                }
-                else {
-                    video = YouTubeScrape.searchYouTube(message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim()).get(0);
-                }
-                video.setRequester(message.getSenderElseDisplay());
-                video.setYT(message.isYouTube());
-                MediaShare.addMedia(video);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
-
 
     public static String runBlock(ChatMessage message){
         if(message.getArgs().length == 1){

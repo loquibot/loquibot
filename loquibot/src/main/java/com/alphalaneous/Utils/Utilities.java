@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Utilities {
 
@@ -74,6 +76,37 @@ public class Utilities {
 		popup.add(forceExitItem);
 		trayIcon.setPopupMenu(popup);
 	}
+
+	public static void unzip(String zipFilePath, String destDirectory) throws IOException {
+		File destDir = new File(destDirectory);
+		if (!destDir.exists()) {
+			destDir.mkdir();
+		}
+		ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath));
+		ZipEntry entry = zipIn.getNextEntry();
+		// iterates over entries in the zip file
+		while (entry != null) {
+			String filePath = destDirectory + File.separator + entry.getName();
+			if (!entry.isDirectory()) {
+				// if the entry is a file, extracts it
+				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+				byte[] bytesIn = new byte[4096];
+				int read = 0;
+				while ((read = zipIn.read(bytesIn)) != -1) {
+					bos.write(bytesIn, 0, read);
+				}
+				bos.close();
+			} else {
+				// if the entry is a directory, make the directory
+				File dir = new File(filePath);
+				dir.mkdir();
+			}
+			zipIn.closeEntry();
+			entry = zipIn.getNextEntry();
+		}
+		zipIn.close();
+	}
+
 	public static void openURL(URI uri){
 
 		try {
@@ -172,19 +205,30 @@ public class Utilities {
 		return format;
 	}
 
-	public static void openSteamApp(int id) {
+	public static void openSteamApp(int id, boolean bypass) {
 		new Thread(() -> {
-			String choice = DialogBox.showDialogBox("Open Steam App ID: " + id + "?", "Do you want to launch a steam game?", "", new String[]{"$YES$", "$NO$"});
-			if (choice.equalsIgnoreCase("yes")) {
+			if (bypass) {
 				try {
 					Desktop.getDesktop().browse(new URI("steam://rungameid/" + id));
 				} catch (IOException | URISyntaxException e) {
 					e.printStackTrace();
 				}
 			}
+			else {
+				String choice = DialogBox.showDialogBox("Open Steam App ID: " + id + "?", "Do you want to launch a steam game?", "", new String[]{"$YES$", "$NO$"});
+				if (choice.equalsIgnoreCase("yes")) {
+					try {
+						Desktop.getDesktop().browse(new URI("steam://rungameid/" + id));
+					} catch (IOException | URISyntaxException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}).start();
 	}
-
+	public static void openSteamApp(int id) {
+		openSteamApp(id, false);
+	}
 	public static void runProgram(String location) {
 
 		String[] loc = location.split("\\\\");

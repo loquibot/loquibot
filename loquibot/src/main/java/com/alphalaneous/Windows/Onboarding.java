@@ -42,8 +42,6 @@ public class Onboarding {
 
 		if(!Defaults.isLight) tutorialImage.setIcon(Assets.tutorial);
 		else tutorialImage.setIcon(invertImage(Assets.tutorial));
-
-		tutorialImage.setIcon(Assets.tutorial);
 		everything.add(tutorialImage);
 
 		tutorialImage.setVisible(false);

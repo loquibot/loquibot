@@ -6,9 +6,7 @@ import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Swing.Components.SettingsTitle;
-import com.alphalaneous.Swing.Components.VideoDetailsPanel;
 import com.alphalaneous.Tabs.ChatbotTab;
-import com.alphalaneous.Tabs.MediaShareTab;
 import com.alphalaneous.Swing.ThemedComponents.ThemedCheckbox;
 import com.alphalaneous.Swing.ThemedComponents.ThemedConfigCheckbox;
 import com.alphalaneous.Swing.ThemedComponents.ThemedIconCheckbox;
@@ -43,7 +41,6 @@ public class Themes {
 		ThemedColor.setAllThemeColors();
 
 		RequestsTab.refreshUI();
-		MediaShareTab.refreshUI();
 		FancyTooltip.refreshAll();
 		SettingsTitle.refreshAll();
 		ThemedConfigCheckbox.refreshAll();
@@ -59,7 +56,6 @@ public class Themes {
 		CustomCommands.LegacyCommandsLabel.refreshUI();
 		CustomCommands.refreshListButtons();
 		LevelDetailsPanel.refreshUI();
-		VideoDetailsPanel.refreshUI();
 		SettingsTab.refreshUI();
 		ChatbotTab.refreshUI();
 	}
