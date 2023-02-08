@@ -2,6 +2,7 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Settings.SettingData;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
 import com.alphalaneous.Swing.Components.*;
@@ -407,28 +408,44 @@ public class Window {
     }
 
     public static void loadSettings() {
-        if (!SettingsHandler.getSettings("windowState").asString().equalsIgnoreCase("")) {
-            int windowState = SettingsHandler.getSettings("windowState").asInteger();
+
+        SettingData state = SettingsHandler.getSettings("windowState");
+
+        if (!state.asString().equalsIgnoreCase("")) {
+            int windowState = state.asInteger();
             windowFrame.setExtendedState(windowState);
         }
 
-        if (!SettingsHandler.getSettings("windowSize").asString().equalsIgnoreCase("")) {
-            String[] dim = SettingsHandler.getSettings("windowSize").asString().split(",");
+        SettingData size = SettingsHandler.getSettings("windowSize");
+        if (!size.asString().equalsIgnoreCase("")) {
+            String[] dim = size.asString().split(",");
+
             int newW = Integer.parseInt(dim[0]);
             int newH = Integer.parseInt(dim[1]);
 
+            int winWidth = windowFrame.getWidth();
+            int winHeight = windowFrame.getHeight();
+
             windowFrame.setSize(newW, newH);
-            tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 135);
-            updatePanel.setBounds(0, windowFrame.getHeight()-135, 50, 100);
-            layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
-            mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
-            RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
-            SettingsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
-            ChatbotTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
+            tabPanel.setBounds(0, 0, 50,  winHeight- 135);
+            updatePanel.setBounds(0, winHeight-135, 50, 100);
+            layeredContentPanel.setBounds(0, 0, winWidth, winHeight);
+            mainContent.setBounds(50, 0, winWidth - 50, winHeight);
+
+
+            new Thread(() -> {
+                RequestsTab.resize(winWidth, winHeight);
+                SettingsTab.resize(winWidth, winHeight);
+                ChatbotTab.resize(winWidth, winHeight);
+            }).start();
+
+
+
         }
         else {
             windowFrame.setSize(width, height + 30);
         }
+
     }
 
     public static class ListButton extends JButton {

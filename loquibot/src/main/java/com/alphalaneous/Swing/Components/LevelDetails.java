@@ -73,12 +73,12 @@ public class LevelDetails extends JPanel {
     public LevelDetails(LevelData data){
         setLayout(null);
         setBounds(0,0,520, Window.getWindow().getHeight());
-        titleLabel = new JLabel(data.getGDLevel().name());
+        titleLabel = new JLabel(data.getGDLevel().getLevel().name());
 
         String starCount = "";
-        if(data.getGDLevel().stars() > 0) starCount = data.getGDLevel().stars() + " stars • ";
+        if(data.getGDLevel().getLevel().stars() > 0) starCount = data.getGDLevel().getLevel().stars() + " stars • ";
 
-        infoLabel = new JLabel(starCount + data.getGDLevel().length() + " • " + NumberFormat.getInstance().format(data.getGDLevel().downloads()) + " downloads • " + NumberFormat.getInstance().format(data.getGDLevel().likes()) + " likes • (" + data.getGDLevel().id() + ")");
+        infoLabel = new JLabel(starCount + data.getGDLevel().getLevel().length() + " • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().downloads()) + " downloads • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().likes()) + " likes • (" + data.getGDLevel().getLevel().id() + ")");
 
 
         titleLabel.setFont(Defaults.MAIN_FONT.deriveFont(24f));
@@ -113,8 +113,8 @@ public class LevelDetails extends JPanel {
 
         usernameLabel = new JLabel("By Unknown");
 
-        if(data.getGDLevel().creatorName().isPresent()){
-            usernameLabel = new JLabel("By " + data.getGDLevel().creatorName().get());
+        if(data.getGDLevel().getLevel().creatorName().isPresent()){
+            usernameLabel = new JLabel("By " + data.getGDLevel().getLevel().creatorName().get());
         }
 
         if(data.isYouTube()) requesterLabel = new JLabel("Sent by " + data.getDisplayName());
@@ -126,10 +126,10 @@ public class LevelDetails extends JPanel {
         songArtistLabel = new JLabel("By N/A");
         songIDLabel = new JLabel("(N/A)");
 
-        if(data.getGDLevel().song().isPresent()){
-            songTitleLabel = new JLabel(data.getGDLevel().song().get().title());
-            songArtistLabel = new JLabel("By " + data.getGDLevel().song().get().artist());
-            songIDLabel = new JLabel("(" + data.getGDLevel().song().get().id() + ")");
+        if(data.getGDLevel().getLevel().song().isPresent()){
+            songTitleLabel = new JLabel(data.getGDLevel().getLevel().song().get().title());
+            songArtistLabel = new JLabel("By " + data.getGDLevel().getLevel().song().get().artist());
+            songIDLabel = new JLabel("(" + data.getGDLevel().getLevel().song().get().id() + ")");
         }
 
 
@@ -168,26 +168,26 @@ public class LevelDetails extends JPanel {
         JLabel reqDifficulty = new JLabel();
         reqDifficulty.setBounds(450, 10, 50,50);
 
-        if(data.getGDLevel().isAuto()){
-            if (data.getGDLevel().isEpic()) {
+        if(data.getGDLevel().getLevel().isAuto()){
+            if (data.getGDLevel().getLevel().isEpic()) {
                 reqDifficulty.setIcon(Assets.difficultyIconsEpicLarge.get("auto"));
-            } else if (data.getGDLevel().featuredScore() > 0) {
+            } else if (data.getGDLevel().getLevel().featuredScore() > 0) {
                 reqDifficulty.setIcon(Assets.difficultyIconsFeatureLarge.get("auto"));
-            } else if (data.getGDLevel().stars() != 0) {
+            } else if (data.getGDLevel().getLevel().stars() != 0) {
                 reqDifficulty.setIcon(Assets.difficultyIconsNormalLarge.get("auto"));
             } else {
                 reqDifficulty.setIcon(new ImageIcon(Assets.difficultyIconsNormalLarge.get("auto").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
             }
         }
-        else if(data.getGDLevel().isDemon()){
+        else if(data.getGDLevel().getLevel().isDemon()){
             for (String difficultyA : demonDifficulties) {
-                if (data.getGDLevel().demonDifficulty().name().equalsIgnoreCase(difficultyA)) {
+                if (data.getGDLevel().getLevel().demonDifficulty().name().equalsIgnoreCase(difficultyA)) {
                     difficultyA = difficultyA + " demon";
-                    if (data.getGDLevel().isEpic()) {
+                    if (data.getGDLevel().getLevel().isEpic()) {
                         reqDifficulty.setIcon(Assets.difficultyIconsEpicLarge.get(difficultyA));
-                    } else if (data.getGDLevel().featuredScore() > 0) {
+                    } else if (data.getGDLevel().getLevel().featuredScore() > 0) {
                         reqDifficulty.setIcon(Assets.difficultyIconsFeatureLarge.get(difficultyA));
-                    } else if (data.getGDLevel().stars() != 0) {
+                    } else if (data.getGDLevel().getLevel().stars() != 0) {
                         reqDifficulty.setIcon(Assets.difficultyIconsNormalLarge.get(difficultyA));
                     } else {
                         reqDifficulty.setIcon(new ImageIcon(Assets.difficultyIconsNormalLarge.get(difficultyA).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
@@ -197,12 +197,12 @@ public class LevelDetails extends JPanel {
         }
         else {
             for (String difficultyA : difficulties) {
-                if (data.getGDLevel().difficulty().toString().equalsIgnoreCase(difficultyA)) {
-                    if (data.getGDLevel().isEpic()) {
+                if (data.getGDLevel().getLevel().difficulty().toString().equalsIgnoreCase(difficultyA)) {
+                    if (data.getGDLevel().getLevel().isEpic()) {
                         reqDifficulty.setIcon(Assets.difficultyIconsEpicLarge.get(difficultyA));
-                    } else if (data.getGDLevel().featuredScore() > 0) {
+                    } else if (data.getGDLevel().getLevel().featuredScore() > 0) {
                         reqDifficulty.setIcon(Assets.difficultyIconsFeatureLarge.get(difficultyA));
-                    } else if (data.getGDLevel().stars() != 0) {
+                    } else if (data.getGDLevel().getLevel().stars() != 0) {
                         reqDifficulty.setIcon(Assets.difficultyIconsNormalLarge.get(difficultyA));
                     } else {
                         reqDifficulty.setIcon(new ImageIcon(Assets.difficultyIconsNormalLarge.get(difficultyA).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
@@ -212,12 +212,12 @@ public class LevelDetails extends JPanel {
             }
         }
 
-        int coins = data.getGDLevel().coinCount();
+        int coins = data.getGDLevel().getLevel().coinCount();
         int coinPos = 0;
 
         for (int i = 0; i < coins; i++) {
             JLabel coin;
-            if (data.getGDLevel().hasCoinsVerified()) {
+            if (data.getGDLevel().getLevel().hasCoinsVerified()) {
                 coin = new JLabel(Assets.verifiedCoin);
             } else {
                 coin = new JLabel(Assets.unverifiedCoin);
@@ -295,7 +295,7 @@ public class LevelDetails extends JPanel {
         loadingPane.setBounds(230,50,62,62);
         commentScrollPane.add(loadingPane);
 
-        new Thread(() -> refreshComments(0, false, data.getGDLevel().id())).start();
+        new Thread(() -> refreshComments(0, false, data.getGDLevel().getLevel().id())).start();
 
         commentsLabel.setFont(Defaults.MAIN_FONT.deriveFont(18f));
         commentsLabel.setBounds(18, commentScrollPane.getY()-45, 200, 40);
@@ -304,7 +304,7 @@ public class LevelDetails extends JPanel {
         prev.addActionListener(e -> {
             if(page > 0){
                 page--;
-                new Thread(() -> refreshComments(page, top, data.getGDLevel().id())).start();
+                new Thread(() -> refreshComments(page, top, data.getGDLevel().getLevel().id())).start();
             }
         });
 
@@ -313,10 +313,10 @@ public class LevelDetails extends JPanel {
 
         next.addActionListener(e -> {
             page++;
-            boolean success = refreshComments(page, top, data.getGDLevel().id());
+            boolean success = refreshComments(page, top, data.getGDLevel().getLevel().id());
             if(!success) {
                 page--;
-                new Thread(() -> refreshComments(page, top, data.getGDLevel().id())).start();
+                new Thread(() -> refreshComments(page, top, data.getGDLevel().getLevel().id())).start();
             }
         });
 
@@ -326,7 +326,7 @@ public class LevelDetails extends JPanel {
         topComments.addActionListener(e -> {
             page = 0;
             top = true;
-            new Thread(() -> refreshComments(page, true, data.getGDLevel().id())).start();
+            new Thread(() -> refreshComments(page, true, data.getGDLevel().getLevel().id())).start();
         });
 
         topComments.setBounds(135, commentScrollPane.getY()-40, 30, 30);
@@ -335,7 +335,7 @@ public class LevelDetails extends JPanel {
         newest.addActionListener(e -> {
             page = 0;
             top = false;
-            new Thread(() -> refreshComments(page, false, data.getGDLevel().id())).start();
+            new Thread(() -> refreshComments(page, false, data.getGDLevel().getLevel().id())).start();
         });
 
         newest.setBounds(170, commentScrollPane.getY()-40, 30, 30);
@@ -370,10 +370,10 @@ public class LevelDetails extends JPanel {
             public YouTubeVideo doInBackground() {
                 ArrayList<YouTubeVideo> youTubeVideos;
                 try {
-                    youTubeVideos = YouTubeScrape.searchYouTube(String.valueOf(data.getGDLevel().id()));
+                    youTubeVideos = YouTubeScrape.searchYouTube(String.valueOf(data.getGDLevel().getLevel().id()));
                     while(true) {
                         int pos = maxValue(youTubeVideos);
-                        if (youTubeVideos.get(pos).getTitle().contains(data.getGDLevel().name())) {
+                        if (youTubeVideos.get(pos).getTitle().contains(data.getGDLevel().getLevel().name())) {
                             return youTubeVideos.get(pos);
                         }
                         else youTubeVideos.remove(pos);
@@ -537,7 +537,7 @@ public class LevelDetails extends JPanel {
             boolean hasColored = false;
 
 
-            String desc = RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().description();
+            String desc = RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().getLevel().description();
             Matcher matcher = Pattern.compile("<(c[a-zA-Z])>(.+?)</c>").matcher(desc);
             while (matcher.find()) {
                 hasColored = true;

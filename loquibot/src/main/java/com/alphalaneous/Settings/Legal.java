@@ -18,7 +18,7 @@ public class Legal {
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$LEGAL_SETTINGS$");
         String text = Utilities.readIntoString(legalFileReader, true);
-        settingsPage.addInput("", "", 20, null, text, false);
+        settingsPage.addInput("", "", 20, null, text, false, false);
 
         return settingsPage;
     }

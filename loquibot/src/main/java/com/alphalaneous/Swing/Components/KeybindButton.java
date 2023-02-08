@@ -2,7 +2,7 @@ package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Settings.SettingsHandler;
-import com.github.kwhat.jnativehook.keyboard.SwingKeyAdapter;
+import org.jnativehook.keyboard.SwingKeyAdapter;
 
 import javax.swing.*;
 import javax.swing.text.DefaultStyledDocument;

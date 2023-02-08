@@ -406,17 +406,17 @@
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:win:18.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:18.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:19" level="project" />
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-common:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-client:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor.netty:reactor-netty:1.0.12" level="project" />
@@ -460,20 +460,20 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.13" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.11" level="project" />
-    <orderEntry type="library" name="Maven: com.google.api-client:google-api-client:1.35.2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.oauth-client:google-oauth-client:1.34.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-gson:1.42.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.9.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-apache-v2:1.42.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.http-client:google-http-client:1.42.0" level="project" />
-    <orderEntry type="library" name="Maven: io.opencensus:opencensus-api:0.31.1" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-context:1.27.2" level="project" />
-    <orderEntry type="library" name="Maven: io.opencensus:opencensus-contrib-http-util:0.31.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.auth:google-auth-library-oauth2-http:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.auto.value:auto-value-annotations:1.9" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.auth:google-auth-library-credentials:1.8.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.http-client:google-http-client:1.42.0" level="project" />
+    <orderEntry type="library" name="Maven: io.opencensus:opencensus-api:0.31.1" level="project" />
+    <orderEntry type="library" name="Maven: io.grpc:grpc-context:1.27.2" level="project" />
+    <orderEntry type="library" name="Maven: io.opencensus:opencensus-contrib-http-util:0.31.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-gson:1.42.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.apis:google-api-services-youtube:v3-rev20220719-1.32.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.api-client:google-api-client:1.34.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.oauth-client:google-oauth-client:1.33.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-apache-v2:1.41.7" level="project" />
     <orderEntry type="library" name="Maven: com.google.oauth-client:google-oauth-client-jetty:1.34.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.oauth-client:google-oauth-client-java6:1.34.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />
@@ -491,7 +491,6 @@
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.26.0-GA" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.15.3" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20220924" level="project" />
-    <orderEntry type="library" name="Maven: com.github.kwhat:jnativehook:2.2.2" level="project" />
     <orderEntry type="library" name="Maven: javazoom:jlayer:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.philippheuer.credentialmanager:credentialmanager:0.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.10" level="project" />

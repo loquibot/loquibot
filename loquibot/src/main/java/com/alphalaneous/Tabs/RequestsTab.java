@@ -402,9 +402,9 @@ public class RequestsTab {
                 selectedUsername = String.valueOf(getRequest(pos).getLevelData().getRequester());
                 selectedID = pos;
                 usernameLabel.setText(String.valueOf(getRequest(pos).getLevelData().getRequester()));
-                levelNameLabel.setText(String.valueOf(getRequest(pos).getLevelData().getGDLevel().name()));
+                levelNameLabel.setText(String.valueOf(getRequest(pos).getLevelData().getGDLevel().getLevel().name()));
                 levelNameLabel.setBounds(473 - levelNameLabel.getPreferredSize().width, 0, 473, 40);
-                levelIDLabel.setText("(" + getRequest(pos).getLevelData().getGDLevel().id() + ")");
+                levelIDLabel.setText("(" + getRequest(pos).getLevelData().getGDLevel().getLevel().id() + ")");
                 levelIDLabel.setBounds(473 - levelIDLabel.getPreferredSize().width, 16, 473, 40);
                 messageTextArea.setText(getRequest(pos).getLevelData().getMessage());
                 messageTextArea.clearUndo();

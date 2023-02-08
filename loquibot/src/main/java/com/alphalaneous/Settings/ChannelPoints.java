@@ -47,20 +47,22 @@ public class ChannelPoints {
     }
 
     public static void refresh(){
-        if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
-            try {
-                listView.clearElements();
-                if (TwitchAccount.broadcaster_type.equalsIgnoreCase("affiliate")
-                        || TwitchAccount.broadcaster_type.equalsIgnoreCase("partner")) {
-                    ArrayList<ChannelPointReward> rewards = TwitchAPI.getChannelPoints();
-                    for (ChannelPointReward reward : rewards) {
-                        listView.addElement(createButton(reward.getTitle(), reward.getBgColor(), reward.getIcon(), reward.isDefaultIcon()));
+        if(TwitchAccount.broadcaster_type != null) {
+            if (SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
+                try {
+                    listView.clearElements();
+                    if (TwitchAccount.broadcaster_type.equalsIgnoreCase("affiliate")
+                            || TwitchAccount.broadcaster_type.equalsIgnoreCase("partner")) {
+                        ArrayList<ChannelPointReward> rewards = TwitchAPI.getChannelPoints();
+                        for (ChannelPointReward reward : rewards) {
+                            listView.addElement(createButton(reward.getTitle(), reward.getBgColor(), reward.getIcon(), reward.isDefaultIcon()));
+                        }
+                    } else {
+                        listView.addElement(notAvailableComponent);
                     }
-                } else {
-                    listView.addElement(notAvailableComponent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -123,7 +125,7 @@ public class ChannelPoints {
                         }
                     }
                     if(data != null) {
-                        ChatMessage message = new ChatMessage(new String[]{}, "PointHandler", "PointHandler", "", new String[0], true, true, true, 0, false);
+                        ChatMessage message = new ChatMessage(new String[]{}, "PointHandler", "PointHandler", "", new String[0], true, true, true, 0, false, false);
                         Main.sendMessage(CommandHandler.replaceBetweenParentheses(message, data.getMessage(), data.getMessage().split(" "), null));
                     }
                 }

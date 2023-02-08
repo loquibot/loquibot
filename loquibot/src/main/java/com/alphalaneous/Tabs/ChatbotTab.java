@@ -1,6 +1,7 @@
 package com.alphalaneous.Tabs;
 
 import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Settings.ChannelPoints;
 import com.alphalaneous.Settings.Chatbot;
 import com.alphalaneous.Settings.Logs.RequestsLog;
@@ -30,6 +31,8 @@ public class ChatbotTab {
 	private static final JPanel pointsPage = ChannelPoints.createPanel();
 	private static final JPanel spamProtectionPage = SpamProtection.createPanel();
 	private static final JPanel customKeywordsPage = CustomKeywords.createPanel();
+	private static final JPanel customCheerActionsPage = CustomCheerActions.createPanel();
+
 	private static final JPanel blockedKeywordsPage = BlockedKeywords.createPanel();
 
 	private static final JPanel chatbotPanel = new JPanel(null);
@@ -40,40 +43,43 @@ public class ChatbotTab {
 
 	private static final FunctionButton generalBotButton = createButton("$CHATBOT_SETTINGS$", "\uF130", () -> {
 		generalBotPage.setVisible(true);
-		return null;
 	});
 	private static final FunctionButton customCommandsButton = createButton("$CUSTOM_COMMANDS_SETTINGS$", "\uF03C", () -> {
 		CustomCommands.loadCommands();
 		customCommandsPage.setVisible(true);
-		return null;
 	});
 	private static final FunctionButton defaultCommandsButton = createButton("$DEFAULT_COMMANDS_SETTINGS$", "\uF4EA", () -> {
 		com.alphalaneous.Tabs.ChatbotPages.DefaultCommands.loadCommands();
 		defaultCommandsPage.setVisible(true);
-		return null;
 	});
 	private static final FunctionButton channelPointsButton = createButton("$CHANNEL_POINTS_SETTINGS$", "\uF52B", () -> {
 		pointsPage.setVisible(true);
-		return null;
 	});
 	private static final FunctionButton timersButton = createButton("$TIMERS_SETTINGS$", "\uF210", () -> {
 		TimerSettings.loadTimers();
 		timersPage.setVisible(true);
-		return null;
 	});
 	private static final FunctionButton spamProtectionButton = createButton("$SPAM_PROTECTION_SETTINGS$", "\uF02D", () -> {
 		spamProtectionPage.setVisible(true);
-		return null;
 	});
 	private static final FunctionButton customKeywordsButton = createButton("$CUSTOM_KEYWORDS_SETTINGS$", "\uF0B3", () -> {
 		CustomKeywords.loadKeywords();
 		customKeywordsPage.setVisible(true);
-		return null;
+	});
+	private static final FunctionButton customCheerActionsButton = createButton("$CUSTOM_CHEER_ACTIONS_SETTINGS$", "\uF259", () -> {
+		CustomCheerActions.loadCheerActions();
+		customCheerActionsPage.setVisible(true);
 	});
 	private static final FunctionButton blockedKeywordsButton = createButton("$BLOCKED_KEYWORDS_SETTINGS$", "\uF0AB", () -> {
 		blockedKeywordsPage.setVisible(true);
-		return null;
 	});
+
+	public static final JButtonUI selectUI = new JButtonUI(){{
+		setBackground(Defaults.COLOR4);
+		setHover(Defaults.COLOR1);
+		setSelect(Defaults.COLOR4);
+	}};
+
 
 	public static void createPanel() {
 
@@ -109,9 +115,11 @@ public class ChatbotTab {
 		buttons.add(defaultCommandsButton);
 		buttons.add(customCommandsButton);
 		buttons.add(customKeywordsButton);
+
 		buttons.add(createSeparator());
 		buttons.add(chatSection);
 		buttons.add(timersButton);
+		buttons.add(customCheerActionsButton);
 		buttons.add(channelPointsButton);
 		buttons.add(spamProtectionButton);
 		//buttons.add(blockedKeywordsButton);
@@ -124,6 +132,7 @@ public class ChatbotTab {
 		content.add(spamProtectionPage);
 		content.add(blockedKeywordsPage);
 		content.add(customKeywordsPage);
+		content.add(customCheerActionsPage);
 
 		buttons.setPreferredSize(new Dimension(208, 400));
 
@@ -140,11 +149,10 @@ public class ChatbotTab {
 
 	public static void refreshUI() {
 		buttonsScroll.getVerticalScrollBar().setUI(new ScrollbarUI());
-		//buttonsScroll.getViewport().setBackground(Defaults.COLOR);
-		//buttonsScroll.setBackground(Defaults.COLOR);
-		//chatbotPanel.setBackground(Defaults.COLOR);
-		//buttons.setBackground(Defaults.COLOR);
-		//content.setBackground(Defaults.COLOR3);
+		selectUI.setBackground(Defaults.COLOR4);
+		selectUI.setHover(Defaults.COLOR1);
+		selectUI.setSelect(Defaults.COLOR4);
+
 		for (Component component : buttons.getComponents()) {
 			if (component instanceof JButton) {
 				for (Component component2 : ((JButton) component).getComponents()) {
@@ -152,10 +160,12 @@ public class ChatbotTab {
 						component2.setForeground(Defaults.FOREGROUND_A);
 					}
 				}
-				if (!((JButton) component).getUI().equals(SettingsTab.selectUI)) {
-					component.setBackground(new Color(0,0,0,0));
-				} else {
-					component.setBackground(new Color(255,255,255,20));
+				if(((JButton) component).getUI() != null) {
+					if (!((JButton) component).getUI().equals(selectUI)) {
+						component.setBackground(new Color(0, 0, 0, 0));
+					} else {
+						component.setBackground(new Color(255, 255, 255, 20));
+					}
 				}
 
 			}
@@ -249,15 +259,15 @@ public class ChatbotTab {
 
 	private static class FunctionButton extends CurvedButton {
 
-		private final Callable<Void> method;
+		private final Function function;
 		private ImageIcon icon;
 		private final LangLabel iconLabel;
 		private static final ArrayList<FunctionButton> functionButtons = new ArrayList<>();
 		private final LangLabel label;
 
-		FunctionButton(String text, String icon, Callable<Void> method){
+		FunctionButton(String text, String icon, Function function){
 			super("");
-			this.method = method;
+			this.function = function;
 
 			label = new LangLabel(text);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -275,7 +285,7 @@ public class ChatbotTab {
 			add(label);
 			add(iconLabel);
 			setBackground(new Color(255,255,255,20));
-			setUI(SettingsTab.selectUI);
+			setUI(selectUI);
 			setForeground(Defaults.FOREGROUND_A);
 			setBorder(BorderFactory.createEmptyBorder());
 			setPreferredSize(new Dimension(180, 32));
@@ -312,7 +322,7 @@ public class ChatbotTab {
 				}
 			}
 			try {
-				method.call();
+				function.run();
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
@@ -350,8 +360,8 @@ public class ChatbotTab {
 			return new ImageIcon(img);
 		}
 	}
-	private static FunctionButton createButton(String text, String icon, Callable<Void> method) {
-		return new FunctionButton(text, icon, method);
+	private static FunctionButton createButton(String text, String icon, Function function) {
+		return new FunctionButton(text, icon, function);
 	}
 
 

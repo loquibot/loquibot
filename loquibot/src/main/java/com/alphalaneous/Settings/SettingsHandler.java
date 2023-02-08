@@ -35,6 +35,10 @@ public class SettingsHandler {
 	}
 
 	public static void loadSettings() {
-		Utilities.load("/loquibot/config.properties", settings);
+		try {
+			Utilities.load("/loquibot/config.properties", settings);
+		} catch (IOException e) {
+			System.out.println("No config.properties");
+		}
 	}
 }

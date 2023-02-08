@@ -27,7 +27,7 @@ public class KeywordConfigCheckbox extends JPanel {
     public KeywordConfigCheckbox(KeywordData keywordData){
 
 
-        themedCheckbox = new ThemedConfigCheckbox(keywordData.getKeyword(), StringEscapeUtils.escapeHtml4(keywordData.getMessage()), () -> openKeywordSettings(keywordData), false, null, keywordData);
+        themedCheckbox = new ThemedConfigCheckbox(keywordData.getKeyword(), StringEscapeUtils.escapeHtml4(keywordData.getMessage()), () -> openKeywordSettings(keywordData), false, null, keywordData, null);
 
         themedCheckbox.setChecked(keywordData.isEnabled());
         setLayout(null);

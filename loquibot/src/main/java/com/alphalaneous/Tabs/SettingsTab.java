@@ -330,7 +330,6 @@ public class SettingsTab {
 		buttonsScroll.setBounds(0, 0, 198, height-40);
 
 		content.setBounds(198, 0, width, height);
-
 	}
 
 	private static JPanel createSeparator(){

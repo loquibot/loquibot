@@ -12,6 +12,7 @@ public class Requests {
         SettingsPage settingsPage = new SettingsPage("$REQUESTS_SETTINGS$");
         settingsPage.addCheckbox("$GD_MODE$", "$GD_MODE_DESC$", "gdMode", true, DefaultCommands::loadCommands);
         settingsPage.addCheckbox("$REMOVE_IF_OFFLINE$", "$REMOVE_IF_OFFLINE_DESC$", "removeIfOffline");
+        settingsPage.addCheckbox("$WAIT_A_SECOND$", "$WAIT_A_SECOND_DESC$", "waitForRequests");
         settingsPage.addCheckbox("$FOLLOWERS_ONLY$ (Twitch)", "", "followers");
         settingsPage.addCheckbox("$SUBSCRIBERS_ONLY$ (Twitch)", "", "subscribers");
         settingsPage.addCheckbox("$CHANNEL_POINTS_ONLY$ (Twitch)", "", "requestsChannelPointsOnly");
@@ -29,7 +30,7 @@ public class Requests {
         settingsPage.addCheckedInput("$MAX_QUEUE_SIZE$", "", 1, true, false, false, "queueLimitEnabled", "queueLimit");
         settingsPage.addCheckedInput("$REQUEST_LIMIT_QUEUE$", "$REQUEST_LIMIT_QUEUE_DESC$", 1, true, false, false, "userLimitEnabled", "userLimit");
         settingsPage.addCheckedInput("$STREAM_REQUEST_LIMIT$", "$STREAM_REQUEST_LIMIT_DESC$",1, true, false, false, "userLimitStreamEnabled", "userLimitStream");
-        settingsPage.addInput("$QUEUE_COMMAND_LABEL$", "", 1, true, false, false, "queueLevelLength", "10", true);
+        settingsPage.addInput("$QUEUE_COMMAND_LABEL$", "", 1, true, false, false, "queueLevelLength", "10", true, false);
 
         return settingsPage;
     }

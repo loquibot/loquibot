@@ -67,13 +67,15 @@ public class Requests {
         removedForOffline.add(button);
     }
 
-
-    public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand, ChatMessage chatMessage) {
+    public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand, ChatMessage chatMessage){
+        addRequest(IDa, user, isMod, isSub, message, messageID, userID, isCommand, chatMessage, -1);
+    }
+    public static void addRequest(long IDa, String user, boolean isMod, boolean isSub, String message, String messageID, long userID, boolean isCommand, ChatMessage chatMessage, int pos) {
 
 
         if(!com.alphalaneous.Windows.Window.getWindow().isVisible()) return;
         if(chatMessage == null) {
-            chatMessage = new ChatMessage(new String[]{}, user, user, message, new String[]{}, isMod, isSub, false, 0, false);
+            chatMessage = new ChatMessage(new String[]{}, user, user, message, new String[]{}, isMod, isSub, false, 0, false, false);
         }
         if (chatMessage.getTag("user-id") != null && !chatMessage.isYouTube() && globallyBlockedUsers.containsKey(Long.parseLong(chatMessage.getTag("user-id")))) {
             return;
@@ -109,7 +111,7 @@ public class Requests {
                     return;
                 }
 
-                GDLevel level;
+                GDLevelExtra level;
 
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add(""); //Accidentally started array at one due to value I thought existed, easier to add dummy value than change everything.
@@ -127,7 +129,7 @@ public class Requests {
                         if (level == null) return;
                     } else if (arguments.size() > 2) {
                         boolean inQuotes = false;
-                        if (arguments.get(2).equalsIgnoreCase("by") || message.contains(" by ")) {
+                        if (arguments.get(2).equalsIgnoreCase("by") || message.toLowerCase().contains(" by ")) {
                             if (arguments.get(2).equalsIgnoreCase("by")) {
                                 levelNameS = arguments.get(1).trim();
                                 if (levelNameS.startsWith("\"") && levelNameS.endsWith("\"")) {
@@ -171,7 +173,7 @@ public class Requests {
 
                 for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
 
-                    if (level.id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().id()) {
+                    if (level.getLevel().id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().getLevel().id()) {
                         int j = k + 1;
                         if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
                             sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", finalUser, j), finalChatMessage.isYouTube());
@@ -186,14 +188,14 @@ public class Requests {
                     bypass = (SettingsHandler.getSettings("modsBypass").asBoolean() && isMod) || (finalUser.equalsIgnoreCase(TwitchAccount.login) && SettingsHandler.getSettings("streamerBypass").asBoolean());
                 }
                 if (!bypass) {
-                    if (checkList(level.id(), "\\loquibot\\blocked.txt")) {
+                    if (checkList(level.getLevel().id(), "\\loquibot\\blocked.txt")) {
                         sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                         return;
                     }
                     if (Files.exists(logged) && (SettingsHandler.getSettings("repeatedRequestsAll").asBoolean() && !SettingsHandler.getSettings("updatedRepeated").asBoolean()) && Main.programLoaded) {
                         Scanner sc = new Scanner(logged.toFile());
                         while (sc.hasNextLine()) {
-                            if (String.valueOf(level.id()).equals(sc.nextLine().split(",")[0])) {
+                            if (String.valueOf(level.getLevel().id()).equals(sc.nextLine().split(",")[0])) {
                                 sc.close();
                                 sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                                 return;
@@ -201,8 +203,8 @@ public class Requests {
                         }
                         sc.close();
                     }
-                    if (globallyBlockedIDs.containsKey(level.id())) {
-                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", finalUser, globallyBlockedIDs.get(level.id())), finalChatMessage.isYouTube());
+                    if (globallyBlockedIDs.containsKey(level.getLevel().id())) {
+                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", finalUser, globallyBlockedIDs.get(level.getLevel().id())), finalChatMessage.isYouTube());
                         return;
                     }
                     if (SettingsHandler.getSettings("subscribers").asBoolean()) {
@@ -221,11 +223,11 @@ public class Requests {
                             }
                         }
                     }
-                    if (level.id() < SettingsHandler.getSettings("minID").asInteger() && SettingsHandler.getSettings("minIDOption").asBoolean()) {
+                    if (level.getLevel().id() < SettingsHandler.getSettings("minID").asInteger() && SettingsHandler.getSettings("minIDOption").asBoolean()) {
                         sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", finalUser, SettingsHandler.getSettings("minID").asInteger()), finalChatMessage.isYouTube());
                         return;
                     }
-                    if (level.id() > SettingsHandler.getSettings("maxID").asInteger() && SettingsHandler.getSettings("maxIDOption").asBoolean()) {
+                    if (level.getLevel().id() > SettingsHandler.getSettings("maxID").asInteger() && SettingsHandler.getSettings("maxIDOption").asBoolean()) {
                         sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", finalUser, SettingsHandler.getSettings("maxID").asInteger()), finalChatMessage.isYouTube());
                         return;
                     }
@@ -256,7 +258,7 @@ public class Requests {
                             }
                         }
                     }
-                    if (addedLevels.containsKey(level.id()) && (SettingsHandler.getSettings("repeatedRequests").asBoolean() && !SettingsHandler.getSettings("updatedRepeated").asBoolean())) {
+                    if (addedLevels.containsKey(level.getLevel().id()) && (SettingsHandler.getSettings("repeatedRequests").asBoolean() && !SettingsHandler.getSettings("updatedRepeated").asBoolean())) {
                         sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser), finalChatMessage.isYouTube());
                         return;
                     }
@@ -269,34 +271,38 @@ public class Requests {
                 else levelData.setDisplayName(finalChatMessage.getSender());
 
                 if (!bypass) {
-                    if(level.creatorName().isPresent()) {
-                        if (checkList(level.creatorName().get(), "\\loquibot\\blockedGDUsers.txt")) {
+                    if(level.getLevel().creatorName().isPresent()) {
+                        if (checkList(level.getLevel().creatorName().get(), "\\loquibot\\blockedGDUsers.txt")) {
                             sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$", finalUser), levelData.isYouTube());
                             return;
                         }
                     }
-                    if (SettingsHandler.getSettings("rated").asBoolean() && !(level.stars() > 0)) {
+                    /*if (SettingsHandler.getSettings("twoPlayerOnly").asBoolean() && level. ) {
+                        sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", finalUser), levelData.isYouTube());
+                        return;
+                    }*/
+                    if (SettingsHandler.getSettings("rated").asBoolean() && !(level.getLevel().stars() > 0)) {
                         sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$", finalUser), levelData.isYouTube());
                         return;
                     }
-                    if (SettingsHandler.getSettings("unrated").asBoolean() && level.stars() > 0) {
+                    if (SettingsHandler.getSettings("unrated").asBoolean() && level.getLevel().stars() > 0) {
                         sendUnallowed(Utilities.format("$UNRATED_MESSAGE$", finalUser), levelData.isYouTube());
                         return;
                     }
-                    if (SettingsHandler.getSettings("minObjectsOption").asBoolean() && level.objectCount() < SettingsHandler.getSettings("minObjects").asInteger()) {
+                    if (SettingsHandler.getSettings("minObjectsOption").asBoolean() && level.getLevel().objectCount() < SettingsHandler.getSettings("minObjects").asInteger()) {
                         sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
-                    if (SettingsHandler.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > SettingsHandler.getSettings("maxObjects").asInteger()) {
+                    if (SettingsHandler.getSettings("maxObjectsOption").asBoolean() && level.getLevel().objectCount() > SettingsHandler.getSettings("maxObjects").asInteger()) {
                         sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
-                    if (level.objectCount() != 0) {
-                        if (SettingsHandler.getSettings("minLikesOption").asBoolean() && level.objectCount() < SettingsHandler.getSettings("minLikes").asInteger()) {
+                    if (level.getLevel().objectCount() != 0) {
+                        if (SettingsHandler.getSettings("minLikesOption").asBoolean() && level.getLevel().objectCount() < SettingsHandler.getSettings("minLikes").asInteger()) {
                             sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$", finalUser),levelData.isYouTube());
                             return;
                         }
-                        if (SettingsHandler.getSettings("maxObjectsOption").asBoolean() && level.objectCount() > SettingsHandler.getSettings("maxLikes").asInteger()) {
+                        if (SettingsHandler.getSettings("maxObjectsOption").asBoolean() && level.getLevel().objectCount() > SettingsHandler.getSettings("maxLikes").asInteger()) {
                             sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$", finalUser),levelData.isYouTube());
                             return;
                         }
@@ -306,7 +312,7 @@ public class Requests {
                     levelData.setMessageID(messageID);
                 }
 
-                if (level.featuredScore() > 0) {
+                if (level.getLevel().featuredScore() > 0) {
                     levelData.setFeatured();
                 }
                 levelData.setLevelData(level);
@@ -315,14 +321,14 @@ public class Requests {
                         Scanner sc = new Scanner(logged.toFile());
                         while (sc.hasNextLine()) {
                             String levelLine = sc.nextLine();
-                            if (String.valueOf(level.id()).equals(levelLine.split(",")[0])) {
+                            if (String.valueOf(level.getLevel().id()).equals(levelLine.split(",")[0])) {
                                 int version;
                                 if (levelLine.split(",").length == 1) {
                                     version = 1;
                                 } else {
                                     version = Integer.parseInt(levelLine.split(",")[1]);
                                 }
-                                if (version >= levelData.getGDLevel().levelVersion()) {
+                                if (version >= levelData.getGDLevel().getLevel().levelVersion()) {
                                     sc.close();
                                     sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser),levelData.isYouTube());
                                     return;
@@ -331,8 +337,8 @@ public class Requests {
                         }
                         sc.close();
                     }
-                    if (addedLevels.containsKey(level.id()) && (SettingsHandler.getSettings("updatedRepeated").asBoolean())) {
-                        if (addedLevels.get(level.id()) >= levelData.getGDLevel().levelVersion()) {
+                    if (addedLevels.containsKey(level.getLevel().id()) && (SettingsHandler.getSettings("updatedRepeated").asBoolean())) {
+                        if (addedLevels.get(level.getLevel().id()) >= levelData.getGDLevel().getLevel().levelVersion()) {
                             sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$", finalUser),levelData.isYouTube());
                             return;
                         }
@@ -341,11 +347,11 @@ public class Requests {
                         sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
-                    if (Filters.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().requestedStars())) && SettingsHandler.getSettings("disableReqDifficulties").asBoolean()) {
+                    if (Filters.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().getLevel().requestedStars())) && SettingsHandler.getSettings("disableReqDifficulties").asBoolean()) {
                         sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
-                    if (Filters.excludedLengths.contains(level.length().name().toLowerCase()) && SettingsHandler.getSettings("disableLengths").asBoolean()) {
+                    if (Filters.excludedLengths.contains(level.getLevel().length().name().toLowerCase()) && SettingsHandler.getSettings("disableLengths").asBoolean()) {
                         sendUnallowed(Utilities.format("$LENGTH_MESSAGE$", finalUser),levelData.isYouTube());
                         return;
                     }
@@ -353,7 +359,7 @@ public class Requests {
 
                 if (SettingsHandler.getSettings("autoDL").asBoolean()) {
                     new Thread(() -> {
-                        Optional<GDSong> song = levelData.getGDLevel().song();
+                        Optional<GDSong> song = levelData.getGDLevel().getLevel().song();
                         if (song.isPresent()) {
                             Path songFile = Paths.get(System.getenv("LOCALAPPDATA") + "\\GeometryDash\\" + song.get().id() + ".mp3");
                             if (!Files.exists(songFile)) {
@@ -383,7 +389,7 @@ public class Requests {
                 levelData.setMessage(message);
                 levelData.setMessageID(messageID);
 
-                Optional<String> creatorName = levelData.getGDLevel().creatorName();
+                Optional<String> creatorName = levelData.getGDLevel().getLevel().creatorName();
 
                 try {
                     creatorName.ifPresent(s -> levelData.setPlayerIcon(GDAPI.getIcon(GDAPI.getGDUserProfile(s), 100)));
@@ -393,8 +399,12 @@ public class Requests {
                 }
                 LevelButton levelButton = new LevelButton(levelData);
 
-                RequestsTab.addRequest(levelButton);
-
+                if(pos != -1) {
+                    RequestsTab.addRequest(levelButton, pos);
+                }
+                else {
+                    RequestsTab.addRequest(levelButton);
+                }
 
                 try {
                     RequestsTab.getLevelsPanel().setSelect(LevelButton.selectedID, RequestsTab.getQueueSize() == 1);
@@ -403,47 +413,66 @@ public class Requests {
                 RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
                 RequestFunctions.saveFunction();
                 if (Main.sendMessages && !SettingsHandler.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
-                    if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
-                        sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
+                    if(pos == -1) {
+                        if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
+                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
+                                    levelData.getDisplayName(),
+                                    level.getLevel().name(),
+                                    level.getLevel().id(),
+                                    RequestsTab.getQueueSize()), finalUser, levelData.isYouTube());
+                        } else {
+                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
+                                    levelData.getDisplayName(),
+                                    level.getLevel().name(),
+                                    level.getLevel().id()), finalUser, levelData.isYouTube());
+                        }
+                    }
+                    else{
+                        sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_INSTANT$",
                                 levelData.getDisplayName(),
-                                level.name(),
-                                level.id(),
-                                RequestsTab.getQueueSize()), finalUser,levelData.isYouTube());
-                    } else {
-                        sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
-                                levelData.getDisplayName(),
-                                level.name(),
-                                level.id()), finalUser,levelData.isYouTube());
+                                level.getLevel().name(),
+                                level.getLevel().id(),
+                                RequestsTab.getQueueSize()), finalUser, levelData.isYouTube());
+
                     }
                 }
 
                 if (Main.sendMessages && !SettingsHandler.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() == 1) {
-                    StringSelection selection = new StringSelection(String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                    StringSelection selection = new StringSelection(String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()));
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
 
                     if (Main.sendMessages && !SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getDisplayName(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id()), SettingsHandler.getSettings("announceNP").asBoolean());
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()), SettingsHandler.getSettings("announceNP").asBoolean());
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getDisplayName(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()));
                     }
                     else if(SettingsHandler.getSettings("inGameNowPlaying").asBoolean() && !SettingsHandler.getSettings("disableConfirm").asBoolean()){
-                        if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
-                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
+                        if(pos == -1) {
+                            if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
+                                sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
+                                        levelData.getDisplayName(),
+                                        level.getLevel().name(),
+                                        level.getLevel().id(),
+                                        RequestsTab.getQueueSize()), finalUser, levelData.isYouTube());
+                            } else {
+                                sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
+                                        levelData.getDisplayName(),
+                                        level.getLevel().name(),
+                                        level.getLevel().id()), finalUser, levelData.isYouTube());
+                            }
+                        }
+                        else {
+                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_INSTANT$",
                                     levelData.getDisplayName(),
-                                    level.name(),
-                                    level.id(),
-                                    RequestsTab.getQueueSize()), finalUser,levelData.isYouTube());
-                        } else {
-                            sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
-                                    levelData.getDisplayName(),
-                                    level.name(),
-                                    level.id()), finalUser,levelData.isYouTube());
+                                    level.getLevel().name(),
+                                    level.getLevel().id(),
+                                    RequestsTab.getQueueSize()), finalUser, levelData.isYouTube());
                         }
                     }
 
@@ -493,7 +522,7 @@ public class Requests {
 
     public static void saveLogs(LevelData levelData){
         try {
-            addedLevels.put(levelData.getGDLevel().id(), levelData.getGDLevel().levelVersion());
+            addedLevels.put(levelData.getGDLevel().getLevel().id(), levelData.getGDLevel().getLevel().levelVersion());
             Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
 
@@ -506,7 +535,7 @@ public class Requests {
                 Scanner sc = new Scanner(logged.toFile());
                 while (sc.hasNextLine()) {
                     value = sc.nextLine();
-                    if (String.valueOf(levelData.getGDLevel().id()).equals(value.split(",")[0])) {
+                    if (String.valueOf(levelData.getGDLevel().getLevel().id()).equals(value.split(",")[0])) {
                         sc.close();
                         exists = true;
                         break;
@@ -516,7 +545,7 @@ public class Requests {
                 sc.close();
             }
             if (!exists) {
-                Files.write(file, (levelData.getGDLevel().id() + "," + levelData.getGDLevel().levelVersion() + "\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(file, (levelData.getGDLevel().getLevel().id() + "," + levelData.getGDLevel().getLevel().levelVersion() + "\n").getBytes(), StandardOpenOption.APPEND);
 
             } else {
                 BufferedReader fileA = new BufferedReader(new FileReader(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt"));
@@ -529,7 +558,7 @@ public class Requests {
                 fileA.close();
 
                 FileOutputStream fileOut = new FileOutputStream(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
-                fileOut.write(inputBuffer.toString().replace(value, levelData.getGDLevel().id() + "," + levelData.getGDLevel().levelVersion()).getBytes());
+                fileOut.write(inputBuffer.toString().replace(value, levelData.getGDLevel().getLevel().id() + "," + levelData.getGDLevel().getLevel().levelVersion()).getBytes());
                 fileOut.close();
             }
         }
@@ -575,9 +604,9 @@ public class Requests {
         }
     }
 
-    private static GDLevel getID(String message, String user, boolean isYT) {
+    private static GDLevelExtra getID(String message, String user, boolean isYT) {
         String messageS = message.split(" ", 2)[1].replace("\"", "");
-        GDLevel level;
+        GDLevelExtra level;
         if(EmojiManager.containsEmoji(messageS)){
             sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$", user), isYT);
             return null;
@@ -591,8 +620,8 @@ public class Requests {
         return level;
     }
 
-    private static GDLevel checkLevelIDAndGetLevel(long ID) {
-        GDLevel level;
+    private static GDLevelExtra checkLevelIDAndGetLevel(long ID) {
+        GDLevelExtra level;
         if (ID > 999999999 || ID < 1) {
             return null;
         }

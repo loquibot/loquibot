@@ -9,8 +9,8 @@ import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.SwingKeyAdapter;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.SwingKeyAdapter;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;

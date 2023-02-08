@@ -45,7 +45,7 @@ public class Comment extends JPanel {
         Optional<String> creatorNameOptional = Optional.empty();
 
         if(RequestsTab.getRequest(LevelButton.selectedID) != null){
-            creatorNameOptional = RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().creatorName();
+            creatorNameOptional = RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().getLevel().creatorName();
         }
 
 

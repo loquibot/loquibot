@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -407,6 +408,7 @@ public class TwitchAPI {
 		}
 	}
 
+	public static boolean oauthOpen = false;
 	public static void setOauth() {
 		success.set(false);
 		try {
@@ -420,7 +422,7 @@ public class TwitchAPI {
 			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
 
 			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
-
+			oauthOpen = true;
 			if (twitch.auth().awaitAccessToken()) {
 				SettingsHandler.writeSettings("oauth", twitch.auth().getAccessToken());
 				SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
@@ -428,12 +430,14 @@ public class TwitchAPI {
 				Account.refreshTwitch(SettingsHandler.getSettings("channel").asString(), true);
 				//Main.refreshBot();
 				success.set(true);
+				oauthOpen = false;
 			} else {
 				System.out.println(twitch.auth().getAuthenticationError());
-
+				oauthOpen = false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			oauthOpen = false;
 		}
 	}
 
@@ -449,13 +453,17 @@ public class TwitchAPI {
 			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
 
 			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
+			oauthOpen = true;
 
 			if (twitch.auth().awaitAccessToken()) {
+				oauthOpen = false;
 				return twitch.auth().getAccessToken();
 			} else {
 				System.out.println(twitch.auth().getAuthenticationError());
+				oauthOpen = false;
 			}
 		} catch (Exception e) {
+			oauthOpen = false;
 			e.printStackTrace();
 		}
 		return null;
@@ -468,7 +476,7 @@ public class TwitchAPI {
 	}
 	public static String setGame(String game){
 		JSONObject newChannelInfo = new JSONObject();
-		JSONObject gameInfo = twitchAPI("https://api.twitch.tv/helix/games?name=" + game);
+		JSONObject gameInfo = twitchAPI("https://api.twitch.tv/helix/games?name=" + URLEncoder.encode(game, StandardCharsets.UTF_8));
 		assert gameInfo != null;
 		if(gameInfo.getJSONArray("data").length() == 0){
 			return "no_game";

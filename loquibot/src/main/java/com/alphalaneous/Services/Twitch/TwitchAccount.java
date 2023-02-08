@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Settings.SettingsHandler;
 import org.json.JSONObject;
 
@@ -24,6 +25,7 @@ public class TwitchAccount {
 
 	public static void setInfo(){
 		setInfo(false);
+		Account.refreshTwitch(display_name);
 	}
 
 

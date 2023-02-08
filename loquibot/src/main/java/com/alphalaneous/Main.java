@@ -1,6 +1,8 @@
 package com.alphalaneous;
 
 import com.alphalaneous.ChatBot.ServerBot;
+import com.alphalaneous.Interactive.CheerActions.CheerActionData;
+import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
 import com.alphalaneous.Memory.Global;
 import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
@@ -38,10 +40,11 @@ import com.alphalaneous.Utils.*;
 import com.alphalaneous.Utils.KeyListener;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyListener;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -82,27 +85,52 @@ public class Main {
     private static ServerBot serverBot = null;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
-    private static final ImageIcon icon = Assets.loquibot;
-    private static final Image newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-    private static final Image newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+    private static ImageIcon icon;
+    private static Image newIcon16;
+    private static Image newIcon32;
     private static final JFrame starting = new JFrame("loquibot");
     private static ConnectorSocket streamDeckSocket;
 
+    public static void main(String[] args) throws IOException, InterruptedException {
+        long time = System.currentTimeMillis();
 
+        try {
+            Assets.load();
+            Assets.loadAssets();
 
+            icon = Assets.loquibot;
+            newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 
-    public static void main(String[] args) throws IOException {
+            iconImages.add(newIcon16);
+            iconImages.add(newIcon32);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //Initialize JavaFX Graphics Toolkit (Hacky Solution)
+        new Thread(JFXPanel::new).start();
+
+        new Thread(() -> {
+            try {
+                new LoquibotSocket();
+                URI originalURI = new URI("ws://127.0.0.1:18562");
+                CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
+                checkIfRunning.connectBlocking();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
         setUI();
-
         new Thread(() -> {
             Utilities.sleep(21600000);
             if(SettingsHandler.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
                 restart();
             }
         }).start();
-
-        new JFXPanel(); //Initialize JavaFX Graphics Toolkit (Hacky Solution)
 
         SettingsHandler.loadSettings();
 
@@ -115,20 +143,6 @@ public class Main {
 
         Find.setup();
         Find.findPath();
-
-        try {
-            URI originalURI = new URI("ws://127.0.0.1:18562");
-            CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
-            checkIfRunning.connectBlocking();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        new Thread(new LoquibotSocket()).start();
-
-        iconImages.add(newIcon16);
-        iconImages.add(newIcon32);
 
         Defaults.setSystem(false);
 
@@ -169,31 +183,38 @@ public class Main {
 
         System.out.println("> Themes Loaded");
 
-        if (SettingsHandler.getSettings("onboarding").exists()) {
-            try {
-                TwitchAccount.setInfo();
-                new Thread(ChannelPoints::refresh).start();
+        new Thread(() -> {
+            if (SettingsHandler.getSettings("onboarding").exists()) {
                 try {
-                    if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                    TwitchAccount.setInfo();
+                    ChannelPoints.refresh();
+                    try {
+                        if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                    }
+                    catch (Exception e){
+                        YouTubeAccount.setCredential(true);
+                    }
+                    YouTubeAccount.setInfo();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
+                    TwitchAccount.setInfo();
+                    ChannelPoints.refresh();
+                    try {
+                        if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+                    }
+                    catch (Exception f){
+                        try {
+                            YouTubeAccount.setCredential(true);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    YouTubeAccount.setInfo();
                 }
-                catch (Exception e){
-                    YouTubeAccount.setCredential(true);
-                }
-                YouTubeAccount.setInfo();
-            } catch (Exception e) {
-                e.printStackTrace();
-                if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
-                TwitchAccount.setInfo();
-                new Thread(ChannelPoints::refresh).start();
-                try {
-                    if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
-                }
-                catch (Exception f){
-                    YouTubeAccount.setCredential(true);
-                }
-                YouTubeAccount.setInfo();
             }
-        }
+        }).start();
+
         System.out.println("> Twitch Loaded");
         try {
             try {
@@ -204,13 +225,14 @@ public class Main {
                 System.out.println("> Language Change Listener Failed");
             }
 
-            Assets.loadAssets();
             new Thread(Defaults::startMainThread).start();
             new Thread(streamDeckSocket = new ConnectorSocket()).start();
 
             System.out.println("> Main Threads Started");
 
             Window.loadSettings();
+
+
             System.out.println("> Window Settings Loaded");
             try {
                 Window.initFrame();
@@ -218,6 +240,7 @@ public class Main {
             catch (Exception e){
                 e.printStackTrace();
             }
+
             System.out.println("> Window initialized");
             RequestsTab.createPanel();
             System.out.println("> Requests Tab created");
@@ -237,6 +260,8 @@ public class Main {
             System.out.println("> Channel Points Loaded");
             LoadKeywords.loadKeywords();
             System.out.println("> Keywords Loaded");
+            LoadCheerActions.loadCheerActions();
+            System.out.println("> Cheer Actions Loaded");
             LoggedID.loadLoggedIDs();
             System.out.println("> IDs Loaded");
             TimerHandler.startTimerHandler();
@@ -256,8 +281,9 @@ public class Main {
             Themes.refreshUI();
             System.out.println("> UI Refreshed");
 
-
             starting.setVisible(false);
+
+            System.out.println("> Launch Finished in " + (System.currentTimeMillis() - time) + "ms");
 
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
@@ -569,7 +595,7 @@ public class Main {
                 GlobalScreen.unregisterNativeHook();
             }
             GlobalScreen.registerNativeHook();
-            GlobalScreen.addNativeKeyListener(new KeyListener());
+            GlobalScreen.addNativeKeyListener((NativeKeyListener) new KeyListener());
             while (GlobalScreen.isNativeHookRegistered()) {
                 Utilities.sleep(100);
             }
@@ -604,6 +630,7 @@ public class Main {
             //CommandData.saveMediaShareCommands();
             TimerData.saveCustomTimers();
             KeywordData.saveCustomKeywords();
+            CheerActionData.saveCustomCheerActions();
             ChannelPointData.saveCustomPoints();
             LoggedID.saveLoggedIDs();
         }

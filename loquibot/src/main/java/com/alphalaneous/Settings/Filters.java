@@ -115,6 +115,7 @@ public class Filters {
         SettingsPage settingsPage = new SettingsPage("$FILTERS_SETTINGS$");
         settingsPage.addCheckbox("$RATED_LEVELS_ONLY$", "", "rated");
         settingsPage.addCheckbox("$UNRATED_LEVELS_ONLY$", "", "unrated");
+       // settingsPage.addCheckbox("$TWOPLAYERONLY$", "", "twoPlayerOnly");
         settingsPage.addCheckbox("$DISABLE_SELECTED_DIFFICULTIES$", "", "disableDifficulties", true, null);
 
         difficultyPanel.setBackground(new Color(0,0,0,0));

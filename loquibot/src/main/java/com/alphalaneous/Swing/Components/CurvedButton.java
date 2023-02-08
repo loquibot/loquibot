@@ -11,6 +11,7 @@ import java.awt.font.TextAttribute;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class CurvedButton extends JButton {
 
@@ -21,7 +22,7 @@ public class CurvedButton extends JButton {
 
 	private final String identifier;
 
-	public static ArrayList<CurvedButton> buttons = new ArrayList<>();
+	public static ConcurrentLinkedQueue<CurvedButton> buttons = new ConcurrentLinkedQueue<>();
 
 	private final JToolTip tooltip = new FancyTooltip(this);
 

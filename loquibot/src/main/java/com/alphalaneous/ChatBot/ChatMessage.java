@@ -21,11 +21,12 @@ public class ChatMessage {
     private final boolean isSub;
     private final boolean isVIP;
     private final boolean isFirstMessage;
+    private final boolean isCustomReward;
     private boolean isYouTube = false;
 
     private final int cheerCount;
 
-    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, int cheerCount, boolean isFirstMessage) {
+    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, int cheerCount, boolean isFirstMessage, boolean isCustomReward) {
         this.tags = tags;
         this.sender = sender;
         this.displayName = displayName;
@@ -36,9 +37,12 @@ public class ChatMessage {
         this.isVIP = isVIP;
         this.cheerCount = cheerCount;
         this.isFirstMessage = isFirstMessage;
+        this.isCustomReward = isCustomReward;
         this.args = message.split(" ");
     }
-
+    public boolean isCustomReward() {
+        return isCustomReward;
+    }
     public void setYouTube(boolean isYouTube){
         this.isYouTube = isYouTube;
     }

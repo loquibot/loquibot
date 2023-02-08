@@ -10,9 +10,23 @@ import java.util.regex.Pattern;
 public class BotHandler {
 
     public static void onMessage(ChatMessage chatMessage) {
-        String messageNoComma = chatMessage.getMessage().replace(",", "").replace(".","");
 
-        Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoComma);
+        if(chatMessage.isCustomReward()) return;
+
+        String messageNoSymbol = chatMessage.getMessage().replace(",", "")
+                .replace(".","")
+                .replace("!", "")
+                .replace("(", "")
+                .replace(")", "")
+                .replace("{", "")
+                .replace("}", "")
+                .replace("[", "")
+                .replace("]", "")
+                .replace("-", "")
+                .replace("'", "");
+
+
+        Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoSymbol);
 
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";

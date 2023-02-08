@@ -82,12 +82,12 @@ public class TimerData {
     public void runTimer(int minute){
         if(minute % interval == 0 && isEnabled && TwitchChatListener.SelfDestructingMessage.getSize() >= lines) {
             if (runCommand != null && !runCommand.equalsIgnoreCase("")) {
-                ChatMessage message = new ChatMessage(new String[]{}, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false);
+                ChatMessage message = new ChatMessage(new String[]{}, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false, false);
                 CommandHandler.run(message);
                 message.setYouTube(true);
                 CommandHandler.run(message);
             } else {
-                ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0, false);
+                ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0, false, false);
                 Main.sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
                 Main.sendYTMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
             }

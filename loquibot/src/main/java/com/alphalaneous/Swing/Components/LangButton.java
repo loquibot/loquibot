@@ -4,10 +4,11 @@ import com.alphalaneous.Utils.Language;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class LangButton extends JButton {
 	private String text;
-	public static ArrayList<LangButton> buttonList = new ArrayList<>();
+	public static ConcurrentLinkedQueue<LangButton> buttonList = new ConcurrentLinkedQueue<>();
 
 	public LangButton(String text){
 		this.text = text;

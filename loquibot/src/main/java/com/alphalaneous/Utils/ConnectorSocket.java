@@ -74,8 +74,8 @@ public class ConnectorSocket extends WebSocketServer {
                 break;
             case "opened":
                 Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data).toString());
-                Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1).getLevelData()).toString());
-                Main.sendMessageConnectedService(RequestsUtils.getCurrentInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1).getLevelData()).toString());
+                Main.sendMessageConnectedService(RequestsUtils.getNextInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().getLevel().id()) + 1).getLevelData()).toString());
+                Main.sendMessageConnectedService(RequestsUtils.getCurrentInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().getLevel().id()) + 1).getLevelData()).toString());
                 break;
             case "get":{
                 Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data, true).toString());
@@ -128,7 +128,7 @@ public class ConnectorSocket extends WebSocketServer {
                 break;
             }
             case "main_pressed":
-                Main.sendMessageConnectedService(RequestsUtils.getCurrentInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().id()) + 1).getLevelData()).toString());
+                Main.sendMessageConnectedService(RequestsUtils.getCurrentInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().getLevel().id()) + 1).getLevelData()).toString());
                 break;
             case "block_id":
                 RequestFunctions.blockFunction(true);

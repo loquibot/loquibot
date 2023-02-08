@@ -3,6 +3,10 @@ package com.alphalaneous.Interactive.Commands;
 import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
+import com.alphalaneous.Interactive.CheerActions.CheerActionData;
+import com.alphalaneous.Memory.Global;
+import com.alphalaneous.Memory.MemoryHelper;
+import com.alphalaneous.Servers.Levels;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
@@ -25,18 +29,28 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandHandler {
+
+    private static Random random = new Random();
 
     public static void run(ChatMessage message) {
         String reply = "";
@@ -47,11 +61,9 @@ public class CommandHandler {
         CommandData foundCommand = null;
         String defaultCommandPrefix = "!";
         String geometryDashCommandPrefix = "!";
-        //String mediaShareCommandPrefix = "!";
 
         if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
         if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
-        //if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
 
         for (CommandData command : LoadCommands.getDefaultCommands()) {
             if ((message.getMessage() + " ").toLowerCase().startsWith(defaultCommandPrefix + command.getCommand().toLowerCase() + " ")) {
@@ -67,14 +79,7 @@ public class CommandHandler {
                 }
             }
         }
-        //if(foundCommand == null) {
-            //for (CommandData command : LoadCommands.getMediaShareCommands()) {
-            //    if ((message.getMessage() + " ").toLowerCase().startsWith(mediaShareCommandPrefix + command.getCommand().toLowerCase() + " ")) {
-            //        foundCommand = command;
-            //        break;
-            //    }
-            //}
-        //}
+
         if(foundCommand == null) {
             for (CommandData command : LoadCommands.getCustomCommands()) {
                 if ((message.getMessage() + " ").toLowerCase().startsWith(command.getCommand().toLowerCase() + " ")) {
@@ -108,22 +113,11 @@ public class CommandHandler {
                 }
             }
         }
+
         if(foundCommand != null && foundCommand.isMethod() && foundCommand.isEnabled() && checkUserLevel(foundCommand, message)){
             if(foundCommand.isGD() && (!SettingsHandler.getSettings("gdMode").asBoolean() || !Window.getWindow().isVisible())) return;
-
-            Reflections reflections =
-                    new Reflections(new ConfigurationBuilder()
-                            .filterInputsBy(new FilterBuilder().includePackage("com.alphalaneous"))
-                            .setUrls(ClasspathHelper.forPackage("com.alphalaneous"))
-                            .setScanners(new SubTypesScanner(false)));
-            Set<String> typeList = reflections.getAllTypes();
-
             try {
-                for (String str : typeList) {
-                    if (str.equals("com.alphalaneous.Interactive.Commands.DefaultCommandFunctions")) {
-                        reply = (String) Class.forName(str).getMethod(foundCommand.getMessage(), ChatMessage.class).invoke(null, message);
-                    }
-                }
+                reply = (String) Class.forName("com.alphalaneous.Interactive.Commands.DefaultCommandFunctions").getMethod(foundCommand.getMessage(), ChatMessage.class).invoke(null, message);
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -150,14 +144,96 @@ public class CommandHandler {
     }
 
     public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, CommandData data) {
-        return replaceBetweenParentheses(message, text, arguments, null, text, data, null);
+        return replaceBetweenParentheses(message, text, arguments, null, text, data, null, null);
     }
-
+    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, CommandData data, CheerActionData cheerActionData) {
+        return replaceBetweenParentheses(message, text, arguments, null, text, data, null, cheerActionData);
+    }
     public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, CommandData data, KeywordData keywordData) {
-        return replaceBetweenParentheses(message, text, arguments, null, text, data, keywordData);
+        return replaceBetweenParentheses(message, text, arguments, null, text, data, keywordData, null);
     }
 
-    private static String runCommandActions(String value, CommandData commandData, KeywordData keywordData, ChatMessage message, String[] arguments){
+    private static String evaluateIfStatements(String value, ChatMessage message, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData){
+
+
+        String data = "";
+        String[] dataArr = value.split(" ", 2);
+        if (dataArr.length > 1) data = value.split(" ", 2)[1];
+        String identifier = value.split(" ")[0];
+        String replacement = "";
+
+        if(identifier.toLowerCase().startsWith("if")){
+
+            String innerData = value.substring(2).trim();
+
+            String[] parts = innerData.split("]", 2)[1].split("\\|");
+            String ifData = parts[0].trim();
+            String elseData = "";
+            if(parts.length > 1) {
+                elseData = parts[1].trim();
+            }
+
+            System.out.println(ifData);
+
+            int state = 0;
+            int startPos = 0;
+            int endPos = 0;
+            all: for(int i = 0; i < innerData.length(); i++) {
+                char c = innerData.charAt(i);
+                switch (state) {
+                    case 0: {
+                        if (c == '['){
+                            state = 1;
+                            startPos = i;
+                        }
+                        break;
+                    }
+                    case 1:{
+                        if(c == ']'){
+                            state = 2;
+                            endPos = i;
+                            break all;
+                        }
+                        break;
+                    }
+                }
+            }
+            String newValue = "";
+
+            if(state == 2){
+                String ifValue = innerData.substring(startPos+1, endPos);
+                String ifValueAfter = parseParenthesis(message, ifValue, ifValue.split(" "), null, ifValue, commandData, keywordData, cheerActionData, false);
+
+                System.out.println(ifValueAfter);
+
+                newValue = ifData;
+                if(compare(ifValueAfter)) replacement = ifData;
+                else replacement = elseData;
+            }
+            else{
+                replacement = "Malformed If Statement";
+            }
+        }
+        else{
+            replacement = "$(" + value + ")";
+        }
+        return replacement;
+    }
+
+    private static boolean compare(String value){
+
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("JavaScript");
+
+        try {
+            return (boolean) engine.eval(value);
+        } catch (ScriptException e) {
+            return false;
+        }
+    }
+
+    private static String runCommandActions(String value, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData, ChatMessage message, String[] arguments){
+
         String data = "";
         String[] dataArr = value.split(" ", 2);
         if (dataArr.length > 1) data = value.split(" ", 2)[1];
@@ -204,24 +280,67 @@ public class CommandHandler {
                 }
                 break;
             }
+            case "instant_request":
+            case "instantrequest":{
+                String messageNoSymbol = message.getMessage().replace(",", "")
+                        .replace(".","")
+                        .replace("!", "")
+                        .replace("(", "")
+                        .replace(")", "")
+                        .replace("{", "")
+                        .replace("}", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace("-", "")
+                        .replace("'", "");
+
+                Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoSymbol);
+
+                if (m.find()) {
+                    try {
+                        String[] messages = message.getMessage().split(" ");
+                        String mention = "";
+                        for (String s : messages) {
+                            if (s.contains("@")) {
+                                mention = s;
+                                break;
+                            }
+                        }
+                        if (!mention.contains(m.group(1))) {
+                            if (SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
+                                long chatIDL = 0;
+                                String chatID = message.getTag("user-id");
+                                if (chatID != null) {
+                                    chatIDL = Long.parseLong(chatID);
+                                }
+                                Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), message.getSender(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), chatIDL, false, message, 1);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                break;
+            }
+
             case "find_and_request":
             case "findrequest":
             case "request": {
-                String messageNoComma = message.getMessage().replace(",", "").replace(".","");
+                String messageNoSymbol = message.getMessage().replace(",", "")
+                        .replace(".","")
+                        .replace("!", "")
+                        .replace("(", "")
+                        .replace(")", "")
+                        .replace("{", "")
+                        .replace("}", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace("-", "")
+                        .replace("'", "");
 
-                messageNoComma = messageNoComma.toLowerCase()
-                        .replace("one", "1")
-                        .replace("two", "2")
-                        .replace("three", "3")
-                        .replace("four", "4")
-                        .replace("five", "5")
-                        .replace("six", "6")
-                        .replace("seven", "7")
-                        .replace("eight", "8")
-                        .replace("nine", "9")
-                        .replace("zero", "0").replace(" ", "");
-
-                Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoComma);
+                Matcher m = Pattern.compile("\\s*(\\d{6,})\\s*").matcher(messageNoSymbol);
 
                 if (m.find()) {
                     try {
@@ -274,6 +393,32 @@ public class CommandHandler {
             case "bwomp": {
                 Board.bwomp();
                 break;
+            }
+            case "randomline":
+            case "random_line": {
+
+                String content;
+                String path = data.toLowerCase();
+                if(path.startsWith("file://") || path.startsWith("file:\\\\")){
+                    try {
+                        content = new String(Files.readAllBytes(Paths.get(path.substring("file://".length()))));
+                    } catch (IOException e) {
+                        return "Invalid File Path";
+                    }
+
+                }
+                else{
+                    try {
+                        content = new Scanner(new URL(path).openStream(), "UTF-8").useDelimiter("\\A").next();
+                    }
+                    catch (Exception e){
+                        return "Invalid URL";
+                    }
+                }
+
+                String[] lines = content.split("\n");
+
+                return lines[random.nextInt(lines.length)];
             }
             case "playsound":
             case "sound": {
@@ -382,6 +527,11 @@ public class CommandHandler {
                 replacement = String.valueOf(count+1);
                 break;
             }
+            case "cheercount" :
+            case "cheer_count" : {
+                replacement = String.valueOf(cheerActionData.getCheerAmount());
+                break;
+            }
             case "message" : {
                 replacement = message.getMessage();
                 break;
@@ -480,7 +630,23 @@ public class CommandHandler {
                 replacement = String.valueOf(RequestsTab.getQueueSize());
                 break;
             }
+            case "levelpercent":
+            case "level_percent": {
+                if(Global.isGDOpen() && Global.isInLevel()){
+                    replacement = String.valueOf(com.alphalaneous.Memory.Level.getPercent());
+                }
+                replacement = String.valueOf(0);
+                break;
+            }
+            case "emptymessage":
+            case "empty_message": {
+                String command = message.getMessage().split(" ")[0].trim();
+                String query = message.getMessage().substring(command.length()).trim();
+                replacement = String.valueOf(query.trim().equals(""));
+                break;
+            }
             default: {
+
                 replacement = "$(" + value + ")";
                 break;
             }
@@ -488,8 +654,17 @@ public class CommandHandler {
         return replacement;
     }
 
+    private static String replaceBetweenParentheses(ChatMessage message, String value, String[] arguments, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData) {
+        return replaceBetweenParentheses(message, value, arguments, null, value, commandData, keywordData, cheerActionData);
+    }
 
-    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData) {
+    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData) {
+        return replaceBetweenParentheses(message, text, arguments, parenthesisSubstrings, original, commandData, keywordData, cheerActionData, false);
+    }
+
+    public static String parseParenthesis(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData, boolean ifPass){
+        String newResult = original;
+
 
         if (parenthesisSubstrings == null) parenthesisSubstrings = new ArrayList<>();
 
@@ -513,12 +688,16 @@ public class CommandHandler {
         String strE = text.substring(eIndex);
 
         if (pValue != 0) {
-            parenthesisSubstrings.add(new ParenthesisSubstrings(sIndex, eIndex - 1, original.substring(sIndex + 1, eIndex - 1)));
+            try {
+                parenthesisSubstrings.add(new ParenthesisSubstrings(sIndex, eIndex - 1, original.substring(sIndex + 1, eIndex - 1)));
+            } catch (IndexOutOfBoundsException e) {
+                return "Malformed Command String";
+            }
             String filled = StringUtils.repeat("█", eIndex - sIndex);
             String result = strS + filled + strE;
-            return replaceBetweenParentheses(message, result, arguments, parenthesisSubstrings, original, commandData, keywordData);
+            return parseParenthesis(message, result, arguments, parenthesisSubstrings, original, commandData, keywordData, cheerActionData, ifPass);
         }
-        String newResult = original;
+
         String lastResult = original;
 
         for (ParenthesisSubstrings parenthesisSubstrings1 : parenthesisSubstrings) {
@@ -526,19 +705,25 @@ public class CommandHandler {
             if (parenthesisSubstrings1.getStartIndex() - 1 >= 0) {
                 if (newResult.charAt(parenthesisSubstrings1.getStartIndex() - 1) == '$') {
 
-                    String strStart = newResult.substring(0, parenthesisSubstrings1.getStartIndex()-1);
-                    String strEnd = newResult.substring(parenthesisSubstrings1.getEndIndex()+1);
-                    String value = newResult.substring(parenthesisSubstrings1.getStartIndex()+1, parenthesisSubstrings1.getEndIndex());
+                    String strStart = newResult.substring(0, parenthesisSubstrings1.getStartIndex() - 1);
+                    String strEnd = newResult.substring(parenthesisSubstrings1.getEndIndex() + 1);
+                    String value = newResult.substring(parenthesisSubstrings1.getStartIndex() + 1, parenthesisSubstrings1.getEndIndex());
 
-                    String replacement = runCommandActions(value, commandData, keywordData, message, arguments);
+                    String replacement = "";
+                    if (ifPass) {
+                        replacement = evaluateIfStatements(value, message, commandData, keywordData, cheerActionData);
+                    } else {
+                        replacement = runCommandActions(value, commandData, keywordData, cheerActionData, message, arguments);
+                    }
+
 
                     newResult = strStart + replacement + strEnd;
 
-                    for(ParenthesisSubstrings substring : parenthesisSubstrings){
-                        if(parenthesisSubstrings1.getStartIndex() < substring.getStartIndex()) {
+                    for (ParenthesisSubstrings substring : parenthesisSubstrings) {
+                        if (parenthesisSubstrings1.getStartIndex() < substring.getStartIndex()) {
                             substring.shiftIndex(newResult.length() - lastResult.length());
                         }
-                        if(parenthesisSubstrings1.getStartIndex() > substring.getStartIndex() && parenthesisSubstrings1.getEndIndex() < substring.getEndIndex()) {
+                        if (parenthesisSubstrings1.getStartIndex() > substring.getStartIndex() && parenthesisSubstrings1.getEndIndex() < substring.getEndIndex()) {
                             substring.shiftEndIndex(newResult.length() - lastResult.length());
                         }
                     }
@@ -547,7 +732,16 @@ public class CommandHandler {
                 }
             }
         }
+
         return newResult;
+    }
+
+    public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData, boolean ifPass) {
+
+        String value = parseParenthesis(message, text, arguments, parenthesisSubstrings, original, commandData, keywordData, cheerActionData, true);
+        System.out.println("Value: " + value);
+        return parseParenthesis(message, value, value.split(" "), parenthesisSubstrings, value, commandData, keywordData, cheerActionData, false);
+
     }
 
     private static String getWeather(String data){

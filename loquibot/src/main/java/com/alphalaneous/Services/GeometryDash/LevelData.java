@@ -12,7 +12,7 @@ public class LevelData {
 	private String requester;
 
 	private boolean viewership = true;
-	private GDLevel levelData;
+	private GDLevelExtra levelData;
 	private String message;
 	private String messageID;
 	private String youtubeURL;
@@ -41,24 +41,24 @@ public class LevelData {
 	}
 
 	public String getSimpleDifficulty(){
-		if(getGDLevel().isAuto()){
+		if(getGDLevel().getLevel().isAuto()){
 			return "AUTO";
 		}
-		if(getGDLevel().isDemon()){
-			return getGDLevel().demonDifficulty().name().toUpperCase() + " DEMON";
+		if(getGDLevel().getLevel().isDemon()){
+			return getGDLevel().getLevel().demonDifficulty().name().toUpperCase() + " DEMON";
 		}
-		return getGDLevel().difficulty().name().toUpperCase();
+		return getGDLevel().getLevel().difficulty().name().toUpperCase();
 	}
 
 	public void setYoutubeURL(String url){
 		this.youtubeURL = url;
 	}
 
-	public GDLevel getGDLevel(){
+	public GDLevelExtra getGDLevel(){
 		return levelData;
 	}
 
-	public void setLevelData(GDLevel level){
+	public void setLevelData(GDLevelExtra level){
 		this.levelData = level;
 	}
 

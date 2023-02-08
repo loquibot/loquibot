@@ -59,13 +59,13 @@ public class RequestsUtils {
 		}
 		if(data != null) {
 			object.put("difficulty", data.getSimpleDifficulty());
-			object.put("id", data.getGDLevel().id());
+			object.put("id", data.getGDLevel().getLevel().id());
 			String creator = "-";
-			if(data.getGDLevel().creatorName().isPresent()){
-				creator = data.getGDLevel().creatorName().get();
+			if(data.getGDLevel().getLevel().creatorName().isPresent()){
+				creator = data.getGDLevel().getLevel().creatorName().get();
 			}
 
-			object.put("name", data.getGDLevel().name());
+			object.put("name", data.getGDLevel().getLevel().name());
 			object.put("creator", creator);
 
 			if(data.getDisplayName() == null){
@@ -77,47 +77,29 @@ public class RequestsUtils {
 
 			int songID = 0;
 
-			if(data.getGDLevel().songId().isPresent()){
-				songID = data.getGDLevel().songId().get().intValue();
+			if(data.getGDLevel().getLevel().songId().isPresent()){
+				songID = data.getGDLevel().getLevel().songId().get().intValue();
 			}
 			boolean isCustomSong = false;
-			if(data.getGDLevel().song().isPresent()){
-				isCustomSong = data.getGDLevel().song().get().isCustom();
+			if(data.getGDLevel().getLevel().song().isPresent()){
+				isCustomSong = data.getGDLevel().getLevel().song().get().isCustom();
 			}
 			object.put("isCustomSong", isCustomSong);
 
 			object.put("isViewer", data.getViewership());
 			object.put("songID", songID);
-			object.put("stars", data.getGDLevel().stars());
-			object.put("likes", data.getGDLevel().likes());
-			object.put("downloads", data.getGDLevel().downloads());
-			object.put("length", data.getGDLevel().length());
-			object.put("lengthValue", data.getGDLevel().length().ordinal());
-			object.put("isDemon", data.getGDLevel().isDemon());
-			object.put("isAuto", data.getGDLevel().isAuto());
-			object.put("isEpic", data.getGDLevel().isEpic());
-			object.put("featuredScore", data.getGDLevel().featuredScore());
-			object.put("difficulty", data.getGDLevel().difficulty().ordinal());
-			object.put("demonDifficulty", data.getGDLevel().demonDifficulty().ordinal());
-
-
-			object.put("accountID", 0);
-			if(forGD) {
-				if(!creator.equalsIgnoreCase("-")) {
-					try {
-						try {
-							GDLevel level = GDAPI.getLevel(data.getGDLevel().id());
-						}
-						catch (Exception e) {
-							object.put("exists", false);
-						}
-						GDUserStats gdUserStats = GDAPI.getGDUserStats(creator);
-						object.put("accountID", gdUserStats.accountId());
-					} catch (Exception e) {
-						System.out.println("Failed Account ID");
-					}
-				}
-			}
+			object.put("stars", data.getGDLevel().getLevel().stars());
+			object.put("likes", data.getGDLevel().getLevel().likes());
+			object.put("downloads", data.getGDLevel().getLevel().downloads());
+			object.put("length", data.getGDLevel().getLevel().length());
+			object.put("lengthValue", data.getGDLevel().getLevel().length().ordinal());
+			object.put("isDemon", data.getGDLevel().getLevel().isDemon());
+			object.put("isAuto", data.getGDLevel().getLevel().isAuto());
+			object.put("isEpic", data.getGDLevel().getLevel().isEpic());
+			object.put("featuredScore", data.getGDLevel().getLevel().featuredScore());
+			object.put("difficulty", data.getGDLevel().getLevel().difficulty().ordinal());
+			object.put("demonDifficulty", data.getGDLevel().getLevel().demonDifficulty().ordinal());
+			object.put("accountID", data.getGDLevel().getAccountID());
 		}
 		else {
 			object.put("status", "empty");
@@ -129,25 +111,25 @@ public class RequestsUtils {
 		if(data != null) {
 			object.put("type", "nextlevel");
 			object.put("difficulty", data.getSimpleDifficulty());
-			object.put("id", data.getGDLevel().id());
+			object.put("id", data.getGDLevel().getLevel().id());
 			String creator = "-";
-			if(data.getGDLevel().creatorName().isPresent()){
-				creator = data.getGDLevel().creatorName().get();
+			if(data.getGDLevel().getLevel().creatorName().isPresent()){
+				creator = data.getGDLevel().getLevel().creatorName().get();
 			}
 
-			object.put("name", data.getGDLevel().name());
+			object.put("name", data.getGDLevel().getLevel().name());
 			object.put("creator", creator);
 
 			int songID = 0;
-			if(data.getGDLevel().songId().isPresent()){
-				songID = data.getGDLevel().songId().get().intValue();
+			if(data.getGDLevel().getLevel().songId().isPresent()){
+				songID = data.getGDLevel().getLevel().songId().get().intValue();
 			}
 			object.put("songID", songID);
-			object.put("creatorID", data.getGDLevel().creatorPlayerId());
-			object.put("stars", data.getGDLevel().stars());
-			object.put("likes", data.getGDLevel().likes());
-			object.put("downloads", data.getGDLevel().downloads());
-			object.put("length", data.getGDLevel().length());
+			object.put("creatorID", data.getGDLevel().getLevel().creatorPlayerId());
+			object.put("stars", data.getGDLevel().getLevel().stars());
+			object.put("likes", data.getGDLevel().getLevel().likes());
+			object.put("downloads", data.getGDLevel().getLevel().downloads());
+			object.put("length", data.getGDLevel().getLevel().length());
 
 			if(!creator.equalsIgnoreCase("-")) {
 				try {
@@ -176,25 +158,25 @@ public class RequestsUtils {
 		if(data != null) {
 			object.put("type", "currentlevel");
 			object.put("difficulty", data.getSimpleDifficulty());
-			object.put("id", data.getGDLevel().id());
+			object.put("id", data.getGDLevel().getLevel().id());
 			String creator = "-";
-			if(data.getGDLevel().creatorName().isPresent()){
-				creator = data.getGDLevel().creatorName().get();
+			if(data.getGDLevel().getLevel().creatorName().isPresent()){
+				creator = data.getGDLevel().getLevel().creatorName().get();
 			}
 
-			object.put("name", data.getGDLevel().name());
+			object.put("name", data.getGDLevel().getLevel().name());
 			object.put("creator", creator);
 
 			int songID = 0;
-			if(data.getGDLevel().songId().isPresent()){
-				songID = data.getGDLevel().songId().get().intValue();
+			if(data.getGDLevel().getLevel().songId().isPresent()){
+				songID = data.getGDLevel().getLevel().songId().get().intValue();
 			}
 			object.put("songID", songID);
-			object.put("creatorID", data.getGDLevel().creatorPlayerId());
-			object.put("stars", data.getGDLevel().stars());
-			object.put("likes", data.getGDLevel().likes());
-			object.put("downloads", data.getGDLevel().downloads());
-			object.put("length", data.getGDLevel().length());
+			object.put("creatorID", data.getGDLevel().getLevel().creatorPlayerId());
+			object.put("stars", data.getGDLevel().getLevel().stars());
+			object.put("likes", data.getGDLevel().getLevel().likes());
+			object.put("downloads", data.getGDLevel().getLevel().downloads());
+			object.put("length", data.getGDLevel().getLevel().length());
 		}
 		else {
 			object.put("type", "nextlevel");
@@ -360,7 +342,7 @@ public class RequestsUtils {
 			}
 		};
 		LevelData levelData = new LevelData();
-		levelData.setLevelData(level);
+		levelData.setLevelData(new GDLevelExtra(level, 0));
 		levelData.setEpic(epic);
 		if (featuredScore > 0) {
 			levelData.setFeatured();
@@ -385,70 +367,70 @@ public class RequestsUtils {
 
 				switch (attribute) {
 					case "name":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().name();
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().name();
 						break;
 					case "id":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().id());
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().id());
 						break;
 					case "author":
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().isPresent())
-							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().creatorName().get();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().creatorName().isPresent())
+							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().creatorName().get();
 						break;
 					case "requester":
 						result = RequestsTab.getRequest(level).getLevelData().getDisplayName();
 						break;
 					case "difficulty":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().difficulty().toString();
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().difficulty().toString();
 						break;
 					case "likes":
-						result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().likes());
+						result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().likes());
 						break;
 					case "downloads":
-						result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().downloads());
+						result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().downloads());
 						break;
 					case "description":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().description();
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().description();
 						break;
 					case "songName":
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
-							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().title();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().isPresent())
+							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().get().title();
 						break;
 					case "songID":
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
-							result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().id());
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().isPresent())
+							result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().get().id());
 						break;
 					case "songArtist":
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
-							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().artist();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().isPresent())
+							result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().get().artist();
 						break;
 					case "songURL":
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().isPresent())
-							if(RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().downloadUrl().isPresent())
-								result = RequestsTab.getRequest(level).getLevelData().getGDLevel().song().get().downloadUrl().get();
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().isPresent())
+							if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().get().downloadUrl().isPresent())
+								result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().song().get().downloadUrl().get();
 						break;
 					case "stars":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().stars());
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().stars());
 						break;
 					case "epic":
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getEpic());
 						break;
 					case "version":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().levelVersion());
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().levelVersion());
 						break;
 					case "length":
-						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().length().toString();
+						result = RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().length().toString();
 						break;
 					case "coins":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().coinCount());
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().coinCount());
 						break;
 					case "objects":
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount() > 0)
-							result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount());
-						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().objectCount() == 65535)
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().objectCount() > 0)
+							result = NumberFormat.getInstance().format(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().objectCount());
+						if(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().objectCount() == 65535)
 							result = "≥65535";
 						break;
 					case "original":
-						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().originalLevelId());
+						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getGDLevel().getLevel().originalLevelId());
 						break;
 					case "image":
 						result = String.valueOf(RequestsTab.getRequest(level).getLevelData().getContainsImage());
@@ -495,9 +477,9 @@ public class RequestsUtils {
 		String response = "";
 		for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
 			try {
-				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().id() == RequestsTab.getRequest(intArg - 1).getLevelData().getGDLevel().id()
+				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() == RequestsTab.getRequest(intArg - 1).getLevelData().getGDLevel().getLevel().id()
 						&& (isMod || String.valueOf(user).equalsIgnoreCase(RequestsTab.getRequest(i).getRequester()))) {
-					response = "@" + user + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
+					response = "@" + user + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ") has been removed!";
 
 					int sel = LevelButton.selectedID;
 
@@ -514,7 +496,7 @@ public class RequestsUtils {
 					RequestFunctions.saveFunction();
 					if (i == 0) {
 						StringSelection selection = new StringSelection(
-								String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+								String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()));
 						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 						clipboard.setContents(selection, selection);
 					}
@@ -535,8 +517,8 @@ public class RequestsUtils {
 					if (i == LevelButton.selectedID) {
 						return "";
 					}
-					String prevLevelName = RequestsTab.getRequest(i).getLevelData().getGDLevel().name();
-					long prevLevelID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
+					String prevLevelName = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name();
+					long prevLevelID = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id();
 
 					RequestsTab.removeRequest(i);
 
@@ -560,7 +542,7 @@ public class RequestsUtils {
 					}
 
 
-					response = "@" + chatMessage.getSenderElseDisplay() + ", " + prevLevelName + " (" + prevLevelID + ") has been replaced with + " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + "(" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ").";
+					response = "@" + chatMessage.getSenderElseDisplay() + ", " + prevLevelName + " (" + prevLevelID + ") has been replaced with + " + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + "(" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ").";
 					RequestFunctions.saveFunction();
 					break;
 				}
@@ -580,7 +562,7 @@ public class RequestsUtils {
 					if (i == LevelButton.selectedID) {
 						return "";
 					}
-					response = "@" + message.getSenderElseDisplay() + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().id() + ") has been removed!";
+					response = "@" + message.getSenderElseDisplay() + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ") has been removed!";
 					RequestsTab.removeRequest(i);
 					RequestFunctions.saveFunction();
 					break;
@@ -652,15 +634,15 @@ public class RequestsUtils {
 		try {
 			boolean start = false;
 			int blockedID = Integer.parseInt(arguments[1]);
-			if (blockedID == RequestsTab.getRequest(0).getLevelData().getGDLevel().id() && RequestsTab.getQueueSize() > 1) {
+			if (blockedID == RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id() && RequestsTab.getQueueSize() > 1) {
 				StringSelection selection = new StringSelection(
-						String.valueOf(RequestsTab.getRequest(1).getLevelData().getGDLevel().id()));
+						String.valueOf(RequestsTab.getRequest(1).getLevelData().getGDLevel().getLevel().id()));
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				clipboard.setContents(selection, selection);
 				start = true;
 			}
 			for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().id() == blockedID) {
+				if (RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() == blockedID) {
 					RequestsTab.removeRequest(i);
 					RequestFunctions.saveFunction();
 					break;
@@ -952,6 +934,6 @@ public class RequestsUtils {
 	}
 
 	public static String parseInfoString(String text) {
-		return CommandHandler.replaceBetweenParentheses(new ChatMessage(null,"OutputHandler", "OutputHandler", "", null, true, true, true, 0, false), text, text.split(" "), null);
+		return CommandHandler.replaceBetweenParentheses(new ChatMessage(null,"OutputHandler", "OutputHandler", "", null, true, true, true, 0, false, false), text, text.split(" "), null);
 	}
 }

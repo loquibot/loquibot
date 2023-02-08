@@ -29,39 +29,49 @@ public class Themes {
 
 	public static void refreshUI() {
 
-		defaultUI.setBackground(Defaults.COLOR);
-		defaultUI.setHover(Defaults.COLOR5);
-		defaultUI.setSelect(Defaults.COLOR4);
-		settingsButtonUI.setBackground(Defaults.COLOR2);
-		settingsButtonUI.setHover(Defaults.COLOR5);
-		settingsButtonUI.setSelect(Defaults.COLOR4);
+		try {
+			defaultUI.setBackground(Defaults.COLOR);
+			defaultUI.setHover(Defaults.COLOR5);
+			defaultUI.setSelect(Defaults.COLOR4);
+			settingsButtonUI.setBackground(Defaults.COLOR2);
+			settingsButtonUI.setHover(Defaults.COLOR5);
+			settingsButtonUI.setSelect(Defaults.COLOR4);
 
-		Window.refreshUI();
+			Window.refreshUI();
 
-		ThemedColor.setAllThemeColors();
+			ThemedColor.setAllThemeColors();
 
-		RequestsTab.refreshUI();
-		FancyTooltip.refreshAll();
-		SettingsTitle.refreshAll();
-		ThemedConfigCheckbox.refreshAll();
-		ThemedIconCheckbox.refreshAll();
-		ThemedCheckbox.refreshAll();
-		FancyTextArea.refreshAll();
-		FancyPasswordField.refreshAll();
-		CommandListElement.refreshAll();
-		SettingsPage.refreshAll();
-		SettingsComponent.refreshAll();
-		ListView.refreshAll();
-		OfficerWindow.refreshUI();
-		CustomCommands.LegacyCommandsLabel.refreshUI();
-		CustomCommands.refreshListButtons();
-		LevelDetailsPanel.refreshUI();
-		SettingsTab.refreshUI();
-		ChatbotTab.refreshUI();
+			RequestsTab.refreshUI();
+			FancyTooltip.refreshAll();
+			SettingsTitle.refreshAll();
+			ThemedConfigCheckbox.refreshAll();
+			ThemedIconCheckbox.refreshAll();
+			ThemedCheckbox.refreshAll();
+			FancyTextArea.refreshAll();
+			FancyPasswordField.refreshAll();
+			CommandListElement.refreshAll();
+			SettingsPage.refreshAll();
+			SettingsComponent.refreshAll();
+			ListView.refreshAll();
+			OfficerWindow.refreshUI();
+			CustomCommands.LegacyCommandsLabel.refreshUI();
+			CustomCommands.refreshListButtons();
+			LevelDetailsPanel.refreshUI();
+			SettingsTab.refreshUI();
+			ChatbotTab.refreshUI();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public static void loadTheme() {
-		Utilities.load("/loquibot/theme.properties", themeSettings);
+		try {
+			Utilities.load("/loquibot/theme.properties", themeSettings);
+		}
+		catch (Exception e){
+			System.out.println("No theme.properties");
+		}
 	}
 
 	public static boolean getIsLight(){

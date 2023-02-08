@@ -2,6 +2,7 @@ package com.alphalaneous.Windows;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Services.GeometryDash.GDAPI;
+import com.alphalaneous.Services.GeometryDash.GDLevelExtra;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Swing.Components.LevelButton;
@@ -131,8 +132,8 @@ public class OfficerWindow {
                 new Thread(() -> {
                     String levelName = "Unknown";
                     try{
-                        GDLevel level = GDAPI.getLevel(Long.parseLong(idInput.getText()));
-                        levelName = level.name();
+                        GDLevelExtra level = GDAPI.getLevel(Long.parseLong(idInput.getText()));
+                        levelName = level.getLevel().name();
                     }
                     catch (Exception ignored){}
                     String option = DialogBox.showDialogBox("Globally Unblock " + idInput.getText() + "?", "\"" + levelName + "\" will now be able to be requested anywhere using loquibot.", "" , new String[]{"$YES$", "$NO$"});
@@ -151,8 +152,8 @@ public class OfficerWindow {
                     new Thread(() -> {
                         String levelName = "Unknown";
                         try {
-                            GDLevel level = GDAPI.getLevel(Long.parseLong(idInput.getText()));
-                            levelName = level.name();
+                            GDLevelExtra level = GDAPI.getLevel(Long.parseLong(idInput.getText()));
+                            levelName = level.getLevel().name();
                         } catch (Exception ignored) {
                         }
                         String option = DialogBox.showDialogBox("Globally Block " + idInput.getText() + "?", "\"" + levelName + "\" will no longer be able to be requested anywhere using loquibot. REASON: " + reasonInput.getText(), "", new String[]{"$YES$", "$NO$"});
@@ -217,7 +218,7 @@ public class OfficerWindow {
         reasonInput.setVisible(false);
         submitButton.setVisible(false);
         if(RequestsTab.getQueueSize() != 0) {
-            idInput.setText(String.valueOf(RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().id()));
+            idInput.setText(String.valueOf(RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().getLevel().id()));
         }
         DialogBox.showDialogBox(panel);
     }

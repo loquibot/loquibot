@@ -19,7 +19,11 @@ public class Variables {
 	private static final HashMap<String, String> vars = new HashMap<>();
 
 	public static void loadVars() {
-		Utilities.load("/loquibot/vars.board", vars);
+		try {
+			Utilities.load("/loquibot/vars.board", vars);
+		} catch (IOException e) {
+			System.out.println("No vars.board");
+		}
 	}
 
 	public static void saveVars() {

@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardWatchEventKinds.*;
@@ -40,8 +41,8 @@ public class Language {
         return "";
     }
 
-    static HashMap<String, String> language = new HashMap<>();
-    static HashMap<String, String> langProp = new HashMap<>();
+    static ConcurrentHashMap<String, String> language = new ConcurrentHashMap <>();
+    static ConcurrentHashMap <String, String> langProp = new ConcurrentHashMap <>();
 
     static String[] uwuEndings = {"uwu", "OwO", "rawr~", "X3", "nuzzles~", "(´・ω・｀)", "\uD83E\uDD7A", "uvu", " （=´∇｀=）"};
 

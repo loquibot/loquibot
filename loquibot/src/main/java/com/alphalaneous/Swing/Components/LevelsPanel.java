@@ -100,7 +100,7 @@ public class LevelsPanel extends JPanel {
 
         for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
             if (getButton(i).selected) {
-                selectID = RequestsTab.getRequest(i).getLevelData().getGDLevel().id();
+                selectID = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id();
                 selectPos = i;
                 break;
             }

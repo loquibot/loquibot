@@ -23,6 +23,7 @@ public abstract class ChatBot {
 				@Override
 				public void onMessage(String message) {
 					onRawMessage(message);
+
 					message = message.replaceAll("\n", "").replaceAll("\r", "");
 					if (message.contains("PRIVMSG")) {
 						if (message.split("@").length > 2) {
@@ -36,6 +37,8 @@ public abstract class ChatBot {
 							boolean isMod = false;
 							boolean isSub = false;
 							boolean isVIP = false;
+							boolean isCustomReward = false;
+
 							int cheerCount = 0;
 							String[] tags = tagsPrefix.split(";");
 							for (String tagA : tags) {
@@ -51,6 +54,9 @@ public abstract class ChatBot {
 								if (tagA.split("=", 2)[0].equals("first-msg")) {
 									isFirstMessage = !tagA.split("=", 2)[1].equals("0");
 								}
+								if (tagA.split("=", 2)[0].equals("custom-reward-id")) {
+									isCustomReward = true;
+								}
 							}
 							for (String badgeA : badges) {
 								if (badgeA.split("/", 2)[0].equals("broadcaster") || badgeA.split("/", 2)[0].equals("moderator")) {
@@ -64,7 +70,7 @@ public abstract class ChatBot {
 								}
 							}
 
-							ChatBot.this.onMessage(new ChatMessage(tags, sender, displayName, sentMessage, badges, isMod, isSub, isVIP, cheerCount, isFirstMessage));
+							ChatBot.this.onMessage(new ChatMessage(tags, sender, displayName, sentMessage, badges, isMod, isSub, isVIP, cheerCount, isFirstMessage, isCustomReward));
 						}
 					}
 					if (message.equalsIgnoreCase("PING :tmi.twitch.tv")) {

@@ -6,12 +6,13 @@ import com.alphalaneous.Utils.Language;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.MissingFormatArgumentException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class LangLabel extends JLabel {
 
 	private String text;
 	private Object[] args;
-	public static ArrayList<LangLabel> labelList = new ArrayList<>();
+	public static ConcurrentLinkedQueue<LangLabel> labelList = new ConcurrentLinkedQueue<>();
 
 	public LangLabel(String text){
 		this.text = text;

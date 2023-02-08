@@ -18,7 +18,7 @@ public class Privacy {
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$PRIVACY_SETTINGS$");
         String text = Utilities.readIntoString(privacyFileReader, true);
-        settingsPage.addInput("", "", 20, null, text, false);
+        settingsPage.addInput("", "", 20, null, text, false, false);
 
         return settingsPage;
     }

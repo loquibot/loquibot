@@ -49,19 +49,19 @@ public class LevelButton extends CurvedButton {
 	public LevelButton(LevelData data) {
 		super("");
 		setOpaque(false);
-		this.name = data.getGDLevel().name();
-		this.ID = data.getGDLevel().id();
+		this.name = data.getGDLevel().getLevel().name();
+		this.ID = data.getGDLevel().getLevel().id();
 		this.levelData = data;
-		Optional<String> creatorName = data.getGDLevel().creatorName();
+		Optional<String> creatorName = data.getGDLevel().getLevel().creatorName();
 		String author = "";
 		if(creatorName.isPresent()){
 			author = creatorName.get();
 		}
 
-		String difficulty = data.getGDLevel().difficulty().toString();
-		boolean epic = data.getGDLevel().isEpic();
+		String difficulty = data.getGDLevel().getLevel().difficulty().toString();
+		boolean epic = data.getGDLevel().getLevel().isEpic();
 		boolean featured = data.getFeatured();
-		int starCount = data.getGDLevel().stars();
+		int starCount = data.getGDLevel().getLevel().stars();
 
 		String displayRequester;
 
@@ -75,16 +75,16 @@ public class LevelButton extends CurvedButton {
 		}
 
 		this.requester = data.getRequester();
-		double version = data.getGDLevel().levelVersion();
+		double version = data.getGDLevel().getLevel().levelVersion();
 		ImageIcon playerIcon = data.getPlayerIcon();
-		int coins = data.getGDLevel().coinCount();
+		int coins = data.getGDLevel().getLevel().coinCount();
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if(SwingUtilities.isRightMouseButton(e)){
 					Window.destroyContextMenu();
-					Window.addContextMenu(new LevelContextMenu(Requests.getPosFromID(data.getGDLevel().id())));
+					Window.addContextMenu(new LevelContextMenu(Requests.getPosFromID(data.getGDLevel().getLevel().id())));
 				}
 			}
 		});
@@ -112,7 +112,7 @@ public class LevelButton extends CurvedButton {
 			String[] demonDifficulties = {"easy", "medium", "hard", "insane", "extreme"};
 			JLabel reqDifficulty = new JLabel();
 
-			if(data.getGDLevel().isAuto()){
+			if(data.getGDLevel().getLevel().isAuto()){
 				if (epic) {
 					reqDifficulty.setIcon(Assets.difficultyIconsEpic.get("auto"));
 				} else if (featured) {
@@ -123,9 +123,9 @@ public class LevelButton extends CurvedButton {
 					reqDifficulty.setIcon(new ImageIcon(Assets.difficultyIconsNormal.get("auto").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
 				}
 			}
-			else if(data.getGDLevel().isDemon()){
+			else if(data.getGDLevel().getLevel().isDemon()){
 				for (String difficultyA : demonDifficulties) {
-					if (data.getGDLevel().demonDifficulty().name().equalsIgnoreCase(difficultyA)) {
+					if (data.getGDLevel().getLevel().demonDifficulty().name().equalsIgnoreCase(difficultyA)) {
 						difficultyA = difficultyA + " demon";
 						if (epic) {
 							reqDifficulty.setIcon(Assets.difficultyIconsEpic.get(difficultyA));
@@ -186,7 +186,7 @@ public class LevelButton extends CurvedButton {
 
 			for (int i = 0; i < coins; i++) {
 				JLabel coin;
-				if (data.getGDLevel().hasCoinsVerified()) {
+				if (data.getGDLevel().getLevel().hasCoinsVerified()) {
 					coin = new JLabel(Assets.verifiedCoin);
 				} else {
 					coin = new JLabel(Assets.unverifiedCoin);

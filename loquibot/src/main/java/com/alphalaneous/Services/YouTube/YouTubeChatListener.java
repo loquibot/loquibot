@@ -98,6 +98,7 @@ public class YouTubeChatListener {
                 message.getAuthorDetails().getIsChatSponsor(),
                 false,
                 0,
+                false,
                 false);
         message1.setYouTube(true);
         return message1;

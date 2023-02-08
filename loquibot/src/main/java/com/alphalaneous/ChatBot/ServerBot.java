@@ -81,7 +81,7 @@ public class ServerBot {
 
 				switch (event) {
 					case "connected" : {
-
+						waitTime = 1;
 						System.out.println("> Connected to loquibot Servers");
 						String channel = object.getString("username");
 						if(object.optBoolean("is_officer")){
@@ -177,10 +177,17 @@ public class ServerBot {
 		}
 		System.out.println("> Disconnected from ServerBot");
 		if(!disconnected) {
-			Utilities.sleep(2000);
+			if(TwitchAPI.oauthOpen){
+				while (TwitchAPI.oauthOpen) Utilities.sleep(1);
+			}
+			Utilities.sleep(waitTime * 1000);
+			waitTime *= 2;
+
 			new ServerBot().connect();
 		}
 	}
+
+	int waitTime = 1;
 
 	public void sendMessage(String message) {
 		out.println(message);

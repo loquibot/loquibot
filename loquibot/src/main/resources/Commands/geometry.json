@@ -116,6 +116,20 @@
       "runMethod" : true,
       "message" : "runWrongLevel",
       "aliases" : ["oops", "wrongid", "wrong"]
+    },
+    {
+      "name" : "howmany",
+      "description" : "Returns how many levels you have in the queue | Usage \"%phowmany\"",
+      "runMethod" : true,
+      "message" : "runHowMany",
+      "aliases" : ["levelcount"]
+    },
+    {
+      "name" : "size",
+      "description" : "Returns how many levels are in the queue | Usage \"%psize\"",
+      "runMethod" : true,
+      "message" : "runSize",
+      "aliases" : ["amount"]
     }
   ]
 }

@@ -14,7 +14,13 @@ public class UpdateChecker {
                     String version = Utilities.fetchURL("https://raw.githubusercontent.com/Alphatism/GDBoard/Master/GD%20Request%20Bot/src/.version").trim();
                     double versionNumber = Double.parseDouble(version.split("=")[1]);
 
-                    String curVersion = Files.readString(Paths.get(Defaults.saveDirectory + "/GDBoard/version.txt"));
+                    String curVersion;
+                    if(Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/version.txt"))) {
+                        curVersion = Files.readString(Paths.get(Defaults.saveDirectory + "/loquibot/version.txt"));
+                    }
+                    else {
+                        curVersion = Files.readString(Paths.get(Defaults.saveDirectory + "/GDBoard/version.txt"));
+                    }
                     double curVersionNumber = Double.parseDouble(curVersion.split("=")[1]);
 
                     if(curVersionNumber < versionNumber){

@@ -41,7 +41,7 @@ public class RequestFunctions {
     private static boolean didUndo = false;
 
     public static void openGDBrowser(int pos) {
-        BrowserWindow browserWindow = new BrowserWindow("https://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().id());
+        BrowserWindow browserWindow = new BrowserWindow("https://www.gdbrowser.com/" + RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().id());
     }
 
     public static void skipFunction() {
@@ -83,7 +83,7 @@ public class RequestFunctions {
                 undoQueue.put(RequestsTab.getRequest(pos), pos);
                 wasSelected = RequestsTab.getRequest(pos).selected;
 
-                new LoggedID((int) RequestsTab.getRequest(pos).getID(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().levelVersion());
+                new LoggedID((int) RequestsTab.getRequest(pos).getID(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().levelVersion());
                 RequestsTab.removeRequest(pos);
 
                 if(setPos || wasSelected) {
@@ -93,7 +93,7 @@ public class RequestFunctions {
 
                 if (RequestsTab.getQueueSize() > 0) {
                     StringSelection selection = new StringSelection(
-                            String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().id()));
+                            String.valueOf(RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()));
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
                 }
@@ -102,12 +102,12 @@ public class RequestFunctions {
                 if (pos == 0 && RequestsTab.getQueueSize() > 0) {
                     if (!SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(0).getLevelData().getDisplayName()));
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(0).getLevelData().getDisplayName()), SettingsHandler.getSettings("announceNP").asBoolean());
                     }
                 }
@@ -176,7 +176,7 @@ public class RequestFunctions {
                 }
 
                 undoQueue.put(RequestsTab.getRequest(LevelButton.selectedID), LevelButton.selectedID);
-                new LoggedID((int) RequestsTab.getRequest(LevelButton.selectedID).getID(), RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().levelVersion());
+                new LoggedID((int) RequestsTab.getRequest(LevelButton.selectedID).getID(), RequestsTab.getRequest(LevelButton.selectedID).getLevelData().getGDLevel().getLevel().levelVersion());
                 RequestsTab.removeRequest(LevelButton.selectedID);
 
                 RequestFunctions.saveFunction();
@@ -195,19 +195,19 @@ public class RequestFunctions {
 
 
                     StringSelection selection = new StringSelection(
-                            String.valueOf(RequestsTab.getRequest(num).getLevelData().getGDLevel().id()));
+                            String.valueOf(RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id()));
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(selection, selection);
 
                     if (!SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(num).getLevelData().getDisplayName()));
 
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                RequestsTab.getRequest(num).getLevelData().getGDLevel().name(),
-                                RequestsTab.getRequest(num).getLevelData().getGDLevel().id(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(num).getLevelData().getDisplayName()), SettingsHandler.getSettings("announceNP").asBoolean());
 
                     }
@@ -227,7 +227,7 @@ public class RequestFunctions {
     public static void copyFunction(int pos) {
         if (RequestsTab.getQueueSize() != 0) {
             StringSelection selection = new StringSelection(
-                    String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
+                    String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().id()));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(selection, selection);
         }
@@ -243,7 +243,7 @@ public class RequestFunctions {
             reportPanel.setLayout(null);
             reportPanel.setBounds(0,0,300,200);
 
-            LangLabel reportLabel = new LangLabel("$REPORT$ " + RequestsTab.getRequest(pos).getLevelData().getGDLevel().name());
+            LangLabel reportLabel = new LangLabel("$REPORT$ " + RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().name());
             reportLabel.setBounds(10,0,200,40);
             reportLabel.setFont(Defaults.MAIN_FONT.deriveFont(20f));
             reportPanel.add(reportLabel);
@@ -277,16 +277,16 @@ public class RequestFunctions {
                     long originalID = 0;
                     long songID = 0;
 
-                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().creatorName().isPresent()) {
-                        creatorName = RequestsTab.getRequest(i).getLevelData().getGDLevel().creatorName().get();
+                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().creatorName().isPresent()) {
+                        creatorName = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().creatorName().get();
                     }
-                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().song().isPresent()) {
-                        songTitle = RequestsTab.getRequest(i).getLevelData().getGDLevel().song().get().title();
-                        songArtist = RequestsTab.getRequest(i).getLevelData().getGDLevel().song().get().artist();
-                        songID = RequestsTab.getRequest(i).getLevelData().getGDLevel().song().get().id();
+                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().song().isPresent()) {
+                        songTitle = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().song().get().title();
+                        songArtist = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().song().get().artist();
+                        songID = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().song().get().id();
                     }
-                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().originalLevelId().isPresent()) {
-                        originalID = RequestsTab.getRequest(i).getLevelData().getGDLevel().originalLevelId().get();
+                    if (RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().originalLevelId().isPresent()) {
+                        originalID = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().originalLevelId().get();
                     }
 
                     JSONObject level = new JSONObject();
@@ -296,26 +296,26 @@ public class RequestFunctions {
                     level.put("song_artist", songArtist);
                     level.put("original_id", originalID);
                     level.put("song_id", songID);
-                    level.put("id", RequestsTab.getRequest(i).getLevelData().getGDLevel().id());
-                    level.put("name", RequestsTab.getRequest(i).getLevelData().getGDLevel().name());
-                    level.put("difficulty", RequestsTab.getRequest(i).getLevelData().getGDLevel().difficulty());
-                    level.put("demon_difficulty", RequestsTab.getRequest(i).getLevelData().getGDLevel().demonDifficulty());
-                    level.put("is_auto", RequestsTab.getRequest(i).getLevelData().getGDLevel().isAuto());
-                    level.put("is_demon", RequestsTab.getRequest(i).getLevelData().getGDLevel().isDemon());
-                    level.put("is_epic", RequestsTab.getRequest(i).getLevelData().getGDLevel().isEpic());
-                    level.put("featured_score", RequestsTab.getRequest(i).getLevelData().getGDLevel().featuredScore());
-                    level.put("stars", RequestsTab.getRequest(i).getLevelData().getGDLevel().stars());
-                    level.put("requested_stars", RequestsTab.getRequest(i).getLevelData().getGDLevel().requestedStars());
+                    level.put("id", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id());
+                    level.put("name", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name());
+                    level.put("difficulty", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().difficulty());
+                    level.put("demon_difficulty", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().demonDifficulty());
+                    level.put("is_auto", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().isAuto());
+                    level.put("is_demon", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().isDemon());
+                    level.put("is_epic", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().isEpic());
+                    level.put("featured_score", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().featuredScore());
+                    level.put("stars", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().stars());
+                    level.put("requested_stars", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().requestedStars());
                     level.put("requester", RequestsTab.getRequest(i).getRequester());
-                    level.put("game_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().gameVersion());
-                    level.put("description", RequestsTab.getRequest(i).getLevelData().getGDLevel().description());
-                    level.put("coin_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().coinCount());
-                    level.put("likes", RequestsTab.getRequest(i).getLevelData().getGDLevel().likes());
-                    level.put("downloads", RequestsTab.getRequest(i).getLevelData().getGDLevel().downloads());
-                    level.put("length", RequestsTab.getRequest(i).getLevelData().getGDLevel().length().toString());
-                    level.put("level_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().levelVersion());
-                    level.put("object_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().objectCount());
-                    level.put("has_verified_coins", RequestsTab.getRequest(i).getLevelData().getGDLevel().hasCoinsVerified());
+                    level.put("game_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().gameVersion());
+                    level.put("description", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().description());
+                    level.put("coin_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().coinCount());
+                    level.put("likes", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().likes());
+                    level.put("downloads", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().downloads());
+                    level.put("length", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().length().toString());
+                    level.put("level_version", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().levelVersion());
+                    level.put("object_count", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().objectCount());
+                    level.put("has_verified_coins", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().hasCoinsVerified());
                     level.put("is_youtube", RequestsTab.getRequest(i).getLevelData().isYouTube());
                     level.put("display_name", RequestsTab.getRequest(i).getLevelData().getDisplayName());
                     levelsArray.put(level);
@@ -347,7 +347,7 @@ public class RequestFunctions {
         if (Main.programLoaded) {
             if (pos == 0 && RequestsTab.getQueueSize() > 1) {
                 StringSelection selection = new StringSelection(
-                        String.valueOf(RequestsTab.getRequest(1).getLevelData().getGDLevel().id()));
+                        String.valueOf(RequestsTab.getRequest(1).getLevelData().getGDLevel().getLevel().id()));
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(selection, selection);
             }
@@ -356,10 +356,10 @@ public class RequestFunctions {
                 new Thread(() -> {
                     String option;
                     if(skip) option = "YES";
-                    else option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{RequestsTab.getRequest(pos).getLevelData().getGDLevel().name(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()});
+                    else option = DialogBox.showDialogBox("$BLOCK_ID_TITLE$", "$BLOCK_ID_INFO$", "$BLOCK_ID_SUBINFO$", new String[]{"$YES$", "$NO$"}, new Object[]{RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().name(), RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().id()});
 
                     if (option.equalsIgnoreCase("YES")) {
-                        BlockedIDs.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().id()));
+                        BlockedIDs.addBlockedLevel(String.valueOf(RequestsTab.getRequest(pos).getLevelData().getGDLevel().getLevel().id()));
                         RequestsTab.removeRequest(pos);
                         RequestFunctions.saveFunction();
                         RequestsTab.getLevelsPanel().setSelect(0);

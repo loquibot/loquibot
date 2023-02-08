@@ -110,7 +110,7 @@ public class Modifications {
                 }
                 else if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\ToastedMarshmellow.dll"))) {
                     System.out.println("Is HackerMode");
-                    installDir = "GDHM\\dll";
+                    installDir = ".GDHM\\dll";
                 }
                 else {
                     URL inputUrl = Main.class.getClassLoader()
@@ -140,8 +140,8 @@ public class Modifications {
         Path loquiZipPath = Path.of(GDDirectory + "\\LoquiExtension.zip");
         try {
             Path installPath = Path.of(installDir);
-            if(!Files.isDirectory(installPath)){
-                Files.createDirectory(installPath);
+            if(!Files.isDirectory(Path.of(installPath + "\\"))){
+                Files.createDirectories(Path.of(installPath + "\\"));
             }
             SettingsHandler.writeSettings("modVersion", "1.0");
 
@@ -159,7 +159,8 @@ public class Modifications {
 
         }
         catch (Exception e){
-            DialogBox.showDialogBox("Error", "Failed to install mod!", e.getMessage(), new String[] {"Okay"});
+            e.printStackTrace();
+            DialogBox.showDialogBox("Error", "Failed to install mod!", e.toString(), new String[] {"Okay"});
         }
         try {
             Files.deleteIfExists(loquiPath);

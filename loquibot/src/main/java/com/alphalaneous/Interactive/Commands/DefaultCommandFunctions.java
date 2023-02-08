@@ -61,7 +61,14 @@ public class DefaultCommandFunctions {
     }
 
     public static String runGDPing(ChatMessage message){
-        return "GD ping: " + Board.testSearchPing() + " ms";
+
+        String pingResult = Board.testSearchPing();
+        if(pingResult == null){
+            return "GD ping: Unknown (Servers down!)";
+        }
+        else {
+            return "GD ping: " + Board.testSearchPing() + " ms!";
+        }
     }
     public static String runHelp(ChatMessage message){
         return RequestsUtils.getHelp(message);
@@ -69,7 +76,6 @@ public class DefaultCommandFunctions {
     public static String runCommandList(ChatMessage message){
         return RequestsUtils.getCommand(message);
     }
-
 
     public static String runInfo(ChatMessage message){
         int intArg;
@@ -540,6 +546,24 @@ public class DefaultCommandFunctions {
 
         return "";
     }
+
+    public static String runHowMany(ChatMessage message){
+        int amount = 0;
+        for(int i = 0; i < RequestsUtils.getSize(); i++){
+            if(RequestsUtils.getLevel(i, "requester").equalsIgnoreCase(message.getSender())){
+                amount++;
+            }
+        }
+
+        return Utilities.format("$HOW_MANY_MESSAGE$", message.getSenderElseDisplay(), amount);
+    }
+
+    public static String runSize(ChatMessage message){
+
+
+        return Utilities.format("$SIZE_MESSAGE$", message.getSenderElseDisplay(), RequestsUtils.getSize());
+    }
+
 
     private static String getValidUserlevel(String userlevel){
         switch (userlevel){

@@ -18,7 +18,7 @@ public class Terms {
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$TERMS_SETTINGS$");
         String text = Utilities.readIntoString(tosFileReader, true);
-        settingsPage.addInput("", "", 20, null, text, false);
+        settingsPage.addInput("", "", 20, null, text, false, false);
 
         return settingsPage;
     }

@@ -1,5 +1,6 @@
 package com.alphalaneous.Swing.ThemedComponents;
 
+import com.alphalaneous.Interactive.CheerActions.CheerActionData;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.GraphicsFunctions;
@@ -71,7 +72,12 @@ public class ThemedConfigCheckbox extends JPanel {
     public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData){
         this(label, description, function, isCommand, commandData, null);
     }
-    public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData, KeywordData keywordData) {
+
+    public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData, CheerActionData cheerActionData){
+        this(label, description, function, isCommand, commandData, null, cheerActionData);
+    }
+
+    public ThemedConfigCheckbox(String label, String description, Function function, boolean isCommand, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData) {
         setLayout(null);
         this.description = description;
         this.isCommand = isCommand;

@@ -1,6 +1,8 @@
 package com.alphalaneous.Utils;
 
 import com.alphalaneous.*;
+import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Interactive.CheerActions.CheerActionData;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Timers.TimerData;
@@ -10,11 +12,19 @@ import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -108,15 +118,46 @@ public class Utilities {
 	}
 
 	public static void openURL(URI uri){
+		System.out.println("Opening link: " + uri.toString());
 
-		try {
-			Runtime rt = Runtime.getRuntime();
-			rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
+		if(KeyListener.isCtrlPressed()){
+			Platform.runLater(() -> {
+				JFrame frame = new JFrame();
+				JFXPanel panel = new JFXPanel();
+				frame.add(panel, BorderLayout.CENTER);
+				WebEngine engine;
+				WebView wv = new WebView();
+				engine = wv.getEngine();
+				panel.setScene(new Scene(wv));
+				engine.load(String.valueOf(uri));
+				frame.setSize(800,800);
+				frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				frame.setVisible(true);
+				frame.setIconImages(Main.getIconImages());
+				frame.setTitle("loquibot - Browser");
+				frame.setLocationRelativeTo(null);
+				frame.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent e)
+					{
+						Platform.runLater(() -> {
+							wv.getEngine().loadContent("");
+							frame.dispose();
+						});
+					}
+				});
+			});
+
 		}
-		catch (Exception e){
+		else {
+
 			try {
-				Desktop.getDesktop().browse(uri);
-			} catch (IOException ignored) {
+				Runtime rt = Runtime.getRuntime();
+				rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
+			} catch (Exception e) {
+				try {
+					Desktop.getDesktop().browse(uri);
+				} catch (IOException ignored) {
+				}
 			}
 		}
 	}
@@ -154,24 +195,16 @@ public class Utilities {
 		}
 	}
 
-	public static void load(String file, HashMap<String, String> location){
-		Path path = Paths.get(Defaults.saveDirectory + file);
-		if (Files.exists(path)) {
-			Scanner sc = null;
-			try {
-				sc = new Scanner(path.toFile());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			assert sc != null;
-			while (sc.hasNextLine()) {
-				String line = sc.nextLine();
+	public static void load(String file, HashMap<String, String> location) throws IOException {
+
+			String text = new String(Files.readAllBytes(Paths.get(Defaults.saveDirectory + file)));
+			String[] textSplit = text.split("\n");
+			for(String line : textSplit){
 				if (line.contains("=")) {
 					location.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
 				}
 			}
-			sc.close();
-		}
+
 	}
 
 	public static void save(String file, HashMap<String, String> values){
@@ -336,6 +369,25 @@ public class Utilities {
 		}
 		return newCommandDataArrayList;
 	}
+
+	public static ArrayList<CheerActionData> alphabetizeCheerActionData(ArrayList<CheerActionData> cheerActionArrayList){
+		ArrayList<String> commandNames = new ArrayList<>();
+		for(CheerActionData data : cheerActionArrayList){
+			commandNames.add(data.getName());
+		}
+		commandNames.sort(String.CASE_INSENSITIVE_ORDER);
+		ArrayList<CheerActionData> newCheerActionDataArrayList = new ArrayList<>();
+		for(String commandName : commandNames){
+			for(CheerActionData keywordData : cheerActionArrayList){
+				if(keywordData.getName().equalsIgnoreCase(commandName)){
+					newCheerActionDataArrayList.add(keywordData);
+					break;
+				}
+			}
+		}
+		return newCheerActionDataArrayList;
+	}
+
 	public static ArrayList<KeywordData> alphabetizeKeywordData(ArrayList<KeywordData> keywordDataArrayList){
 		ArrayList<String> commandNames = new ArrayList<>();
 		for(KeywordData data : keywordDataArrayList){

@@ -271,7 +271,9 @@ public class Account {
 
     public static void refreshTwitch(String channel, boolean skipCheck) {
         if (SettingsHandler.getSettings("twitchEnabled").asBoolean() || skipCheck){
-            twitchPanel.refreshInfo(channel, "Twitch", new ImageIcon(makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+            if(TwitchAccount.profileImage != null){
+                twitchPanel.refreshInfo(channel, "Twitch", new ImageIcon(makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+            }
         }
     }
 
@@ -281,7 +283,9 @@ public class Account {
 
     public static void refreshYouTube(String channel, boolean skipCheck) {
         if (SettingsHandler.getSettings("youtubeEnabled").asBoolean() || skipCheck) {
-            youTubePanel.refreshInfo(channel, "YouTube", new ImageIcon(makeRoundedCorner(YouTubeAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+            if (YouTubeAccount.profileImage != null) {
+                youTubePanel.refreshInfo(channel, "YouTube", new ImageIcon(makeRoundedCorner(YouTubeAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+            }
         }
     }
 

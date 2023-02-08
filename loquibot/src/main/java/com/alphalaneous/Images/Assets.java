@@ -2,6 +2,7 @@ package com.alphalaneous.Images;
 
 
 import com.alphalaneous.Main;
+import com.alphalaneous.Utilities;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -9,6 +10,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Assets {
 
@@ -42,106 +45,109 @@ public class Assets {
 	private static final int size = 30;
 	private static final int largeSize = 50;
 
+	public static void load() {
 
-	static {
+		ExecutorService es = Executors.newCachedThreadPool();
+
+		es.execute(new	Thread(() -> verifiedCoin = loadStartAsset("GDAssets/verifiedCoin.png", 15, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> unverifiedCoin = loadStartAsset("GDAssets/unverifiedCoin.png", 15, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> loquibot = loadStartAsset("Icons/windowIcon.png", 40, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> loquibotLarge = loadStartAsset("Icons/loqui.png", 200, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> music = loadStartAsset("Icons/music.png", 50, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> Alphalaneous = loadStartAsset("Icons/Alphalaneous.png", 80, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> settings = loadStartAsset("Icons/settings.png", 30, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> commands = loadStartAsset("Icons/chat.png", 30, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> actions = loadStartAsset("Icons/actions.png", 30, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> channelPoints = loadStartAsset("Icons/channelPoint.png", 30, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> requests = loadStartAsset("Icons/gd.png", 30, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> loading = loadStartAsset("Icons/loading.gif", 30, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> YouTube = loadStartAsset("Icons/YouTube.png", 16, Scalr.Method.BALANCED)));
+		es.execute(new	Thread(() -> Twitch = loadStartAsset("Icons/Twitch.png", 16, Scalr.Method.BALANCED)));
+		es.execute(new	Thread(() -> YouTubeLarge = loadStartAsset("Icons/YouTube.png", 40, Scalr.Method.BALANCED)));
+		es.execute(new	Thread(() -> TwitchLarge = loadStartAsset("Icons/Twitch.png", 40, Scalr.Method.BALANCED)));
+		es.execute(new	Thread(() -> tutorial = loadStartAsset("tutorial.png", 40, null)));
+
+		es.shutdown();
+		while (!es.isTerminated()) Utilities.sleep(1);
+	}
+
+	public static ImageIcon loadStartAsset(String path, int size, Scalr.Method scalingMethod){
 		try {
-			verifiedCoin = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("GDAssets/verifiedCoin.png"))), Scalr.Method.QUALITY,15));
-			unverifiedCoin = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("GDAssets/unverifiedCoin.png"))),Scalr.Method.QUALITY,15));
+			if(scalingMethod == null){
+				return new ImageIcon(Scalr.resize(ImageIO
+						.read(Objects.requireNonNull(Main.class.getClassLoader()
+								.getResource(path))),size, Scalr.OP_ANTIALIAS));
+			}
+			else{
+				return new ImageIcon(Scalr.resize(ImageIO
+						.read(Objects.requireNonNull(Main.class.getClassLoader()
+								.getResource(path))),scalingMethod,size, Scalr.OP_ANTIALIAS));
+			}
 
-			loquibot = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/windowIcon.png"))),Scalr.Method.QUALITY,40));
-			loquibotLarge = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/loqui.png"))),Scalr.Method.QUALITY,200, Scalr.OP_ANTIALIAS));
-			music = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/music.png"))),Scalr.Method.QUALITY,50));
-			Alphalaneous = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/Alphalaneous.png"))),Scalr.Method.QUALITY,80));
-			settings = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/settings.png"))),Scalr.Method.QUALITY,30));
-			commands = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/chat.png"))),Scalr.Method.QUALITY,30));
-			actions = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/actions.png"))),Scalr.Method.QUALITY,30));
-			channelPoints = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/channelPoint.png"))),Scalr.Method.QUALITY,30));
-			requests = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/gd.png"))),Scalr.Method.QUALITY,30));
-			loading = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/loading.gif"))),Scalr.Method.BALANCED,30));
-			YouTube = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/YouTube.png"))),Scalr.Method.BALANCED,16));
-			Twitch = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/Twitch.png"))),Scalr.Method.BALANCED,16));
-			YouTubeLarge = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/YouTube.png"))),Scalr.Method.BALANCED,40));
-			TwitchLarge = new ImageIcon(Scalr.resize(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("Icons/Twitch.png"))),Scalr.Method.BALANCED,40));
-			tutorial = new ImageIcon(ImageIO
-					.read(Objects.requireNonNull(Main.class.getClassLoader()
-							.getResource("tutorial.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Failed to load " + path);
+		}
+		return null;
+	}
+
+	public static void loadAsset(String value, String path, HashMap<String, ImageIcon> save){
+		es.execute(
+		new Thread(() -> {
+			try {
+				save.put(value, new ImageIcon(Scalr.resize(ImageIO
+						.read(Objects.requireNonNull(Main.class.getClassLoader()
+								.getResource(path))), Scalr.Method.QUALITY, 100, Scalr.OP_ANTIALIAS)));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}));
+	}
+
+	private static ExecutorService es = Executors.newCachedThreadPool();
+
+	public static void loadAsset(String value, String path, HashMap<String, ImageIcon> save, HashMap<String, ImageIcon> saveLarge){
+		es.execute(
+		new Thread(() -> {
+			try {
+				save.put(value, new ImageIcon(Scalr.resize(ImageIO
+						.read(Objects.requireNonNull(Main.class.getClassLoader()
+								.getResource(path))), Scalr.Method.QUALITY, size)));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}));
+		if(saveLarge != null) {
+			es.execute(
+			new Thread(() -> {
+				try {
+					saveLarge.put(value, new ImageIcon(Scalr.resize(ImageIO
+							.read(Objects.requireNonNull(Main.class.getClassLoader()
+									.getResource(path))), Scalr.Method.QUALITY, largeSize, Scalr.OP_ANTIALIAS)));
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}));
 		}
 	}
 
 	public static void loadAssets() {
 
-			try {
-				String[] difficulties = {"NA", "auto", "easy", "normal", "hard", "harder", "insane", "easy demon", "medium demon",
-						"hard demon", "insane demon", "extreme demon"};
-				for (String difficulty : difficulties) {
-					difficultyIconsNormal.put(difficulty, new ImageIcon(Scalr.resize(ImageIO
-							.read(Objects.requireNonNull(Main.class.getClassLoader()
-									.getResource("DifficultyIcons/Normal/" + difficulty + ".png"))),Scalr.Method.QUALITY, size)));
-					difficultyIconsNormalLarge.put(difficulty, new ImageIcon(Scalr.resize(ImageIO
-							.read(Objects.requireNonNull(Main.class.getClassLoader()
-									.getResource("DifficultyIcons/Normal/" + difficulty + ".png"))),Scalr.Method.QUALITY, largeSize, Scalr.OP_ANTIALIAS)));
+		String[] difficulties = {"NA", "auto", "easy", "normal", "hard", "harder", "insane", "easy demon", "medium demon",
+				"hard demon", "insane demon", "extreme demon"};
+		for (String difficulty : difficulties) {
 
-					if (!difficulty.equalsIgnoreCase("NA")) {
-						difficultyIconsFeature.put(difficulty, new ImageIcon(Scalr.resize(ImageIO
-								.read(Objects.requireNonNull(Main.class.getClassLoader()
-										.getResource("DifficultyIcons/Featured/" + difficulty + ".png"))),Scalr.Method.QUALITY, size)));
-						difficultyIconsFeatureLarge.put(difficulty, new ImageIcon(Scalr.resize(ImageIO
-								.read(Objects.requireNonNull(Main.class.getClassLoader()
-										.getResource("DifficultyIcons/Featured/" + difficulty + ".png"))),Scalr.Method.QUALITY, largeSize, Scalr.OP_ANTIALIAS)));
-
-						difficultyIconsEpic.put(difficulty, new ImageIcon(Scalr.resize(ImageIO
-								.read(Objects.requireNonNull(Main.class.getClassLoader()
-										.getResource("DifficultyIcons/Epic/" + difficulty + ".png"))),Scalr.Method.QUALITY, size)));
-						difficultyIconsEpicLarge.put(difficulty, new ImageIcon(Scalr.resize(ImageIO
-								.read(Objects.requireNonNull(Main.class.getClassLoader()
-										.getResource("DifficultyIcons/Epic/" + difficulty + ".png"))),Scalr.Method.QUALITY, largeSize, Scalr.OP_ANTIALIAS)));
-					}
-				}
-				String[] lengths = {"Tiny", "Short", "Medium", "Long", "XL"};
-
-				for(String length : lengths){
-					lengthIcons.put(length, new ImageIcon(ImageIO
-							.read(Objects.requireNonNull(Main.class.getClassLoader()
-									.getResource("LengthIcons/" + length + ".png")))));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			loadAsset(difficulty, "DifficultyIcons/Normal/" + difficulty + ".png", difficultyIconsNormal, difficultyIconsNormalLarge);
+			if (!difficulty.equalsIgnoreCase("NA")) {
+				loadAsset(difficulty, "DifficultyIcons/Featured/" + difficulty + ".png", difficultyIconsFeature, difficultyIconsFeatureLarge);
+				loadAsset(difficulty, "DifficultyIcons/Epic/" + difficulty + ".png", difficultyIconsEpic, difficultyIconsEpicLarge);
 			}
+		}
+		String[] lengths = {"Tiny", "Short", "Medium", "Long", "XL"};
 
-
+		for(String length : lengths){
+			loadAsset(length, "LengthIcons/" + length + ".png", lengthIcons);
+		}
+		es.shutdown();
+		while (!es.isTerminated()) Utilities.sleep(1);
 	}
 }
