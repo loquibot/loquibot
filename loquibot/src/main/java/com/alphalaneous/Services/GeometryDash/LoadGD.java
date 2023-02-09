@@ -2,6 +2,7 @@ package com.alphalaneous.Services.GeometryDash;
 
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Account;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import jdash.common.entity.GDUser;
 import jdash.common.entity.GDUserProfile;

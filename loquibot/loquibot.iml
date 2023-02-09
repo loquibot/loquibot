@@ -398,6 +398,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="ColorPicker" level="project" />
     <orderEntry type="library" name="Maven: me.friwi:jcefmaven:100.0.14.3" level="project" />
     <orderEntry type="library" name="Maven: me.friwi:jcef-api:jcef-08efede+cef-100.0.14+g4e5ba66+chromium-100.0.4896.75" level="project" />
     <orderEntry type="library" name="Maven: me.friwi:jogl-all:v2.4.0-rc-20210111" level="project" />
@@ -406,33 +407,45 @@
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns-native-macos:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns-classes-macos:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.87.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.github.tulskiy:jkeymaster:1.3" level="project" />
+    <orderEntry type="library" name="Maven: net.java.dev.jna:jna:5.4.0" level="project" />
+    <orderEntry type="library" name="Maven: net.java.dev.jna:jna-platform:5.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-media:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-web:win:19" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-web:mac-aarch64:19" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:19" level="project" />
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-common:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: com.alex1304.jdash:jdash-client:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor.netty:reactor-netty:1.0.12" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor.netty:reactor-netty-core:1.0.12" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.69.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.69.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.69.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns-native-macos:osx-x86_64:4.1.69.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.69.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.69.Final" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor.netty:reactor-netty-http:1.0.12" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.69.Final" level="project" />

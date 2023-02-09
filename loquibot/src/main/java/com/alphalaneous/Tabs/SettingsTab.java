@@ -187,7 +187,7 @@ public class SettingsTab {
 		content.setLayout(null);
 
 		content.add(generalPage);
-		content.add(modsPage);
+		if(!Defaults.isMac()) content.add(modsPage);
 		content.add(messagePage);
 		content.add(overlayPage);
 		content.add(accountsPage);
@@ -243,7 +243,7 @@ public class SettingsTab {
 		buttons.add(createSeparator(), gbc);
 		buttons.add(GDSection, gbc);
 		buttons.add(requests, gbc);
-		buttons.add(mods, gbc);
+		if(!Defaults.isMac()) buttons.add(mods, gbc);
 		//buttons.add(messages, gbc);
 		buttons.add(filters, gbc);
 		buttons.add(outputs, gbc);

@@ -321,13 +321,13 @@ public class LevelButton extends CurvedButton {
 			add(moveDown);
 
 			lAuthorID.setFont(Defaults.MAIN_FONT.deriveFont(10f));
-			lAuthorID.setBounds(50, 20, (int) lAuthorID.getPreferredSize().getWidth() + 5, 20);
+			lAuthorID.setBounds(50, 20, RequestsTab.getLevelsPanel().getButtonWidth()-50, 20);
 			lPlayerIcon.setIcon(playerIcon);
 			lPlayerIcon.setBounds(50 + lAuthorID.getPreferredSize().width + 2, 13, 40, 40);
 
 
 			lRequester.setFont(Defaults.MAIN_FONT.deriveFont(10f));
-			lRequester.setBounds(50, 34, (int) lRequester.getPreferredSize().getWidth() + 5, 20);
+			lRequester.setBounds(50, 34, RequestsTab.getLevelsPanel().getButtonWidth()-50, 20);
 			lStarCount.setFont(Defaults.MAIN_FONT.deriveFont(12f));
 			lStarCount.setBounds(25 - (lStarCount.getPreferredSize().width + lStar.getPreferredSize().width) / 2, 37,
 					(int) lStarCount.getPreferredSize().getWidth() + 5, 20);

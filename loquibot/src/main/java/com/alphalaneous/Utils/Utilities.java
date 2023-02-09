@@ -139,10 +139,23 @@ public class Utilities {
 				frame.addWindowListener(new WindowAdapter() {
 					public void windowClosing(WindowEvent e)
 					{
-						Platform.runLater(() -> {
-							wv.getEngine().loadContent("");
-							frame.dispose();
-						});
+						if(!Defaults.isMac()) {
+							Platform.runLater(() -> {
+								wv.getEngine().loadContent("");
+								frame.dispose();
+							});
+						}
+						else{
+							try {
+								Runtime rt = Runtime.getRuntime();
+								rt.exec("rundll32 url.dll,FileProtocolHandler " + uri);
+							} catch (Exception f) {
+								try {
+									Desktop.getDesktop().browse(uri);
+								} catch (IOException ignored) {
+								}
+							}
+						}
 					}
 				});
 			});

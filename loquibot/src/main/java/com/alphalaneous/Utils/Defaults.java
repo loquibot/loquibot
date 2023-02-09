@@ -38,6 +38,12 @@ public class Defaults {
 	public static Font SYMBOLS;
 	public static Font SYMBOLSalt;
 	public static Font MAIN_FONT;
+	private static final String os = (System.getProperty("os.name")).toUpperCase();
+
+	public static boolean isMac(){
+		return (os.toLowerCase().contains("mac")) || (os.toLowerCase().contains("darwin"));
+	}
+
 	public static Font SEGOE_FONT = new Font("Segoe UI", Font.PLAIN, 20);
 	public static HashMap<String, Color> colors = new HashMap<>() {{
 		put("foreground", Defaults.FOREGROUND_A);
@@ -62,7 +68,6 @@ public class Defaults {
 		put("foreground_b", new Color(165, 165, 165));
 
 	}};
-	private static final String os = (System.getProperty("os.name")).toUpperCase();
 
 	static {
 		if (os.contains("WIN")) {
@@ -224,7 +229,12 @@ public class Defaults {
 			futureC.cancel(true);
 		}
 
-		ACCENT = Color.decode(String.valueOf(color));
+		if(isMac()){
+			ACCENT = new Color(160, 143, 255, 255);
+		}
+		else {
+			ACCENT = Color.decode(String.valueOf(color));
+		}
 		if(refresh) Themes.refreshUI();
 
 	}
@@ -275,8 +285,10 @@ public class Defaults {
 						}
 
 						if (!ACCENT.equals(Color.decode(String.valueOf(color)))) {
-							ACCENT = Color.decode(String.valueOf(color));
-							Themes.refreshUI();
+							if(!isMac()) {
+								ACCENT = Color.decode(String.valueOf(color));
+								Themes.refreshUI();
+							}
 						}
 
 

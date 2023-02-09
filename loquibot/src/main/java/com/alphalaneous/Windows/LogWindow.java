@@ -4,6 +4,7 @@ import com.alphalaneous.*;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.sun.jna.platform.WindowUtils;
 import org.json.JSONObject;
@@ -82,7 +83,7 @@ public class LogWindow {
         frame.add(scrollPane);
         frame.add(commandArea, BorderLayout.SOUTH);
 
-        WindowUtils.setWindowAlpha(frame, 0.9f);
+        if(!Defaults.isMac()) WindowUtils.setWindowAlpha(frame, 0.9f);
 
         MessageConsole mc = new MessageConsole(pane);
         mc.redirectOut(Color.WHITE, System.out);
@@ -91,7 +92,18 @@ public class LogWindow {
 
     public static void toggleLogWindow(){
         frame.setLocationRelativeTo(Window.getWindow());
-        frame.setVisible(!frame.isVisible());
+
+        if(Defaults.isMac()) {
+            if (frame.isUndecorated()) {
+                frame.setVisible(true);
+            }
+            else{
+                frame.setVisible(!frame.isVisible());
+            }
+        }
+        else {
+            frame.setVisible(!frame.isVisible());
+        }
         scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
         frame.setIconImages(Main.getIconImages());
     }

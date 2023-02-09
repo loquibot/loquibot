@@ -2,6 +2,7 @@ package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Utils.MacKeyListener;
 import org.jnativehook.keyboard.SwingKeyAdapter;
 
 import javax.swing.*;
@@ -31,10 +32,13 @@ public class KeybindButton extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == 8 || e.getKeyCode() == 16 || e.getKeyCode() == 17 || e.getKeyCode() == 18 || e.getKeyCode() == 10) {
                     input.setText("");
+                    MacKeyListener.removeKey(SettingsHandler.getSettings(setting).asInteger());
                     SettingsHandler.writeSettings(setting, "-1");
                 } else {
                     input.setText(KeyEvent.getKeyText(e.getKeyCode()));
+                    MacKeyListener.removeKey(SettingsHandler.getSettings(setting).asInteger());
                     SettingsHandler.writeSettings(setting, String.valueOf(e.getKeyCode()));
+                    MacKeyListener.addKey(e.getKeyCode());
                 }
                 requestFocusInWindow();
             }

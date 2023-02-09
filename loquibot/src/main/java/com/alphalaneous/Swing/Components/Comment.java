@@ -68,7 +68,7 @@ public class Comment extends JPanel {
         commentAuthorLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         commentAuthorLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
         commentAuthorLabel.setForeground(Defaults.FOREGROUND_A);
-        commentAuthorLabel.setBounds(30, 2, commentAuthorLabel.getPreferredSize().width, 18);
+        commentAuthorLabel.setBounds(30, 2, commentAuthorLabel.getPreferredSize().width + 5, 18);
 
         if (commentAuthor.equalsIgnoreCase("Alphalaneous")){
 
@@ -108,7 +108,7 @@ public class Comment extends JPanel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                int center = (commentAuthorLabel.getPreferredSize().width) / 2;
+                int center = (commentAuthorLabel.getPreferredSize().width + 5) / 2;
                 commentAuthorLabel.setFont(Defaults.MAIN_FONT.deriveFont(13f));
                 commentAuthorLabel.setBounds(30 + center - (commentAuthorLabel.getPreferredSize().width) / 2, 2,
                         commentAuthorLabel.getPreferredSize().width + 5, 18);
@@ -117,7 +117,7 @@ public class Comment extends JPanel {
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 commentAuthorLabel.setFont(Defaults.MAIN_FONT.deriveFont(12f));
-                commentAuthorLabel.setBounds(30, 2, commentAuthorLabel.getPreferredSize().width, 18);
+                commentAuthorLabel.setBounds(30, 2, commentAuthorLabel.getPreferredSize().width + 5, 18);
             }
         });
 

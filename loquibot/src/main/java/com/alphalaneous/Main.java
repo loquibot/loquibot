@@ -86,8 +86,12 @@ public class Main {
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
     private static ImageIcon icon;
+    private static ImageIcon iconLarge;
+
     private static Image newIcon16;
     private static Image newIcon32;
+    private static Image newIcon512;
+
     private static final JFrame starting = new JFrame("loquibot");
     private static ConnectorSocket streamDeckSocket;
 
@@ -99,11 +103,14 @@ public class Main {
             Assets.loadAssets();
 
             icon = Assets.loquibot;
+            iconLarge = Assets.loquibotLarge;
             newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
             newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+            newIcon512 = iconLarge.getImage().getScaledInstance(512, 512, Image.SCALE_SMOOTH);
 
             iconImages.add(newIcon16);
             iconImages.add(newIcon32);
+            iconImages.add(newIcon512);
 
         }
         catch (Exception e){
@@ -111,7 +118,7 @@ public class Main {
         }
 
         //Initialize JavaFX Graphics Toolkit (Hacky Solution)
-        new Thread(JFXPanel::new).start();
+        if(!Defaults.isMac()) new Thread(JFXPanel::new).start();
 
         new Thread(() -> {
             try {
@@ -133,6 +140,7 @@ public class Main {
         }).start();
 
         SettingsHandler.loadSettings();
+        MacKeyListener.loadKeybinds();
 
         boolean reopen = SettingsHandler.getSettings("hasUpdated").asBoolean();
         SettingsHandler.writeSettings("hasUpdated", "false");
@@ -141,8 +149,10 @@ public class Main {
             SettingsHandler.writeSettings("twitchEnabled", "true");
         }
 
-        Find.setup();
-        Find.findPath();
+        if(!Defaults.isMac()) {
+            Find.setup();
+            Find.findPath();
+        }
 
         Defaults.setSystem(false);
 
@@ -402,45 +412,46 @@ public class Main {
                     }
                 }).start();
             }
+            if(!Defaults.isMac()) {
+                Global.onEnterLevel(() -> {
+                    if (SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
+                        if (MemoryHelper.isInFocus()) {
+                            String levelName = com.alphalaneous.Memory.Level.getLevelName();
+                            long levelID = com.alphalaneous.Memory.Level.getID();
 
-            Global.onEnterLevel(() -> {
-                if(SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
-                    if (MemoryHelper.isInFocus()) {
-                        String levelName = com.alphalaneous.Memory.Level.getLevelName();
-                        long levelID = com.alphalaneous.Memory.Level.getID();
+                            if (lastID == levelID) {
+                                return;
+                            }
 
-                        if (lastID == levelID) {
-                            return;
-                        }
+                            lastID = levelID;
 
-                        lastID = levelID;
+                            String username = null;
+                            int pos = Requests.getPosFromID(levelID);
+                            if (pos != -1) {
+                                username = RequestsTab.getRequest(pos).getLevelData().getDisplayName();
+                            }
 
-                        String username = null;
-                        int pos = Requests.getPosFromID(levelID);
-                        if (pos != -1) {
-                            username = RequestsTab.getRequest(pos).getLevelData().getDisplayName();
-                        }
-
-                        if (username != null) {
-                            Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                    levelName,
-                                    levelID,
-                                    username));
-                            Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                    levelName,
-                                    levelID,
-                                    username), SettingsHandler.getSettings("announceNP").asBoolean());
-                        } else {
-                            Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
-                                    levelName,
-                                    levelID));
-                            Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
-                                    levelName,
-                                    levelID), SettingsHandler.getSettings("announceNP").asBoolean());
+                            if (username != null) {
+                                Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                        levelName,
+                                        levelID,
+                                        username));
+                                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                        levelName,
+                                        levelID,
+                                        username), SettingsHandler.getSettings("announceNP").asBoolean());
+                            } else {
+                                Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
+                                        levelName,
+                                        levelID));
+                                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
+                                        levelName,
+                                        levelID), SettingsHandler.getSettings("announceNP").asBoolean());
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
 
 
         } catch (Exception e) {
@@ -582,40 +593,46 @@ public class Main {
     }
 
     private static void runKeyboardHook() {
-        var runHookRef = new Object() {
-            boolean runHook = true;
-        };
-        if (keyboardHookThread != null) {
-            if (keyboardHookThread.isAlive()) {
-                runHookRef.runHook = false;
-            }
-        }
-        try {
-            if (GlobalScreen.isNativeHookRegistered()) {
-                GlobalScreen.unregisterNativeHook();
-            }
-            GlobalScreen.registerNativeHook();
-            GlobalScreen.addNativeKeyListener((NativeKeyListener) new KeyListener());
-            while (GlobalScreen.isNativeHookRegistered()) {
-                Utilities.sleep(100);
-            }
-        } catch (Exception e) {
-            try {
-                GlobalScreen.unregisterNativeHook();
-            } catch (NativeHookException e1) {
-                e1.printStackTrace();
-            }
-            failed = true;
-        }
-        keyboardHookThread = new Thread(() -> {
-            while (runHookRef.runHook) {
-                if (failed) {
-                    runKeyboardHook();
+        if (!Defaults.isMac()) {
+            var runHookRef = new Object() {
+                boolean runHook = true;
+            };
+            if (keyboardHookThread != null) {
+                if (keyboardHookThread.isAlive()) {
+                    runHookRef.runHook = false;
                 }
-                Utilities.sleep(100);
             }
-        });
-        keyboardHookThread.start();
+            try {
+
+                if (GlobalScreen.isNativeHookRegistered()) {
+                    GlobalScreen.unregisterNativeHook();
+                }
+                GlobalScreen.registerNativeHook();
+                GlobalScreen.addNativeKeyListener(new KeyListener());
+                while (GlobalScreen.isNativeHookRegistered()) {
+                    Utilities.sleep(100);
+                }
+            } catch(Exception e){
+                try {
+                    GlobalScreen.unregisterNativeHook();
+                } catch (NativeHookException e1) {
+                    e1.printStackTrace();
+                }
+                failed = true;
+            }
+            keyboardHookThread = new Thread(() -> {
+                while (runHookRef.runHook) {
+                    if (failed) {
+                        runKeyboardHook();
+                    }
+                    Utilities.sleep(100);
+                }
+            });
+            keyboardHookThread.start();
+        }
+        else{
+            //todo find keyboardhook for mac
+        }
     }
 
     public static void save(){
@@ -682,7 +699,7 @@ public class Main {
             if(ServerBot.getCurrentServerBot() != null) {
                 ServerBot.getCurrentServerBot().disconnect();
             }
-            GlobalScreen.unregisterNativeHook();
+            if(!Defaults.isMac()) GlobalScreen.unregisterNativeHook();
         } catch (Exception e) {
             System.out.println("Failed closing properly, forcing close");
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.alphalaneous.Settings;
 import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsComponent;
 import com.alphalaneous.Swing.Components.SettingsPage;
+import com.alphalaneous.Utils.Defaults;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ public class Keybinds {
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$SHORTCUTS_SETTINGS$");
 
-        settingsPage.addComponent(createKeybindComponent(new KeybindButton("$OPEN_SHORTCUT$", "openKeybind")));
+        if(!Defaults.isMac()) settingsPage.addComponent(createKeybindComponent(new KeybindButton("$OPEN_SHORTCUT$", "openKeybind")));
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$SKIP_SHORTCUT$", "skipKeybind")));
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$UNDO_SHORTCUT$", "undoKeybind")));
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$RANDOM_SHORTCUT$", "randomKeybind")));

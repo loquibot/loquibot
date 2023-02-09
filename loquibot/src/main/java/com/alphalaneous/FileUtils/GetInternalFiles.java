@@ -1,6 +1,7 @@
 package com.alphalaneous.FileUtils;
 
 import com.alphalaneous.Main;
+import com.alphalaneous.Utils.Defaults;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,7 +27,8 @@ public class GetInternalFiles {
             } catch (URISyntaxException ignored) {
             }
             fileSystem = FileSystems.getDefault();
-            path = fileSystem.getPath(uri.getPath().substring(3) + location);
+            if(Defaults.isMac())path = fileSystem.getPath(uri.getPath() + location);
+            else path = fileSystem.getPath(uri.getPath().substring(3) + location);
         }
     }
 
@@ -64,6 +66,10 @@ public class GetInternalFiles {
             }
         }
     }
+    public String getPath(){
+        return path.toString();
+    }
+
     public static boolean isInJar(){
         String protocol = Objects.requireNonNull(GetInternalFiles.class.getResource("")).getProtocol();
         return protocol.equalsIgnoreCase("jar");

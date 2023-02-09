@@ -35,39 +35,40 @@ public class Personalization {
         settingsPage.addCheckbox("$DISABLE_FOCUS$", "$DISABLE_FOCUS_DESCRIPTION$", "disableFocus", Personalization::setFocusable);
         settingsPage.addCheckbox("$ALWAYS_CENTER$", "$ALWAYS_CENTER_DESCRIPTION$","alwaysCenter");
 
-        settingsPage.addCheckbox("$RUN_AT_STARTUP$", "$RUN_AT_STARTUP_DESCRIPTION$","runAtStartup", () -> {
-            if(SettingsHandler.getSettings("installPath").exists()){
-                Paths.get(SettingsHandler.getSettings("installPath").asString());
-                //todo disable GD Mode unless visible
-                Path link = Paths.get(Defaults.saveDirectory + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\loquibot.lnk");
-                if(SettingsHandler.getSettings("runAtStartup").asBoolean()) {
-                    System.out.println("here");
-                    try {
-                        FileSystemView filesys = FileSystemView.getFileSystemView();
-                        File file = filesys.getHomeDirectory();
-                        boolean exists = Files.exists(Paths.get(file.getPath() + "/loquibot.lnk"));
-                        ShortcutFactory.createDesktopShortcut(SettingsHandler.getSettings("installPath").asString(), "loquibot.lnk");
-
-                        if(exists) Files.copy(Paths.get(file.getPath() + "/loquibot.lnk"), link);
-                        else Files.move(Paths.get(file.getPath() + "/loquibot.lnk"), link);
-
-                        //Files.createLink(link, Paths.get(Settings.getSettings("installLocation").asString()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    if(Files.exists(link)){
+        if(!Defaults.isMac()) {
+            settingsPage.addCheckbox("$RUN_AT_STARTUP$", "$RUN_AT_STARTUP_DESCRIPTION$", "runAtStartup", () -> {
+                if (SettingsHandler.getSettings("installPath").exists()) {
+                    Paths.get(SettingsHandler.getSettings("installPath").asString());
+                    //todo disable GD Mode unless visible
+                    Path link = Paths.get(Defaults.saveDirectory + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\loquibot.lnk");
+                    if (SettingsHandler.getSettings("runAtStartup").asBoolean()) {
+                        System.out.println("here");
                         try {
-                            Files.delete(link);
+                            FileSystemView filesys = FileSystemView.getFileSystemView();
+                            File file = filesys.getHomeDirectory();
+                            boolean exists = Files.exists(Paths.get(file.getPath() + "/loquibot.lnk"));
+                            ShortcutFactory.createDesktopShortcut(SettingsHandler.getSettings("installPath").asString(), "loquibot.lnk");
+
+                            if (exists) Files.copy(Paths.get(file.getPath() + "/loquibot.lnk"), link);
+                            else Files.move(Paths.get(file.getPath() + "/loquibot.lnk"), link);
+
+                            //Files.createLink(link, Paths.get(Settings.getSettings("installLocation").asString()));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        if (Files.exists(link)) {
+                            try {
+                                Files.delete(link);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
-            }
-        });
-        settingsPage.addCheckbox("$PLAY_SOUNDS_WHILE_HIDDEN$", "$PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION$", "playSoundsWhileHidden");
+            });
+            settingsPage.addCheckbox("$PLAY_SOUNDS_WHILE_HIDDEN$", "$PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION$", "playSoundsWhileHidden");
+        }
         settingsPage.addCheckbox("$DISABLE_NOTIFICATIONS$", "$DISABLE_NOTIFICATIONS_DESCRIPTION$","disableNotifications");
         return settingsPage;
     }

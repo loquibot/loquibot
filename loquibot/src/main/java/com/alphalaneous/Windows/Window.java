@@ -47,6 +47,7 @@ public class Window {
         windowFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                System.out.println("> Closing");
                 Main.close();
             }
         });
@@ -152,6 +153,17 @@ public class Window {
         layeredContentPanel.add(dialogBackgroundPanel, 1, -1);
         windowFrame.add(layeredContentPanel);
 
+        final Taskbar taskbar = Taskbar.getTaskbar();
+
+        try {
+            //set icon for macOS (and other systems which do support this method)
+            taskbar.setIconImage(Main.getIconImages().get(2));
+
+        } catch (final UnsupportedOperationException e) {
+            System.out.println("The os does not support: 'taskbar.setIconImage'");
+        } catch (final SecurityException e) {
+            System.out.println("There was a security exception for: 'taskbar.setIconImage'");
+        }
 
     }
     private static boolean dragging = false;
@@ -340,27 +352,41 @@ public class Window {
             public void componentResized(ComponentEvent evt) {
                 //closeDialog();
                 //resizing = true;
-                tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() - 88);
-                updatePanel.setBounds(0, windowFrame.getHeight()-88, 50, 50);
-                layeredContentPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
-                mainContent.setBounds(50, 0, windowFrame.getWidth() - 50, windowFrame.getHeight());
-                RequestsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
-                SettingsTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
-                ChatbotTab.resize(windowFrame.getWidth(), windowFrame.getHeight());
-                dialogBackgroundPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
-                backgroundColor.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
-                componentLayer.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
-                fullPanel.setBounds(0, 0, windowFrame.getWidth(), windowFrame.getHeight());
+
+                int changeA = -88;
+                int changeB = -50;
+                int changeC = 0;
+                int changeD = 0;
+
+                if(Defaults.isMac()) {
+                    changeA = 0;
+                    changeB = 0;
+                    changeC = 10;
+                    changeD = 16;
+
+                }
+
+                tabPanel.setBounds(0, 0, 50, windowFrame.getHeight() + changeA);
+                updatePanel.setBounds(0, windowFrame.getHeight() + changeA, 50, 50);
+                layeredContentPanel.setBounds(0, 0, windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                mainContent.setBounds(50, 0, windowFrame.getWidth() + changeB + changeD, windowFrame.getHeight() + changeC);
+                RequestsTab.resize(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                SettingsTab.resize(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                ChatbotTab.resize(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                dialogBackgroundPanel.setBounds(0, 0, windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                backgroundColor.setBounds(0, 0, windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                componentLayer.setBounds(0, 0, windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                fullPanel.setBounds(0, 0, windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
                 if (dialogComponent != null) {
                     dialogComponent.setBounds(windowFrame.getWidth() / 2 - dialogComponent.getWidth() / 2-8, windowFrame.getHeight() / 2 - dialogComponent.getHeight() / 2 - 20, dialogComponent.getWidth(), dialogComponent.getHeight());
                 }
 
-                SettingsPage.resizeAll(windowFrame.getWidth(), windowFrame.getHeight());
-                ListView.resizeAll(new Dimension(windowFrame.getWidth(), windowFrame.getHeight()));
-                CommandConfigCheckbox.resizeAll(windowFrame.getWidth());
-                TimerConfigCheckbox.resizeAll(windowFrame.getWidth());
-                KeywordConfigCheckbox.resizeAll(windowFrame.getWidth());
-                CustomCommands.LegacyCommandsLabel.resize(windowFrame.getWidth());
+                SettingsPage.resizeAll(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
+                ListView.resizeAll(new Dimension(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC));
+                CommandConfigCheckbox.resizeAll(windowFrame.getWidth() + changeD);
+                TimerConfigCheckbox.resizeAll(windowFrame.getWidth() + changeD);
+                KeywordConfigCheckbox.resizeAll(windowFrame.getWidth() + changeD);
+                CustomCommands.LegacyCommandsLabel.resize(windowFrame.getWidth() + changeD);
             }
 
             public void componentMoved(ComponentEvent evt) {
@@ -372,7 +398,7 @@ public class Window {
                 Point mouse = new Point(frameX, frameY);
                 for (GraphicsDevice screen : screens) {
                     if (screen.getDefaultConfiguration().getBounds().contains(mouse)) {
-                        Defaults.screenNum = Integer.parseInt(screen.getIDstring().replaceAll("Display", "").replace("\\", ""));
+                        Defaults.screenNum = Integer.parseInt(screen.getIDstring().replaceAll("Display", "").replace("\\", "").trim());
                     }
                 }
             }
