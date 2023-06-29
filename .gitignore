@@ -1,9 +1,9 @@
 .idea/
 lib/
-.DS_Store
+*.DS_Store
 out/
 target/
-.iml
-.ipr
-.iws
+*.iml
+*.ipr
+*.iws
 artifacts/
