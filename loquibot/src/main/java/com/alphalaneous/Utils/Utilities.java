@@ -221,10 +221,9 @@ public class Utilities {
 	}
 
 	public static void save(String file, HashMap<String, String> values){
-		Path fileA = Paths.get(Defaults.saveDirectory + file);
+		Path fileA = Paths.get(Defaults.saveDirectory + file).toAbsolutePath();
 
 		try {
-			if (!Files.exists(fileA)) Files.createFile(fileA);
 
 			Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
 			StringBuilder pairs = new StringBuilder();

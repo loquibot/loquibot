@@ -6,6 +6,7 @@ public class YouTubeVideo {
 
     private final String title;
     private final String username;
+    private final String description;
     private final String videoID;
     private final String thumbnailURL;
     private final int time;
@@ -14,9 +15,10 @@ public class YouTubeVideo {
     private final long viewCount;
     private boolean isYT;
 
-    YouTubeVideo(String title, String username, String videoID, String thumbnailURL, long viewCount, int time){
+    YouTubeVideo(String title, String username, String videoID, String description, String thumbnailURL, long viewCount, int time){
         this.title = title;
         this.thumbnailURL = thumbnailURL;
+        this.description = description;
         this.videoID = videoID;
         this.username = username;
         this.viewCount = viewCount;
@@ -45,6 +47,10 @@ public class YouTubeVideo {
 
     public String getRequester() {
         return requester;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getTitle() {

@@ -1,5 +1,8 @@
 package com.alphalaneous.Windows;
 
+import com.alphalaneous.ChatBot.KickBot;
+import com.alphalaneous.Services.Kick.KickAccount;
+import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
@@ -30,7 +33,7 @@ public class Onboarding {
 	private static final JLabel tutorialImage = new JLabel();
 
 	private static final int width = 465;
-	private static final int height = 512;
+	private static final int height = 582;
 
 	public static void createPanel() {
 
@@ -47,7 +50,7 @@ public class Onboarding {
 		tutorialImage.setVisible(false);
 
 		content.setOpaque(false);
-		content.setBounds(0, 0, width, height-100);
+		content.setBounds(0, 0, width, height-50);
 		content.setBackground(new Color(0,0,0,0));
 		content.setLayout(null);
 
@@ -66,7 +69,7 @@ public class Onboarding {
 
 		JTextPane infoText = new JTextPane();
 
-		infoText.setText("Before we begin, make sure loquibot is VIP or Mod in your chat! This will prevent it from getting caught up in Twitch and YouTube's default chat limits.\n\nloquibot has tons of settings to tailor requests just for you, but can also work with defaults, just log in with Twitch or YouTube, press next, and boom, it's ready to go!");
+		infoText.setText("Before we begin, make sure loquibot is VIP or Mod in your chat (If using Twitch)! This will prevent it from getting caught up in Twitch and YouTube's default chat limits.\n\nloquibot has tons of settings to tailor requests just for you, but can also work with defaults, just log in with Twitch, Kick or YouTube, press next!");
 		infoText.setBounds(20, 100, width - 50, 300);
 		infoText.setOpaque(false);
 		infoText.setEditable(false);
@@ -101,10 +104,11 @@ public class Onboarding {
 
 		CurvedButton nextButton = new CurvedButton("Next");
 
+		AtomicBoolean kickLoggedIn = new AtomicBoolean(false);
 		AtomicBoolean twitchLoggedIn = new AtomicBoolean(false);
 		AtomicBoolean youtubeLoggedIn = new AtomicBoolean(false);
 
-		AccountButton twitchButton = new AccountButton(Assets.TwitchLarge, "Twitch",height - 245);
+		AccountButton twitchButton = new AccountButton(Assets.TwitchLarge, "Twitch",height - 305);
 		twitchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -125,7 +129,7 @@ public class Onboarding {
 			}
 		});
 
-		AccountButton youtubeButton = new AccountButton(Assets.YouTubeLarge, "YouTube", height - 175);
+		AccountButton youtubeButton = new AccountButton(Assets.YouTubeLarge, "YouTube", height - 235);
 		youtubeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -148,6 +152,45 @@ public class Onboarding {
 			}
 		});
 
+		AccountButton kickButton = new AccountButton(Assets.KickLarge, "Kick", height - 165);
+		kickButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				try {
+					nextButton.setForeground(Defaults.FOREGROUND_A);
+					new Thread(() -> {
+						while(true) {
+							String newUsername = KickLoginWindow.createLoginWindow();
+
+							if (newUsername == null) {
+								break;
+							} else {
+								newUsername = newUsername.replace("_", "-");
+								KickAccount.username = newUsername;
+								kickButton.setUsername(KickAccount.username);
+								kickLoggedIn.set(true);
+
+								SettingsHandler.writeSettings("kickUsername", newUsername);
+
+								SettingsHandler.writeSettings("kickEnabled", "true");
+
+								KickBot bot = KickBot.getCurrentState();
+								if (bot != null) bot.disconnect();
+
+								new KickBot(KickAccount.username).connect();
+
+								if (KickBot.getCurrentState().didConnectionSucceed()) {
+									Account.refreshKick(KickAccount.username, false);
+									break;
+								}
+							}
+						}
+					}).start();
+				} catch (Exception ignored) {
+				}
+			}
+		});
+
 
 		final int[] page = {0};
 
@@ -162,7 +205,7 @@ public class Onboarding {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				try {
-					if(youtubeLoggedIn.get() || twitchLoggedIn.get()){
+					if(youtubeLoggedIn.get() || twitchLoggedIn.get() || kickLoggedIn.get()){
 
 						if (page[0] == 0) {
 							content.setVisible(false);
@@ -185,6 +228,7 @@ public class Onboarding {
 		content.add(authInfo);
 		content.add(twitchButton);
 		content.add(youtubeButton);
+		content.add(kickButton);
 		content.add(moveOn);
 		content.add(infoText);
 

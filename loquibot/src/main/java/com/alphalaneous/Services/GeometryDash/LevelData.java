@@ -11,6 +11,15 @@ public class LevelData {
 
 	private String requester;
 
+	public boolean isRepeated() {
+		return isRepeated;
+	}
+
+	public void setRepeated(boolean repeated) {
+		isRepeated = repeated;
+	}
+
+	private boolean isRepeated = false;
 	private boolean viewership = true;
 	private GDLevelExtra levelData;
 	private String message;
@@ -22,15 +31,35 @@ public class LevelData {
 	private boolean containsImage;
 	private ImageIcon playerIcon;
 	private boolean isYouTube;
+	private boolean isKick;
+
 	private String displayName;
+
+	public long getPlayerID() {
+		return playerID;
+	}
+
+	public void setPlayerID(long playerID) {
+		this.playerID = playerID;
+	}
+
+	private long playerID;
 
 	public void setYouTube(boolean isYouTube){
 		this.isYouTube = isYouTube;
+	}
+	public void setKick(boolean isKick){
+		this.isKick = isKick;
 	}
 
 	public boolean isYouTube() {
 		return isYouTube;
 	}
+
+	public boolean isKick() {
+		return isKick;
+	}
+
 
 	public void setDisplayName(String displayName){
 		this.displayName = displayName;

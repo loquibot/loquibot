@@ -1,2 +1,9 @@
-
-loquibot/out/artifacts/.DS_Store
+.idea/
+lib/
+.DS_Store
+out/
+target/
+.iml
+.ipr
+.iws
+artifacts/

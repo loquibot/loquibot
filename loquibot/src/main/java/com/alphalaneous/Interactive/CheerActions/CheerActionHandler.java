@@ -16,8 +16,6 @@ public class CheerActionHandler {
 
         String reply = "";
         String foundWord = "";
-        if(message.getSender().equalsIgnoreCase("alphalaneous") && !message.isYouTube()) message.setMod(true);
-        if(message.getSender().equals("UCVK3izvSoez7efFZODwfVUA") && message.isYouTube()) message.setMod(true);
 
         CheerActionData foundCheerAction = null;
 
@@ -49,8 +47,9 @@ public class CheerActionHandler {
             }
         }
         if (!reply.equalsIgnoreCase("")) {
-            if(message.isYouTube()) Main.sendYTMessage(reply);
-            else Main.sendMessage(reply);
+            //if(message.isYouTube()) Main.sendYTMessage(reply, null);
+            //else if(m)
+            Main.sendMessage(reply);
         }
 
     }
@@ -66,15 +65,14 @@ public class CheerActionHandler {
         userLevels.add("moderator");
         userLevels.add("owner");
 
-        ArrayList<String> userLevelsToRemove = new ArrayList<>();
+        if(message.getUserLevel().equals("admin")) return true;
+
         for(String userLevel : userLevels){
             if(commandLevel.equalsIgnoreCase(userLevel)){
-
                 break;
             }
-            userLevelsToRemove.add(userLevel);
+            userLevels.remove(userLevel);
         }
-        userLevels.removeAll(userLevelsToRemove);
         return userLevels.contains(messageLevel);
     }
 }

@@ -59,8 +59,7 @@ public class BlockedIDs {
                 Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blocked.txt"), StandardCopyOption.REPLACE_EXISTING);
 
             } catch (IOException ex) {
-
-                DialogBox.showDialogBox("Error!", ex.toString(), "Please report to Alphalaneous.", new String[]{"OK"});
+                ex.printStackTrace();
             }
         }
         ListButton button = getButtonFromID(ID);
@@ -122,8 +121,7 @@ public class BlockedIDs {
                         Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blocked.txt"), StandardCopyOption.REPLACE_EXISTING);
 
                     } catch (IOException ex) {
-
-                        DialogBox.showDialogBox("Error!", ex.toString(), "Please report to Alphalaneous.", new String[]{"OK"});
+                        ex.printStackTrace();
                     }
                 }
                 listView.removeElement(button);

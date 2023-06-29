@@ -186,13 +186,13 @@ public class KeywordConfigCheckbox extends JPanel {
         saveButton.addActionListener(e -> {
 
             if(checkIfNameExists(keywordInput.getText(), finalCommandName)
-                    || keywordInput.getText().equalsIgnoreCase("") || keywordInput.getText().trim().contains(" ") || keywordInput.getText().trim().contains("\n")){
+                    || keywordInput.getText().equalsIgnoreCase("") || keywordInput.getText().trim().contains("\n")){
                 keywordInput.setErrorRed();
             }
             else {
                 if(newCommand){
                     if(checkIfNameExists(keywordInput.getText(), finalCommandName) || keywordInput.getText().equalsIgnoreCase("")
-                            || keywordInput.getText().trim().contains(" ") || keywordInput.getText().trim().contains("\n")){
+                            || keywordInput.getText().trim().contains("\n")){
                         keywordInput.setErrorRed();
                     }
                     else {

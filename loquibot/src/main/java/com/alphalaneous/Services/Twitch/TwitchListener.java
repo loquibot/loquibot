@@ -95,6 +95,8 @@ public class TwitchListener extends WebSocketClient {
 				String redemptionA = object.getJSONObject("data").get("message").toString().replaceAll("\r", "").replaceAll("\n", "");
 				String redemption = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("reward").get("title").toString().replaceAll("\"", "");
 				String username = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("user").get("login").toString().replaceAll("\"", "");
+				String userID = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("user").get("id").toString().replaceAll("\"", "");
+
 				boolean isUserinput = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").getJSONObject("reward").getBoolean("is_user_input_required");
 				String userInput = "";
 				if (isUserinput) {
@@ -114,7 +116,11 @@ public class TwitchListener extends WebSocketClient {
 						}
 					}
 					if(data != null){
-						ChatMessage messageA = new ChatMessage(new String[]{}, username, username, userInput, new String[0], false, false, false, 0, false, false);
+
+						String[] tags = new String[1];
+						tags[0] = "user-id=" + userID;
+
+						ChatMessage messageA = new ChatMessage(tags, username, username, userInput, new String[0], false, false, false, 0, false, false);
 						Main.sendMessage(CommandHandler.replaceBetweenParentheses(messageA, data.getMessage(), data.getMessage().split(" "), null));
 					}
 
@@ -127,7 +133,7 @@ public class TwitchListener extends WebSocketClient {
 
 	@Override
 	public void onMessage(ByteBuffer message) {
-		System.out.println("received ByteBuffer");
+
 	}
 
 	@Override

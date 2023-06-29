@@ -1,21 +1,19 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.ChatBot.BotHandler;
-import com.alphalaneous.ChatBot.ChatterActivity;
+import com.alphalaneous.ChatBot.*;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.Moderation.Moderation;
-import com.alphalaneous.ChatBot.ChatBot;
-import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Utilities;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class TwitchChatListener extends ChatBot {
+public class TwitchChatListener extends NewChatBot {
 
-	public static boolean sentStartupMessage = false;
 	private static TwitchChatListener currentListener;
 
 
@@ -29,28 +27,26 @@ public class TwitchChatListener extends ChatBot {
 	}
 
 	@Override
-	public void onOpen(ServerHandshake serverHandshake) {
+	public void onOpen() {
 		System.out.println("> Connected to Twitch IRC");
 
 	}
 
 	@Override
-	public void onClose(int i, String s, boolean b) {
+	public void onClose() {
 		System.out.println("> Disconnected from Chat Listener");
-		Utilities.sleep(2000);
-		new TwitchChatListener(TwitchAccount.login).connect(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.login);
+		//Utilities.sleep(2000);
+		//new TwitchChatListener(TwitchAccount.login).connect(SettingsHandler.getSettings("oauth").asString());
 	}
 
 	@Override
 	public void onMessage(ChatMessage chatMessage) {
 		//TwitchChat.addMessage(chatMessage);
-		if(chatMessage.getSender().equalsIgnoreCase("loquibot") && chatMessage.isMod()){
-			SettingsHandler.writeSettings("isMod", "true");
-		}
 
 		if (!chatMessage.getSender().equalsIgnoreCase("loquibot")) {
 			new SelfDestructingMessage();
-			new ChatterActivity(chatMessage.getSender());
+			new SelfDestructingViewer(chatMessage.getSender());
+
 			if (SettingsHandler.getSettings("multiMode").asBoolean()) {
 				new Thread(() -> waitOnMessage(chatMessage)).start();
 			} else {
@@ -71,14 +67,9 @@ public class TwitchChatListener extends ChatBot {
 	public void onRawMessage(String s) {
 	}
 
-	@Override
-	public void onError(Exception e) {
-		e.printStackTrace();
-	}
-
 	public static class SelfDestructingMessage{
 
-		private static final ArrayList<SelfDestructingMessage> selfDestructingMessages = new ArrayList<>();
+		private static final List<SelfDestructingMessage> selfDestructingMessages = Collections.synchronizedList(new ArrayList<>());
 
 		public SelfDestructingMessage(){
 			new Thread(() -> {
@@ -89,6 +80,55 @@ public class TwitchChatListener extends ChatBot {
 		}
 		public static int getSize(){
 			return selfDestructingMessages.size();
+		}
+	}
+
+	public static class SelfDestructingViewer{
+
+		private static final List<SelfDestructingViewer> selfDestructingViewers = Collections.synchronizedList(new ArrayList<>());
+		private final String viewer;
+		public SelfDestructingViewer(String viewer){
+
+			if(containsViewer(viewer)) {
+				removeByViewer(viewer);
+			}
+
+			this.viewer = viewer;
+			new Thread(() -> {
+				selfDestructingViewers.add(this);
+				Utilities.sleep(60000*3);
+				selfDestructingViewers.remove(this);
+			}).start();
+		}
+
+		public String getViewer(){
+			return viewer;
+		}
+
+		public static void removeByViewer(String viewer){
+			for(SelfDestructingViewer viewer1 : selfDestructingViewers){
+				if(viewer1 != null) {
+					if (viewer1.getViewer().equalsIgnoreCase(viewer)) {
+						selfDestructingViewers.remove(viewer1);
+						break;
+					}
+				}
+			}
+		}
+
+		public static boolean containsViewer(String viewer){
+			for(SelfDestructingViewer viewer1 : selfDestructingViewers){
+				if(viewer1 != null) {
+					if (viewer1.getViewer().trim().equalsIgnoreCase(viewer.trim())) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		public static int getSize(){
+			return selfDestructingViewers.size();
 		}
 	}
 

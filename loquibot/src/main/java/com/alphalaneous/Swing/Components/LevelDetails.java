@@ -14,6 +14,7 @@ import com.alphalaneous.Windows.Window;
 import jdash.client.exception.GDClientException;
 import jdash.common.IconType;
 import jdash.common.entity.GDComment;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.imgscalr.Scalr;
 import org.json.JSONObject;
 
@@ -32,6 +33,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,6 +71,7 @@ public class LevelDetails extends JPanel {
     private final LoadingPane loadingPane = new LoadingPane();
     private int descHeight = 30;
     private boolean top = false;
+
 
 
     public LevelDetails(LevelData data){
@@ -369,16 +373,56 @@ public class LevelDetails extends JPanel {
             @Override
             public YouTubeVideo doInBackground() {
                 ArrayList<YouTubeVideo> youTubeVideos;
+
                 try {
-                    youTubeVideos = YouTubeScrape.searchYouTube(String.valueOf(data.getGDLevel().getLevel().id()));
-                    while(true) {
-                        int pos = maxValue(youTubeVideos);
-                        if (youTubeVideos.get(pos).getTitle().contains(data.getGDLevel().getLevel().name())) {
-                            return youTubeVideos.get(pos);
-                        }
-                        else youTubeVideos.remove(pos);
-                        if(youTubeVideos.size() == 0) return null;
+
+                    String creatorName = "";
+
+                    if(data.getGDLevel().getLevel().creatorName().isPresent()){
+                        creatorName =  data.getGDLevel().getLevel().creatorName().get();
                     }
+
+                    String[] potentialSearches = {
+                            String.valueOf(data.getGDLevel().getLevel().id()),
+                            //data.getGDLevel().getLevel().name() + " " + data.getGDLevel().getLevel().id(),
+                            //data.getGDLevel().getLevel().name() + " " + creatorName,
+                            //data.getGDLevel().getLevel().name() + " " + creatorName + " " + data.getGDLevel().getLevel().id(),
+                    };
+
+                    ArrayList<YouTubeVideo> candidates = new ArrayList<>();
+
+                    int i = 0;
+
+                    while (i < potentialSearches.length) {
+
+                        youTubeVideos = YouTubeScrape.searchYouTube(potentialSearches[i]);
+                        out: for(YouTubeVideo video : youTubeVideos) {
+
+                            double similarity = containsSimilar(data.getGDLevel().getLevel().name(), video.getTitle());
+
+                            if(similarity > 0.7){
+                                for(YouTubeVideo video1 : candidates){
+                                    if(video1.getTitle().equalsIgnoreCase(video.getTitle())){
+                                        continue out;
+                                    }
+                                }
+                                candidates.add(video);
+                            }
+
+                            //System.out.println(video.getTitle() + " | " + video.getUsername() + " | " + video.getDescription());
+
+                            /*if (youTubeVideos.size() == 0) {
+                                i++;
+                                break;
+                            }*/
+                        }
+                        i++;
+                    }
+
+                    candidates.sort(Comparator.comparing(YouTubeVideo::getViewCount));
+                    Collections.reverse(candidates);
+
+                    return candidates.get(0);
 
                 } catch (IOException f) {
                     f.printStackTrace();
@@ -418,6 +462,49 @@ public class LevelDetails extends JPanel {
                 }
             }
         }.execute();
+    }
+
+    public static double containsSimilar(String s1, String s2){
+        try {
+            s1 = s1.toLowerCase().trim();
+            s2 = s2.toLowerCase().trim();
+
+            int words = s1.split(" ").length;
+
+            String[] s2Split = s2.split(" ");
+
+            double finalSim = 0;
+            StringBuilder window;
+            for (int i = 0; i < s2Split.length; i++) {
+                window = new StringBuilder();
+                for (int j = 0; j < words; j++) {
+
+                    if (i + j >= s2Split.length) break;
+                    window.append(s2Split[i + j]).append(" ");
+
+                }
+
+                double sim = similarity(s1, window.toString().trim());
+
+                if (sim > finalSim) finalSim = sim;
+            }
+            return finalSim;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static double similarity(String s1, String s2) {
+        String longer = s1, shorter = s2;
+        if (s1.length() < s2.length()) { // longer should always have greater length
+            longer = s2; shorter = s1;
+        }
+        int longerLength = longer.length();
+        if (longerLength == 0) { return 1.0; /* both strings are zero length */ }
+        LevenshteinDistance distance = LevenshteinDistance.getDefaultInstance();
+        return (longerLength - distance.apply(longer, shorter)) / (double )longerLength;
     }
 
     int tries = 0;
@@ -686,6 +773,7 @@ public class LevelDetails extends JPanel {
             g.fillRect(0, 0, getSize().width, getSize().height);
         }
         g2d.dispose();
+
     }
 
     public BufferedImage getScaledInstanceToFill(BufferedImage img, Dimension size) {

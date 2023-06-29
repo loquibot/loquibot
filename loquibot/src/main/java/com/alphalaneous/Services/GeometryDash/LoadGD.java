@@ -40,6 +40,7 @@ public class LoadGD {
                     e.printStackTrace();
                     System.out.println("> Failed to load initial GD connection");
                 }
+                Account.refreshGD(null);
                 SettingsHandler.writeSettings("GDLogon", "false");
                 isAuth = false;
             }

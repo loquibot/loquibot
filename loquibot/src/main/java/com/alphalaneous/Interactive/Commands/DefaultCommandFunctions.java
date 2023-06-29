@@ -21,22 +21,22 @@ public class DefaultCommandFunctions {
 
     public static String runBlock(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$BLOCK_NO_ID_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$BLOCK_NO_ID_MESSAGE$");
         }
-        return RequestsUtils.block(message.getSenderElseDisplay(), message.getArgs());
+        return RequestsUtils.block(message.getArgs());
     }
     public static String runBlockUser(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$BLOCK_NO_USER_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$BLOCK_NO_USER_MESSAGE$");
         }
-        return RequestsUtils.blockUser(message.getSenderElseDisplay(), message.getArgs());
+        return RequestsUtils.blockUser(message.getArgs());
     }
     public static String runClear(ChatMessage message){
         RequestsUtils.clear();
-        return Utilities.format("$CLEAR_MESSAGE$", message.getSenderElseDisplay());
+        return Utilities.format("$CLEAR_MESSAGE$");
     }
     public static String runEnd(ChatMessage message){
-        if(message.getSenderElseDisplay().equalsIgnoreCase("Alphalaneous")){
+        if(message.getUserLevel().equalsIgnoreCase("admin")){
             RequestsUtils.endLoquibot();
         }
         return "";
@@ -44,7 +44,7 @@ public class DefaultCommandFunctions {
 
     public static String runStopSounds(ChatMessage message){
         Sounds.stopAllSounds();
-        return Utilities.format("$STOP_SOUNDS_MESSAGE$", message.getSenderElseDisplay());
+        return Utilities.format("$STOP_SOUNDS_MESSAGE$");
     }
 
     public static String runFart(ChatMessage message){
@@ -91,7 +91,7 @@ public class DefaultCommandFunctions {
         }
         if (RequestsUtils.getSize() > 1 && intArg <= RequestsUtils.getSize()) {
 
-            return Utilities.format("$INFO_COMMAND_MESSAGE$", message.getSenderElseDisplay(),
+            return Utilities.format("$INFO_COMMAND_MESSAGE$",
                     RequestsUtils.getLevel(intArg - 1, "name"),
                     RequestsUtils.getLevel(intArg - 1, "id"),
                     RequestsUtils.getLevel(intArg - 1, "author"),
@@ -105,10 +105,10 @@ public class DefaultCommandFunctions {
     }
     public static String runMove(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$MOVE_NO_ID_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$MOVE_NO_ID_MESSAGE$");
         }
         if(message.getArgs().length == 2){
-            return Utilities.format("$MOVE_NO_POS_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$MOVE_NO_POS_MESSAGE$");
         }
         try {
             if (RequestsUtils.getPosFromID(Integer.parseInt(message.getArgs()[1])) != -1) {
@@ -122,22 +122,22 @@ public class DefaultCommandFunctions {
                     newPos = 0;
                 }
                 RequestsUtils.movePosition(RequestsUtils.getPosFromID(Integer.parseInt(message.getArgs()[1])), newPos);
-                return Utilities.format("$MOVE_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1], (newPos + 1));
+                return Utilities.format("$MOVE_MESSAGE$", message.getArgs()[1], (newPos + 1));
             }
             else{
-                return Utilities.format("$MOVE_FAILED_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+                return Utilities.format("$MOVE_FAILED_MESSAGE$", message.getArgs()[1]);
             }
         }
         catch (NumberFormatException e){
             e.printStackTrace();
-            return Utilities.format("$MOVE_FAILED_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+            return Utilities.format("$MOVE_FAILED_MESSAGE$", message.getArgs()[1]);
         }
     }
     public static String runNext(ChatMessage message){
         if(!SettingsHandler.getSettings("basicMode").asBoolean()) {
             if (RequestsUtils.getSize() > 1) {
 
-                return Utilities.format("$NEXT_MESSAGE$", message.getSenderElseDisplay(),
+                return Utilities.format("$NEXT_MESSAGE$",
                         RequestsUtils.getLevel(1, "name"),
                         RequestsUtils.getLevel(1, "author"),
                         RequestsUtils.getLevel(1, "id"),
@@ -146,7 +146,7 @@ public class DefaultCommandFunctions {
         }
         else {
             if (RequestsUtils.getSize() > 1) {
-                return Utilities.format("$NEXT_MESSAGE_BASIC$", message.getSenderElseDisplay(),
+                return Utilities.format("$NEXT_MESSAGE_BASIC$",
                         RequestsUtils.getLevel(1, "id"));
             }
         }
@@ -155,10 +155,10 @@ public class DefaultCommandFunctions {
     public static String runPermit(ChatMessage message){
         if(SettingsHandler.getSettings("linkFilterEnabled").asBoolean()){
             if(message.getArgs().length == 1){
-                return Utilities.format("$NO_USER_MESSAGE$", message.getSenderElseDisplay());
+                return Utilities.format("$NO_USER_MESSAGE$");
             }
             LinkPermit.giveLinkPermit(message.getArgs()[1].replace("@", ""));
-            return Utilities.format("$PERMIT_SUCCESS_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1].replace("@", ""));
+            return Utilities.format("$PERMIT_SUCCESS_MESSAGE$", message.getArgs()[1].replace("@", ""));
         }
         return "";
     }
@@ -175,18 +175,18 @@ public class DefaultCommandFunctions {
         }
         ArrayList<Integer> userPosition = new ArrayList<>();
         for(var i = 0; i < RequestsUtils.getSize(); i++){
-            if(RequestsUtils.getLevel(i, "requester").equalsIgnoreCase(message.getSender())){
+            if(RequestsUtils.getLevel(i, "requester").equalsIgnoreCase(message.getSenderElseDisplay())){
                 userPosition.add(i);
             }
         }
         if(userPosition.size() == 0){
-            return Utilities.format("$POSITION_NONE_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$POSITION_NONE_MESSAGE$");
         }
         if(intArg > userPosition.size()){
-            return Utilities.format("$POSITION_WRONG_MESSAGE$", message.getSenderElseDisplay(), userPosition.size());
+            return Utilities.format("$POSITION_WRONG_MESSAGE$", userPosition.size());
         }
         int pos = userPosition.get(intArg-1)+1;
-        return Utilities.format("$POSITION_MESSAGE$", message.getSenderElseDisplay(),
+        return Utilities.format("$POSITION_MESSAGE$",
                 RequestsUtils.getLevel(userPosition.get(intArg-1), "name"), pos);
     }
     public static String runQueue(ChatMessage message){
@@ -206,15 +206,15 @@ public class DefaultCommandFunctions {
             pages = (((RequestsUtils.getSize() - 1) / queueLength) + 1);
         }
         if(RequestsUtils.getSize() == 0){
-            return Utilities.format("$QUEUE_NO_LEVELS_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$QUEUE_NO_LEVELS_MESSAGE$");
         }
         if(intArg > pages){
-            return Utilities.format("$QUEUE_NO_PAGE_MESSAGE$", message.getSenderElseDisplay(), intArg);
+            return Utilities.format("$QUEUE_NO_PAGE_MESSAGE$", intArg);
         }
         if(intArg < 1){
             intArg = 1;
         }
-        String queueMessage = Utilities.format("$QUEUE_MESSAGE$", message.getSenderElseDisplay(), intArg, pages) + " | ";
+        String queueMessage = Utilities.format("$QUEUE_MESSAGE$", intArg, pages) + " | ";
         for(int i = (intArg - 1)*queueLength; i < intArg * queueLength; i++){
             if(i < RequestsUtils.getSize()){
                 if(i % queueLength != 0){
@@ -227,7 +227,7 @@ public class DefaultCommandFunctions {
     }
     public static String runRemove(ChatMessage message){
         if(message.getArgs().length == 1) {
-            return Utilities.format("$SPECIFY_ID_REMOVE_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$SPECIFY_ID_REMOVE_MESSAGE$");
         }
         int intArg;
         try {
@@ -249,7 +249,7 @@ public class DefaultCommandFunctions {
     }
     public static String runRequest(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$SPECIFY_ID_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$SPECIFY_ID_MESSAGE$");
         }
         String userID = message.getTag("user-id");
         long lUserID = 0;
@@ -273,7 +273,7 @@ public class DefaultCommandFunctions {
                 intArg = RequestsUtils.getSelection() + 1;
             }
             if (RequestsUtils.getSize() > 0 && intArg <= RequestsUtils.getSize()) {
-                return Utilities.format("$SONG_MESSAGE$", message.getSenderElseDisplay(),
+                return Utilities.format("$SONG_MESSAGE$",
                         RequestsUtils.getLevel(intArg - 1, "songName"),
                         RequestsUtils.getLevel(intArg - 1, "songArtist"),
                         RequestsUtils.getLevel(intArg - 1, "songID"));
@@ -296,27 +296,27 @@ public class DefaultCommandFunctions {
             pos = -1;
         }
         if(message.getArgs().length == 1){
-            return Utilities.format("$TOP_NO_ID_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$TOP_NO_ID_MESSAGE$");
         }
         if(pos != -1 && message.getArgs().length > 1){
             RequestsUtils.movePosition(pos, 1);
-            return Utilities.format("$TOP_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+            return Utilities.format("$TOP_MESSAGE$", message.getArgs()[1]);
         }
         else{
-            return Utilities.format("$TOP_FAILED_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+            return Utilities.format("$TOP_FAILED_MESSAGE$", message.getArgs()[1]);
         }
     }
     public static String runUnblock(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$BLOCK_NO_ID_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$BLOCK_NO_ID_MESSAGE$");
         }
-        return RequestsUtils.unblock( message.getSenderElseDisplay(), message.getArgs());
+        return RequestsUtils.unblock(message.getArgs());
     }
     public static String runUnblockUser(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$BLOCK_NO_USER_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$BLOCK_NO_USER_MESSAGE$");
         }
-        return RequestsUtils.unblockUser( message.getSenderElseDisplay(), message.getArgs());
+        return RequestsUtils.unblockUser(message.getArgs());
     }
     public static String runWrongLevel(ChatMessage message){
         return RequestsUtils.removeLatest(message);
@@ -329,7 +329,7 @@ public class DefaultCommandFunctions {
     public static String runAddcom(ChatMessage message){
 
         if(message.getArgs().length == 1){
-            return Utilities.format("$ADD_COMMAND_NO_ARGS_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$ADD_COMMAND_NO_ARGS_MESSAGE$");
         }
         int endOfArgsPos = 0;
 
@@ -349,7 +349,7 @@ public class DefaultCommandFunctions {
                                 break;
                             }
                             catch (NumberFormatException e){
-                                return Utilities.format("$ADD_COMMAND_INVALID_COOLDOWN_MESSAGE$", message.getSenderElseDisplay());
+                                return Utilities.format("$ADD_COMMAND_INVALID_COOLDOWN_MESSAGE$");
                             }
                         case "-ul":
                         case "-userlevel":
@@ -362,7 +362,7 @@ public class DefaultCommandFunctions {
                     }
                 }
                 else {
-                    return Utilities.format("$ADD_COMMAND_INVALID_ARGS_MESSAGE$", message.getSenderElseDisplay());
+                    return Utilities.format("$ADD_COMMAND_INVALID_ARGS_MESSAGE$");
                 }
             }
             else{
@@ -379,13 +379,13 @@ public class DefaultCommandFunctions {
 
             String text = message.getMessage().substring(size-1).trim();
             if(text.equalsIgnoreCase("")) {
-                return Utilities.format("$ADD_COMMAND_NO_MESSAGE_MESSAGE$", message.getSenderElseDisplay());
+                return Utilities.format("$ADD_COMMAND_NO_MESSAGE_MESSAGE$");
             }
             else{
                 newCommand.setMessage(text);
                 newCommand.setDescription(text);
             }
-            if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$", message.getSenderElseDisplay());
+            if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$");
             if(!userLevel.equalsIgnoreCase("")) newCommand.setUserLevel(userLevel);
 
             if(aliases != null) newCommand.setAliases(List.of(aliases));
@@ -393,35 +393,35 @@ public class DefaultCommandFunctions {
 
             if(CommandConfigCheckbox.checkIfNameExists(newCommand.getCommand(), "") || newCommand.getCommand().equalsIgnoreCase("")
                     || newCommand.getCommand().trim().contains(" ") || newCommand.getCommand().trim().contains("\n")){
-                return Utilities.format("$ADD_COMMAND_ALREADY_EXISTS_MESSAGE$", message.getSenderElseDisplay(), newCommand.getCommand());
+                return Utilities.format("$ADD_COMMAND_ALREADY_EXISTS_MESSAGE$", newCommand.getCommand());
             }
 
             newCommand.registerCommand();
 
             LoadCommands.reloadCustomCommands();
-            return Utilities.format("$ADD_COMMAND_SUCCESS_MESSAGE$", message.getSenderElseDisplay(), newCommand.getCommand());
+            return Utilities.format("$ADD_COMMAND_SUCCESS_MESSAGE$", newCommand.getCommand());
         }
         return "";
     }
     public static String runDelcom(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$DELETE_COMMAND_NO_ARGS_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$DELETE_COMMAND_NO_ARGS_MESSAGE$");
         }
         for(CommandData data : LoadCommands.getCustomCommands()){
             if(data.getCommand().equalsIgnoreCase(message.getArgs()[1])){
                 data.deRegisterCommand();
                 LoadCommands.reloadCustomCommands();
-                return Utilities.format("$DELETE_COMMAND_SUCCESS_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+                return Utilities.format("$DELETE_COMMAND_SUCCESS_MESSAGE$", message.getArgs()[1]);
 
             }
         }
-        return Utilities.format("$DELETE_COMMAND_DOESNT_EXIST_MESSAGE$", message.getSenderElseDisplay(), message.getArgs()[1]);
+        return Utilities.format("$DELETE_COMMAND_DOESNT_EXIST_MESSAGE$", message.getArgs()[1]);
     }
 
 
     public static String runEditcom(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$EDIT_COMMAND_NO_ARGS_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$EDIT_COMMAND_NO_ARGS_MESSAGE$");
         }
         int endOfArgsPos = 0;
 
@@ -441,7 +441,7 @@ public class DefaultCommandFunctions {
                                 break;
                             }
                             catch (NumberFormatException e){
-                                return Utilities.format("$EDIT_COMMAND_INVALID_COOLDOWN_MESSAGE$", message.getSenderElseDisplay());
+                                return Utilities.format("$EDIT_COMMAND_INVALID_COOLDOWN_MESSAGE$");
                             }
                         case "-ul":
                         case "-userlevel":
@@ -454,7 +454,7 @@ public class DefaultCommandFunctions {
                     }
                 }
                 else {
-                    return Utilities.format("$EDIT_COMMAND_INVALID_ARGS_MESSAGE$", message.getSenderElseDisplay());
+                    return Utilities.format("$EDIT_COMMAND_INVALID_ARGS_MESSAGE$");
                 }
             }
             else{
@@ -477,14 +477,14 @@ public class DefaultCommandFunctions {
                         data.setMessage(text);
                         data.setDescription(text);
                     }
-                    if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$", message.getSenderElseDisplay());
+                    if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$");
                     if(!userLevel.equalsIgnoreCase("")) data.setUserLevel(userLevel);
 
                     if(cooldown != 0) data.setCooldown(cooldown);
                     if(aliases != null) data.setAliases(List.of(aliases));
 
                     LoadCommands.reloadCustomCommands();
-                    return Utilities.format("$EDIT_COMMAND_SUCCESS_MESSAGE$", message.getSenderElseDisplay(), data.getCommand());
+                    return Utilities.format("$EDIT_COMMAND_SUCCESS_MESSAGE$", data.getCommand());
 
                 }
             }
@@ -492,17 +492,17 @@ public class DefaultCommandFunctions {
         return "";
     }
     public static String runTitle(ChatMessage message){
-        if(!message.isYouTube()) {
+        if(!message.isYouTube() && !message.isKick()) {
             if (message.getArgs().length == 1 || !message.isMod()) {
                 JSONObject channelInfo = TwitchAPI.getChannelInfo();
                 String title = channelInfo.getJSONArray("data").getJSONObject(0).getString("title");
-                return Utilities.format("$STREAM_TITLE_COMMAND_MESSAGE$", message.getSenderElseDisplay(), title);
+                return Utilities.format("$STREAM_TITLE_COMMAND_MESSAGE$", title);
             } else if (message.isMod()) {
 
                 String title = message.getMessage().substring(message.getMessage().split(" ")[0].length()).trim();
                 String response = TwitchAPI.setTitle(title);
                 if (response == null)
-                    return Utilities.format("$STREAM_TITLE_CHANGE_MESSAGE$", message.getSenderElseDisplay(), title);
+                    return Utilities.format("$STREAM_TITLE_CHANGE_MESSAGE$", title);
                 else return response;
 
             }
@@ -510,19 +510,19 @@ public class DefaultCommandFunctions {
         return "";
     }
     public static String runGame(ChatMessage message){
-        if(!message.isYouTube()) {
+        if(!message.isYouTube() && !message.isKick()) {
             if (message.getArgs().length == 1 || !message.isMod()) {
                 JSONObject channelInfo = TwitchAPI.getChannelInfo();
                 String title = channelInfo.getJSONArray("data").getJSONObject(0).getString("game_name");
-                return Utilities.format("$STREAM_GAME_COMMAND_MESSAGE$", message.getSenderElseDisplay(), title);
+                return Utilities.format("$STREAM_GAME_COMMAND_MESSAGE$", title);
             } else if (message.isMod()) {
 
                 String game = message.getMessage().substring(message.getMessage().split(" ")[0].length() + 1).trim();
                 String response = TwitchAPI.setGame(game);
                 if (response == null)
-                    return Utilities.format("$STREAM_GAME_CHANGE_MESSAGE$", message.getSenderElseDisplay(), game);
+                    return Utilities.format("$STREAM_GAME_CHANGE_MESSAGE$", game);
                 if (response.equalsIgnoreCase("no_game"))
-                    return Utilities.format("$GAME_NOT_FOUND_MESSAGE$", message.getSenderElseDisplay(), game);
+                    return Utilities.format("$GAME_NOT_FOUND_MESSAGE$", game);
                 else return response;
 
             }
@@ -532,7 +532,7 @@ public class DefaultCommandFunctions {
 
     public static String runFileSay(ChatMessage message){
         if(message.getArgs().length == 1){
-            return Utilities.format("$FILESAY_COMMAND_NO_ARGS_MESSAGE$", message.getSenderElseDisplay());
+            return Utilities.format("$FILESAY_COMMAND_NO_ARGS_MESSAGE$");
         }
 
         String url = message.getArgs()[1];
@@ -540,7 +540,8 @@ public class DefaultCommandFunctions {
         String[] fileText = TwitchAPI.fetchURL(url, true).split("\n");
 
         for(String line : fileText){
-            if(message.isYouTube()) Main.sendYTMessage(line);
+            if(message.isYouTube()) Main.sendYTMessage(line, null);
+            else if(message.isKick()) Main.sendKickMessage(line, null);
             else Main.sendMessage(line);
         }
 
@@ -555,13 +556,13 @@ public class DefaultCommandFunctions {
             }
         }
 
-        return Utilities.format("$HOW_MANY_MESSAGE$", message.getSenderElseDisplay(), amount);
+        return Utilities.format("$HOW_MANY_MESSAGE$", amount);
     }
 
     public static String runSize(ChatMessage message){
 
 
-        return Utilities.format("$SIZE_MESSAGE$", message.getSenderElseDisplay(), RequestsUtils.getSize());
+        return Utilities.format("$SIZE_MESSAGE$", RequestsUtils.getSize());
     }
 
 

@@ -39,6 +39,7 @@ public class Auth {
         Reader clientSecretReader = new InputStreamReader(Objects.requireNonNull(Auth.class.getResourceAsStream("/client_secrets.json")));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
 
+
         File correctDirectory = new File(Defaults.saveDirectory + "\\loquibot");
 
         FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);

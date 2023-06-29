@@ -46,6 +46,14 @@ public class YouTubeScrape {
             }
         }
 
+        String otherData = "";
+        for (Element element : elements) {
+            if(element.data().startsWith("var ytInitialPlayerResponse")){
+                otherData = element.data().substring("var ytInitialPlayerResponse = ".length(), element.data().length()-1);
+                break;
+            }
+        }
+
         JSONObject jsonData = new JSONObject(data);
 
         JSONObject playerOverlays = jsonData.getJSONObject("playerOverlays");
@@ -57,11 +65,30 @@ public class YouTubeScrape {
         JSONObject titleObj = playerOverlayVideoDetailsRenderer.getJSONObject("title");
         String title = titleObj.getString("simpleText");
 
+        //JSONArray keywords = videoDetails.getJSONArray("keywords");
+        //System.out.println(keywords);
+
+        //String shortDescription = videoDetails.getString("shortDescription");
+        //System.out.println(shortDescription);
+
+        //simpleText (string) -> description (object) -> playerMicroformatRenderer (object) -> microformat (object) -> playerConfig (object)
+
         JSONObject subtitle = playerOverlayVideoDetailsRenderer.getJSONObject("subtitle");
+
         JSONArray runs = subtitle.getJSONArray("runs");
         String username = runs.getJSONObject(0).getString("text");
 
-        return new YouTubeVideo(title, username, query, thumbnailURL, 0, (int) seconds);
+        JSONObject otherJsonData = new JSONObject(otherData);
+        //System.out.println(otherJsonData.toString(4));
+
+        JSONObject microformat = otherJsonData.getJSONObject("microformat");
+        JSONObject playerMicroformatRenderer = microformat.getJSONObject("playerMicroformatRenderer");
+        JSONObject description = playerMicroformatRenderer.getJSONObject("description");
+        String descriptionText = description.getString("simpleText");
+
+        System.out.println(descriptionText.replace("\n", " ").trim());
+
+        return new YouTubeVideo(title, username, query,"", thumbnailURL, 0, (int) seconds);
     }
 
     public static ArrayList<YouTubeVideo> searchYouTube(String query) throws IOException {
@@ -122,7 +149,7 @@ public class YouTubeScrape {
                 JSONArray runs = shortBylineText.getJSONArray("runs");
                 JSONObject runsArr0 = runs.getJSONObject(0);
                 String username = runsArr0.getString("text");
-                youTubeVideos.add(new YouTubeVideo(title, username, videoID, thumbnailURL, viewCount, seconds));
+                youTubeVideos.add(new YouTubeVideo(title, username, videoID, "", thumbnailURL, viewCount, seconds));
 
             }
         }

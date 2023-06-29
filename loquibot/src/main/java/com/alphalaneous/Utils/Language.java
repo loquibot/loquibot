@@ -46,11 +46,12 @@ public class Language {
 
     static String[] uwuEndings = {"uwu", "OwO", "rawr~", "X3", "nuzzles~", "(´・ω・｀)", "\uD83E\uDD7A", "uvu", " （=´∇｀=）"};
 
-    public static String uwuify(String text){
+    public static String modify(String text){
 
-        String today = new SimpleDateFormat("MMdd").format(Calendar.getInstance().getTime());
-        if(today.equalsIgnoreCase("0401")){
-            Random generator = new Random();
+        if(Defaults.isAprilFools) {
+            text = text.replace("queue", "form").replace("Queue", "Form");
+
+            /*Random generator = new Random();
             int randomIndex = generator.nextInt(uwuEndings.length);
 
             return text.replace('l', 'w')
@@ -60,7 +61,7 @@ public class Language {
                     .replace("no", "nyo")
                     .replace("NO", "NYO")
                     .replace("nO", "nYO")
-                    .replace("No", "Nyo") + " " + uwuEndings[randomIndex];
+                    .replace("No", "Nyo") + " " + uwuEndings[randomIndex];*/
         }
         return text;
     }

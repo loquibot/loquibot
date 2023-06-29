@@ -2,6 +2,7 @@ package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Windows.AprilFools;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
@@ -119,6 +120,7 @@ public class LevelsPanel extends JPanel {
         setSelect(position, refresh, true);
     }
     public void setSelect(int position, boolean refresh, boolean resetScroll){
+        AprilFools.setSelect(position);
         deselectAll();
         if(buttonPanel.getComponentCount() != 0) {
             LevelButton button;
@@ -149,6 +151,8 @@ public class LevelsPanel extends JPanel {
             }
         }
     }
+
+
 
     public void refreshUI(){
         for (Component component : buttonPanel.getComponents()) {

@@ -13,20 +13,20 @@ public class Developer {
         SettingsPage settingsPage = new SettingsPage("$DEVELOPER_SETTINGS$");
 
         settingsPage.addRadioOption("Server", "", new String[]{"main", "local"}, "dev_Server", "main", () -> {
-            ServerBot.getCurrentServerBot().disconnect();
-            new Thread(() -> new ServerBot().connect()).start();
+            ServerBot.disconnect();
+            ServerBot.connect();
         });
 
         settingsPage.addButton("Reconnect", ()->{
-            ServerBot.getCurrentServerBot().disconnect();
-            new Thread(() -> new ServerBot().connect()).start();
+            ServerBot.disconnect();
+            ServerBot.connect();
         });
 
 
         settingsPage.addButton("Reboot Servers", () -> {
             JSONObject response = new JSONObject();
             response.put("request_type", "restart");
-            ServerBot.getCurrentServerBot().sendMessage(String.valueOf(response));
+            ServerBot.sendMessage(String.valueOf(response));
         });
 
         settingsPage.addButton("Update oauth", () -> {
@@ -35,11 +35,12 @@ public class Developer {
                 JSONObject response = new JSONObject();
                 response.put("request_type", "reset_oauth");
 
-                String oauth = TwitchAPI.getOauth();
+                String oauth = TwitchAPI.getBotOauth();
+                System.out.println("New oauth is: " + oauth);
                 response.put("oauth", oauth);
 
                 if (oauth != null){
-                    ServerBot.getCurrentServerBot().sendMessage(String.valueOf(response));
+                    ServerBot.sendMessage(String.valueOf(response));
                 }
             }).start();
 

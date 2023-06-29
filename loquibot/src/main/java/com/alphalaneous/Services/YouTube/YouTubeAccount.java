@@ -65,6 +65,7 @@ public class YouTubeAccount {
                 String mediumURL = medium.getString("url");
 
                 name = title;
+
                 profileImage = ImageIO.read(new URL(mediumURL));
 
             } catch (Exception e) {

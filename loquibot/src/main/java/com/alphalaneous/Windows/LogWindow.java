@@ -7,6 +7,7 @@ import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.sun.jna.platform.WindowUtils;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -18,7 +19,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -120,7 +126,7 @@ public class LogWindow {
         Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(argString);
         while (m.find()) args.add(m.group(1).replace("\"", ""));
 
-        switch (command){
+        switch (command.toLowerCase()){
 
             case "/help" : {
                 System.out.println("List of commands: " +
@@ -147,6 +153,44 @@ public class LogWindow {
             case "/browser": {
                 new BrowserWindow("https://google.com");
                 break;
+            }
+            case "/visible": {
+                Window.setVisible(true);
+                break;
+            }
+            case "/version": {
+                try {
+                    String curVersion;
+                    if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/version.txt"))) {
+                        curVersion = Files.readString(Paths.get(Defaults.saveDirectory + "/loquibot/version.txt"));
+                    } else {
+                        curVersion = Files.readString(Paths.get(Defaults.saveDirectory + "/GDBoard/version.txt"));
+                    }
+                    double curVersionNumber = Double.parseDouble(curVersion.split("=")[1]);
+
+                    System.out.println("Version: " + curVersionNumber);
+                }
+                catch(Exception e){
+                    System.out.println("Failed to retrieve version.");
+                }
+                break;
+            }
+
+            case "/swapsave": {
+
+                File file = FileUtils.getUserDirectory();
+                try {
+                    Path path = Paths.get(file.toString() + "\\.loquibot").toAbsolutePath();
+                    if(!Files.isDirectory(path)) {
+                        Files.createDirectory(path);
+                    }
+                    Files.write(Paths.get(file.toString() + "\\.loquibot\\.save"), "".getBytes());
+                    System.out.println("Saves Swapped to " + file.toString() + "\\.loquibot");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+
             }
             default: {
                 System.out.println("! That command doesn't exist!");

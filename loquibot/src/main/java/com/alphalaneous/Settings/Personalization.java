@@ -42,7 +42,6 @@ public class Personalization {
                     //todo disable GD Mode unless visible
                     Path link = Paths.get(Defaults.saveDirectory + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\loquibot.lnk");
                     if (SettingsHandler.getSettings("runAtStartup").asBoolean()) {
-                        System.out.println("here");
                         try {
                             FileSystemView filesys = FileSystemView.getFileSystemView();
                             File file = filesys.getHomeDirectory();

@@ -153,20 +153,18 @@ public class Window {
         layeredContentPanel.add(dialogBackgroundPanel, 1, -1);
         windowFrame.add(layeredContentPanel);
 
-        final Taskbar taskbar = Taskbar.getTaskbar();
 
-        try {
-            //set icon for macOS (and other systems which do support this method)
-            taskbar.setIconImage(Main.getIconImages().get(2));
-
-        } catch (final UnsupportedOperationException e) {
-            System.out.println("The os does not support: 'taskbar.setIconImage'");
-        } catch (final SecurityException e) {
-            System.out.println("There was a security exception for: 'taskbar.setIconImage'");
+        if(Defaults.isMac()) {
+            Taskbar taskbar = Taskbar.getTaskbar();
+            try {
+                taskbar.setIconImage(Main.getIconImages().get(2));
+            } catch (UnsupportedOperationException | SecurityException e) {
+                e.printStackTrace();
+            }
         }
 
     }
-    private static boolean dragging = false;
+    private static final boolean dragging = false;
 
     public static void showUpdateButton(){
         updateButton.setVisible(true);

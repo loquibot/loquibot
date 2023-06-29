@@ -21,7 +21,6 @@ import jdash.common.DemonDifficulty;
 import jdash.common.Difficulty;
 import jdash.common.Length;
 import jdash.common.entity.GDLevel;
-import jdash.common.entity.GDLevelDownload;
 import jdash.common.entity.GDSong;
 import jdash.common.entity.GDUserStats;
 import org.json.JSONObject;
@@ -30,8 +29,6 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.text.NumberFormat;
 import java.util.*;
@@ -185,7 +182,7 @@ public class RequestsUtils {
 		return object;
 	}
 
-	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean verifiedCoins, boolean isYouTube, String displayName) {
+	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean verifiedCoins, boolean isYouTube, String displayName, long accountID) {
 
 		GDLevel level = new GDLevel() {
 			@Override
@@ -342,7 +339,7 @@ public class RequestsUtils {
 			}
 		};
 		LevelData levelData = new LevelData();
-		levelData.setLevelData(new GDLevelExtra(level, 0));
+		levelData.setLevelData(new GDLevelExtra(level, accountID));
 		levelData.setEpic(epic);
 		if (featuredScore > 0) {
 			levelData.setFeatured();
@@ -351,6 +348,7 @@ public class RequestsUtils {
 		levelData.setRequester(requester);
 		levelData.setYouTube(isYouTube);
 		levelData.setDisplayName(displayName);
+
 		RequestsTab.addRequest(new LevelButton(levelData));
 
 		if (RequestsTab.getQueueSize() == 1) {
@@ -526,13 +524,7 @@ public class RequestsUtils {
 
 					for (int j = RequestsTab.getQueueSize(); j >= 0; j--) {
 						try {
-
-							System.out.println(chatMessage.getSender() + " | " + RequestsTab.getRequest(j).getRequester());
-
 							if (chatMessage.getSender().equalsIgnoreCase(RequestsTab.getRequest(j).getRequester())) {
-
-								System.out.println(j + " | " + i);
-
 								RequestsTab.movePosition(j, i);
 								RequestFunctions.saveFunction();
 								break;
@@ -542,7 +534,7 @@ public class RequestsUtils {
 					}
 
 
-					response = "@" + chatMessage.getSenderElseDisplay() + ", " + prevLevelName + " (" + prevLevelID + ") has been replaced with + " + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + "(" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ").";
+					response = prevLevelName + " (" + prevLevelID + ") has been replaced with + " + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + "(" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ").";
 					RequestFunctions.saveFunction();
 					break;
 				}
@@ -562,7 +554,7 @@ public class RequestsUtils {
 					if (i == LevelButton.selectedID) {
 						return "";
 					}
-					response = "@" + message.getSenderElseDisplay() + ", " + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ") has been removed!";
+					response = RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().name() + " (" + RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().id() + ") has been removed!";
 					RequestsTab.removeRequest(i);
 					RequestFunctions.saveFunction();
 					break;
@@ -615,7 +607,6 @@ public class RequestsUtils {
 
 	@SuppressWarnings("unused")
 	public static void movePosition(int position, int newPosition) {
-		System.out.println(newPosition);
 		RequestsTab.getLevelsPanel().movePosition(position, newPosition);
 	}
 
@@ -629,7 +620,7 @@ public class RequestsUtils {
 	}
 
 	@SuppressWarnings("unused")
-	public static String block(String user, String[] arguments) {
+	public static String block(String[] arguments) {
 		String response;
 		try {
 			boolean start = false;
@@ -656,25 +647,25 @@ public class RequestsUtils {
 			while (sc.hasNextLine()) {
 				if (String.valueOf(blockedID).equals(sc.nextLine())) {
 					sc.close();
-					return Utilities.format("$BLOCK_EXISTS_MESSAGE$", user);
+					return Utilities.format("$BLOCK_EXISTS_MESSAGE$");
 				}
 			}
 			sc.close();
 
-			response = Utilities.format("$BLOCK_MESSAGE$", user, arguments[1]);
+			response = Utilities.format("$BLOCK_MESSAGE$", arguments[1]);
 			BlockedIDs.addBlockedLevel(arguments[1]);
 			if (start) {
 				RequestsTab.getLevelsPanel().setSelect(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response = Utilities.format("$BLOCK_FAILED_MESSAGE$", user);
+			response = Utilities.format("$BLOCK_FAILED_MESSAGE$");
 		}
 		return response;
 	}
 
 	@SuppressWarnings("unused")
-	public static String unblock(String user, String[] arguments) {
+	public static String unblock(String[] arguments) {
 		String unblocked = arguments[1];
 		String response = "";
 		try {
@@ -692,20 +683,20 @@ public class RequestsUtils {
 
 				if (exists) {
 					BlockedIDs.removeBlockedLevel(arguments[1]);
-					response = Utilities.format("$UNBLOCK_MESSAGE$", user, arguments[1]);
+					response = Utilities.format("$UNBLOCK_MESSAGE$", arguments[1]);
 				} else {
-					response = Utilities.format("$UNBLOCK_DOESNT_EXISTS_MESSAGE$", user);
+					response = Utilities.format("$UNBLOCK_DOESNT_EXISTS_MESSAGE$");
 				}
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			response = Utilities.format("$UNBLOCK_FAILED_MESSAGE$", user);
+			response = Utilities.format("$UNBLOCK_FAILED_MESSAGE$");
 		}
 		return response;
 	}
 
 	@SuppressWarnings("unused")
-	public static String blockUser(String user, String[] arguments) {
+	public static String blockUser(String[] arguments) {
 		String response;
 		try {
 			String blockedUser = arguments[1].replace("@", "");
@@ -717,23 +708,23 @@ public class RequestsUtils {
 			while (sc.hasNextLine()) {
 				if (String.valueOf(blockedUser).equals(sc.nextLine())) {
 					sc.close();
-					return Utilities.format("$BLOCK_USER_EXISTS_MESSAGE$", user);
+					return Utilities.format("$BLOCK_USER_EXISTS_MESSAGE$");
 				}
 			}
 			sc.close();
 
-			response = Utilities.format("$BLOCK_USER_MESSAGE$", user, blockedUser);
+			response = Utilities.format("$BLOCK_USER_MESSAGE$", blockedUser);
 			BlockedUsers.addBlockedUser(blockedUser);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response = Utilities.format("$BLOCK_USER_FAILED_MESSAGE$", user);
+			response = Utilities.format("$BLOCK_USER_FAILED_MESSAGE$");
 		}
 		return response;
 	}
 
 	@SuppressWarnings("unused")
-	public static String unblockUser(String user, String[] arguments) {
+	public static String unblockUser(String[] arguments) {
 		String response = "";
 		String unblocked = arguments[1].replace("@", "");
 
@@ -751,16 +742,16 @@ public class RequestsUtils {
 				sc.close();
 				if (exists) {
 
-					response = Utilities.format("$UNBLOCK_USER_MESSAGE$", user, unblocked);
+					response = Utilities.format("$UNBLOCK_USER_MESSAGE$", unblocked);
 					BlockedUsers.removeBlockedUser(unblocked);
 				} else {
-					response = Utilities.format("$UNBLOCK_USER_DOESNT_EXISTS_MESSAGE$", user);
+					response = Utilities.format("$UNBLOCK_USER_DOESNT_EXISTS_MESSAGE$");
 
 				}
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			response = Utilities.format("$UNBLOCK_USER_FAILED_MESSAGE$", user);
+			response = Utilities.format("$UNBLOCK_USER_FAILED_MESSAGE$");
 		}
 		return response;
 	}
@@ -794,7 +785,7 @@ public class RequestsUtils {
 			if (info == null) info = "$HELP_NO_INFO$";
 		}
 		else info = "$HELP_NO_COMMAND$";
-		return Utilities.format("$DEFAULT_MENTION$", message.getSenderElseDisplay()) + " " + Utilities.format(info);
+		return Utilities.format(info);
 	}
 
 	public static String getCommand(ChatMessage message) {
@@ -822,6 +813,12 @@ public class RequestsUtils {
 
 			for (CommandData commandData : LoadCommands.getDefaultCommands()) {
 				if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getCommand())) {
+					if (message.isKick() || message.isYouTube()) {
+						if (commandData.getCommand().equalsIgnoreCase("game")
+								|| commandData.getCommand().equalsIgnoreCase("title")) {
+							continue;
+						}
+					}
 					existingCommands.add(defaultCommandPrefix + commandData.getCommand());
 				}
 			}
@@ -876,9 +873,9 @@ public class RequestsUtils {
 
 			int pages = ((existingCommands.size() - 1) / 20) + 1;
 
-			if (page > pages) return "@" + message.getSenderElseDisplay() + ", No commands on page " + page;
+			if (page > pages) return "No commands on page " + page;
 			if (page < 1) page = 1;
-			response.append(Utilities.format("@%s, Command List Page %s of %s | Type !help <command> for command help.", message.getSender(), page, pages)).append(" | ");
+			response.append(Utilities.format("Command List Page %s of %s | Type !help <command> for command help.", page, pages)).append(" | ");
 
 			for (int i = (page - 1) * 20; i < page * 20; i++) {
 				if (i < existingCommands.size()) {
@@ -910,7 +907,7 @@ public class RequestsUtils {
 						DefaultCommandFunctions.runDelcom(message);
 						break;
 					default :
-						return Utilities.format("$INVALID_ACTION_MESSAGE$", message.getSender());
+						return Utilities.format("$INVALID_ACTION_MESSAGE$");
 				}
 			}
 			return "";

@@ -69,6 +69,10 @@ public class LevelButton extends CurvedButton {
 			logo.setIcon(Assets.YouTube);
 			displayRequester = data.getDisplayName();
 		}
+		else if(data.isKick()){
+			logo.setIcon(Assets.Kick);
+			displayRequester = data.getDisplayName();
+		}
 		else {
 			logo.setIcon(Assets.Twitch);
 			displayRequester = data.getRequester();
@@ -101,7 +105,8 @@ public class LevelButton extends CurvedButton {
 			selectUI.setHover(Defaults.COLOR5);
 
 			JLabel lName = new JLabel();
-			lName.setText(name);
+			if(levelData.isRepeated()) lName.setText(name + " (Repeated)");
+			else lName.setText(name);
 			lAuthorID.setText("By " + author + " (" + ID + ")");
 			lRequester.setText("Sent by " + displayRequester);
 			JLabel lStarCount = new JLabel();
@@ -382,7 +387,6 @@ public class LevelButton extends CurvedButton {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			DialogBox.showDialogBox("Error!", e.toString(), "Please report to Alphalaneous.", new String[]{"OK"});
 		}
 	}
 
@@ -396,48 +400,6 @@ public class LevelButton extends CurvedButton {
 
 	public String getRequester() {
 		return requester;
-	}
-
-	public void setViewership(boolean viewer) {
-		if(!levelData.isYouTube()) {
-
-			if (viewer) {
-				lRequester.setForeground(Defaults.FOREGROUND_B);
-				viewership = true;
-				gonePoints = 4;
-				markedForRemoval = false;
-			} else {
-				gonePoints = gonePoints - 1;
-				if (gonePoints <= 0) {
-					lRequester.setForeground(Color.RED);
-					viewership = false;
-					gonePoints = 0;
-					markedForRemoval = true;
-				}
-			}
-			levelData.setViewership(viewership);
-		}
-	}
-	private boolean markedForRemoval = false;
-
-	public void resetGonePoints(){
-		markedForRemoval = false;
-		gonePoints = 4;
-	}
-
-	public boolean isMarkedForRemoval(){
-		if(selected) return false;
-		else return markedForRemoval;
-	}
-
-	public void removeSelfViewer(){
-		Requests.addRemovedForOffline(this);
-		getParent().remove(this);
-	}
-
-
-	public void removeSelf(){
-		getParent().remove(this);
 	}
 
 	public int getComponentIndex(){

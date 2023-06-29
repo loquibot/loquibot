@@ -1,8 +1,10 @@
 package com.alphalaneous;
 
+import com.alphalaneous.ChatBot.KickBot;
 import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Interactive.CheerActions.CheerActionData;
 import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
+import com.alphalaneous.KickAPI.KickClient;
 import com.alphalaneous.Memory.Global;
 import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
@@ -22,6 +24,7 @@ import com.alphalaneous.Interactive.Timers.TimerHandler;
 import com.alphalaneous.Interactive.Variables;
 import com.alphalaneous.Running.CheckIfRunning;
 import com.alphalaneous.Running.LoquibotSocket;
+import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Settings.ChannelPoints;
@@ -44,7 +47,6 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
-import org.jnativehook.keyboard.NativeKeyListener;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -82,7 +84,6 @@ public class Main {
 
     private static TwitchListener channelPointListener;
     private static TwitchChatListener chatReader;
-    private static ServerBot serverBot = null;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
     private static ImageIcon icon;
@@ -97,6 +98,14 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         long time = System.currentTimeMillis();
+        new LoquibotSocket();
+        try {
+            URI originalURI = new URI("ws://127.0.0.1:18562");
+            CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
+            checkIfRunning.connectBlocking();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             Assets.load();
@@ -116,22 +125,15 @@ public class Main {
         catch (Exception e){
             e.printStackTrace();
         }
-
+        System.out.println("> Loaded Icons");
         //Initialize JavaFX Graphics Toolkit (Hacky Solution)
         if(!Defaults.isMac()) new Thread(JFXPanel::new).start();
 
-        new Thread(() -> {
-            try {
-                new LoquibotSocket();
-                URI originalURI = new URI("ws://127.0.0.1:18562");
-                CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
-                checkIfRunning.connectBlocking();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
 
         setUI();
+
+        System.out.println("> UI Set");
+
         new Thread(() -> {
             Utilities.sleep(21600000);
             if(SettingsHandler.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
@@ -142,6 +144,8 @@ public class Main {
         SettingsHandler.loadSettings();
         MacKeyListener.loadKeybinds();
 
+        System.out.println("> Settings Loaded");
+
         boolean reopen = SettingsHandler.getSettings("hasUpdated").asBoolean();
         SettingsHandler.writeSettings("hasUpdated", "false");
 
@@ -149,23 +153,38 @@ public class Main {
             SettingsHandler.writeSettings("twitchEnabled", "true");
         }
 
+
         if(!Defaults.isMac()) {
-            Find.setup();
-            Find.findPath();
+            new Thread(() -> {
+                Find.setup();
+                Find.findPath();
+            }).start();
         }
 
         Defaults.setSystem(false);
 
+        System.out.println("> System Theme Set");
+
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         logger.setUseParentHandlers(false);
+
+        System.out.println("> Logger Settings Set");
+
+
         new Thread(Main::runKeyboardHook).start();
+
+        System.out.println("> Windows Keyboard Hook Initialized");
+
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
+
+        System.out.println("> Look and Feel Set");
+
 
         starting.setSize(200, 200);
         starting.setResizable(false);
@@ -193,37 +212,43 @@ public class Main {
 
         System.out.println("> Themes Loaded");
 
-        new Thread(() -> {
-            if (SettingsHandler.getSettings("onboarding").exists()) {
+        if (SettingsHandler.getSettings("onboarding").exists()) {
+
+            if(!SettingsHandler.getSettings("oauth").exists()){
+                if (SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
+            }
+
+            try {
+                if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
+            }
+
+            catch (Exception f){
+                f.printStackTrace();
                 try {
-                    TwitchAccount.setInfo();
-                    ChannelPoints.refresh();
-                    try {
-                        if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
-                    }
-                    catch (Exception e){
-                        YouTubeAccount.setCredential(true);
-                    }
-                    YouTubeAccount.setInfo();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
-                    TwitchAccount.setInfo();
-                    ChannelPoints.refresh();
-                    try {
-                        if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
-                    }
-                    catch (Exception f){
-                        try {
-                            YouTubeAccount.setCredential(true);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    YouTubeAccount.setInfo();
+                    YouTubeAccount.setCredential(true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
-        }).start();
+
+            try {
+                if (SettingsHandler.getSettings("kickEnabled").asBoolean())
+                    if (SettingsHandler.getSettings("kickUsername").exists() &&
+                            !SettingsHandler.getSettings("kickUsername").asString().trim().equals("")) {
+                        new KickBot(SettingsHandler.getSettings("kickUsername").asString()).connect();
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                SettingsHandler.writeSettings("kickEnabled", "false");
+            }
+        }
+
+        TwitchAccount.setInfo();
+        ChannelPoints.refresh();
+        YouTubeAccount.setInfo();
+        Account.refreshYouTube(YouTubeAccount.name);
+        Account.refreshKick(KickAccount.username, false);
 
         System.out.println("> Twitch Loaded");
         try {
@@ -290,7 +315,10 @@ public class Main {
             System.out.println("> Theme Info Initialized");
             Themes.refreshUI();
             System.out.println("> UI Refreshed");
-
+            if(Defaults.isAprilFools) {
+                AprilFools.create();
+                AprilFools.loadLevels();
+            }
             starting.setVisible(false);
 
             System.out.println("> Launch Finished in " + (System.currentTimeMillis() - time) + "ms");
@@ -310,6 +338,7 @@ public class Main {
                 }
                 TwitchAccount.setInfo();
                 YouTubeAccount.setInfo();
+
                 if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()) Account.refreshYouTube(YouTubeAccount.name);
                 new Thread(ChannelPoints::refresh).start();
             }
@@ -323,21 +352,18 @@ public class Main {
             Variables.loadVars();
             System.out.println("> Command Variables Loaded");
 
-            new Thread(() -> {
-                serverBot = new ServerBot();
-                serverBot.connect();
-            }).start();
-            System.out.println("> ServerBot Started");
+            ServerBot.connect();
+
 
             if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
-                new Thread(() -> YouTubeChatListener.startChatListener(null)).start();
+                new Thread(YouTubeChatListener::startChatListener).start();
                 System.out.println("> YouTube Chat Listener Started");
             }
 
             if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
                 new Thread(() -> {
                     chatReader = new TwitchChatListener(TwitchAccount.login);
-                    chatReader.connect(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.login);
+                    chatReader.connect(SettingsHandler.getSettings("oauth").asString());
                     System.out.println("> Twitch Chat Listener Started");
                 }).start();
                 new Thread(() -> {
@@ -375,29 +401,19 @@ public class Main {
             allowRequests = true;
             RequestFunctions.saveFunction();
             RequestsTab.getLevelsPanel().setSelect(0);
-            new Thread(TwitchAPI::checkViewers).start();
+            //new Thread(TwitchAPI::checkViewers).start();
 
             sendMessages = true;
             if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
-                TwitchAPI.setAllViewers();
-
-                SettingsHandler.writeSettings("isMod", String.valueOf(TwitchAPI.isLoquiMod()));
-
-                if (!SettingsHandler.getSettings("isHigher").exists()) {
-                    if (TwitchAPI.allMods.contains("loquibot") || TwitchAPI.allVIPs.contains("loquibot"))
-                        SettingsHandler.writeSettings("isHigher", "true");
-                    else SettingsHandler.writeSettings("isHigher", "false");
-                }
+                boolean loquiIsMod = TwitchAPI.isLoquiMod();
+                SettingsHandler.writeSettings("isMod", String.valueOf(loquiIsMod));
             }
             programLoaded = true;
-            if(!TwitchChatListener.sentStartupMessage) {
-                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE$"));
-                TwitchChatListener.sentStartupMessage = true;
-            }
+
             startSaveLoop();
             System.out.println("> Save loop Started");
 
-            if(!SettingsHandler.getSettings("dontShowDonate").asBoolean()) {
+            /*if(!SettingsHandler.getSettings("dontShowDonate").asBoolean()) {
                 new Thread(() -> {
                     String choice = DialogBox.showDialogBox("Help Out Alpha!", "Hosting loquibot costs me some money.", "Any donation is appreciated!", new String[]{"Donate", "No", "Don't Show"});
                     if (choice.equalsIgnoreCase("Donate")) {
@@ -411,7 +427,7 @@ public class Main {
                         SettingsHandler.writeSettings("dontShowDonate", "true");
                     }
                 }).start();
-            }
+            }*/
             if(!Defaults.isMac()) {
                 Global.onEnterLevel(() -> {
                     if (SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
@@ -435,7 +451,11 @@ public class Main {
                                 Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                         levelName,
                                         levelID,
-                                        username));
+                                        username), null);
+                                Main.sendKickMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                        levelName,
+                                        levelID,
+                                        username), null);
                                 Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                         levelName,
                                         levelID,
@@ -443,7 +463,10 @@ public class Main {
                             } else {
                                 Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
                                         levelName,
-                                        levelID));
+                                        levelID), null);
+                                Main.sendKickMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
+                                        levelName,
+                                        levelID), null);
                                 Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
                                         levelName,
                                         levelID), SettingsHandler.getSettings("announceNP").asBoolean());
@@ -452,7 +475,7 @@ public class Main {
                     }
                 });
             }
-
+            Window.setVisible(true);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -492,7 +515,7 @@ public class Main {
 
     public static void sendToServer(String message) {
         try {
-            ServerBot.getCurrentServerBot().sendMessage(message);
+            ServerBot.sendMessage(message);
         } catch (Exception ignored) {
         }
     }
@@ -502,11 +525,12 @@ public class Main {
             JSONObject messageObj = new JSONObject();
             messageObj.put("request_type", "send_message");
             messageObj.put("message", message);
-            ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
+            ServerBot.sendMessage(messageObj.toString());
         }
     }
 
-    public static void sendMessage(String messageA, boolean whisper, String user) {
+    public static void sendMessage(String messageA, String messageID) {
+
         if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
 
             String[] messages = messageA.split("¦");
@@ -518,39 +542,20 @@ public class Main {
                         JSONObject messageObj = new JSONObject();
                         messageObj.put("request_type", "send_message");
                         if (SettingsHandler.getSettings("antiDox").asBoolean()) {
-                            message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
+                            message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
                         }
-                        if (whisper) {
-                            messageObj.put("message", "/w " + user + " " + message);
-                        } else {
-                            messageObj.put("message", message);
+                        messageObj.put("message", message);
+                        if(messageID != null && !messageID.trim().equalsIgnoreCase("")){
+                            messageObj.put("reply-id", messageID);
                         }
-                        try {
-                            ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else if (whisper) {
-                    if (!message.equalsIgnoreCase("")) {
-                        JSONObject messageObj = new JSONObject();
-                        messageObj.put("request_type", "send_message");
-                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
-                            message = message.replaceAll(System.getProperty("user.name"), "*****");
-                        }
-                        messageObj.put("message", "/w " + user + " " + message);
-                        try {
-                            ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        ServerBot.sendMessage(messageObj.toString());
                     }
                 }
             }
         }
     }
 
-    public static void sendYTMessage(String messageA){
+    public static void sendYTMessage(String messageA, String username){
         if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
             String[] messages = messageA.split("¦");
             for(String message : messages) {
@@ -563,13 +568,57 @@ public class Main {
                         messageObj.put("liveChatId", YouTubeAccount.liveChatId);
 
                         if (SettingsHandler.getSettings("antiDox").asBoolean()) {
-                            message = Language.uwuify(message.replaceAll(System.getProperty("user.name"), "*****"));
+                            message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
                         }
-                        messageObj.put("message", message);
+
+                        String pingStart = "";
+
+                        if(username != null && !username.equalsIgnoreCase("")){
+                            pingStart = com.alphalaneous.Utils.Utilities.format("@%s, ", username);
+                        }
+                        messageObj.put("username", YouTubeAccount.name);
+                        messageObj.put("message", pingStart + message);
 
                         if(YouTubeAccount.liveChatId != null) {
                             try {
-                                ServerBot.getCurrentServerBot().sendMessage(messageObj.toString());
+                                ServerBot.sendMessage(messageObj.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void sendKickMessage(String messageA, String username){
+        if(SettingsHandler.getSettings("kickEnabled").asBoolean()){
+            String[] messages = messageA.split("¦");
+            for(String message : messages) {
+
+                if (!SettingsHandler.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
+                    if (!message.equalsIgnoreCase("") && SettingsHandler.getSettings("kick_chat_token").exists()) {
+
+                        JSONObject messageObj = new JSONObject();
+                        messageObj.put("request_type", "kick_send_message");
+                        messageObj.put("token", SettingsHandler.getSettings("kick_chat_token").asString());
+
+                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
+                            message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
+                        }
+
+                        String pingStart = "";
+
+                        if(username != null && !username.equalsIgnoreCase("")){
+                            pingStart = com.alphalaneous.Utils.Utilities.format("@%s, ", username);
+                        }
+
+                        messageObj.put("message", pingStart + message);
+
+                        if(KickAccount.chatroomID != 0) {
+                            try {
+                                ServerBot.sendMessage(messageObj.toString());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -581,14 +630,15 @@ public class Main {
     }
 
     public static void sendMessage(String message) {
-        sendMessage(message, false, null);
+        sendMessage(message, "");
     }
     public static void sendMessage(String message, boolean doAnnounce) {
         if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
             SettingsHandler.writeSettings("isMod", String.valueOf(TwitchAPI.isLoquiMod()));
-            if (doAnnounce && SettingsHandler.getSettings("isMod").asBoolean() && !message.startsWith("/"))
-                sendMessage("/announce " + message, false, null);
-            else sendMessage(message, false, null);
+            if (doAnnounce && SettingsHandler.getSettings("isMod").asBoolean() && !message.startsWith("/")) {
+                sendMessage("/announce " + message);
+            }
+            else sendMessage(message);
         }
     }
 
@@ -652,7 +702,7 @@ public class Main {
             LoggedID.saveLoggedIDs();
         }
         catch (Exception e){
-            System.exit(0);
+            e.printStackTrace();
         }
     }
 
@@ -672,6 +722,9 @@ public class Main {
             loaded = load;
         }
         Main.save();
+        ServerBot.disconnect();
+        ServerBot.reconnect = false;
+
         if(!SettingsHandler.getSettings("runAtStartup").asBoolean()) {
             com.alphalaneous.Utils.Utilities.disposeTray();
             if (!SettingsHandler.getSettings("onboarding").asBoolean() && loaded) {
@@ -696,8 +749,8 @@ public class Main {
             if(TwitchChatListener.getCurrentListener() != null) {
                 TwitchChatListener.getCurrentListener().disconnect();
             }
-            if(ServerBot.getCurrentServerBot() != null) {
-                ServerBot.getCurrentServerBot().disconnect();
+            if(ServerBot.clientSocket != null) {
+                ServerBot.disconnect();
             }
             if(!Defaults.isMac()) GlobalScreen.unregisterNativeHook();
         } catch (Exception e) {

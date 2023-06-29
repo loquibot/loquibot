@@ -9,6 +9,7 @@ import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
+import com.alphalaneous.Windows.AprilFools;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.OfficerWindow;
 import com.alphalaneous.Windows.Window;
@@ -314,8 +315,13 @@ public class RequestsTab {
 
         windowPanel.setOpaque(false);
         windowPanel.setBackground(new Color(0,0,0,0));
-
-        contentPanel.add(levelsPanel);
+        if(Defaults.isAprilFools) {
+            contentPanel.add(AprilFools.getPanel());
+            AprilFools.setSize(levelsPanel.getWidth(), levelsPanel.getHeight());
+        }
+        else {
+            contentPanel.add(levelsPanel);
+        }
         contentPanel.add(LevelDetailsPanel.getPanel());
         //contentPanel.add(commentsPanel);
         //contentPanel.add(levelInfoPanel);
@@ -337,12 +343,13 @@ public class RequestsTab {
             if (Requests.requestsEnabled) {
                 Requests.requestsEnabled = false;
                 Main.sendMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), doAnnounce);
-                Main.sendYTMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"));
-
+                Main.sendYTMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), null);
+                Main.sendKickMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), null);
             } else {
                 Requests.requestsEnabled = true;
                 Main.sendMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), doAnnounce);
-                Main.sendYTMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"));
+                Main.sendYTMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), null);
+                Main.sendKickMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), null);
             }
         }
         if (Requests.requestsEnabled) {
@@ -460,6 +467,8 @@ public class RequestsTab {
         buttonPanel.setBounds(width-130, 0, buttonPanel.getWidth(), height);
         iconPanel.setBounds(width - 125, height - 95, 80, 50);
         levelsPanel.resizePanel(width - 650, height-47);
+        AprilFools.setSize(levelsPanel.getWidth(), levelsPanel.getHeight());
+
         LevelDetailsPanel.setPositionAndHeight(width-650, height);
     }
 

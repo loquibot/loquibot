@@ -7,9 +7,11 @@ import com.alphalaneous.Interactive.CheerActions.CheerActionData;
 import com.alphalaneous.Memory.Global;
 import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Servers.Levels;
+import com.alphalaneous.Services.GeometryDash.LevelData;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
+import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Settings.SettingsHandler;
@@ -41,10 +43,7 @@ import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,9 +53,6 @@ public class CommandHandler {
 
     public static void run(ChatMessage message) {
         String reply = "";
-
-        if(message.getSender().equalsIgnoreCase("alphalaneous") && !message.isYouTube()) message.setMod(true);
-        if(message.getSender().equals("UCVK3izvSoez7efFZODwfVUA") && message.isYouTube()) message.setMod(true);
 
         CommandData foundCommand = null;
         String defaultCommandPrefix = "!";
@@ -126,7 +122,7 @@ public class CommandHandler {
         }
         else if (foundCommand != null
                 && foundCommand.isEnabled()
-                && !isCooldown(foundCommand)
+                && !isCooldown(foundCommand, message)
                 && checkUserLevel(foundCommand, message)) {
             String response = foundCommand.getMessage();
             String[] messageSplit = message.getMessage().split(" ");
@@ -138,8 +134,16 @@ public class CommandHandler {
             startCooldown(foundCommand);
         }
         if (!reply.equalsIgnoreCase("")) {
-            if(message.isYouTube()) Main.sendYTMessage(reply);
-            else Main.sendMessage(reply);
+
+            String username = "";
+
+            if(foundCommand.isDefault() || foundCommand.isGD()){
+                username = message.getSenderElseDisplay();
+            }
+
+            if(message.isYouTube()) Main.sendYTMessage(reply, username);
+            else if(message.isKick()) Main.sendKickMessage(reply, username);
+            else Main.sendMessage(reply, message.getTag("id"));
         }
     }
 
@@ -240,6 +244,8 @@ public class CommandHandler {
         String identifier = value.split(" ")[0];
         String replacement = "";
 
+        String[] messageSplit = message.getMessage().split(" ");
+
         switch (identifier.toLowerCase()) {
             case "user": {
                 replacement = message.getSenderElseDisplay();
@@ -247,8 +253,8 @@ public class CommandHandler {
             }
             case "touser":
             case "to_user": {
-                if (arguments.length > 0) {
-                    replacement = arguments[0].trim();
+                if (messageSplit.length > 1) {
+                    replacement = messageSplit[1].trim();
                 } else {
                     replacement = message.getSenderElseDisplay();
                 }
@@ -262,8 +268,8 @@ public class CommandHandler {
                     replacement = "Error";
                     break;
                 }
-                if (arguments.length >= arg) {
-                    replacement = arguments[arg];
+                if (messageSplit.length >= arg) {
+                    replacement = messageSplit[arg];
                 } else {
                     replacement = "Error";
                 }
@@ -278,6 +284,11 @@ public class CommandHandler {
                 } catch (Exception e) {
                     replacement = e.toString();
                 }
+                break;
+            }
+            case "requestsenabled":
+            case "requests_enabled": {
+                replacement = String.valueOf(Requests.requestsEnabled);
                 break;
             }
             case "instant_request":
@@ -308,12 +319,25 @@ public class CommandHandler {
                         }
                         if (!mention.contains(m.group(1))) {
                             if (SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
-                                long chatIDL = 0;
-                                String chatID = message.getTag("user-id");
-                                if (chatID != null) {
-                                    chatIDL = Long.parseLong(chatID);
+                                long ID = Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", ""));
+                                int pos = RequestsUtils.getPosFromID(ID);
+                                if(pos == -1){
+                                    long chatIDL = 0;
+                                    String chatID = message.getTag("user-id");
+                                    if (chatID != null) {
+                                        chatIDL = Long.parseLong(chatID);
+                                    }
+                                    Requests.addRequest(ID, message.getSender(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), chatIDL, false, message, 1);
                                 }
-                                Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), message.getSender(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), chatIDL, false, message, 1);
+                                else{
+                                    LevelData levelData = RequestsTab.getRequest(pos).getLevelData();
+
+                                    RequestsUtils.movePosition(pos, 1);
+                                    Requests.sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_INSTANT_IN_QUEUE$",
+                                            levelData.getGDLevel().getLevel().name(),
+                                            levelData.getGDLevel().getLevel().id(),
+                                            RequestsTab.getQueueSize()), message.getTag("id"), levelData.isYouTube(), message.isKick(), levelData.getDisplayName());
+                                }
                             }
                         }
 
@@ -377,7 +401,7 @@ public class CommandHandler {
             }
             case "userid":
             case "user_id": {
-                if(!message.isYouTube()) replacement = message.getTag("user-id");
+                if(!message.isYouTube() && !message.isKick()) replacement = message.getTag("user-id");
                 break;
             }
             case "userlevel":
@@ -448,7 +472,11 @@ public class CommandHandler {
                         break;
                     }
                     default: {
-                        if(data.startsWith("file://")) Sounds.playSound(dataArr[1].trim().substring(7), true, true, true, false);
+
+                        if(data.toLowerCase().startsWith("file://")) {
+                            System.out.println("Playing sound from file");
+                            Sounds.playSound(dataArr[1].trim().substring(7), true, true, true, false);
+                        }
                         else Sounds.playSound(dataArr[1].trim(), true, true, false, true);
                         break;
                     }
@@ -482,12 +510,14 @@ public class CommandHandler {
             case "channel":
             case "broadcaster": {
                 if(message.isYouTube()) replacement = YouTubeAccount.name;
+                else if(message.isKick()) replacement = KickAccount.username;
                 else replacement = TwitchAccount.login;
                 break;
             }
             case "channelid":
             case "channel_id": {
                 if(message.isYouTube()) replacement = YouTubeAccount.ID;
+                if(message.isKick()) replacement = String.valueOf(KickAccount.chatroomID);
                 else replacement = TwitchAccount.id;
                 break;
             }
@@ -621,9 +651,11 @@ public class CommandHandler {
                 }
             }
             case "random_user":
+            case "randomuser":
+            case "randomviewer":
             case "random_viewer": {
                 Random ran = new Random();
-                replacement = TwitchAPI.allViewers.get(ran.nextInt(TwitchAPI.allViewers.size()));
+                replacement = TwitchAPI.viewerList.get(ran.nextInt(TwitchAPI.viewerList.size()));
                 break;
             }
             case "queue_size": {
@@ -739,7 +771,6 @@ public class CommandHandler {
     public static String replaceBetweenParentheses(ChatMessage message, String text, String[] arguments, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CommandData commandData, KeywordData keywordData, CheerActionData cheerActionData, boolean ifPass) {
 
         String value = parseParenthesis(message, text, arguments, parenthesisSubstrings, original, commandData, keywordData, cheerActionData, true);
-        System.out.println("Value: " + value);
         return parseParenthesis(message, value, value.split(" "), parenthesisSubstrings, value, commandData, keywordData, cheerActionData, false);
 
     }
@@ -968,7 +999,11 @@ public class CommandHandler {
         }).start();
 
     }
-    public static boolean isCooldown(CommandData data){
+    public static boolean isCooldown(CommandData data, ChatMessage message){
+        boolean bypass = message.getUserLevel().equals("admin");
+
+        if(bypass) return false;
+
         for(CommandData commandData : commandDataList){
             return commandData.getCommand().equalsIgnoreCase(data.getCommand());
         }
@@ -986,15 +1021,15 @@ public class CommandHandler {
         userLevels.add("moderator");
         userLevels.add("owner");
 
-        ArrayList<String> userLevelsToRemove = new ArrayList<>();
+        if(message.getUserLevel().equals("admin")) return true;
+
         for(String userLevel : userLevels){
             if(commandLevel.equalsIgnoreCase(userLevel)){
-
                 break;
             }
-            userLevelsToRemove.add(userLevel);
+            userLevels.remove(userLevel);
         }
-        userLevels.removeAll(userLevelsToRemove);
+
         return userLevels.contains(messageLevel);
     }
 

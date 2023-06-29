@@ -8,6 +8,7 @@ import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Windows.Window;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class LevelDetailsPanel {
 

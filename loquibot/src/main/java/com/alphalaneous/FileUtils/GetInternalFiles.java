@@ -15,20 +15,17 @@ import java.util.stream.Stream;
 public class GetInternalFiles {
 
     private final String location;
-    private URI uri;
+    private String uri;
     private Path path;
     public static FileSystem fileSystem;
 
     public GetInternalFiles(String location){
         this.location = location;
         if(!isInJar()){
-            try {
-                uri = Objects.requireNonNull(Main.class.getResource("/")).toURI();
-            } catch (URISyntaxException ignored) {
-            }
+            uri = Objects.requireNonNull(Main.class.getResource("/")).getPath();
             fileSystem = FileSystems.getDefault();
-            if(Defaults.isMac())path = fileSystem.getPath(uri.getPath() + location);
-            else path = fileSystem.getPath(uri.getPath().substring(3) + location);
+            if(Defaults.isMac())path = fileSystem.getPath(uri + location);
+            else path = fileSystem.getPath(uri.substring(3) + location);
         }
     }
 

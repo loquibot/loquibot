@@ -31,14 +31,6 @@ public class Board {
 		Sounds.stopAllSounds();
 	}
 
-	public static void sendMessage(String message, boolean whisper, String user) {
-		Main.sendMessage(message, whisper, user);
-	}
-
-	public static void sendMessage(String message) {
-		Main.sendMessage(message, false, null);
-	}
-
 	public static void sendAsMain(String message) {
 		Main.sendMainMessage(message);
 	}

@@ -5,9 +5,12 @@
 
 package com.alphalaneous.ChatBot;
 
+import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
+import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public class ChatMessage {
@@ -23,7 +26,9 @@ public class ChatMessage {
     private final boolean isFirstMessage;
     private final boolean isCustomReward;
     private boolean isYouTube = false;
+    private boolean isKick = false;
 
+    private IRCMessageEvent event;
     private final int cheerCount;
 
     public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, int cheerCount, boolean isFirstMessage, boolean isCustomReward) {
@@ -49,6 +54,16 @@ public class ChatMessage {
     public boolean isYouTube(){
         return isYouTube;
     }
+    public void setKick(boolean isKick){
+        this.isKick = isKick;
+    }
+    public boolean isKick(){
+        return isKick;
+    }
+    public void addIRCEvent(IRCMessageEvent event){
+        this.event = event;
+    }
+
 
     public String[] getArgs(){
         return args;
@@ -70,11 +85,28 @@ public class ChatMessage {
     }
 
     public String getUserLevel(){
+
+        if(!isYouTube) {
+            if (sender.equalsIgnoreCase("Alphalaneous")) {
+                return "admin";
+            }
+        }
+        else {
+            if(sender.equals("UCVK3izvSoez7efFZODwfVUA")){
+                return "admin";
+            }
+        }
+
         if(isYouTube){
             if (YouTubeAccount.ID.equals(sender)) return "owner";
         }
+        else if(isKick){
+            if (KickAccount.username.toLowerCase().equalsIgnoreCase(sender)) return "owner";
+        }
         else {
-            if (TwitchAccount.login.toLowerCase().equalsIgnoreCase(sender)) return "owner";
+            if (TwitchAccount.login.toLowerCase().equalsIgnoreCase(sender)) {
+                return "owner";
+            }
         }
         if(isMod) return "moderator";
         if(isVIP) return "twitch_vip";
@@ -83,6 +115,9 @@ public class ChatMessage {
     }
 
     public boolean isMod() {
+
+        if(getUserLevel().equals("admin")) return true;
+
         return this.isMod;
     }
 

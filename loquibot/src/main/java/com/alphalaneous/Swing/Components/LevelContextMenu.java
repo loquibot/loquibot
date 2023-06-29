@@ -19,6 +19,7 @@ public class LevelContextMenu extends ContextMenu {
     public LevelContextMenu(int levelPos) {
 
         boolean isYouTube = RequestsTab.getRequest(levelPos).getLevelData().isYouTube();
+        boolean isKick = RequestsTab.getRequest(levelPos).getLevelData().isKick();
 
         addButton(new ContextButton("Remove", () -> RequestFunctions.skipFunction(levelPos, false)));
         addButton(new ContextButton("Copy", () -> RequestFunctions.copyFunction(levelPos)));
@@ -32,7 +33,7 @@ public class LevelContextMenu extends ContextMenu {
         //addButton(new ContextButton("Report", () -> RequestFunctions.reportFunction(levelPos)));
         //addButton(new ContextButton("Block User", () -> RequestFunctions.blockFunction(levelPos)));
         //addButton(new ContextButton("Block Creator", () -> RequestFunctions.blockFunction(levelPos)));
-        if(!isYouTube) addButton(new ContextButton("Moderation", () -> RequestsTab.showModPane(levelPos)));
+        if(!isYouTube && !isKick) addButton(new ContextButton("Moderation", () -> RequestsTab.showModPane(levelPos)));
         addButton(new ContextButton("View in GDBrowser", () -> RequestFunctions.openGDBrowser(levelPos)));
     }
 
@@ -75,12 +76,12 @@ public class LevelContextMenu extends ContextMenu {
             if(TwitchAccount.login != null) {
                 object.put("username", TwitchAccount.login);
                 object.put("userID", TwitchAccount.id);
-                ServerBot.getCurrentServerBot().sendMessage(object.toString());
+                ServerBot.sendMessage(object.toString());
             }
             else if(YouTubeAccount.name != null){
                 object.put("username", YouTubeAccount.name);
                 object.put("userID", YouTubeAccount.ID);
-                ServerBot.getCurrentServerBot().sendMessage(object.toString());
+                ServerBot.sendMessage(object.toString());
             }
 
             DialogBox.closeDialogBox();

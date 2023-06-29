@@ -1,32 +1,66 @@
 package com.alphalaneous.Audio;
 
 import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
 import javazoom.jl.player.Player;
 
 import java.io.*;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Sounds {
 
-	static HashMap<String, Sound> sounds = new HashMap<>();
-
+	static ConcurrentHashMap<String, Sound> sounds = new ConcurrentHashMap<>();
+	static {
+		querySound();
+		queryOverlapSound();
+	}
 
 	public static void playSound(String location, boolean restart, boolean overlap) {
 		playSound(location, restart, overlap, true, false);
 	}
 
-	public static void playSound(String location, boolean restart, boolean overlap, boolean isFile, boolean isURL) {
+	static List<Object> playingSoundsOverlap = Collections.synchronizedList(new ArrayList<Object>());
+	public static void queryOverlapSound(){
+		new Thread(() -> {
+			while(true){
+				for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
+					if(stringSoundEntry.getValue().overlap) {
+						if(!playingSoundsOverlap.contains(stringSoundEntry)){
+							stringSoundEntry.getValue().playSound();
+							playingSoundsOverlap.add(stringSoundEntry);
+						}
+					}
+				}
+				Utilities.sleep(10);
+			}
+		}).start();
+	}
 
-		if (!contains(location) || overlap) {
-			new Sound(location, isFile, isURL).playSound();
-		} else if (contains(location) && restart) {
-			sounds.get(getLocationID(location)).stopSound();
-			new Sound(location, isFile, isURL).playSound();
-		}
+	public static void querySound(){
+		new Thread(() -> {
+			while(true){
+				for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
+					if(!stringSoundEntry.getValue().overlap) {
+						if (!stringSoundEntry.getValue().complete) {
+							stringSoundEntry.getValue().playSound();
+							while (!stringSoundEntry.getValue().complete) {
+								Utilities.sleep(10);
+							}
+							Utilities.sleep(1000);
+						}
+					}
+				}
+				Utilities.sleep(10);
+			}
+		}).start();
+	}
+
+	public static void playSound(String location, boolean restart, boolean overlap, boolean isFile, boolean isURL) {
+		new Sound(location, isFile, isURL, overlap);
 	}
 
 	public static void stopSound(String location) {
@@ -68,12 +102,14 @@ public class Sounds {
 		boolean complete = false;
 		boolean isFile;
 		boolean isURL;
+		boolean overlap;
 		Player mp3player;
 
-		public Sound(String location, boolean isFile, boolean isURL) {
+		public Sound(String location, boolean isFile, boolean isURL, boolean overlap) {
 			this.location = location;
 			this.isFile = isFile;
 			this.isURL = isURL;
+			this.overlap = overlap;
 			Sounds.sounds.put(UUID, this);
 		}
 
@@ -101,6 +137,11 @@ public class Sounds {
 
 				}
 				complete = true;
+				System.out.println("Complete " + UUID);
+				if(overlap) {
+					Utilities.sleep(5000);
+					playingSoundsOverlap.remove(this);
+				}
 				//Sounds.sounds.remove(UUID, this);
 			}).start();
 

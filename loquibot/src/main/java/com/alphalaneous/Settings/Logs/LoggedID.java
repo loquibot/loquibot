@@ -90,8 +90,7 @@ public class LoggedID {
             loggedIDsString.append(loggedID.getID()).append(",").append(loggedID.getVersion()).append("\n");
         }
         try {
-            Path logFile = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
-            if(!Files.exists(logFile)) Files.createFile(logFile);
+            Path logFile = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt").toAbsolutePath();
             Files.write(logFile, loggedIDsString.toString().getBytes());
         }
         catch (Exception e){

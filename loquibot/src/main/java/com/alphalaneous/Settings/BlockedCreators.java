@@ -60,8 +60,7 @@ public class BlockedCreators {
                 Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blockedGDUsers.txt"), StandardCopyOption.REPLACE_EXISTING);
 
             } catch (IOException ex) {
-
-                DialogBox.showDialogBox("Error!", ex.toString(), "Please report to Alphalaneous.", new String[]{"OK"});
+                ex.printStackTrace();
             }
         }
         ListButton button = getButtonFromID(ID);
@@ -101,7 +100,7 @@ public class BlockedCreators {
                 }
             }
         } catch (IOException e1) {
-            DialogBox.showDialogBox("Error!", e1.toString(), "Please report to Alphalaneous.", new String[]{"OK"});
+            e1.printStackTrace();
         }
     }
 
@@ -123,8 +122,7 @@ public class BlockedCreators {
                         Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blockedGDUsers.txt"), StandardCopyOption.REPLACE_EXISTING);
 
                     } catch (IOException ex) {
-
-                        DialogBox.showDialogBox("Error!", ex.toString(), "Please report to Alphalaneous.", new String[]{"OK"});
+                        ex.printStackTrace();
                     }
                 }
                 listView.removeElement(button);

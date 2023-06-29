@@ -38,8 +38,14 @@ public class Assets {
 	public static ImageIcon loading;
 	public static ImageIcon YouTube;
 	public static ImageIcon Twitch;
+	public static ImageIcon Kick;
+	public static ImageIcon KickText;
+
+
 	public static ImageIcon YouTubeLarge;
 	public static ImageIcon TwitchLarge;
+	public static ImageIcon KickLarge;
+
 	public static ImageIcon tutorial;
 
 	private static final int size = 30;
@@ -63,9 +69,13 @@ public class Assets {
 		es.execute(new	Thread(() -> loading = loadStartAsset("Icons/loading.gif", 30, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> YouTube = loadStartAsset("Icons/YouTube.png", 16, Scalr.Method.BALANCED)));
 		es.execute(new	Thread(() -> Twitch = loadStartAsset("Icons/Twitch.png", 16, Scalr.Method.BALANCED)));
+		es.execute(new	Thread(() -> Kick = loadStartAsset("Icons/Kick.png", 16, Scalr.Method.BALANCED)));
+		es.execute(new	Thread(() -> KickText = loadStartAsset("Icons/KickText.png", 70, Scalr.Method.BALANCED)));
 		es.execute(new	Thread(() -> YouTubeLarge = loadStartAsset("Icons/YouTube.png", 40, Scalr.Method.BALANCED)));
 		es.execute(new	Thread(() -> TwitchLarge = loadStartAsset("Icons/Twitch.png", 40, Scalr.Method.BALANCED)));
-		es.execute(new	Thread(() -> tutorial = loadStartAsset("tutorial.png", 40, null)));
+		es.execute(new	Thread(() -> KickLarge = loadStartAsset("Icons/Kick.png", 40, Scalr.Method.BALANCED)));
+
+		es.execute(new	Thread(() -> tutorial = loadStartAsset("tutorial.png", 450, null)));
 
 		es.shutdown();
 		while (!es.isTerminated()) Utilities.sleep(1);

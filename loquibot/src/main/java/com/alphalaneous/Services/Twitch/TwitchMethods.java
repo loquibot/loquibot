@@ -18,27 +18,14 @@ public class TwitchMethods {
 	}
 
 	public static String getRandomViewer() {
-		TwitchAPI.setAllViewers();
+
 		Random random = new Random();
-		int num = random.nextInt(TwitchAPI.allViewers.size() - 1);
-		return TwitchAPI.allViewers.get(num);
+		int num = random.nextInt(TwitchAPI.viewerList.size() - 1);
+		return TwitchAPI.viewerList.get(num);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static String[] getViewers() {
-		ArrayList<String> allViewers = (ArrayList<String>) TwitchAPI.allViewers.clone();
-		String[] array = new String[allViewers.size()];
-		for (int j = 0; j < allViewers.size(); j++) {
-			array[j] = allViewers.get(j);
-		}
-		return array;
-	}
-
-	public static void reloadViewers() {
-		TwitchAPI.setAllViewers();
-	}
-
-	public static void checkloquibot() {
-
+		return TwitchAPI.viewerList.toArray(String[]::new);
 	}
 }

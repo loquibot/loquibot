@@ -19,10 +19,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.Objects;
 
 public class Modifications {
@@ -88,10 +85,18 @@ public class Modifications {
                 }
             }
             if(!skip) {
-                String choice = DialogBox.showDialogBox("Woah, wait a sec", "This will restart GD to install!", "", new String[] {"Okay", "Cancel"});
+                boolean isGDOpen = Global.isGDOpen();
 
-                if(choice.equalsIgnoreCase("Cancel")) return;
+                if(isGDOpen) {
+                    String choice = DialogBox.showDialogBox("Woah, wait a sec", "This will restart GD to install!", "", new String[]{"Okay", "Cancel"});
 
+                    if (choice.equalsIgnoreCase("Cancel")) return;
+                }
+                else{
+                    String choice = DialogBox.showDialogBox("Install?", "Are you sure you want to install this mod?", "", new String[]{"Okay", "Cancel"});
+
+                    if (choice.equalsIgnoreCase("Cancel")) return;
+                }
                 try {
                     com.alphalaneous.Utils.Utilities.runCommand("taskkill", "/IM", "GeometryDash.exe", "/F");
                 }
@@ -128,7 +133,7 @@ public class Modifications {
 
                 if(installDir != null){
                     installMod(Paths.get(path).getParent().toString() + "\\" + installDir, Paths.get(path).getParent().toString());
-                    com.alphalaneous.Utils.Utilities.openSteamApp(322170, true);
+                    if(isGDOpen) com.alphalaneous.Utils.Utilities.openSteamApp(322170, true);
                 }
             }
         }).start();
@@ -151,8 +156,9 @@ public class Modifications {
 
 
             Files.move(Path.of(loquiDir + "\\LoquiExtension.dll"), Path.of(installPath + "\\LoquiExtension.dll"), StandardCopyOption.REPLACE_EXISTING);
-            if(!Files.exists(Path.of(GDDirectory + "\\minhook.x32.dll"))){
-                Files.move(Path.of(loquiDir + "\\minhook.x32.dll"), Path.of(installPath + "\\minhook.x32.dll"), StandardCopyOption.REPLACE_EXISTING);
+            Path minhookDir = Path.of(GDDirectory + "\\minhook.x32.dll");
+            if(!Files.exists(minhookDir)){
+                Files.move(Path.of(loquiDir + "\\minhook.x32.dll"), minhookDir, StandardCopyOption.REPLACE_EXISTING);
             }
 
             FileUtils.copyDirectory(new File(GDDirectory + "\\LoquiExtension\\Resources (place contents in resources folder)"), new File(GDDirectory + "\\Resources"));
@@ -163,14 +169,28 @@ public class Modifications {
             DialogBox.showDialogBox("Error", "Failed to install mod!", e.toString(), new String[] {"Okay"});
         }
         try {
-            Files.deleteIfExists(loquiPath);
+            if(Files.exists(loquiPath)) {
+                deleteDirectoryRecursion(loquiPath);
+            }
             Files.deleteIfExists(loquiZipPath);
         }
         catch (IOException e){
             e.printStackTrace();
         }
-
     }
+
+
+    private static void deleteDirectoryRecursion(Path path) throws IOException {
+        if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
+            try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+                for (Path entry : entries) {
+                    deleteDirectoryRecursion(entry);
+                }
+            }
+        }
+        Files.delete(path);
+    }
+
     public static boolean getSafeMode(){
 
         boolean isSafe = false;

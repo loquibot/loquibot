@@ -103,7 +103,7 @@ public class KeywordData {
 
     private static void save(Path path, JSONObject object){
         try {
-            Files.write(path, object.toString(4).getBytes());
+            Files.write(path.toAbsolutePath(), object.toString(4).getBytes());
         }
         catch (Exception e){
             e.printStackTrace();

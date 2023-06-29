@@ -15,8 +15,6 @@ public class KeywordHandler {
 
         String reply = "";
         String foundWord = "";
-        if(message.getSender().equalsIgnoreCase("alphalaneous") && !message.isYouTube()) message.setMod(true);
-        if(message.getSender().equals("UCVK3izvSoez7efFZODwfVUA") && message.isYouTube()) message.setMod(true);
 
         KeywordData foundKeyword = null;
 
@@ -26,12 +24,12 @@ public class KeywordHandler {
             Matcher m = p.matcher(message.getMessage());
 
             boolean found = false;
-            while (m.find()) {
+            if (m.find()) {
                 foundWord = m.group(0);
                 found = true;
             }
 
-            if(found) {
+            if(found && data.isEnabled()) {
                 foundKeyword = data;
                 break;
             }
@@ -53,8 +51,11 @@ public class KeywordHandler {
             startCooldown(foundKeyword);
         }
         if (!reply.equalsIgnoreCase("")) {
-            if(message.isYouTube()) Main.sendYTMessage(reply);
-            else Main.sendMessage(reply);
+            if(message.isYouTube()) Main.sendYTMessage(reply, null);
+            else if(message.isKick()) Main.sendKickMessage(reply, null);
+            else {
+                Main.sendMessage(reply, message.getTag("id"));
+            }
         }
 
     }

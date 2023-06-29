@@ -89,14 +89,16 @@ public class TimerData {
             } else {
                 ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0, false, false);
                 Main.sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
-                Main.sendYTMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
+                Main.sendYTMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null), null);
+                Main.sendKickMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null), null);
+
             }
         }
     }
 
     private static void save(Path path, JSONObject object){
         try {
-            Files.write(path, object.toString(4).getBytes());
+            Files.write(path.toAbsolutePath(), object.toString(4).getBytes());
         }
         catch (Exception e){
             e.printStackTrace();

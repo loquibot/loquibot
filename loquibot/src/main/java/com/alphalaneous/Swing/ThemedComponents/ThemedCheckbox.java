@@ -8,11 +8,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 public class ThemedCheckbox extends JPanel {
 
-	private static final ArrayList<ThemedCheckbox> buttons = new ArrayList<>();
+	private static final List<ThemedCheckbox> buttons = Collections.synchronizedList(new ArrayList<ThemedCheckbox>());
 
 	private final LangLabel text = new LangLabel("");
 	private final JLabel check = new JLabel("\uE922");

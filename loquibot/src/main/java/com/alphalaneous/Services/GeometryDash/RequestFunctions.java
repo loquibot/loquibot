@@ -9,6 +9,7 @@ import com.alphalaneous.Settings.BlockedIDs;
 import com.alphalaneous.Settings.Outputs;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
+import com.alphalaneous.Windows.AprilFools;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Tabs.RequestsTab;
 import javazoom.jl.decoder.JavaLayerException;
@@ -58,19 +59,6 @@ public class RequestFunctions {
     }
     public static void skipFunction(int pos, boolean setPos) {
 
-        if (RequestsUtils.bwomp) {
-            new Thread(() -> {
-                try {
-                    BufferedInputStream inp = new BufferedInputStream(Objects.requireNonNull(RequestFunctions.class
-                            .getResource("bwomp.mp3")).openStream());
-                    Player mp3player = new Player(inp);
-                    mp3player.play();
-                } catch (JavaLayerException | NullPointerException | IOException f) {
-                    f.printStackTrace();
-                    DialogBox.showDialogBox("Error!", f.toString(), "There was an error playing the sound!", new String[]{"OK"});
-                }
-            }).start();
-        }
         boolean wasSelected;
 
         if (Main.programLoaded) {
@@ -104,7 +92,11 @@ public class RequestFunctions {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
-                                RequestsTab.getRequest(0).getLevelData().getDisplayName()));
+                                RequestsTab.getRequest(0).getLevelData().getDisplayName()), null);
+                        Main.sendKickMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
+                                RequestsTab.getRequest(0).getLevelData().getDisplayName()), null);
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
@@ -113,6 +105,7 @@ public class RequestFunctions {
                 }
             }
         }
+
         Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
 
         RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
@@ -143,6 +136,9 @@ public class RequestFunctions {
             }
             undoQueue.remove(levelButton);
         }
+
+        Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+
         RequestFunctions.saveFunction();
     }
 
@@ -157,11 +153,16 @@ public class RequestFunctions {
             }
             RequestsTab.addRequest(levelButton, position);
             undoQueue.remove(levelButton);
+            RequestFunctions.saveFunction();
+            Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+
             return position;
         }
+
+        Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+
         RequestFunctions.saveFunction();
         return LevelButton.selectedID;
-
     }
 
 
@@ -203,14 +204,18 @@ public class RequestFunctions {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
-                                RequestsTab.getRequest(num).getLevelData().getDisplayName()));
-
+                                RequestsTab.getRequest(num).getLevelData().getDisplayName()), null);
+                        Main.sendKickMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
+                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
+                                RequestsTab.getRequest(num).getLevelData().getDisplayName()), null);
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(num).getLevelData().getDisplayName()), SettingsHandler.getSettings("announceNP").asBoolean());
 
                     }
+
                     Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
                     LevelDetailsPanel.setPanel(RequestsTab.getRequest(num).getLevelData());
                 }
@@ -259,6 +264,7 @@ public class RequestFunctions {
 
 
     public static void saveFunction() {
+        AprilFools.loadLevels();
         new Thread(() -> {
             try {
                 Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\saved.json");
@@ -318,6 +324,8 @@ public class RequestFunctions {
                     level.put("has_verified_coins", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLevel().hasCoinsVerified());
                     level.put("is_youtube", RequestsTab.getRequest(i).getLevelData().isYouTube());
                     level.put("display_name", RequestsTab.getRequest(i).getLevelData().getDisplayName());
+                    level.put("account_id", RequestsTab.getRequest(i).getLevelData().getGDLevel().getAccountID());
+
                     levelsArray.put(level);
                 }
 

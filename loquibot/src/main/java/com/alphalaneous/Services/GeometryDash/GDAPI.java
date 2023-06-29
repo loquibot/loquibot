@@ -143,10 +143,15 @@ public class GDAPI {
             String[] accounts = accountsString.split("\\|");
 
             for(String str : accounts){
-                long userID = Long.parseLong(str.split(":")[0]);
-                if(userID == level.creatorPlayerId()){
-                    accountID = Long.parseLong(str.split(":")[2]);
-                    break;
+                if(str.equalsIgnoreCase("")){
+                    accountID = -1;
+                }
+                else {
+                    long userID = Long.parseLong(str.split(":")[0]);
+                    if (userID == level.creatorPlayerId()) {
+                        accountID = Long.parseLong(str.split(":")[2]);
+                        break;
+                    }
                 }
             }
         }

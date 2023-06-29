@@ -20,35 +20,39 @@ public class YouTubeChatListener {
     private static boolean isConnected = false;
     private static boolean isFirstMessage = true;
 
+    private static Timer currentTimerTask = null;
 
-    public static void startChatListener(String liveChatID) {
+    private static String liveChatID = null;
+
+    public static void startChatListener() {
         if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()) {
-            try {
-                while (true) {
-                    if (!isConnected) {
-                        try {
-                            String liveChatId = liveChatID != null
-                                    ? GetLiveChatID.getLiveChatId(YouTubeAccount.getYouTube(), liveChatID)
-                                    : GetLiveChatID.getLiveChatId(YouTubeAccount.getYouTube());
-                            if (liveChatId != null) {
-                                isConnected = true;
-                                listChatMessages(liveChatId, null, 0);
-                            }
-                        } catch (Exception e) {
-                            isConnected = false;
+            while (true) {
+                try {
+                    String newLiveChatID = GetLiveChatID.getLiveChatId(YouTubeAccount.getYouTube());
+
+                    if(newLiveChatID != null && !newLiveChatID.equalsIgnoreCase(liveChatID)){
+                        if(currentTimerTask != null){
+                            currentTimerTask.cancel();
                         }
-                        Utilities.sleep(60000);
+                        liveChatID = newLiveChatID;
+                        YouTubeAccount.liveChatId = liveChatID;
+                        listChatMessages(null, 0);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                Utilities.sleep(15000);
+
             }
         }
     }
 
-    private static void listChatMessages(final String liveChatId, final String nextPageToken, long delayMs) {
-        new Timer().schedule(
+    private static void listChatMessages(final String nextPageToken, long delayMs) {
+
+        currentTimerTask = new Timer();
+
+        currentTimerTask.schedule(
             new TimerTask() {
                 @SuppressWarnings("InstantiationOfUtilityClass")
                 @Override
@@ -56,7 +60,7 @@ public class YouTubeChatListener {
                     try {
                         LiveChatMessageListResponse response = YouTubeAccount.getYouTube()
                                 .liveChatMessages()
-                                .list(liveChatId, Arrays.asList("snippet", "authorDetails"))
+                                .list(liveChatID, Arrays.asList("snippet", "authorDetails"))
                                 .setPageToken(nextPageToken)
                                 .setFields(LIVE_CHAT_FIELDS)
                                 .execute();
@@ -77,7 +81,6 @@ public class YouTubeChatListener {
 
 
                         listChatMessages(
-                                liveChatId,
                                 response.getNextPageToken(),
                                 5000);
                         Utilities.sleep(1);

@@ -5,9 +5,15 @@ import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.JButtonUI;
 import com.alphalaneous.Settings.Personalization;
 import com.alphalaneous.Theming.Themes;
+import org.apache.commons.io.FileUtils;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +25,11 @@ public class Defaults {
 	public static final int globalArc = 20;
 	public static String saveDirectory;
 	public static boolean isLight = false;
+	public static boolean isAprilFools;
+	static {
+		String today = new SimpleDateFormat("MMdd").format(Calendar.getInstance().getTime());
+		isAprilFools = today.equalsIgnoreCase("0401");
+	}
 	public static Color ACCENT = Color.decode(String.valueOf(RegQuery.getColor()));
 	public static Color COLOR;
 	public static Color COLOR1;
@@ -71,7 +82,14 @@ public class Defaults {
 
 	static {
 		if (os.contains("WIN")) {
-			saveDirectory = System.getenv("APPDATA");
+			File file = FileUtils.getUserDirectory();
+			if(Files.exists(Paths.get(file.toString() + "\\.loquibot\\.save"))){
+				saveDirectory = file.toString() + "\\.loquibot";
+			}
+			else {
+				saveDirectory = System.getenv("APPDATA");
+			}
+
 		} else {
 			saveDirectory = System.getProperty("user.home") + "/Library/Application Support";
 		}

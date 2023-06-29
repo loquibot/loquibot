@@ -60,7 +60,7 @@ public class ChannelPointData {
 
     private static void save(Path path, JSONObject object){
         try {
-            Files.write(path, object.toString(4).getBytes());
+            Files.write(path.toAbsolutePath(), object.toString(4).getBytes());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -78,6 +78,6 @@ public class ChannelPointData {
             jsonArray.put(commandObject);
         }
         jsonObject.put("points", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/customPoints.json"), jsonObject);
+        save(Paths.get(Defaults.saveDirectory + "/loquibot/customPoints.json").toAbsolutePath(), jsonObject);
     }
 }

@@ -189,7 +189,7 @@ public class CommandData {
             jsonArray.put(commandObject);
         }
         jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/customCommands.json"), jsonObject);
+        save(Paths.get(Defaults.saveDirectory + "/loquibot/customCommands.json").toAbsolutePath(), jsonObject);
     }
     public static void saveDefaultCommands(){
         JSONObject jsonObject = new JSONObject();
@@ -198,7 +198,7 @@ public class CommandData {
             saveCommands(jsonArray, data);
         }
         jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/defaultCommands.json"), jsonObject);
+        save(Paths.get(Defaults.saveDirectory + "/loquibot/defaultCommands.json").toAbsolutePath(), jsonObject);
     }
     public static void saveGeometryDashCommands(){
         JSONObject jsonObject = new JSONObject();
@@ -207,7 +207,7 @@ public class CommandData {
             saveCommands(jsonArray, data);
         }
         jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json"), jsonObject);
+        save(Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json").toAbsolutePath(), jsonObject);
     }
     public static void saveMediaShareCommands(){
         JSONObject jsonObject = new JSONObject();

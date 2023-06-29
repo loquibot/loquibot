@@ -1,6 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.ChatBot.ChatterActivity;
+import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
@@ -14,8 +14,15 @@ import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.TwitchClientBuilder;
+import com.github.twitch4j.helix.domain.Chatter;
+import com.github.twitch4j.helix.domain.ChattersList;
+import com.github.twitch4j.tmi.domain.Chatters;
+import com.github.twitch4j.util.PaginationUtil;
 import com.mb3364.twitch.api.Twitch;
 import com.mb3364.twitch.api.auth.Scopes;
+import com.netflix.hystrix.HystrixCommand;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
@@ -34,53 +41,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class TwitchAPI {
 
-	public static ArrayList<String> allViewers = new ArrayList<>();
-	public static ArrayList<String> allMods = new ArrayList<>();
-	public static ArrayList<String> allVIPs = new ArrayList<>();
+	public static TwitchClient twitchClient;
 	public static AtomicBoolean success = new AtomicBoolean(false);
 	@SuppressWarnings("SpellCheckingInspection")
 	static final String clientID = "fzwze6vc6d2f7qodgkpq2w8nnsz3rl";
-
-	public static void setAllViewers() {
-
-		try {
-			JSONObject viewers = getViewers();
-			String[] types = {"broadcaster", "vips", "staff", "moderators", "admins", "global_mods", "viewers"};
-			if(viewers != null) {
-				allViewers.clear();
-				for (String type : types) {
-					JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
-					for (int i = 0; i < viewerList.length(); i++) {
-						String viewer = viewerList.get(i).toString().replaceAll("\"", "");
-						allViewers.add(viewer);
-					}
-				}
-				allVIPs.clear();
-				allMods.clear();
-				JSONArray viewerListMods = viewers.getJSONObject("chatters").getJSONArray("moderators");
-				for (int i = 0; i < viewerListMods.length(); i++) {
-					String viewer = viewerListMods.get(i).toString().replaceAll("\"", "");
-					allMods.add(viewer);
-				}
-				JSONArray viewerListVIPs = viewers.getJSONObject("chatters").getJSONArray("vips");
-				for (int i = 0; i < viewerListVIPs.length(); i++) {
-					String viewer = viewerListVIPs.get(i).toString().replaceAll("\"", "");
-					allVIPs.add(viewer);
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static ArrayList<ChannelPointReward> getChannelPoints() {
 		JSONArray awards = Objects.requireNonNull(twitchAPI("https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=" + getUserID())).getJSONArray("data");
@@ -118,29 +89,48 @@ public class TwitchAPI {
 		return rewards;
 	}
 
-	private static JSONObject getViewers(){
+	private static List<Chatter> getViewers(){
+
 		try {
-			URL url = new URL("https://tmi.twitch.tv/group/user/" + SettingsHandler.getSettings("channel").asString().toLowerCase() + "/chatters");
-			URLConnection conn = url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			StringBuilder builder = new StringBuilder();
-			String x;
-			while ((x = br.readLine()) != null) {
-				builder.append(x).append("\n");
+			if (twitchClient != null) {
+				return PaginationUtil.getPaginated(
+						cursor -> {
+							try {
+								return twitchClient
+										.getHelix()
+										.getChatters(SettingsHandler.getSettings("oauth").asString(),
+												String.valueOf(TwitchAccount.id),
+												String.valueOf(TwitchAccount.id),
+												1000,
+												cursor).execute();
+							} catch (Exception e) {
+								e.printStackTrace();
+								return null;
+							}
+						},
+						ChattersList::getChatters,
+						call -> call.getPagination() != null ? call.getPagination().getCursor() : null
+				);
 			}
-			return new JSONObject(builder.toString());
 		}
 		catch (Exception e){
-			return null;
+			TwitchAPI.setOauth();
 		}
+		return null;
 	}
 
-	private static java.util.List<Object> viewerList;
+
+
+	public static ArrayList<String> viewerList;
 
 	public static boolean isViewer(String username){
-		for(Object object : viewerList){
-			if(((String)object).equalsIgnoreCase(username)){
-				return true;
+		if(username != null) {
+			for (String chatter : viewerList) {
+				if (chatter != null) {
+					if (chatter.equalsIgnoreCase(username)) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -150,50 +140,44 @@ public class TwitchAPI {
 	public static void checkViewers() {
 			while (true) {
 				try {
-					JSONObject viewers = getViewers();
-					String[] types = {"broadcaster", "vips", "staff", "moderators", "admins", "global_mods", "viewers"};
+					List<Chatter> viewers = getViewers();
 					if(viewers != null) {
-						for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-							RequestsTab.getLevelsPanel().getButton(i).setViewership(false);
+						/*for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
+							RequestsTab.getRequest(i).setViewership(false);
 						}
-						if (SettingsHandler.getSettings("removeIfOffline").asBoolean()) {
+
+						TwitchAPI.viewerList = (ArrayList<String>) viewers.stream().map(Chatter::getUserLogin).collect(Collectors.toList());
+
+						for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+
+							if(TwitchChatListener.SelfDestructingViewer.containsViewer(RequestsTab.getRequest(k).getRequester())){
+								RequestsTab.getRequest(k).setViewership(true);
+								TwitchAPI.viewerList.add(RequestsTab.getRequest(k).getRequester());
+							}
+						}
+
+						/*if (SettingsHandler.getSettings("removeIfOffline").asBoolean()) {
 							for (int i = 0; i < RequestsTab.getQueueSize(); i++) {
-								if (RequestsTab.getLevelsPanel().getButton(i).isMarkedForRemoval()) {
-									RequestsTab.getLevelsPanel().getButton(i).removeSelfViewer();
+								if (RequestsTab.getRequest(i).isMarkedForRemoval()) {
+									RequestsTab.getRequest(i).removeSelfViewer();
 									i--;
 								}
 							}
 							RequestsTab.updateLevelsPanel();
 						}
 
-						for (String type : types) {
-							if (viewers.get("chatters") != null) {
-								JSONArray viewerList = viewers.getJSONObject("chatters").getJSONArray(type);
-								TwitchAPI.viewerList = viewerList.toList();
+						for (String s : TwitchAPI.viewerList) {
+							String viewer = s.toString().replaceAll("\"", "");
 
-								for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-									if(ChatterActivity.checkIfActive(RequestsTab.getLevelsPanel().getButton(k).getRequester())){
-										if(!RequestsTab.getLevelsPanel().getButton(k).getLevelData().isYouTube()) {
-											RequestsTab.getLevelsPanel().getButton(k).setViewership(true);
-											TwitchAPI.viewerList.add(RequestsTab.getLevelsPanel().getButton(k).getRequester());
-										}
-									}
-								}
-
-								for (int i = 0; i < viewerList.length(); i++) {
-									String viewer = viewerList.get(i).toString().replaceAll("\"", "");
-
-									if (SettingsHandler.getSettings("removeIfOffline").asBoolean()) {
-										for (LevelButton button : Requests.getRemovedForOffline()) {
-											if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
-												if(Requests.getPosFromID(button.getID()) == -1) {
-													RequestsTab.addRequest(button);
-													Requests.removeFromRemovedForOffline(button);
-													if (RequestsTab.getQueueSize() == 1) {
-														RequestsTab.getLevelsPanel().setSelect(0);
-														LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
-													}
-												}
+							if (SettingsHandler.getSettings("removeIfOffline").asBoolean()) {
+								for (LevelButton button : Requests.getRemovedForOffline()) {
+									if (button.getLevelData().getRequester().equalsIgnoreCase(viewer)) {
+										if (Requests.getPosFromID(button.getID()) == -1) {
+											RequestsTab.addRequest(button);
+											Requests.removeFromRemovedForOffline(button);
+											if (RequestsTab.getQueueSize() == 1) {
+												RequestsTab.getLevelsPanel().setSelect(0);
+												LevelDetailsPanel.setPanel(RequestsTab.getRequest(0).getLevelData());
 											}
 										}
 									}
@@ -204,6 +188,7 @@ public class TwitchAPI {
 						RequestsTab.updateLevelsPanel();
 						RequestFunctions.saveFunction();
 						Window.setTitle("loquibot - " + RequestsTab.getQueueSize());
+						 */
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -223,6 +208,7 @@ public class TwitchAPI {
 		else {
 			try {
 				JSONObject isFollowing = twitchAPI("https://api.twitch.tv/helix/users/follows?from_id=" + ID + "&to_id=" + getUserID());
+				System.out.println(isFollowing.toString());
 				if (user.equalsIgnoreCase(SettingsHandler.getSettings("channel").asString())) {
 					return false;
 				}
@@ -344,17 +330,26 @@ public class TwitchAPI {
 
 	public static JSONObject getInfo() {
 
-		JSONObject userID;
 		try {
-			userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-			SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
-			userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
-		}
-		assert userID != null;
+			JSONObject userID;
+			try {
+				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+				SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
+				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
+			}
+			if(userID == null){
+				TwitchAPI.setOauth();
+				return getInfo();
+			}
 
-		return userID.getJSONArray("data").getJSONObject(0);
+			return userID.getJSONArray("data").getJSONObject(0);
+		}
+		catch (Exception e){
+			TwitchAPI.setOauth();
+		}
+		return getInfo();
 	}
 
 	private static JSONObject user;
@@ -419,8 +414,9 @@ public class TwitchAPI {
 
 			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
 					twitch.getClientId(), callbackUri, Scopes.USER_READ
-			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
-
+			//) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read+moderator:manage:announcements+moderator:manage:banned_users+moderator:manage:chat_messages&force_verify=true");
+			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read+moderator:read:chatters&force_verify=true");
+			authUrl = new URI(authUrl.toString().replace("https://api.twitch.tv/kraken/", "https://id.twitch.tv/"));
 			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
 			oauthOpen = true;
 			if (twitch.auth().awaitAccessToken()) {
@@ -431,6 +427,7 @@ public class TwitchAPI {
 				//Main.refreshBot();
 				success.set(true);
 				oauthOpen = false;
+				ServerBot.disconnect();
 			} else {
 				System.out.println(twitch.auth().getAuthenticationError());
 				oauthOpen = false;
@@ -439,6 +436,34 @@ public class TwitchAPI {
 			e.printStackTrace();
 			oauthOpen = false;
 		}
+	}
+
+	public static String getBotOauth(){
+		try {
+			Twitch twitch = new Twitch();
+			URI callbackUri = new URI("http://localhost:23522");
+
+			twitch.setClientId(clientID);
+
+			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
+					twitch.getClientId(), callbackUri, Scopes.USER_READ
+			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read+moderator:manage:announcements+moderator:manage:banned_users+moderator:manage:chat_messages&force_verify=true");
+			authUrl = new URI(authUrl.toString().replace("https://api.twitch.tv/kraken/", "https://id.twitch.tv/"));
+			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
+			oauthOpen = true;
+
+			if (twitch.auth().awaitAccessToken()) {
+				oauthOpen = false;
+				return twitch.auth().getAccessToken();
+			} else {
+				System.out.println(twitch.auth().getAuthenticationError());
+				oauthOpen = false;
+			}
+		} catch (Exception e) {
+			oauthOpen = false;
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static String getOauth() {
@@ -451,7 +476,7 @@ public class TwitchAPI {
 			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
 					twitch.getClientId(), callbackUri, Scopes.USER_READ
 			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
-
+			authUrl = new URI(authUrl.toString().replace("https://api.twitch.tv/kraken/", "https://id.twitch.tv/"));
 			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
 			oauthOpen = true;
 

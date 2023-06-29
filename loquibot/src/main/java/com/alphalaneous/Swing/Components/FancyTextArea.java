@@ -86,7 +86,12 @@ public class FancyTextArea extends JPanel {
 		textArea.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				borderColor = Defaults.ACCENT;
+				if(customAccent != null){
+					borderColor = customAccent;
+				}
+				else {
+					borderColor = Defaults.ACCENT;
+				}
 				repaint();
 			}
 
@@ -143,6 +148,13 @@ public class FancyTextArea extends JPanel {
 		textAreas.add(this);
 	}
 
+	private Color customAccent = null;
+
+	public void setCustomAccent(Color customAccent){
+		this.customAccent = customAccent;
+		if(textArea != null) textArea.setSelectionColor(customAccent);
+	}
+
 	public void setBounds(int x, int y, int width, int height){
 		super.setBounds(x, y, width, height);
 		smoothScrollPane.setBounds(4, 4, width-8, height-8);
@@ -157,6 +169,15 @@ public class FancyTextArea extends JPanel {
 		return textArea;
 	}
 
+	public void setFont(Font font){
+		if(textArea != null) textArea.setFont(font);
+	}
+
+	public void addFocusListener(FocusListener listener){
+		if(textArea != null){
+			textArea.addFocusListener(listener);
+		}
+	}
 
 	public Document getDocument(){
 		return textArea.getDocument();
