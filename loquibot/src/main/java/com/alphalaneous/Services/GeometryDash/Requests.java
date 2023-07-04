@@ -110,7 +110,7 @@ public class Requests {
                     arguments.add(argMatcher.group(1).toLowerCase().trim());
                 }
                 String levelNameS; //Starting level name for search
-                String usernameS; //starting username for search
+                String usernameS = ""; //starting username for search
                 if (isCommand) {
                     Matcher IDMatcher = Pattern.compile("(\\d+)").matcher(arguments.get(1));
                     if (IDMatcher.matches() && arguments.size() <= 2) {
@@ -136,7 +136,10 @@ public class Requests {
                                     inQuotes = true;
                                 }
                                 levelNameS = levelNameS.replace("\"", "");
-                                usernameS = argumentsS[1].trim().replace("\"", "");
+
+                                if(argumentsS.length >= 2) {
+                                    usernameS = argumentsS[1].trim().replace("\"", "");
+                                }
                             } else {
                                 sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                                 return;
@@ -434,7 +437,12 @@ public class Requests {
                 RequestsTab.getLevelsPanel().setWindowName(RequestsTab.getQueueSize());
                 RequestFunctions.saveFunction();
 
-                Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+                try {
+                    Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 if (Main.sendMessages && !SettingsHandler.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
                     if(pos == -1) {
@@ -540,7 +548,12 @@ public class Requests {
     public static void saveLogs(LevelData levelData){
         try {
             addedLevels.put(levelData.getGDLevel().getLevel().id(), levelData.getGDLevel().getLevel().levelVersion());
-            Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+            try {
+                Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
 
             boolean exists = false;
