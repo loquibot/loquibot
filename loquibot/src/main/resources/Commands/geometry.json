@@ -74,7 +74,7 @@
       "description" : "Sends requests | Usage: \"%prequest <Level ID>\" | \"%prequest <Level Name> by <User>\" (Use quotation marks to search by exact name) | \"%prequest <Level Name>\"",
       "runMethod" : true,
       "message" : "runRequest",
-      "aliases" : ["r", "req", "add", "send", "join"]
+      "aliases" : ["r", "req", "add", "send"]
     },
     {
       "name" : "song",
