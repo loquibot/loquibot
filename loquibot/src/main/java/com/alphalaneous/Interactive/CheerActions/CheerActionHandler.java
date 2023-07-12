@@ -67,12 +67,17 @@ public class CheerActionHandler {
 
         if(message.getUserLevel().equals("admin")) return true;
 
-        for(String userLevel : userLevels){
+        int removeOffset = 0;
+        for(int i = 0; i < userLevels.size(); i++){
+            String userLevel = userLevels.get(i);
+
             if(commandLevel.equalsIgnoreCase(userLevel)){
                 break;
             }
-            userLevels.remove(userLevel);
+            userLevels.remove(i - removeOffset);
+            removeOffset++;
         }
+
         return userLevels.contains(messageLevel);
     }
 }
