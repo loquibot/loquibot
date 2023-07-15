@@ -89,11 +89,10 @@ public class ConnectorSocket extends WebSocketServer {
                 LevelData data1 = null;
                 LevelButton button = RequestsTab.getRequest(RequestsUtils.getSelection());
 
-                if(button != null){
+                if(button != null) {
                     data1 = button.getLevelData();
+                    Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
                 }
-
-                Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
                 break;
             }
 
@@ -105,27 +104,40 @@ public class ConnectorSocket extends WebSocketServer {
                 LevelData data1 = null;
                 LevelButton button = RequestsTab.getRequest(RequestsUtils.getSelection());
 
-                if(button != null){
+                if(button != null) {
                     data1 = button.getLevelData();
+                    Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
                 }
-
-                Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
                 break;
             }
-            case "next_get":{
-                if(RequestsTab.getQueueSize() > 1) {
+            case "next_get": {
+                if (RequestsTab.getQueueSize() > 1) {
                     RequestFunctions.skipFunction();
                 }
 
                 LevelData data1 = null;
                 LevelButton button = RequestsTab.getRequest(RequestsUtils.getSelection());
 
-                if(button != null){
+                if (button != null) {
                     data1 = button.getLevelData();
+                    Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
+                }
+                break;
+            }
+            case "top_get": {
+                if(RequestsTab.getQueueSize() > 1) {
+                    RequestFunctions.skipFunction();
+                }
+                RequestsTab.getLevelsPanel().setSelect(0);
+
+                LevelData data1 = null;
+                LevelButton button = RequestsTab.getRequest(RequestsUtils.getSelection());
+
+                if(button != null) {
+                    data1 = button.getLevelData();
+                    Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
                 }
 
-                Main.sendMessageConnectedService(RequestsUtils.getInfoObject(data1, true).toString());
-                break;
             }
             case "main_pressed":
                 Main.sendMessageConnectedService(RequestsUtils.getCurrentInfoObject(RequestsTab.getRequest(RequestsUtils.getPosFromID(data.getGDLevel().getLevel().id()) + 1).getLevelData()).toString());

@@ -132,50 +132,21 @@ public class Modifications {
                 }
 
                 if(installDir != null){
-                    installMod(Paths.get(path).getParent().toString() + "\\" + installDir, Paths.get(path).getParent().toString());
+                    installMod(Paths.get(path).getParent().toString() + "\\" + installDir);
                     if(isGDOpen) com.alphalaneous.Utils.Utilities.openSteamApp(322170, true);
                 }
             }
         }).start();
 
     }
-    public static void installMod(String installDir, String GDDirectory) {
-        String loquiDir = GDDirectory + "\\LoquiExtension";
-        Path loquiPath = Path.of(loquiDir);
-        Path loquiZipPath = Path.of(GDDirectory + "\\LoquiExtension.zip");
+    public static void installMod(String installDir) {
+
         try {
-            Path installPath = Path.of(installDir);
-            if(!Files.isDirectory(Path.of(installPath + "\\"))){
-                Files.createDirectories(Path.of(installPath + "\\"));
-            }
-            SettingsHandler.writeSettings("modVersion", "1.0");
-
             FileUtils.copyURLToFile(Objects.requireNonNull(Main.class.getClassLoader()
-                    .getResource("LoquiExtension.zip")), new File(loquiZipPath.toUri()));
-            com.alphalaneous.Utils.Utilities.unzip(String.valueOf(loquiZipPath), loquiDir);
-
-
-            Files.move(Path.of(loquiDir + "\\LoquiExtension.dll"), Path.of(installPath + "\\LoquiExtension.dll"), StandardCopyOption.REPLACE_EXISTING);
-            Path minhookDir = Path.of(GDDirectory + "\\minhook.x32.dll");
-            if(!Files.exists(minhookDir)){
-                Files.move(Path.of(loquiDir + "\\minhook.x32.dll"), minhookDir, StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            FileUtils.copyDirectory(new File(GDDirectory + "\\LoquiExtension\\Resources (place contents in resources folder)"), new File(GDDirectory + "\\Resources"));
-
-        }
-        catch (Exception e){
+                    .getResource("LoquiExtension.dll")), Path.of(installDir + "\\LoquiExtension.dll").toFile());
+        } catch (Exception e) {
             e.printStackTrace();
             DialogBox.showDialogBox("Error", "Failed to install mod!", e.toString(), new String[] {"Okay"});
-        }
-        try {
-            if(Files.exists(loquiPath)) {
-                deleteDirectoryRecursion(loquiPath);
-            }
-            Files.deleteIfExists(loquiZipPath);
-        }
-        catch (IOException e){
-            e.printStackTrace();
         }
     }
 
