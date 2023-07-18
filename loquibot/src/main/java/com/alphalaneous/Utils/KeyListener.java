@@ -33,14 +33,12 @@ public class KeyListener extends SwingKeyAdapter {
 		//System.out.println(e.getKeyCode());
 
 		if(Defaults.isMac()){
-			if (e.getKeyCode() == 157 || e.getKeyCode() == 17) {
+			if (e.getKeyCode() == 157) {
 				ctrlPressed = true;
 			}
 		}
-		else{
-			if (e.getKeyCode() == 162 || e.getKeyCode() == 163) {
-				ctrlPressed = true;
-			}
+		if(e.getKeyCode() == 17){
+			ctrlPressed = true;
 		}
 
 		if (keyReleased || ctrlPressed) {
@@ -136,14 +134,12 @@ public class KeyListener extends SwingKeyAdapter {
 		keyReleased = true;
 
 		if(Defaults.isMac()){
-			if (e.getKeyCode() == 157 || e.getKeyCode() == 17) {
-				ctrlPressed = false;
+			if (e.getKeyCode() == 157) {
+				ctrlPressed = true;
 			}
 		}
-		else{
-			if (e.getKeyCode() == 162 || e.getKeyCode() == 163) {
-				ctrlPressed = false;
-			}
+		if(e.getKeyCode() == 17){
+			ctrlPressed = true;
 		}
 	}
 }
