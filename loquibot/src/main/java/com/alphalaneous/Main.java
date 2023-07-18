@@ -43,10 +43,10 @@ import com.alphalaneous.Utils.*;
 import com.alphalaneous.Utils.KeyListener;
 import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -60,6 +60,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -97,6 +98,9 @@ public class Main {
     private static ConnectorSocket streamDeckSocket;
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+
+
         long time = System.currentTimeMillis();
         new LoquibotSocket();
         try {
@@ -126,6 +130,16 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println("> Loaded Icons");
+
+        if(Defaults.isMac()) {
+            Taskbar taskbar = Taskbar.getTaskbar();
+            try {
+                taskbar.setIconImage(Main.getIconImages().get(2));
+            } catch (UnsupportedOperationException | SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+
         //Initialize JavaFX Graphics Toolkit (Hacky Solution)
         if(!Defaults.isMac()) new Thread(JFXPanel::new).start();
 
@@ -142,7 +156,7 @@ public class Main {
         }).start();
 
         SettingsHandler.loadSettings();
-        MacKeyListener.loadKeybinds();
+        //MacKeyListener.loadKeybinds();
 
         System.out.println("> Settings Loaded");
 
@@ -643,13 +657,12 @@ public class Main {
     }
 
     private static void runKeyboardHook() {
-        if (!Defaults.isMac()) {
-            var runHookRef = new Object() {
-                boolean runHook = true;
-            };
+        //if (!Defaults.isMac()) {
+        AtomicBoolean runHook = new AtomicBoolean(true);
+
             if (keyboardHookThread != null) {
                 if (keyboardHookThread.isAlive()) {
-                    runHookRef.runHook = false;
+                    runHook.set(false);
                 }
             }
             try {
@@ -671,7 +684,7 @@ public class Main {
                 failed = true;
             }
             keyboardHookThread = new Thread(() -> {
-                while (runHookRef.runHook) {
+                while (runHook.get()) {
                     if (failed) {
                         runKeyboardHook();
                     }
@@ -679,10 +692,7 @@ public class Main {
                 }
             });
             keyboardHookThread.start();
-        }
-        else{
-            //todo find keyboardhook for mac
-        }
+
     }
 
     public static void save(){

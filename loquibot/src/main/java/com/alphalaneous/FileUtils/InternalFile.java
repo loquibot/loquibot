@@ -16,7 +16,6 @@ public class InternalFile {
 
     public InternalFile(Path path){
         this.path = path;
-        //System.out.println(path.toString());
     }
 
     public Path getPath(){
@@ -46,6 +45,7 @@ public class InternalFile {
                 is.close();
                 isr.close();
                 br.close();
+
                 return string.toString();
             } else {
                 return Files.readString(path);

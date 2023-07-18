@@ -24,8 +24,15 @@ public class GetInternalFiles {
         if(!isInJar()){
             uri = Objects.requireNonNull(Main.class.getResource("/")).getPath();
             fileSystem = FileSystems.getDefault();
-            if(Defaults.isMac())path = fileSystem.getPath(uri + location);
-            else path = fileSystem.getPath(uri.substring(3) + location);
+            if(Defaults.isMac()){
+                path = fileSystem.getPath(uri + location);
+            }
+            else {
+                path = fileSystem.getPath(uri.substring(3) + location);
+            }
+        }
+        else{
+            path = Path.of(location);
         }
     }
 
@@ -33,8 +40,15 @@ public class GetInternalFiles {
         if(isInJar()) {
             try {
                 URL jar = Main.class.getProtectionDomain().getCodeSource().getLocation();
+                Path jarFile;
 
-                Path jarFile = Paths.get(jar.toString().substring(8).replace("%20", " "));
+                if(Defaults.isMac()){
+                    jarFile = Paths.get(jar.toString().substring(5).replace("%20", " "));
+                }
+                else{
+                    jarFile = Paths.get(jar.toString().substring(8).replace("%20", " "));
+                }
+
                 FileList list = new FileList();
 
                 FileSystem fs = FileSystems.newFileSystem(jarFile);

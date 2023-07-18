@@ -9,9 +9,10 @@ import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Windows.LogWindow;
 import com.alphalaneous.Windows.Window;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.SwingKeyAdapter;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.SwingKeyAdapter;
 
+import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,17 +28,26 @@ public class KeyListener extends SwingKeyAdapter {
 		return ctrlPressed;
 	}
 
-	public void nativeKeyPressed(NativeKeyEvent e) {
+	public void keyPressed(KeyEvent e) {
 
-		if (e.getRawCode() == 162 || e.getRawCode() == 163) {
-			ctrlPressed = true;
+		//System.out.println(e.getKeyCode());
+
+		if(Defaults.isMac()){
+			if (e.getKeyCode() == 157 || e.getKeyCode() == 17) {
+				ctrlPressed = true;
+			}
+		}
+		else{
+			if (e.getKeyCode() == 162 || e.getKeyCode() == 163) {
+				ctrlPressed = true;
+			}
 		}
 
 		if (keyReleased || ctrlPressed) {
 
-			int key = e.getRawCode();
+			int key = e.getKeyCode();
 
-			if (key == 187) {
+			/*if (key == 187) {
 				key = 61;
 			} else if (key == 189) {
 				key = 45;
@@ -59,7 +69,7 @@ public class KeyListener extends SwingKeyAdapter {
 				key = 127;
 			} else if (key == 45) {
 				key = 155;
-			}
+			}*/
 			if (!KeybindButton.getInFocus()) {
 				if (key == SettingsHandler.getSettings("openKeybind").asInteger()) {
 					Window.focus();
@@ -82,13 +92,15 @@ public class KeyListener extends SwingKeyAdapter {
 				if (key == SettingsHandler.getSettings("clearKeybind").asInteger()) {
 					RequestFunctions.clearFunction();
 				}
-				if(key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()){
-					boolean isNoclip = SettingsHandler.getSettings("safeNoclipHack").asBoolean();
+				if(!Defaults.isMac()) {
+					if (key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()) {
+						boolean isNoclip = SettingsHandler.getSettings("safeNoclipHack").asBoolean();
 
-					SettingsHandler.writeSettings("safeNoclipHack", String.valueOf(!isNoclip));
-					SettingsPage.CheckBox.resetCheckbox("safeNoclipHack");
-					Modifications.setSafeMode();
-					Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
+						SettingsHandler.writeSettings("safeNoclipHack", String.valueOf(!isNoclip));
+						SettingsPage.CheckBox.resetCheckbox("safeNoclipHack");
+						Modifications.setSafeMode();
+						Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
+					}
 				}
 			}
 			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {
@@ -101,7 +113,7 @@ public class KeyListener extends SwingKeyAdapter {
 				assert sc3 != null;
 				while (sc3.hasNextLine()) {
 					String line = sc3.nextLine();
-					if (line.split("=")[0].replace(" ", "").equalsIgnoreCase(String.valueOf(e.getRawCode()))) {
+					if (line.split("=")[0].replace(" ", "").equalsIgnoreCase(String.valueOf(e.getKeyCode()))) {
 						Path path = Paths.get(Defaults.saveDirectory + "/loquibot/actions/" + line.split("=")[1] + ".js");
 
                         break;
@@ -120,10 +132,18 @@ public class KeyListener extends SwingKeyAdapter {
 		}
 	}
 
-	public void nativeKeyReleased(NativeKeyEvent e) {
+	public void keyReleased(KeyEvent e) {
 		keyReleased = true;
-		if (e.getRawCode() == 162 || e.getRawCode() == 163) {
-			ctrlPressed = false;
+
+		if(Defaults.isMac()){
+			if (e.getKeyCode() == 157 || e.getKeyCode() == 17) {
+				ctrlPressed = false;
+			}
+		}
+		else{
+			if (e.getKeyCode() == 162 || e.getKeyCode() == 163) {
+				ctrlPressed = false;
+			}
 		}
 	}
 }

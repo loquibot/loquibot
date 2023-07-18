@@ -52,6 +52,7 @@ public class Defaults {
 	private static final String os = (System.getProperty("os.name")).toUpperCase();
 
 	public static boolean isMac(){
+
 		return (os.toLowerCase().contains("mac")) || (os.toLowerCase().contains("darwin"));
 	}
 

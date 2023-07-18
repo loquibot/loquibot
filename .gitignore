@@ -7,3 +7,5 @@ target/
 *.ipr
 *.iws
 artifacts/
+*.MF
+*.log

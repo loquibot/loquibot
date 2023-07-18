@@ -120,18 +120,9 @@ public class Language {
             GetInternalFiles getInternalFiles = new GetInternalFiles("Languages/");
             FileList files = getInternalFiles.getFiles();
 
-            String fileName;
-            String langProperties;
+            String fileName = lang + ".lang";
+            String langProperties = "Languages.prop";
 
-            if(Defaults.isMac()){
-                fileName = getInternalFiles.getPath() + "/" + lang + ".lang";
-                langProperties = getInternalFiles.getPath() + "/" + "Languages.prop";
-
-            }
-            else {
-                fileName = lang + ".lang";
-                langProperties = "Languages.prop";
-            }
 
             String[] fileLines = files.getFile(fileName).getString().split("\n");
             for(String line : fileLines){

@@ -9,6 +9,7 @@ import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsComponent;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Utilities;
+import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Find;
 import com.alphalaneous.Utils.RegQuery;
 import com.alphalaneous.Windows.DialogBox;
@@ -176,7 +177,7 @@ public class Modifications {
 
 
     public static void loadMods(){
-
+        if(Defaults.isMac()) return;
 
         new Thread(() -> {
             boolean GDOpen = false;

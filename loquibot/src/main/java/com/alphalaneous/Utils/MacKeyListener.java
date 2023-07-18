@@ -21,6 +21,7 @@ public class MacKeyListener {
     }
 
     public static void addKey(int keyCode) {
+        System.out.println(keyCode);
         if (keyCode != -1) {
             if (Defaults.isMac())
                 provider.register(KeyStroke.getKeyStroke(keyCode, 0), hotKey -> runKeyCheck(KeyStroke.getKeyStroke(keyCode, 0)));
@@ -31,7 +32,11 @@ public class MacKeyListener {
     }
 
     public static void stop(){
-        if(Defaults.isMac()) provider.close();
+        if(Defaults.isMac()) {
+
+            provider.reset();
+            provider.close();
+        }
     }
     private static boolean ctrlPressed = true;
 
@@ -49,6 +54,8 @@ public class MacKeyListener {
     public static void runKeyCheck(KeyStroke keyStroke) {
 
         int key = keyStroke.getKeyCode();
+
+        System.out.println(key);
 
         if (key == 187) {
             key = 61;

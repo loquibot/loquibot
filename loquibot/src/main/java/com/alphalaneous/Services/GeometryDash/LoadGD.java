@@ -8,6 +8,7 @@ import jdash.common.entity.GDUser;
 import jdash.common.entity.GDUserProfile;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Base64;
 
 public class LoadGD {
@@ -36,7 +37,8 @@ public class LoadGD {
             } else {
                 try {
                     GDAPI.getLevel(128); //"Warms up" the connection, so it doesn't hang longer than it should, rather have longer start time than not working when open.
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("> Failed to load initial GD connection");
                 }

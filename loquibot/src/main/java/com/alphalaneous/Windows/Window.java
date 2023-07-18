@@ -154,14 +154,7 @@ public class Window {
         windowFrame.add(layeredContentPanel);
 
 
-        if(Defaults.isMac()) {
-            Taskbar taskbar = Taskbar.getTaskbar();
-            try {
-                taskbar.setIconImage(Main.getIconImages().get(2));
-            } catch (UnsupportedOperationException | SecurityException e) {
-                e.printStackTrace();
-            }
-        }
+
 
     }
     private static final boolean dragging = false;
