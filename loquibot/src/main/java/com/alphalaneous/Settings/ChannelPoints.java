@@ -212,6 +212,7 @@ public class ChannelPoints {
                     data1.setMessage(messageInput.getText().trim());
                     data1.registerPoint();
                     LoadPoints.reloadCustomPoints();
+                    ChannelPointData.saveCustomPoints();
                 }
                 else {
                     for (ChannelPointData existingData : ChannelPointData.getRegisteredPoints()) {
@@ -219,6 +220,7 @@ public class ChannelPoints {
                             existingData.setName(keywordInput.getText().trim());
                             existingData.setMessage(messageInput.getText().trim());
                             LoadPoints.reloadCustomPoints();
+                            ChannelPointData.saveCustomPoints();
                             break;
                         }
                     }

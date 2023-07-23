@@ -185,6 +185,7 @@ public class CheerActionConfigCheckbox extends JPanel {
                         data1.setCheerAmount(Long.parseLong(cheerAmountInput.getText()));
                         data1.registerCheerAction();
                         LoadCheerActions.reloadCustomCheerActions();
+                        CheerActionData.saveCustomCheerActions();
                         CustomCheerActions.loadCheerActions();
                         DialogBox.closeDialogBox();
                     }
@@ -197,6 +198,7 @@ public class CheerActionConfigCheckbox extends JPanel {
                             existingData.setMessage(messageInput.getText().trim());
                             existingData.setUserLevel(CheerActionConfigCheckbox.userLevel);
                             LoadCheerActions.reloadCustomCheerActions();
+                            CheerActionData.saveCustomCheerActions();
                             CustomCheerActions.loadCheerActions();
                             break;
                         }

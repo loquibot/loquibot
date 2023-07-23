@@ -33,8 +33,17 @@ public class Auth {
     public static Credential authorize(List<String> scopes, String credentialDatastore, boolean refresh) throws IOException {
 
         String credentials = credentialDatastore;
-        if(refresh) credentials = credentialDatastore + "_temp";
+        if (refresh) {
+            credentials = credentialDatastore + "_temp";
 
+            try {
+                if (Files.exists(Path.of(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore))) {
+                    Files.delete(Path.of(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         Reader clientSecretReader = new InputStreamReader(Objects.requireNonNull(Auth.class.getResourceAsStream("/client_secrets.json")));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
@@ -62,5 +71,4 @@ public class Auth {
 
         return credential;
     }
-
 }

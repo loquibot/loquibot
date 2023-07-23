@@ -27,19 +27,25 @@ public class KeywordData {
     public KeywordData(String keyword){
         this.keyword = keyword;
     }
-    public void registerKeyword(){
+    public void registerKeyword(boolean isEdit){
         registeredKeywords.add(this);
+        if(isEdit) saveCustomKeywords();
     }
     public void deregisterKeyword(){
         registeredKeywords.remove(this);
+        saveCustomKeywords();
     }
 
-    public void setKeyword(String keyword) {
+    public void setKeyword(String keyword, boolean isEdit) {
         this.keyword = keyword;
+        if(isEdit) saveCustomKeywords();
+
     }
 
-    public void setRegex(boolean regex){
+    public void setRegex(boolean regex, boolean isEdit){
         this.isRegex = regex;
+        if(isEdit) saveCustomKeywords();
+
     }
     public boolean isRegex(){
         return isRegex;
@@ -49,24 +55,34 @@ public class KeywordData {
         this.foundWord = foundWord;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(String message, boolean isEdit) {
         this.message = message;
+        if(isEdit) saveCustomKeywords();
+
     }
 
-    public void setUserLevel(String userLevel){
+    public void setUserLevel(String userLevel, boolean isEdit){
         this.userLevel = userLevel;
+        if(isEdit) saveCustomKeywords();
+
     }
 
-    public void setCooldown(int cooldown) {
+    public void setCooldown(int cooldown, boolean isEdit) {
         this.cooldown = cooldown;
+        if(isEdit) saveCustomKeywords();
+
     }
 
-    public void setEnabled(boolean isEnabled){
+    public void setEnabled(boolean isEnabled, boolean isEdit){
         this.isEnabled = isEnabled;
+        if(isEdit) saveCustomKeywords();
+
     }
 
-    public void setCounter(long counter) {
+    public void setCounter(long counter, boolean isEdit) {
         this.counter = counter;
+        if(isEdit) saveCustomKeywords();
+
     }
 
     public String getKeyword() {

@@ -29,12 +29,12 @@ public class CommandData {
     private int cooldown = 0;
     private long counter = 0;
 
-
     public CommandData(String command){
         this.command = command;
     }
-    public void registerCommand(){
+    public void registerCommand(boolean isEdit){
         registeredCommands.add(this);
+        if(isEdit) saveAll();
     }
     public void deRegisterCommand(){
         registeredCommands.remove(this);
@@ -43,68 +43,86 @@ public class CommandData {
                 registeredAliases.remove(((String) alias).toLowerCase(), this);
             }
         }
+        saveAll();
     }
 
 
-    public void setCommand(String command) {
+    public void setCommand(String command, boolean isEdit) {
         this.command = command;
+        if(isEdit) saveAll();
+
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description, boolean isEdit) {
         this.description = description;
+        if(isEdit) saveAll();
+
     }
 
-    public void setDefault(boolean isDefault){
+    public void setDefault(boolean isDefault, boolean isEdit){
         this.isDefault = isDefault;
+        if(isEdit) saveAll();
+
     }
-    public void setGD(boolean isGD){
+    public void setGD(boolean isGD, boolean isEdit){
         this.isGD = isGD;
+        if(isEdit) saveAll();
+
     }
 
-    public void setMediaShare(boolean mediaShare){
+    public void setMediaShare(boolean mediaShare, boolean isEdit){
         this.isMediaShare = mediaShare;
+        if(isEdit) saveAll();
+
     }
 
 
-    public void setHasDescription(boolean hasDescription){
+    public void setHasDescription(boolean hasDescription, boolean isEdit){
         this.hasDescription = hasDescription;
+        if(isEdit) saveAll();
+
     }
 
-    public void setMessage(String message) {
+    public void setMessage(String message, boolean isEdit) {
         this.message = message;
+        if(isEdit) saveAll();
+
     }
 
-    public void setUserLevel(String userLevel){
+    public void setUserLevel(String userLevel, boolean isEdit){
         this.userLevel = userLevel;
+        if(isEdit) saveAll();
+
     }
 
-    public void setCooldown(int cooldown) {
+    public void setCooldown(int cooldown, boolean isEdit) {
         this.cooldown = cooldown;
+        if(isEdit) saveAll();
+
     }
 
-    public void setEnabled(boolean isEnabled){
+    public void setEnabled(boolean isEnabled, boolean isEdit){
         this.isEnabled = isEnabled;
+        if(isEdit) saveAll();
+
     }
 
-    public void setMethod(boolean isMethod){
+    public void setMethod(boolean isMethod, boolean isEdit){
         this.isMethod = isMethod;
-    }
+        if(isEdit) saveAll();
 
-    public void setCounter(long counter) {
+    }
+    public void setCounter(long counter, boolean isEdit) {
         this.counter = counter;
+        if(isEdit) saveAll();
     }
 
-    public void setAliases(List<Object> aliases) {
+    public void setAliases(List<Object> aliases, boolean isEdit) {
         this.aliases = aliases;
         for(Object alias : aliases){
             registeredAliases.put(((String) alias).toLowerCase().trim(), this);
         }
-    }
-
-    public void addAliases(String alias){
-        if(this.aliases == null) aliases = new ArrayList<>();
-        this.aliases.add(alias);
-        registeredAliases.put(alias, this);
+        if(isEdit) saveAll();
     }
 
     public String getCommand() {
@@ -174,49 +192,52 @@ public class CommandData {
         }
     }
 
-    public static void saveCustomCommands(){
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        for(CommandData data : LoadCommands.getCustomCommands()){
-            JSONObject commandObject = new JSONObject();
-            commandObject.putOpt("name", data.getCommand());
-            commandObject.putOpt("enabled", data.isEnabled());
-            commandObject.putOpt("level", data.getUserLevel());
-            commandObject.putOpt("aliases", data.getAliases());
-            commandObject.putOpt("message", data.getMessage());
-            commandObject.putOpt("cooldown", data.getCooldown());
-            commandObject.putOpt("counter", data.getCounter());
-            jsonArray.put(commandObject);
-        }
-        jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/customCommands.json").toAbsolutePath(), jsonObject);
+    public static void saveAll(){
+        saveCustomCommands();
+        saveDefaultCommands();
+        saveGeometryDashCommands();
     }
-    public static void saveDefaultCommands(){
+
+    public static void saveCustomCommands() {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        for(CommandData data : LoadCommands.getDefaultCommands()){
-            saveCommands(jsonArray, data);
+        if (LoadCommands.getCustomCommands() != null) {
+            for (CommandData data : LoadCommands.getCustomCommands()) {
+                JSONObject commandObject = new JSONObject();
+                commandObject.putOpt("name", data.getCommand());
+                commandObject.putOpt("enabled", data.isEnabled());
+                commandObject.putOpt("level", data.getUserLevel());
+                commandObject.putOpt("aliases", data.getAliases());
+                commandObject.putOpt("message", data.getMessage());
+                commandObject.putOpt("cooldown", data.getCooldown());
+                commandObject.putOpt("counter", data.getCounter());
+                jsonArray.put(commandObject);
+            }
+            jsonObject.put("commands", jsonArray);
+            save(Paths.get(Defaults.saveDirectory + "/loquibot/customCommands.json").toAbsolutePath(), jsonObject);
         }
-        jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/defaultCommands.json").toAbsolutePath(), jsonObject);
     }
-    public static void saveGeometryDashCommands(){
+    public static void saveDefaultCommands() {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        for(CommandData data : LoadCommands.getGeometryDashCommands()){
-            saveCommands(jsonArray, data);
+        if (LoadCommands.getDefaultCommands() != null) {
+            for (CommandData data : LoadCommands.getDefaultCommands()) {
+                saveCommands(jsonArray, data);
+            }
+            jsonObject.put("commands", jsonArray);
+            save(Paths.get(Defaults.saveDirectory + "/loquibot/defaultCommands.json").toAbsolutePath(), jsonObject);
         }
-        jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json").toAbsolutePath(), jsonObject);
     }
-    public static void saveMediaShareCommands(){
+    public static void saveGeometryDashCommands() {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        for(CommandData data : LoadCommands.getMediaShareCommands()){
-            saveCommands(jsonArray, data);
+        if (LoadCommands.getGeometryDashCommands() != null) {
+            for (CommandData data : LoadCommands.getGeometryDashCommands()) {
+                saveCommands(jsonArray, data);
+            }
+            jsonObject.put("commands", jsonArray);
+            save(Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json").toAbsolutePath(), jsonObject);
         }
-        jsonObject.put("commands", jsonArray);
-        save(Paths.get(Defaults.saveDirectory + "/loquibot/mediaShareCommands.json"), jsonObject);
     }
 
     private static void saveCommands(JSONArray jsonArray, CommandData data) {

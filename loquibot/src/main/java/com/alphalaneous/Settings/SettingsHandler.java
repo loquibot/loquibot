@@ -23,8 +23,11 @@ public class SettingsHandler {
 	}
 
 	public static void writeSettings(String key, String setting) {
-		if(key != null && !key.equalsIgnoreCase("null"))
+		if(key != null && !key.equalsIgnoreCase("null")) {
 			settings.put(key, setting.replace("\n", "\\n"));
+			saveSettings();
+		}
+
 	}
 
 	public static SettingData getSettings(String key) {

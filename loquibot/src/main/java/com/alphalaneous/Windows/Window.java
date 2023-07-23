@@ -372,6 +372,10 @@ public class Window {
                     dialogComponent.setBounds(windowFrame.getWidth() / 2 - dialogComponent.getWidth() / 2-8, windowFrame.getHeight() / 2 - dialogComponent.getHeight() / 2 - 20, dialogComponent.getWidth(), dialogComponent.getHeight());
                 }
 
+                SettingsHandler.writeSettings("window", windowFrame.getX() + "," + windowFrame.getY());
+                SettingsHandler.writeSettings("windowState", String.valueOf(windowFrame.getExtendedState()));
+                SettingsHandler.writeSettings("windowSize", windowFrame.getWidth() + "," + windowFrame.getHeight());
+
                 SettingsPage.resizeAll(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC);
                 ListView.resizeAll(new Dimension(windowFrame.getWidth() + changeD, windowFrame.getHeight() + changeC));
                 CommandConfigCheckbox.resizeAll(windowFrame.getWidth() + changeD);
@@ -409,19 +413,13 @@ public class Window {
         }
         catch (Exception e){
             JOptionPane.showMessageDialog(null, "Error opening loquibot: " + e, "Error", JOptionPane.ERROR_MESSAGE);
-            Main.close(true, false);
+            Main.close();
         }
     }
 
     public static void focus() {
         windowFrame.setAlwaysOnTop(true);
         windowFrame.setAlwaysOnTop(SettingsHandler.getSettings("onTop").asBoolean());
-    }
-
-    public static void setSettings() {
-        SettingsHandler.writeSettings("window", windowFrame.getX() + "," + windowFrame.getY());
-        SettingsHandler.writeSettings("windowState", String.valueOf(windowFrame.getExtendedState()));
-        SettingsHandler.writeSettings("windowSize", windowFrame.getWidth() + "," + windowFrame.getHeight());
     }
 
     public static void loadSettings() {

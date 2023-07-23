@@ -2,9 +2,7 @@ package com.alphalaneous;
 
 import com.alphalaneous.ChatBot.KickBot;
 import com.alphalaneous.ChatBot.ServerBot;
-import com.alphalaneous.Interactive.CheerActions.CheerActionData;
 import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
-import com.alphalaneous.KickAPI.KickClient;
 import com.alphalaneous.Memory.Global;
 import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
@@ -12,16 +10,11 @@ import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Images.Assets;
-import com.alphalaneous.Interactive.ChannelPoints.ChannelPointData;
 import com.alphalaneous.Interactive.ChannelPoints.LoadPoints;
-import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
-import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Keywords.LoadKeywords;
 import com.alphalaneous.Interactive.Timers.LoadTimers;
-import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Interactive.Timers.TimerHandler;
-import com.alphalaneous.Interactive.Variables;
 import com.alphalaneous.Running.CheckIfRunning;
 import com.alphalaneous.Running.LoquibotSocket;
 import com.alphalaneous.Services.Kick.KickAccount;
@@ -87,12 +80,6 @@ public class Main {
     private static TwitchChatListener chatReader;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
-    private static ImageIcon icon;
-    private static ImageIcon iconLarge;
-
-    private static Image newIcon16;
-    private static Image newIcon32;
-    private static Image newIcon512;
 
     private static final JFrame starting = new JFrame("loquibot");
     private static ConnectorSocket streamDeckSocket;
@@ -115,11 +102,11 @@ public class Main {
             Assets.load();
             Assets.loadAssets();
 
-            icon = Assets.loquibot;
-            iconLarge = Assets.loquibotLarge;
-            newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-            newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            newIcon512 = iconLarge.getImage().getScaledInstance(512, 512, Image.SCALE_SMOOTH);
+            ImageIcon icon = Assets.loquibot;
+            ImageIcon iconLarge = Assets.loquibotLarge;
+            Image newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            Image newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+            Image newIcon512 = iconLarge.getImage().getScaledInstance(512, 512, Image.SCALE_SMOOTH);
 
             iconImages.add(newIcon16);
             iconImages.add(newIcon32);
@@ -232,17 +219,9 @@ public class Main {
                 if (SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
             }
 
-            try {
-                if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) YouTubeAccount.setCredential(false);
-            }
 
-            catch (Exception f){
-                f.printStackTrace();
-                try {
-                    YouTubeAccount.setCredential(true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+            if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) {
+                YouTubeAccount.setCredential(false);
             }
 
             try {
@@ -361,9 +340,6 @@ public class Main {
                 System.out.println("> Window Visible");
             }
 
-
-
-            Variables.loadVars();
             System.out.println("> Command Variables Loaded");
 
             ServerBot.connect();
@@ -424,7 +400,6 @@ public class Main {
             }
             programLoaded = true;
 
-            startSaveLoop();
             System.out.println("> Save loop Started");
 
             /*if(!SettingsHandler.getSettings("dontShowDonate").asBoolean()) {
@@ -493,8 +468,8 @@ public class Main {
 
         } catch (Exception e) {
             e.printStackTrace();
-            DialogBox.showDialogBox("Error!", e + ": " + e.getStackTrace()[0], "Please report to Alphalaneous#9687 on Discord.", new String[]{"Close"});
-            close(true, false);
+            DialogBox.showDialogBox("Error!", e + ": " + e.getStackTrace()[0], "Please report to @Alphalaneous on Discord.", new String[]{"Close"});
+            close();
         }
     }
 
@@ -695,49 +670,14 @@ public class Main {
 
     }
 
-    public static void save(){
-        try {
-            Window.setSettings();
-            Variables.saveVars();
-            SettingsHandler.saveSettings();
-            Themes.saveTheme();
-            CommandData.saveCustomCommands();
-            CommandData.saveDefaultCommands();
-            CommandData.saveGeometryDashCommands();
-            //CommandData.saveMediaShareCommands();
-            TimerData.saveCustomTimers();
-            KeywordData.saveCustomKeywords();
-            CheerActionData.saveCustomCheerActions();
-            ChannelPointData.saveCustomPoints();
-            LoggedID.saveLoggedIDs();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+    public static void close() {
 
-    public static void startSaveLoop(){
-        new Thread(() -> {
-            while(true){
-                save();
-                Utilities.sleep(10000);
-            }
-        }).start();
-    }
-
-    public static void close(boolean forceLoaded, boolean load) {
-        boolean loaded = Main.programLoaded;
-
-        if (forceLoaded) {
-            loaded = load;
-        }
-        Main.save();
         ServerBot.disconnect();
         ServerBot.reconnect = false;
 
         if(!SettingsHandler.getSettings("runAtStartup").asBoolean()) {
             com.alphalaneous.Utils.Utilities.disposeTray();
-            if (!SettingsHandler.getSettings("onboarding").asBoolean() && loaded) {
+            if (!SettingsHandler.getSettings("onboarding").asBoolean()) {
                 forceClose();
             }
             System.exit(0);
@@ -748,10 +688,9 @@ public class Main {
     }
 
     public static void forceClose(){
-        Main.save();
+
         com.alphalaneous.Utils.Utilities.disposeTray();
         Window.setVisible(false);
-        Window.setSettings();
         try {
             if(TwitchListener.getCurrentTwitchListener() != null) {
                 TwitchListener.getCurrentTwitchListener().disconnectBot();
@@ -811,9 +750,5 @@ public class Main {
 
     public static JFrame getStartingFrame(){
         return starting;
-    }
-
-    public static void close() {
-        close(false, false);
     }
 }

@@ -38,7 +38,7 @@ public class SettingsTab {
 
 	private static final JPanel reportedIDsPage = ReportedIDs.createPanel();
 
-	private static final JPanel legalPage = Legal.createPanel();
+	//private static final JPanel legalPage = Legal.createPanel();
 	private static final JPanel privacyPage = Privacy.createPanel();
 	private static final JPanel warrantyPage = Warranty.createPanel();
 	private static final JPanel termsPage = Terms.createPanel();
@@ -118,10 +118,10 @@ public class SettingsTab {
 		ReportedIDs.loadIDs();
 		return null;
 	});
-	private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
-		legalPage.setVisible(true);
-		return null;
-	});
+	//private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
+	//	legalPage.setVisible(true);
+	//	return null;
+	//});
 	private static final SettingsButton privacy = createButton("$PRIVACY_SETTINGS$", null, () -> {
 		privacyPage.setVisible(true);
 		return null;
@@ -202,7 +202,7 @@ public class SettingsTab {
 		content.add(devPage);
 		content.add(reportedIDsPage);
 		content.add(languagePage);
-		content.add(legalPage);
+		//content.add(legalPage);
 		content.add(privacyPage);
 		content.add(warrantyPage);
 		content.add(termsPage);
@@ -222,7 +222,7 @@ public class SettingsTab {
 		loggedIDsPage.setVisible(false);
 		devPage.setVisible(false);
 		reportedIDsPage.setVisible(false);
-		legalPage.setVisible(false);
+		//legalPage.setVisible(false);
 		languagePage.setVisible(false);
 		privacyPage.setVisible(false);
 		warrantyPage.setVisible(false);
@@ -263,7 +263,7 @@ public class SettingsTab {
 		//buttons.add(mediaShareKeybinds, gbc);
 		buttons.add(createSeparator(), gbc);
 		buttons.add(noticesSection, gbc);
-		buttons.add(legal, gbc);
+		//buttons.add(legal, gbc);
 		buttons.add(privacy, gbc);
 		buttons.add(warranty, gbc);
 		buttons.add(terms, gbc);

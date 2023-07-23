@@ -137,7 +137,7 @@ public class Onboarding {
 					nextButton.setForeground(Defaults.FOREGROUND_A);
 					new Thread(() -> {
 						try {
-							YouTubeAccount.setCredential(true);
+							YouTubeAccount.setCredential(false);
 						}
 						catch (Exception f){
 							f.printStackTrace();

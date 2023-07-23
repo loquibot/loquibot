@@ -542,7 +542,7 @@ public class CommandHandler {
                     count = commandData.getCounter();
                     for (CommandData data1 : CommandData.getRegisteredCommands()) {
                         if (data1.getCommand().equalsIgnoreCase(commandData.getCommand())) {
-                            data1.setCounter(count + addedNumber);
+                            data1.setCounter(count + addedNumber, true);
                         }
                     }
                 }
@@ -550,7 +550,7 @@ public class CommandHandler {
                     count = keywordData.getCounter();
                     for (KeywordData data1 : KeywordData.getRegisteredKeywords()) {
                         if (data1.getKeyword().equalsIgnoreCase(keywordData.getKeyword())) {
-                            data1.setCounter(count + addedNumber);
+                            data1.setCounter(count + addedNumber, true);
                         }
                     }
                 }

@@ -201,6 +201,7 @@ public class TimerConfigCheckbox extends JPanel {
                         data1.setRunCommand(runCommandInput.getText());
                         data1.registerTimer();
                         LoadTimers.reloadCustomTimers();
+                        TimerData.saveCustomTimers();
                         DialogBox.closeDialogBox();
                     }
                 }
@@ -213,6 +214,7 @@ public class TimerConfigCheckbox extends JPanel {
                             existingData.setRunCommand(runCommandInput.getText());
                             existingData.setInterval(intervalSlider.getValue());
                             LoadTimers.reloadCustomTimers();
+                            TimerData.saveCustomTimers();
                             break;
                         }
                     }

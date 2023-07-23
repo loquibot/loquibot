@@ -54,9 +54,9 @@ public class LoadCommands {
         for(CommandData data : original){
             for(CommandData combineData : toCombine){
                 if(data.getCommand().equalsIgnoreCase(combineData.getCommand())){
-                    data.setEnabled(combineData.isEnabled());
-                    data.setCooldown(combineData.getCooldown());
-                    data.setUserLevel(combineData.getUserLevel());
+                    data.setEnabled(combineData.isEnabled(), false);
+                    data.setCooldown(combineData.getCooldown(), false);
+                    data.setUserLevel(combineData.getUserLevel(), false);
                 }
             }
         }
@@ -83,6 +83,7 @@ public class LoadCommands {
         customCommands.clear();
         for(CommandData data : CommandData.getRegisteredCommands()){
             if(!data.isDefault()){
+                System.out.println(data.getCommand());
                 customCommands.add(data);
             }
         }
@@ -97,7 +98,7 @@ public class LoadCommands {
             ArrayList<CommandData> defaultCommandSettings = loadJsonToCommandDataArrayList(Files.readString(defaultCommandPath, StandardCharsets.UTF_8));
             combineData(defaultCommands, defaultCommandSettings);
 
-            for(CommandData data : defaultCommands) data.registerCommand();
+            for(CommandData data : defaultCommands) data.registerCommand(false);
 
             geometryDashCommands = loadJsonToCommandDataArrayList(readIntoString(geometryCommandsReader), true, true, false);
             Path geometryDashCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/geometryDashCommands.json");
@@ -105,7 +106,7 @@ public class LoadCommands {
             ArrayList<CommandData> geometryDashCommandSettings = loadJsonToCommandDataArrayList(Files.readString(geometryDashCommandPath, StandardCharsets.UTF_8));
             combineData(geometryDashCommands, geometryDashCommandSettings);
 
-            for(CommandData data : geometryDashCommands) data.registerCommand();
+            for(CommandData data : geometryDashCommands) data.registerCommand(false);
 
             mediaShareCommands = loadJsonToCommandDataArrayList(readIntoString(mediaShareCommandsReader), true, false, true);
             Path mediaShareCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/mediaShareCommands.json");
@@ -113,13 +114,13 @@ public class LoadCommands {
             ArrayList<CommandData> mediaShareCommandSettings = loadJsonToCommandDataArrayList(Files.readString(mediaShareCommandPath, StandardCharsets.UTF_8));
             combineData(mediaShareCommands, mediaShareCommandSettings);
 
-            for(CommandData data : mediaShareCommands) data.registerCommand();
+            for(CommandData data : mediaShareCommands) data.registerCommand(false);
 
             Path customCommandPath = Paths.get(Defaults.saveDirectory + "/loquibot/customCommands.json");
             createPathIfDoesntExist(customCommandPath);
             customCommands = loadJsonToCommandDataArrayList(Files.readString(customCommandPath, StandardCharsets.UTF_8));
 
-            for(CommandData data : customCommands) data.registerCommand();
+            for(CommandData data : customCommands) data.registerCommand(false);
 
         }
         catch (Exception e){
@@ -149,27 +150,27 @@ public class LoadCommands {
             try {
                 JSONObject commandDataJson = commandsArray.getJSONObject(i);
                 CommandData commandData = new CommandData(commandDataJson.getString("name"));
-                commandData.setCounter(commandDataJson.optLong("counter"));
-                commandData.setDefault(isDefault);
-                commandData.setGD(isGD);
-                commandData.setMediaShare(isMediaShare);
-                commandData.setHasDescription(!commandDataJson.optString("description").equalsIgnoreCase(""));
+                commandData.setCounter(commandDataJson.optLong("counter"), false);
+                commandData.setDefault(isDefault, false);
+                commandData.setGD(isGD, false);
+                commandData.setMediaShare(isMediaShare, false);
+                commandData.setHasDescription(!commandDataJson.optString("description").equalsIgnoreCase(""), false);
                 if(!commandDataJson.optString("description").equalsIgnoreCase(""))
-                    commandData.setDescription(commandDataJson.optString("description"));
-                else commandData.setDescription(commandDataJson.optString("message"));
-                commandData.setEnabled(commandDataJson.optBoolean("enabled", true));
-                commandData.setMethod(commandDataJson.optBoolean("runMethod"));
+                    commandData.setDescription(commandDataJson.optString("description"), false);
+                else commandData.setDescription(commandDataJson.optString("message"), false);
+                commandData.setEnabled(commandDataJson.optBoolean("enabled", true), false);
+                commandData.setMethod(commandDataJson.optBoolean("runMethod"), false);
 
-                commandData.setMessage(commandDataJson.optString("message"));
-                commandData.setCooldown(commandDataJson.optInt("cooldown"));
+                commandData.setMessage(commandDataJson.optString("message"), false);
+                commandData.setCooldown(commandDataJson.optInt("cooldown"), false);
                 String level = commandDataJson.optString("level");
                 if(level.equalsIgnoreCase("")){
                     level = "everyone";
                 }
-                commandData.setUserLevel(level);
+                commandData.setUserLevel(level, false);
                 JSONArray array = commandDataJson.optJSONArray("aliases");
                 if(array != null){
-                    commandData.setAliases(array.toList());
+                    commandData.setAliases(array.toList(), false);
                 }
                 commandDataArrayList.add(commandData);
             }

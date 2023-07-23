@@ -372,6 +372,8 @@ public class DefaultCommandFunctions {
         }
         if(message.getArgs().length >= 3) {
             CommandData newCommand = new CommandData(message.getArgs()[1]);
+            newCommand.registerCommand(false);
+
             int size = 0;
             for(int i = 0; i < endOfArgsPos; i++){
                 size+= message.getArgs()[i].length()+1;
@@ -382,21 +384,20 @@ public class DefaultCommandFunctions {
                 return Utilities.format("$ADD_COMMAND_NO_MESSAGE_MESSAGE$");
             }
             else{
-                newCommand.setMessage(text);
-                newCommand.setDescription(text);
+                newCommand.setMessage(text, true);
+                newCommand.setDescription(text, true);
             }
             if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$");
-            if(!userLevel.equalsIgnoreCase("")) newCommand.setUserLevel(userLevel);
+            if(!userLevel.equalsIgnoreCase("")) newCommand.setUserLevel(userLevel, true);
 
-            if(aliases != null) newCommand.setAliases(List.of(aliases));
-            newCommand.setCooldown(cooldown);
+            if(aliases != null) newCommand.setAliases(List.of(aliases), true);
+            newCommand.setCooldown(cooldown, true);
 
             if(CommandConfigCheckbox.checkIfNameExists(newCommand.getCommand(), "") || newCommand.getCommand().equalsIgnoreCase("")
                     || newCommand.getCommand().trim().contains(" ") || newCommand.getCommand().trim().contains("\n")){
                 return Utilities.format("$ADD_COMMAND_ALREADY_EXISTS_MESSAGE$", newCommand.getCommand());
             }
 
-            newCommand.registerCommand();
 
             LoadCommands.reloadCustomCommands();
             return Utilities.format("$ADD_COMMAND_SUCCESS_MESSAGE$", newCommand.getCommand());
@@ -474,14 +475,14 @@ public class DefaultCommandFunctions {
                     String text = "";
                     if(message.getMessage().length() > size-1) text = message.getMessage().substring(size-1).trim();
                     if(!text.equalsIgnoreCase("")) {
-                        data.setMessage(text);
-                        data.setDescription(text);
+                        data.setMessage(text, true);
+                        data.setDescription(text, true);
                     }
                     if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$");
-                    if(!userLevel.equalsIgnoreCase("")) data.setUserLevel(userLevel);
+                    if(!userLevel.equalsIgnoreCase("")) data.setUserLevel(userLevel, true);
 
-                    if(cooldown != 0) data.setCooldown(cooldown);
-                    if(aliases != null) data.setAliases(List.of(aliases));
+                    if(cooldown != 0) data.setCooldown(cooldown, true);
+                    if(aliases != null) data.setAliases(List.of(aliases), true);
 
                     LoadCommands.reloadCustomCommands();
                     return Utilities.format("$EDIT_COMMAND_SUCCESS_MESSAGE$", data.getCommand());

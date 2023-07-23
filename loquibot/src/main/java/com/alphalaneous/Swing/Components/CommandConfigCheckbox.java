@@ -51,7 +51,7 @@ public class CommandConfigCheckbox extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 for(CommandData data : CommandData.getRegisteredCommands()){
                     if(data.getCommand().equalsIgnoreCase(commandData.getCommand())){
-                        data.setEnabled(themedCheckbox.getSelectedState());
+                        data.setEnabled(themedCheckbox.getSelectedState(), true);
                     }
                 }
             }
@@ -234,16 +234,20 @@ public class CommandConfigCheckbox extends JPanel {
                     }
                     else {
                         CommandData data1 = new CommandData(commandNameInput.getText().trim());
-                        data1.setMessage(messageInput.getText().trim());
+                        data1.setMessage(messageInput.getText().trim(), false);
                         ArrayList<Object> aliasesToSave = new ArrayList<>();
                         String[] aliasSplit = aliasInput.getText().split(",");
                         for (String alias : aliasSplit) aliasesToSave.add(alias.trim());
-                        data1.setAliases(aliasesToSave);
-                        data1.setDescription(messageInput.getText().trim());
-                        data1.setUserLevel(CommandConfigCheckbox.userLevel);
-                        data1.setCooldown(slider.getValue());
-                        data1.registerCommand();
+                        data1.setAliases(aliasesToSave, false);
+                        data1.setDescription(messageInput.getText().trim(), false);
+                        data1.setUserLevel(CommandConfigCheckbox.userLevel, false);
+                        data1.setCooldown(slider.getValue(), false);
+                        data1.registerCommand(false);
+
                         LoadCommands.reloadCustomCommands();
+
+                        CommandData.saveAll();
+
                         CustomCommands.loadCommands();
                         DialogBox.closeDialogBox();
                     }
@@ -253,16 +257,17 @@ public class CommandConfigCheckbox extends JPanel {
                         if (existingData.getCommand().equalsIgnoreCase(finalCommandName)) {
 
                             if (!finalIsDefault) {
-                                existingData.setCommand(commandNameInput.getText().trim());
-                                existingData.setMessage(messageInput.getText().trim());
+                                existingData.setCommand(commandNameInput.getText().trim(), false);
+                                existingData.setMessage(messageInput.getText().trim(), false);
                                 ArrayList<Object> aliasesToSave = new ArrayList<>();
                                 String[] aliasSplit = aliasInput.getText().split(",");
                                 for (String alias : aliasSplit) aliasesToSave.add(alias.trim());
-                                existingData.setAliases(aliasesToSave);
-                                existingData.setDescription(messageInput.getText().trim());
+                                existingData.setAliases(aliasesToSave, false);
+                                existingData.setDescription(messageInput.getText().trim(), false);
                             }
-                            existingData.setUserLevel(CommandConfigCheckbox.userLevel);
-                            existingData.setCooldown(slider.getValue());
+                            existingData.setUserLevel(CommandConfigCheckbox.userLevel, false);
+                            existingData.setCooldown(slider.getValue(), false);
+                            CommandData.saveAll();
 
                             CustomCommands.loadCommands();
                             DefaultCommands.loadCommands();

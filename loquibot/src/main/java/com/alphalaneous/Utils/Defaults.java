@@ -86,11 +86,18 @@ public class Defaults {
 			File file = FileUtils.getUserDirectory();
 			if(Files.exists(Paths.get(file.toString() + "\\.loquibot\\.save"))){
 				saveDirectory = file.toString() + "\\.loquibot";
+
+				if(!Files.isDirectory(Paths.get(saveDirectory))) {
+					try {
+						Files.createDirectory(Paths.get(saveDirectory));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			else {
 				saveDirectory = System.getenv("APPDATA");
 			}
-
 		} else {
 			saveDirectory = System.getProperty("user.home") + "/Library/Application Support";
 		}

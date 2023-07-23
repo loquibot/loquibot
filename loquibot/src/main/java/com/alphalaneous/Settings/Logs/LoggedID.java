@@ -27,11 +27,15 @@ public class LoggedID {
                 break;
             }
         }
-        if(!exists) loggedIDS.add(this);
+        if(!exists) {
+            loggedIDS.add(this);
+            saveLoggedIDs();
+        }
     }
 
     public void removeID(){
         loggedIDS.remove(this);
+        saveLoggedIDs();
     }
 
     public static ArrayList<LoggedID> getLoggedIDS() {
@@ -44,6 +48,7 @@ public class LoggedID {
 
     public void setVersion(int version) {
         this.version = version;
+        saveLoggedIDs();
     }
 
     public int getID() {
@@ -52,14 +57,17 @@ public class LoggedID {
 
     public void setID(int ID) {
         this.ID = ID;
+        saveLoggedIDs();
     }
 
     public static void removeID(int ID){
         loggedIDS.removeIf(id -> id.getID() == ID);
+        saveLoggedIDs();
     }
 
     public static void removeAll(){
         loggedIDS.clear();
+        saveLoggedIDs();
     }
 
     public static void loadLoggedIDs(){

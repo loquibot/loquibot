@@ -103,6 +103,7 @@ public class Themes {
 
 	public static void writeTheme(String key, String setting) {
 		themeSettings.put(key, setting.replace("\n", "\\n"));
+		saveTheme();
 	}
 
 	public static void saveTheme() {

@@ -51,7 +51,7 @@ public class LoadKeywords {
             createPathIfDoesntExist(customCommandPath);
             customKeywords = loadJsonToKeywordDataArrayList(Files.readString(customCommandPath, StandardCharsets.UTF_8));
 
-            for(KeywordData data : customKeywords) data.registerKeyword();
+            for(KeywordData data : customKeywords) data.registerKeyword(false);
 
         }
         catch (Exception e){
@@ -74,14 +74,14 @@ public class LoadKeywords {
             try {
                 JSONObject commandDataJson = keywordArray.getJSONObject(i);
                 KeywordData keywordData = new KeywordData(commandDataJson.getString("name"));
-                keywordData.setCounter(commandDataJson.optLong("counter"));
-                keywordData.setEnabled(commandDataJson.optBoolean("enabled", true));
+                keywordData.setCounter(commandDataJson.optLong("counter"), false);
+                keywordData.setEnabled(commandDataJson.optBoolean("enabled", true), false);
 
-                keywordData.setMessage(commandDataJson.optString("message"));
-                keywordData.setCooldown(commandDataJson.optInt("cooldown"));
+                keywordData.setMessage(commandDataJson.optString("message"), false);
+                keywordData.setCooldown(commandDataJson.optInt("cooldown"), false);
                 String level = commandDataJson.optString("level");
                 if(level.equalsIgnoreCase("")) level = "everyone";
-                keywordData.setUserLevel(level);
+                keywordData.setUserLevel(level, false);
 
                 commandDataArrayList.add(keywordData);
             }

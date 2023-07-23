@@ -37,7 +37,7 @@ public class KeywordConfigCheckbox extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 for(KeywordData data : KeywordData.getRegisteredKeywords()){
                     if(data.getKeyword().equalsIgnoreCase(keywordData.getKeyword())){
-                        data.setEnabled(themedCheckbox.getSelectedState());
+                        data.setEnabled(themedCheckbox.getSelectedState(), true);
                     }
                 }
             }
@@ -197,11 +197,12 @@ public class KeywordConfigCheckbox extends JPanel {
                     }
                     else {
                         KeywordData data1 = new KeywordData(keywordInput.getText().trim());
-                        data1.setMessage(messageInput.getText().trim());
-                        data1.setUserLevel(KeywordConfigCheckbox.userLevel);
-                        data1.setCooldown(slider.getValue());
-                        data1.registerKeyword();
+                        data1.registerKeyword(false);
+                        data1.setMessage(messageInput.getText().trim(), false);
+                        data1.setUserLevel(KeywordConfigCheckbox.userLevel, false);
+                        data1.setCooldown(slider.getValue(), false);
                         LoadKeywords.reloadCustomKeywords();
+                        KeywordData.saveCustomKeywords();
                         CustomKeywords.loadKeywords();
                         DialogBox.closeDialogBox();
                     }
@@ -209,11 +210,13 @@ public class KeywordConfigCheckbox extends JPanel {
                 else {
                     for (KeywordData existingData : KeywordData.getRegisteredKeywords()) {
                         if (existingData.getKeyword().equalsIgnoreCase(finalCommandName)) {
-                            existingData.setKeyword(keywordInput.getText().trim());
-                            existingData.setMessage(messageInput.getText().trim());
-                            existingData.setUserLevel(KeywordConfigCheckbox.userLevel);
-                            existingData.setCooldown(slider.getValue());
+                            existingData.setKeyword(keywordInput.getText().trim(), false);
+                            existingData.setMessage(messageInput.getText().trim(), false);
+                            existingData.setUserLevel(KeywordConfigCheckbox.userLevel, false);
+                            existingData.setCooldown(slider.getValue(), false);
                             LoadKeywords.reloadCustomKeywords();
+                            KeywordData.saveCustomKeywords();
+
                             CustomKeywords.loadKeywords();
                             break;
                         }
