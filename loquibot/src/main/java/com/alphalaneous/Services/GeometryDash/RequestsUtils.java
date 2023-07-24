@@ -46,7 +46,7 @@ public class RequestsUtils {
 		return getInfoObject(data, false);
 
 	}
-		public static JSONObject getInfoObject(LevelData data, boolean forGD){
+	public static JSONObject getInfoObject(LevelData data, boolean forGD){
 		JSONObject object = new JSONObject();
 		if(forGD){
 			object.put("service", "gd");
@@ -72,17 +72,15 @@ public class RequestsUtils {
 				object.put("requester", data.getDisplayName());
 			}
 
-			int songID = 0;
-
-			if(data.getGDLevel().getLevel().songId().isPresent()){
-				songID = data.getGDLevel().getLevel().songId().get().intValue();
-			}
+			long songID = 0;
 			boolean isCustomSong = false;
+
 			if(data.getGDLevel().getLevel().song().isPresent()){
 				isCustomSong = data.getGDLevel().getLevel().song().get().isCustom();
+				songID = data.getGDLevel().getLevel().song().get().id();
 			}
-			object.put("isCustomSong", isCustomSong);
 
+			object.put("isCustomSong", isCustomSong);
 			object.put("isViewer", data.getViewership());
 			object.put("songID", songID);
 			object.put("stars", data.getGDLevel().getLevel().stars());
@@ -127,21 +125,7 @@ public class RequestsUtils {
 			object.put("likes", data.getGDLevel().getLevel().likes());
 			object.put("downloads", data.getGDLevel().getLevel().downloads());
 			object.put("length", data.getGDLevel().getLevel().length());
-
-			if(!creator.equalsIgnoreCase("-")) {
-				try {
-					GDUserStats gdUserStats = GDAPI.getGDUserStats(creator);
-					object.put("accountID", gdUserStats.accountId());
-
-				} catch (Exception e) {
-					System.out.println("Failed Account ID");
-				}
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ignored) {
-				}
-
-			}
+			object.put("accountID", data.getGDLevel().getAccountID());
 
 		}
 		else {
@@ -174,6 +158,7 @@ public class RequestsUtils {
 			object.put("likes", data.getGDLevel().getLevel().likes());
 			object.put("downloads", data.getGDLevel().getLevel().downloads());
 			object.put("length", data.getGDLevel().getLevel().length());
+			object.put("accountID", data.getGDLevel().getAccountID());
 		}
 		else {
 			object.put("type", "nextlevel");
