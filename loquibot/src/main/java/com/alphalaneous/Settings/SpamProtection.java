@@ -1,9 +1,6 @@
 package com.alphalaneous.Settings;
 
-import com.alphalaneous.Swing.Components.CurvedButton;
-import com.alphalaneous.Swing.Components.FancyTextArea;
-import com.alphalaneous.Swing.Components.LangLabel;
-import com.alphalaneous.Swing.Components.SettingsPage;
+import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
@@ -23,8 +20,6 @@ public class SpamProtection {
         createBasicConfigCheckbox("$EMOTE_SPAM$", "$EMOTE_SPAM_DESC$", "emoteFilterEnabled", "$EMOTES$", "emote");
 
         settingsPage.addConfigCheckbox("$LINK_SPAM$", "$LINK_SPAM_DESC$", "linkFilterEnabled", SpamProtection::openLinkFilterSettings);
-        settingsPage.addConfigCheckbox("$GIBBERISH_SPAM$", "$GIBBERISH_SPAM_DESC$", "gibberishFilterEnabled", SpamProtection::openGibberishFilterSettings);
-        settingsPage.addCheckbox("$BIG_FOLLOWS_SPAM$", "", "autoDeleteBigFollows");
         settingsPage.addCheckbox("$AUTO_DELETE_GD_LEVEL_IDS$", "", "autoDeleteGDLevelIDs");
 
         return settingsPage;
