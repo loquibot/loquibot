@@ -125,6 +125,9 @@ public class KeyListener extends SwingKeyAdapter {
 				if(ctrlPressed && key == 123){
 					LogWindow.toggleLogWindow();
 				}
+				if(ctrlPressed && key == 82){
+					Main.restart();
+				}
 			}
 			keyReleased = false;
 		}
