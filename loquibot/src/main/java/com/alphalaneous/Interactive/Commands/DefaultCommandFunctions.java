@@ -372,7 +372,6 @@ public class DefaultCommandFunctions {
         }
         if(message.getArgs().length >= 3) {
             CommandData newCommand = new CommandData(message.getArgs()[1]);
-            newCommand.registerCommand(false);
 
             int size = 0;
             for(int i = 0; i < endOfArgsPos; i++){
@@ -384,20 +383,26 @@ public class DefaultCommandFunctions {
                 return Utilities.format("$ADD_COMMAND_NO_MESSAGE_MESSAGE$");
             }
             else{
-                newCommand.setMessage(text, true);
-                newCommand.setDescription(text, true);
+                newCommand.setMessage(text, false);
+                newCommand.setDescription(text, false);
             }
             if(userLevel == null) return Utilities.format("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$");
-            if(!userLevel.equalsIgnoreCase("")) newCommand.setUserLevel(userLevel, true);
+            if(!userLevel.equalsIgnoreCase("")) newCommand.setUserLevel(userLevel, false);
 
-            if(aliases != null) newCommand.setAliases(List.of(aliases), true);
+            if(aliases != null) newCommand.setAliases(List.of(aliases), false);
             newCommand.setCooldown(cooldown, true);
 
-            if(CommandConfigCheckbox.checkIfNameExists(newCommand.getCommand(), "") || newCommand.getCommand().equalsIgnoreCase("")
+            if(newCommand.getCommand().equalsIgnoreCase("")
                     || newCommand.getCommand().trim().contains(" ") || newCommand.getCommand().trim().contains("\n")){
-                return Utilities.format("$ADD_COMMAND_ALREADY_EXISTS_MESSAGE$", newCommand.getCommand());
+                return Utilities.format("$ADD_COMMAND_INVALID_MESSAGE$", newCommand.getCommand());
             }
 
+            if(CommandConfigCheckbox.checkIfNameExists(newCommand.getCommand(), "")){
+                return Utilities.format("$ADD_COMMAND_ALREADY_EXISTS_MESSAGE$", newCommand.getCommand());
+            }
+            newCommand.registerCommand(false);
+
+            CommandData.saveAll();
 
             LoadCommands.reloadCustomCommands();
             return Utilities.format("$ADD_COMMAND_SUCCESS_MESSAGE$", newCommand.getCommand());

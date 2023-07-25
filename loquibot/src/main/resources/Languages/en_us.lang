@@ -173,6 +173,7 @@ STREAM_GAME_COMMAND_MESSAGE =  The current game is %s
 STREAM_GAME_CHANGE_MESSAGE =  Successfully updated the game to %s
 GAME_NOT_FOUND_MESSAGE =  Could not find game: %s
 ADD_COMMAND_NO_ARGS_MESSAGE =  Please specify a command name and message.
+ADD_COMMAND_INVALID_MESSAGE =  Failed to add command, invalid command name.
 ADD_COMMAND_INVALID_COOLDOWN_MESSAGE =  Failed to add command, invalid cooldown parameter.
 ADD_COMMAND_INVALID_ARGS_MESSAGE =  Failed to add command, invalid parameters.
 ADD_COMMAND_INVALID_USERLEVEL_MESSAGE =  Failed to add command, invalid userlevel.
