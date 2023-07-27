@@ -39,7 +39,7 @@ public class Modifications {
             setSafeMode();
             Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
                 });
-        settingsPage.addComponent(createKeybindComponent(new KeybindButton("$SAFE_NOCLIP_SHORTCUT$", "safeNoclipKeybind")));
+        //settingsPage.addComponent(createKeybindComponent(new KeybindButton("$SAFE_NOCLIP_SHORTCUT$", "safeNoclipKeybind")));
         settingsPage.addButton("Install loquibot GD Mod", Modifications::installLoquiMod);
 
         return settingsPage;
