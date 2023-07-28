@@ -41,6 +41,10 @@ public class KeyListener extends SwingKeyAdapter {
 			ctrlPressed = true;
 		}
 
+		if(e.getKeyCode() == 0) return;
+
+		System.out.println(e.getKeyCode());
+
 		if (keyReleased || ctrlPressed) {
 
 			int key = e.getKeyCode();
@@ -91,14 +95,14 @@ public class KeyListener extends SwingKeyAdapter {
 					RequestFunctions.clearFunction();
 				}
 				if(!Defaults.isMac()) {
-					/*if (key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()) {
+					if (key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()) {
 						boolean isNoclip = SettingsHandler.getSettings("safeNoclipHack").asBoolean();
 
 						SettingsHandler.writeSettings("safeNoclipHack", String.valueOf(!isNoclip));
 						SettingsPage.CheckBox.resetCheckbox("safeNoclipHack");
 						Modifications.setSafeMode();
 						Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
-					}*/
+					}
 				}
 			}
 			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {
