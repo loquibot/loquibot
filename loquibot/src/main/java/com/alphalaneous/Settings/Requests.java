@@ -2,6 +2,7 @@ package com.alphalaneous.Settings;
 
 import com.alphalaneous.Tabs.ChatbotPages.DefaultCommands;
 import com.alphalaneous.Swing.Components.SettingsPage;
+import com.alphalaneous.Windows.DialogBox;
 
 import javax.swing.*;
 
@@ -31,6 +32,20 @@ public class Requests {
         settingsPage.addCheckbox("$ALLOW_UPDATED_REPEATED$", "$ALLOW_UPDATED_REPEATED_DESC$", "updatedRepeated");
         settingsPage.addCheckedInput("$MAX_QUEUE_SIZE$", "", 1, true, false, false, "queueLimitEnabled", "queueLimit");
         settingsPage.addCheckedInput("$MAX_LEVELS_SIZE$", "$MAX_LEVELS_SIZE_DESC$", 1, true, false, false, "levelLimitEnabled", "levelLimit");
+        settingsPage.addCheckedInput("$SEQUENTIAL_LEVELS_SIZE$", "$SEQUENTIAL_LEVELS_SIZE_DESC$", 1, true, false, false, "sequentialLevelLimitEnabled", "sequentialLevelLimit");
+        settingsPage.addCheckedInput("$REQUEST_COOLDOWN$", "$REQUEST_COOLDOWN_DESC$", 1, true, false, false, "requestCooldownEnabled", "requestCooldown");
+        settingsPage.addButton("$REQUEST_COOLDOWN_RESET$", () -> {
+            new Thread(() -> {
+                String response = DialogBox.showDialogBox("$REQUEST_COOLDOWN_RESET_TITLE$", "$REQUEST_COOLDOWN_RESET_DESC$", "", new String[]{"Reset", "Cancel"});
+
+                if(response.equalsIgnoreCase("Reset")){
+                    com.alphalaneous.Services.GeometryDash.Requests.RequestCooldown.resetCooldowns();
+                }
+
+
+            }).start();
+        });
+
         settingsPage.addCheckedInput("$REQUEST_LIMIT_QUEUE$", "$REQUEST_LIMIT_QUEUE_DESC$", 1, true, false, false, "userLimitEnabled", "userLimit");
         settingsPage.addCheckedInput("$STREAM_REQUEST_LIMIT$", "$STREAM_REQUEST_LIMIT_DESC$",1, true, false, false, "userLimitStreamEnabled", "userLimitStream");
         settingsPage.addInput("$QUEUE_COMMAND_LABEL$", "", 1, true, false, false, "queueLevelLength", "10", true, false);

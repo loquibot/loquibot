@@ -43,35 +43,10 @@ public class KeyListener extends SwingKeyAdapter {
 
 		if(e.getKeyCode() == 0) return;
 
-		System.out.println(e.getKeyCode());
-
 		if (keyReleased || ctrlPressed) {
 
 			int key = e.getKeyCode();
 
-			/*if (key == 187) {
-				key = 61;
-			} else if (key == 189) {
-				key = 45;
-			} else if (key == 190) {
-				key = 46;
-			} else if (key == 188) {
-				key = 44;
-			} else if (key == 186) {
-				key = 59;
-			} else if (key == 220) {
-				key = 92;
-			} else if (key == 221) {
-				key = 93;
-			} else if (key == 219) {
-				key = 91;
-			} else if (key == 191) {
-				key = 47;
-			} else if (key == 46) {
-				key = 127;
-			} else if (key == 45) {
-				key = 155;
-			}*/
 			if (!KeybindButton.getInFocus()) {
 				if (key == SettingsHandler.getSettings("openKeybind").asInteger()) {
 					Window.focus();

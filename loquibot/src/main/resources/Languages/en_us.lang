@@ -162,6 +162,9 @@ IMAGE_HACK = (Image Hack)
 REQUESTS_OFF_TOGGLE_MESSAGE = Requests are now off!
 REQUESTS_ON_TOGGLE_MESSAGE = Requests are now on!
 GLOBALLY_BLOCKED_LEVEL_MESSAGE =  That level is globally blocked! Reason: %s
+SEQUENTIAL_LIMIT_MESSAGE = You have sent too many levels in a row! (%s levels)
+REQUEST_COOLDOWN_MESSAGE = You are on a request cooldown! (%s remaining)
+
 
 #Command Responses
 
@@ -264,7 +267,15 @@ CHAOS_MODE = Chaos Mode
 CHAOS_CHAOS_MODE = Chaos Chaos Mode
 MAX_QUEUE_SIZE = Maximum Queue Size:
 MAX_LEVELS_SIZE = Maximum Level Count:
+SEQUENTIAL_LEVELS_SIZE = Sequential Level Limit:
+SEQUENTIAL_LEVELS_SIZE_DESC = How many levels someone can send in a row.
+REQUEST_COOLDOWN = Request Cooldown (seconds)
+REQUEST_COOLDOWN_DESC = How long a user must wait before requesting another level.
 MAX_LEVELS_SIZE_DESC = How many levels that can be added in the queue during the session.
+REQUEST_COOLDOWN_RESET = Reset Cooldowns
+REQUEST_COOLDOWN_RESET_TITLE = Reset Cooldowns?
+REQUEST_COOLDOWN_RESET_DESC = This will reset the cooldown timer on all requests.
+
 
 REQUEST_LIMIT_QUEUE = In Queue Request Limit:
 STREAM_REQUEST_LIMIT = All Session Request Limit:
@@ -520,14 +531,6 @@ LINK_SPAM = Link Filter
 GIBBERISH_SPAM = Gibberish Filter
 BIG_FOLLOWS_SPAM = Auto Delete Follow Buying Spam Messages
 AUTO_DELETE_GD_LEVEL_IDS = Auto Delete GD Level IDs
-
-#Basic Mode
-
-NEXT_MESSAGE_BASIC =  The next level is %s.
-NOW_PLAYING_TOP_MESSAGE_BASIC =  %s is now being played!
-CONFIRMATION_MESSAGE_BASIC =  %s has been added to the queue at position %s!
-CONFIRMATION_MESSAGE_BASIC_ALT =  %s has been added to the queue!
-NOW_PLAYING_MESSAGE_BASIC = Now playing %s, requested by %s!
 
 #Antispam
 

@@ -38,6 +38,48 @@ import java.util.regex.Pattern;
 
 public class Requests {
 
+    public static class RequestCooldown{
+
+        public static ArrayList<RequestCooldown> requestCooldowns = new ArrayList<>();
+        String username;
+        long time = System.currentTimeMillis();
+        int cooldown;
+        public RequestCooldown(String username){
+            this.username = username;
+            requestCooldowns.add(this);
+            cooldown = SettingsHandler.getSettings("requestCooldown").asInteger() * 1000;
+            Utilities.sleep(cooldown);
+            requestCooldowns.remove(this);
+
+        }
+
+        public static long getTimeRemaining(String username){
+            for(RequestCooldown requestCooldown : requestCooldowns){
+                if(requestCooldown.username.equalsIgnoreCase(username)){
+
+                    long newTime = System.currentTimeMillis();
+                    long timeElapsed = newTime - requestCooldown.time;
+
+                    return requestCooldown.cooldown - timeElapsed;
+                }
+            }
+            return 0;
+        }
+
+        public static void resetCooldowns(){
+            requestCooldowns.clear();
+        }
+        public static boolean contains(String username){
+            for(RequestCooldown requestCooldown : requestCooldowns){
+                if(requestCooldown.username.equalsIgnoreCase(username)){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
     public static volatile boolean requestsEnabled = true;
     public static HashMap<Long, String> globallyBlockedIDs = new HashMap<>();
     public static HashMap<Long, String> globallyBlockedUsers = new HashMap<>();
@@ -182,11 +224,14 @@ public class Requests {
                         return;
                     }
                 }
+                boolean isAdmin = finalChatMessage.getUserLevel().equals("admin"); //todo normal
+                isAdmin = false;
+
                 boolean bypass = false;
                 if(SettingsHandler.getSettings("twitchEnabled").asBoolean()){
                     bypass = (SettingsHandler.getSettings("modsBypass").asBoolean() && isMod)
                             || (finalUser.equalsIgnoreCase(TwitchAccount.login) && SettingsHandler.getSettings("streamerBypass").asBoolean()
-                            || finalChatMessage.getUserLevel().equals("admin"));
+                            || isAdmin);
                 }
                 if (!bypass) {
                     if (checkList(level.getLevel().id(), "\\loquibot\\blocked.txt")) {
@@ -243,6 +288,63 @@ public class Requests {
 
                         sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_TOTAL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                         return;
+                    }
+
+                    if(SettingsHandler.getSettings("sequentialLevelLimitEnabled").asBoolean()){
+                        int levelCount = 0;
+                        for(int i = RequestsTab.getQueueSize()-1; i >= 0; i--){
+
+                            if(RequestsTab.getRequest(i).getRequester().equalsIgnoreCase(finalChatMessage.getSender())){
+                                levelCount++;
+                            }
+                            else{
+                                break;
+                            }
+                        }
+                        int limit = SettingsHandler.getSettings("sequentialLevelLimit").asInteger();
+
+                        if(levelCount >= limit){
+                            sendUnallowed(Utilities.format("$SEQUENTIAL_LIMIT_MESSAGE$", levelCount), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            return;
+                        }
+                    }
+
+                    if(SettingsHandler.getSettings("requestCooldownEnabled").asBoolean()){
+
+                        if(RequestCooldown.contains(finalChatMessage.getSender())){
+                            long remainingTime = RequestCooldown.getTimeRemaining(finalChatMessage.getSender());
+
+                            System.out.println(remainingTime);
+
+                            long millis = remainingTime % 1000;
+                            long second = (remainingTime / 1000) % 60;
+                            long minute = (remainingTime / (1000 * 60)) % 60;
+                            long hour = (remainingTime / (1000 * 60 * 60)) % 24;
+
+                            String formatString = "";
+                            String time = "";
+
+                            if(hour > 0){
+                                formatString = "%02d:%02d:%02d";
+                                time = String.format(formatString, hour, minute, second);
+                            }
+                            else{
+                                if(minute > 0) {
+                                    formatString = "%02d:%02d";
+                                    time = String.format(formatString, minute, second);
+
+                                }
+                                else{
+                                    formatString = "%02d seconds";
+                                    time = String.format(formatString, second);
+                                }
+                            }
+                            sendUnallowed(Utilities.format("$REQUEST_COOLDOWN_MESSAGE$", time), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            return;
+                        }
+                        new Thread(() -> {
+                            new RequestCooldown(finalChatMessage.getSender());
+                        }).start();
                     }
 
                     if (SettingsHandler.getSettings("userLimitEnabled").asBoolean()) {
