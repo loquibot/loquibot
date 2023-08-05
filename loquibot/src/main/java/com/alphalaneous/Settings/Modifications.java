@@ -118,6 +118,10 @@ public class Modifications {
                     System.out.println("Is HackerMode");
                     installDir = ".GDHM\\dll";
                 }
+                else if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\GDMenu.dll"))) {
+                    System.out.println("Is Mega Overlay");
+                    installDir = "GDMenu\\dll";
+                }
                 else {
                     URL inputUrl = Main.class.getClassLoader()
                             .getResource("xinput9_1_0.dll");
