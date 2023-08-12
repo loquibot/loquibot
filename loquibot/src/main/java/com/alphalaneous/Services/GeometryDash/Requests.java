@@ -224,8 +224,7 @@ public class Requests {
                         return;
                     }
                 }
-                boolean isAdmin = finalChatMessage.getUserLevel().equals("admin"); //todo normal
-                isAdmin = false;
+                boolean isAdmin = finalChatMessage.getUserLevel().equals("admin");
 
                 boolean bypass = false;
                 if(SettingsHandler.getSettings("twitchEnabled").asBoolean()){

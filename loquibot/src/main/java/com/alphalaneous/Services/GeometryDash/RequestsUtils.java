@@ -334,6 +334,7 @@ public class RequestsUtils {
 		levelData.setYouTube(isYouTube);
 		levelData.setDisplayName(displayName);
 
+
 		RequestsTab.addRequest(new LevelButton(levelData));
 
 		if (RequestsTab.getQueueSize() == 1) {
