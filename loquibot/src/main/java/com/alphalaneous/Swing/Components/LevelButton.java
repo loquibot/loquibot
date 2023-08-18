@@ -372,7 +372,8 @@ public class LevelButton extends CurvedButton {
 							try {
 								Utilities.openURL(new URI("http://www.gdbrowser.com/" + ID));
 							} catch (URISyntaxException ex) {
-								ex.printStackTrace();
+								Main.logger.error(ex.getLocalizedMessage(), ex);
+
 							}
 
 					}
@@ -386,7 +387,7 @@ public class LevelButton extends CurvedButton {
 			});
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 

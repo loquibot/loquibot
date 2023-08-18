@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Utils.Defaults;
 
@@ -26,8 +27,9 @@ public class Outputs {
                 Files.createFile(file);
             }
             Files.write(file, text.getBytes());
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            Main.logger.error(e.getLocalizedMessage(), e);
+
         }
     }
 }

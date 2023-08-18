@@ -36,7 +36,7 @@ public class ConnectorSocket extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket webSocket, String s) {
-        System.out.println("> Connector: " + s);
+        Main.logger.info("Connector Socket sent: " + s);
         LevelData data = RequestsTab.getRequest(RequestsUtils.getSelection()).getLevelData();
 
         if(s.split(" ", 2).length == 2) {
@@ -153,7 +153,8 @@ public class ConnectorSocket extends WebSocketServer {
                     try {
                         Utilities.openURL(new URI(data.getYoutubeURL()));
                     } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        Main.logger.error(e.getLocalizedMessage(), e);
+
                     }
                 }
             default:

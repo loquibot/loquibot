@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings.Logs;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class LoggedID {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }
     }
@@ -102,7 +103,7 @@ public class LoggedID {
             Files.write(logFile, loggedIDsString.toString().getBytes());
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 }

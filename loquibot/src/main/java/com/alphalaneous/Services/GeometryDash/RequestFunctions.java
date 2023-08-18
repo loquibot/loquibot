@@ -336,7 +336,7 @@ public class RequestFunctions {
                         StandardOpenOption.TRUNCATE_EXISTING);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }).start();
     }

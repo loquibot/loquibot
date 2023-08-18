@@ -114,7 +114,6 @@ public class GDAPI {
 
         if(SettingsHandler.getSettings("waitForRequests").asBoolean()){
             wait += 1000;
-            System.out.println("Wait: " + wait);
             Utilities.sleep(wait);
             wait -= 1000;
         }

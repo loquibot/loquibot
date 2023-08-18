@@ -33,7 +33,7 @@ public class Warning {
             try {
                 Thread.sleep(300000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
             warningMap.put(type, warningMap.get(type)-1);
         }).start();

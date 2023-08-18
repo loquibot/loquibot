@@ -1,5 +1,6 @@
 package com.alphalaneous.Windows;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 
 import java.io.*;
@@ -35,24 +36,6 @@ public class MessageConsole
 	public void redirectErr(Color textColor, PrintStream printStream) {
 		ConsoleOutputStream cos = new ConsoleOutputStream(textColor, printStream);
 		System.setErr( new PrintStream(cos, true) );
-	}
-
-	private static FileOutputStream fileOutputStream;
-	static {
-		Date now = new Date();
-		SimpleDateFormat format =
-				new SimpleDateFormat ("yyyy.MM.dd-HH.mm.ss.SSSS");
-		try {
-			if(!Files.isDirectory(Paths.get(Defaults.saveDirectory + "/loquibot"))){
-				Files.createDirectory(Paths.get(Defaults.saveDirectory + "/loquibot"));
-			}
-			if(!Files.isDirectory(Paths.get(Defaults.saveDirectory + "/loquibot/logs/"))){
-				Files.createDirectory(Paths.get(Defaults.saveDirectory + "/loquibot/logs/"));
-			}
-			fileOutputStream = new FileOutputStream(Defaults.saveDirectory + "/loquibot/logs/" + format.format(now) + ".txt", true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	class ConsoleOutputStream extends ByteArrayOutputStream {
@@ -96,13 +79,6 @@ public class MessageConsole
 				buffer.append(message);
 				clearBuffer();
 			}
-
-			try {
-				fileOutputStream.write(message.getBytes());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 		}
 		private void handleInsert(String message) {
 			buffer.append(message);

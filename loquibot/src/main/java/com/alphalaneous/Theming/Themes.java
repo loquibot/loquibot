@@ -1,5 +1,6 @@
 package com.alphalaneous.Theming;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Settings.SettingData;
 import com.alphalaneous.Tabs.ChatbotPages.CustomCommands;
@@ -61,7 +62,7 @@ public class Themes {
 			ChatbotTab.refreshUI();
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -70,7 +71,7 @@ public class Themes {
 			Utilities.load("/loquibot/theme.properties", themeSettings);
 		}
 		catch (Exception e){
-			System.out.println("No theme.properties");
+			Main.logger.info("No theme.properties found");
 		}
 	}
 

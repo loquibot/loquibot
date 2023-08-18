@@ -12,8 +12,11 @@ import com.alphalaneous.Windows.Window;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.SwingKeyAdapter;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -85,7 +88,8 @@ public class KeyListener extends SwingKeyAdapter {
 				try {
 					sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt").toFile());
 				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
+					Main.logger.error(e1.getLocalizedMessage(), e1);
+
 				}
 				assert sc3 != null;
 				while (sc3.hasNextLine()) {
@@ -104,6 +108,15 @@ public class KeyListener extends SwingKeyAdapter {
 				if(ctrlPressed && key == 123){
 					LogWindow.toggleLogWindow();
 				}
+				if(ctrlPressed && key == 122){
+					if (Desktop.isDesktopSupported()) {
+						try {
+							Desktop.getDesktop().edit(new File(Main.logFile + ".txt"));
+						} catch (IOException ex) {
+							Main.logger.error(ex.getLocalizedMessage(), ex);
+						}
+					}
+				}
 				if(ctrlPressed && key == 82){
 					Main.restart();
 				}
@@ -117,11 +130,11 @@ public class KeyListener extends SwingKeyAdapter {
 
 		if(Defaults.isMac()){
 			if (e.getKeyCode() == 157) {
-				ctrlPressed = true;
+				ctrlPressed = false;
 			}
 		}
 		if(e.getKeyCode() == 17){
-			ctrlPressed = true;
+			ctrlPressed = false;
 		}
 	}
 }

@@ -120,8 +120,8 @@ public class Requests {
         if(chatMessage.isYouTube() || chatMessage.isKick()){
             user = chatMessage.getDisplayName();
         }
-        if(IDa != 0) System.out.println("> Adding Request: "+ IDa);
-        else System.out.println("> Adding Request: "+ message);
+        if(IDa != 0) Main.logger.info("Adding Request (ID): "+ IDa);
+        else Main.logger.info("Adding Request (MESSAGE): "+ message);
         ChatMessage finalChatMessage = chatMessage;
         String finalUser = user;
         new Thread(() -> {
@@ -312,8 +312,6 @@ public class Requests {
 
                         if(RequestCooldown.contains(finalChatMessage.getSender())){
                             long remainingTime = RequestCooldown.getTimeRemaining(finalChatMessage.getSender());
-
-                            System.out.println(remainingTime);
 
                             long millis = remainingTime % 1000;
                             long second = (remainingTime / 1000) % 60;
@@ -542,7 +540,7 @@ public class Requests {
                     Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
                 }
                 catch (Exception e){
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
                 }
 
                 if (Main.sendMessages && !SettingsHandler.getSettings("disableConfirm").asBoolean() && RequestsTab.getQueueSize() != 1) {
@@ -616,12 +614,11 @@ public class Requests {
 
 
                     sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
-                    System.out.println(IDa);
-                    System.out.println(message);
-                    e.printStackTrace();
+                    Main.logger.error("Failed to add request: " + IDa + " with message: " + message);
+                    Main.logger.error(e.getLocalizedMessage(), e);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
                 sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
             }
         }).start();
@@ -653,7 +650,7 @@ public class Requests {
                 Outputs.setOutputStringFile(RequestsUtils.parseInfoString(SettingsHandler.getSettings("outputString").asString()));
             }
             catch (Exception e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\requestsLog.txt");
 
@@ -694,7 +691,7 @@ public class Requests {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 
@@ -799,7 +796,7 @@ public class Requests {
                 }
                 sc.close();
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }
         return false;

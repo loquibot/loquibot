@@ -1,6 +1,7 @@
 package com.alphalaneous.Windows;
 
 import com.alphalaneous.ChatBot.KickBot;
+import com.alphalaneous.Main;
 import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Utils.Defaults;
@@ -140,7 +141,8 @@ public class Onboarding {
 							YouTubeAccount.setCredential(false);
 						}
 						catch (Exception f){
-							f.printStackTrace();
+							Main.logger.error(f.getLocalizedMessage(), f);
+
 						}
 						SettingsHandler.writeSettings("youtubeEnabled", "true");
 						youtubeLoggedIn.set(true);

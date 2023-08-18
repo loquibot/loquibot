@@ -129,7 +129,8 @@ public class DefaultCommandFunctions {
             }
         }
         catch (NumberFormatException e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
+
             return Utilities.format("$MOVE_FAILED_MESSAGE$", message.getArgs()[1]);
         }
     }

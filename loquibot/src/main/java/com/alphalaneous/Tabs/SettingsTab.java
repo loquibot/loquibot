@@ -2,6 +2,7 @@ package com.alphalaneous.Tabs;
 
 import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Main;
 import com.alphalaneous.Settings.*;
 import com.alphalaneous.Settings.Logs.RequestsLog;
 import com.alphalaneous.Swing.Components.*;
@@ -453,8 +454,8 @@ public class SettingsTab {
 			}
 			try {
 				method.call();
-			} catch (Exception exception) {
-				exception.printStackTrace();
+			} catch (Exception e) {
+				Main.logger.error(e.getLocalizedMessage(), e);
 			}
 			for (CurvedButton component : buttons) {
 				if (component instanceof SettingsButton) {

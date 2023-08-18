@@ -99,10 +99,11 @@ public class Modifications {
                     if (choice.equalsIgnoreCase("Cancel")) return;
                 }
                 try {
+                    Main.logger.info("Closing GD");
                     com.alphalaneous.Utils.Utilities.runCommand("taskkill", "/IM", "GeometryDash.exe", "/F");
                 }
                 catch (Exception e){
-                    System.out.println("GD Already Closed");
+                    Main.logger.info("GD Already Closed");
                 }
                 try {
                     Thread.sleep(1000);
@@ -111,18 +112,19 @@ public class Modifications {
                 }
 
                 if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\hackpro.dll"))) {
-                    System.out.println("Is MegaHack");
+                    Main.logger.info("User has MegaHack");
                     installDir = "extensions";
                 }
                 else if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\ToastedMarshmellow.dll"))) {
-                    System.out.println("Is HackerMode");
+                    Main.logger.info("User has HackerMode");
                     installDir = ".GDHM\\dll";
                 }
                 else if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\GDMenu.dll"))) {
-                    System.out.println("Is Mega Overlay");
+                    Main.logger.info("User has MegaOverlay");
                     installDir = "GDMenu\\dll";
                 }
                 else {
+                    Main.logger.info("User has no mod loader");
                     URL inputUrl = Main.class.getClassLoader()
                             .getResource("xinput9_1_0.dll");
                     File dest = new File(Paths.get(path).getParent().toString() + "\\xinput9_1_0.dll");
@@ -132,6 +134,7 @@ public class Modifications {
                         installDir = "adaf-dll";
                     }
                     catch (IOException e){
+                        Main.logger.error("Failed to copy xinput");
                         installDir = null;
                     }
                 }
@@ -150,7 +153,8 @@ public class Modifications {
             FileUtils.copyURLToFile(Objects.requireNonNull(Main.class.getClassLoader()
                     .getResource("LoquiExtension.dll")), Path.of(installDir + "\\LoquiExtension.dll").toFile());
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
+
             DialogBox.showDialogBox("Error", "Failed to install mod!", e.toString(), new String[] {"Okay"});
         }
     }

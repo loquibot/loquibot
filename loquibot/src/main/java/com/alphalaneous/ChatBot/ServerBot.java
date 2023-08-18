@@ -37,7 +37,8 @@ public class ServerBot {
 					} else clientSocket = new SocketClient("ws://164.152.25.111:2963");
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
+
 				}
 			}).start();
 		}

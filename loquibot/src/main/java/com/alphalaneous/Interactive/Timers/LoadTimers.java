@@ -1,5 +1,6 @@
 package com.alphalaneous.Interactive.Timers;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Tabs.ChatbotPages.TimerSettings;
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ public class LoadTimers {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
     public static void reloadCustomTimers(){
@@ -53,7 +54,7 @@ public class LoadTimers {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         TimerSettings.loadTimers();
     }
@@ -81,7 +82,7 @@ public class LoadTimers {
                 timerDataArrayList.add(timerData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }
         return timerDataArrayList;

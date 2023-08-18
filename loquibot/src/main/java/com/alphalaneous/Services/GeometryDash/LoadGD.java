@@ -1,8 +1,10 @@
 package com.alphalaneous.Services.GeometryDash;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Utils.NamedThread;
 import com.alphalaneous.Utils.Utilities;
 import jdash.common.entity.GDUser;
 import jdash.common.entity.GDUserProfile;
@@ -17,11 +19,11 @@ public class LoadGD {
     public static volatile boolean isAuth = false;
     static boolean loaded = false;
     private static String password = "";
-    private static Thread loadThread;
+    private static NamedThread loadThread;
     private static Thread waitThread;
 
     public static void load() {
-        loadThread = new Thread(() -> {
+        loadThread = new NamedThread("LoadGD", () -> {
             if (SettingsHandler.getSettings("GDLogon").asBoolean()) {
                 try {
                     username = SettingsHandler.getSettings("GDUsername").asString();
@@ -30,7 +32,8 @@ public class LoadGD {
                     isAuth = true;
                     Account.refreshGD(username);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
+
                     SettingsHandler.writeSettings("GDLogon", "false");
                     isAuth = false;
                 }
@@ -39,8 +42,7 @@ public class LoadGD {
                     GDAPI.getLevel(128); //"Warms up" the connection, so it doesn't hang longer than it should, rather have longer start time than not working when open.
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("> Failed to load initial GD connection");
+                    Main.logger.error("Failed to load initial GD connection", e);
                 }
                 Account.refreshGD(null);
                 SettingsHandler.writeSettings("GDLogon", "false");
@@ -48,7 +50,7 @@ public class LoadGD {
             }
             waitThread.stop();
             loaded = true;
-            System.out.println("> LoadGD Loaded");
+            Main.logger.info("LoadGD Loaded");
         });
         loadThread.start();
         waitThread = new Thread(() -> {

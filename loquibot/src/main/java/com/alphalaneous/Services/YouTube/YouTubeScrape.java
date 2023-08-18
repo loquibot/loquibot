@@ -86,8 +86,6 @@ public class YouTubeScrape {
         JSONObject description = playerMicroformatRenderer.getJSONObject("description");
         String descriptionText = description.getString("simpleText");
 
-        System.out.println(descriptionText.replace("\n", " ").trim());
-
         return new YouTubeVideo(title, username, query,"", thumbnailURL, 0, (int) seconds);
     }
 

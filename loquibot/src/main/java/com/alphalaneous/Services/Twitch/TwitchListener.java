@@ -46,11 +46,11 @@ public class TwitchListener extends WebSocketClient {
 			try {
 				send(topicObject.toString());
 
-				System.out.println("> Connected to Twitch Listener");
+				Main.logger.info("Connected to Twitch Listener");
 				break;
 
 			} catch (NullPointerException e) {
-				e.printStackTrace();
+				Main.logger.error(e.getLocalizedMessage(), e);
 			}
 			Utilities.sleep(1000);
 		}
@@ -72,12 +72,12 @@ public class TwitchListener extends WebSocketClient {
 
 	@Override
 	public void onClose(int code, String reason, boolean remote) {
-		System.out.println("> Disconnected from Twitch Listener: " + code + " | Additional info: " + reason);
+		Main.logger.error("Disconnected from Twitch Listener: " + code + " | Additional info: " + reason);
 		Utilities.sleep(2000);
 		try {
 			new TwitchListener(new URI("wss://pubsub-edge.twitch.tv")).connect();
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -101,9 +101,9 @@ public class TwitchListener extends WebSocketClient {
 				String userInput = "";
 				if (isUserinput) {
 					userInput = new JSONObject(redemptionA).getJSONObject("data").getJSONObject("redemption").get("user_input").toString().replaceAll("\"", "");
-					System.out.println(redemption + " redeemed by " + username + " with " + userInput);
+					Main.logger.info(redemption + " redeemed by " + username + " with " + userInput);
 				} else {
-					System.out.println(redemption + " redeemed by " + username);
+					Main.logger.info(redemption + " redeemed by " + username);
 				}
 				try {
 
@@ -137,8 +137,8 @@ public class TwitchListener extends WebSocketClient {
 	}
 
 	@Override
-	public void onError(Exception ex) {
-		ex.printStackTrace();
+	public void onError(Exception e) {
+		Main.logger.error(e.getLocalizedMessage(), e);
 	}
 
 	public void disconnectBot() {

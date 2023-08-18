@@ -1,5 +1,6 @@
 package com.alphalaneous.ChatBot;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Windows.Window;
@@ -64,7 +65,7 @@ public class BotHandler {
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
                 }
             }
         }

@@ -80,7 +80,7 @@ public class TwitchAPI {
 			try {
 				reward = new ChannelPointReward(title, prompt, cost, bgColor, new URL(imgURL), image, defaultIcon);
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				Main.logger.error(e.getLocalizedMessage(), e);
 			}
 			if (reward != null) {
 				rewards.add(reward);
@@ -104,7 +104,7 @@ public class TwitchAPI {
 												1000,
 												cursor).execute();
 							} catch (Exception e) {
-								e.printStackTrace();
+								Main.logger.error(e.getLocalizedMessage(), e);
 								return null;
 							}
 						},
@@ -191,7 +191,7 @@ public class TwitchAPI {
 						 */
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
 				}
 				Utilities.sleep(60000);
 			}
@@ -208,7 +208,6 @@ public class TwitchAPI {
 		else {
 			try {
 				JSONObject isFollowing = twitchAPI("https://api.twitch.tv/helix/users/follows?from_id=" + ID + "&to_id=" + getUserID());
-				System.out.println(isFollowing.toString());
 				if (user.equalsIgnoreCase(SettingsHandler.getSettings("channel").asString())) {
 					return false;
 				}
@@ -241,7 +240,7 @@ public class TwitchAPI {
 			}
 			s.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 		return response.toString();
 	}
@@ -262,7 +261,7 @@ public class TwitchAPI {
 			return nameObj.getJSONArray("data").getJSONObject(0).get("login").toString().replaceAll("\"", "");
 		}
 		catch (JSONException e){
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
 
@@ -305,7 +304,7 @@ public class TwitchAPI {
 			}
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 		return null;
 	}
@@ -323,7 +322,7 @@ public class TwitchAPI {
 		}
 		catch (Exception e){
 			setOauth();
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
 	}
@@ -335,7 +334,7 @@ public class TwitchAPI {
 			try {
 				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
 			} catch (JSONException e) {
-				e.printStackTrace();
+				Main.logger.error(e.getLocalizedMessage(), e);
 				SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
 				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
 			}
@@ -398,7 +397,7 @@ public class TwitchAPI {
 			String x = br.readLine();
 			return new JSONObject(x).get("client_id").toString().replace("\"", "");
 		} catch (IOException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 			return "";
 		}
 	}
@@ -429,11 +428,11 @@ public class TwitchAPI {
 				oauthOpen = false;
 				ServerBot.disconnect();
 			} else {
-				System.out.println(twitch.auth().getAuthenticationError());
+				Main.logger.error(twitch.auth().getAuthenticationError());
 				oauthOpen = false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 			oauthOpen = false;
 		}
 	}
@@ -456,12 +455,12 @@ public class TwitchAPI {
 				oauthOpen = false;
 				return twitch.auth().getAccessToken();
 			} else {
-				System.out.println(twitch.auth().getAuthenticationError());
+				Main.logger.error(twitch.auth().getAuthenticationError());
 				oauthOpen = false;
 			}
 		} catch (Exception e) {
 			oauthOpen = false;
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 		return null;
 	}
@@ -484,12 +483,12 @@ public class TwitchAPI {
 				oauthOpen = false;
 				return twitch.auth().getAccessToken();
 			} else {
-				System.out.println(twitch.auth().getAuthenticationError());
+				Main.logger.error(twitch.auth().getAuthenticationError());
 				oauthOpen = false;
 			}
 		} catch (Exception e) {
 			oauthOpen = false;
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 		return null;
 	}

@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.YouTube;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.youtube.YouTube;
@@ -69,7 +70,8 @@ public class YouTubeAccount {
                 profileImage = ImageIO.read(new URL(mediumURL));
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
     }

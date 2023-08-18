@@ -3,6 +3,7 @@ package com.alphalaneous.Services.Twitch;
 import com.alphalaneous.ChatBot.*;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
+import com.alphalaneous.Main;
 import com.alphalaneous.Moderation.Moderation;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Utilities;
@@ -28,15 +29,13 @@ public class TwitchChatListener extends NewChatBot {
 
 	@Override
 	public void onOpen() {
-		System.out.println("> Connected to Twitch IRC");
+		Main.logger.info("Connected to Twitch IRC");
 
 	}
 
 	@Override
 	public void onClose() {
-		System.out.println("> Disconnected from Chat Listener");
-		//Utilities.sleep(2000);
-		//new TwitchChatListener(TwitchAccount.login).connect(SettingsHandler.getSettings("oauth").asString());
+		Main.logger.info("Disconnected from Chat Listener");
 	}
 
 	@Override

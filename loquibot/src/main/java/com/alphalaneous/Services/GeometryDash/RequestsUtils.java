@@ -570,7 +570,7 @@ public class RequestsUtils {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Main.logger.error(e.getLocalizedMessage(), e);
 			}
 		}
 		return -1;
@@ -644,7 +644,7 @@ public class RequestsUtils {
 				RequestsTab.getLevelsPanel().setSelect(0);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 			response = Utilities.format("$BLOCK_FAILED_MESSAGE$");
 		}
 		return response;
@@ -675,7 +675,7 @@ public class RequestsUtils {
 				}
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			Main.logger.error(ex.getLocalizedMessage(), ex);
 			response = Utilities.format("$UNBLOCK_FAILED_MESSAGE$");
 		}
 		return response;
@@ -703,7 +703,7 @@ public class RequestsUtils {
 			BlockedUsers.addBlockedUser(blockedUser);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 			response = Utilities.format("$BLOCK_USER_FAILED_MESSAGE$");
 		}
 		return response;
@@ -736,7 +736,7 @@ public class RequestsUtils {
 				}
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			Main.logger.error(ex.getLocalizedMessage(), ex);
 			response = Utilities.format("$UNBLOCK_USER_FAILED_MESSAGE$");
 		}
 		return response;
@@ -829,7 +829,7 @@ public class RequestsUtils {
 				try {
 					walk1 = Files.walk(comPath, 1);
 				} catch (IOException e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
 				}
 				assert walk1 != null;
 				for (Iterator<Path> it = walk1.iterator(); it.hasNext(); ) {

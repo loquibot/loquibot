@@ -61,7 +61,8 @@ public class ChannelPoints {
                         listView.addElement(notAvailableComponent);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
+
                 }
             }
         }

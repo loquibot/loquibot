@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.Components.FancyTextArea;
 import com.alphalaneous.Swing.Components.ListButton;
 import com.alphalaneous.Swing.Components.ListView;
@@ -35,7 +36,7 @@ public class BlockedCreators {
             try {
                 sc = new Scanner(file.toFile());
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
             assert sc != null;
             while (sc.hasNextLine()) {
@@ -60,7 +61,8 @@ public class BlockedCreators {
                 Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blockedGDUsers.txt"), StandardCopyOption.REPLACE_EXISTING);
 
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Main.logger.error(ex.getLocalizedMessage(), ex);
+
             }
         }
         ListButton button = getButtonFromID(ID);
@@ -99,8 +101,9 @@ public class BlockedCreators {
                     listView.addElement(createButton(ID));
                 }
             }
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            Main.logger.error(e.getLocalizedMessage(), e);
+
         }
     }
 
@@ -122,7 +125,8 @@ public class BlockedCreators {
                         Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blockedGDUsers.txt"), StandardCopyOption.REPLACE_EXISTING);
 
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        Main.logger.error(ex.getLocalizedMessage(), ex);
+
                     }
                 }
                 listView.removeElement(button);

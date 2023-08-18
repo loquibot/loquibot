@@ -19,14 +19,16 @@ public class Find {
             try {
                 Files.createDirectory(loquibot);
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
         if (!Files.isDirectory(loquibotBin)) {
             try {
                 Files.createDirectory(loquibotBin);
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
         if (!Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/bin/getPrograms.bat"))) {
@@ -55,7 +57,8 @@ public class Find {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
+
         }
         return null;
     }
@@ -81,7 +84,8 @@ public class Find {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
     }

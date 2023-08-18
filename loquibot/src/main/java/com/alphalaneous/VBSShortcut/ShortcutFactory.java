@@ -1,5 +1,7 @@
 package com.alphalaneous.VBSShortcut;
 
+import com.alphalaneous.Main;
+
 import java.io.*;
 
 /*
@@ -55,7 +57,7 @@ public class ShortcutFactory {
 			newVBS(vbsCode);
 		} catch (IOException | InterruptedException e) {
 			System.err.println("Could not create and run VBS!");
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		} 
 	}
 	

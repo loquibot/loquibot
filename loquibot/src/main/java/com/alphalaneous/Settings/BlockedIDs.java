@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.FancyTextArea;
 import com.alphalaneous.Swing.Components.ListButton;
@@ -34,7 +35,7 @@ public class BlockedIDs {
             try {
                 sc = new Scanner(file.toFile());
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
             assert sc != null;
             while (sc.hasNextLine()) {
@@ -58,8 +59,9 @@ public class BlockedIDs {
                 Files.delete(file);
                 Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blocked.txt"), StandardCopyOption.REPLACE_EXISTING);
 
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
         ListButton button = getButtonFromID(ID);
@@ -121,7 +123,8 @@ public class BlockedIDs {
                         Files.move(temp, temp.resolveSibling(Defaults.saveDirectory + "\\loquibot\\blocked.txt"), StandardCopyOption.REPLACE_EXISTING);
 
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        Main.logger.error(ex.getLocalizedMessage(), ex);
+
                     }
                 }
                 listView.removeElement(button);

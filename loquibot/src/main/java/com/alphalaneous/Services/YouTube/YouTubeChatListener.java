@@ -4,6 +4,7 @@ import com.alphalaneous.ChatBot.BotHandler;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Main;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Utilities;
@@ -39,7 +40,7 @@ public class YouTubeChatListener {
                         listChatMessages(null, 0);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
                 }
 
                 Utilities.sleep(15000);
@@ -85,7 +86,7 @@ public class YouTubeChatListener {
                                 5000);
                         Utilities.sleep(1);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Main.logger.error(e.getLocalizedMessage(), e);
                     }
                 }
             }, delayMs);

@@ -75,7 +75,7 @@ public class LoadCommands {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 
@@ -83,7 +83,6 @@ public class LoadCommands {
         customCommands.clear();
         for(CommandData data : CommandData.getRegisteredCommands()){
             if(!data.isDefault()){
-                System.out.println(data.getCommand());
                 customCommands.add(data);
             }
         }
@@ -124,7 +123,7 @@ public class LoadCommands {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         DefaultCommands.loadCommands();
         CustomCommands.loadCommands();
@@ -175,7 +174,7 @@ public class LoadCommands {
                 commandDataArrayList.add(commandData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }
         return commandDataArrayList;

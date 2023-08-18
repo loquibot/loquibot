@@ -1,5 +1,6 @@
 package com.alphalaneous.Running;
 
+import com.alphalaneous.Main;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -11,6 +12,7 @@ public class CheckIfRunning extends WebSocketClient {
 
     public CheckIfRunning(URI uri) {
         super(uri);
+
     }
 
     public void check(){
@@ -41,6 +43,6 @@ public class CheckIfRunning extends WebSocketClient {
 
     @Override
     public void onError(Exception e) {
-        System.out.println("> New Instance");
+        Main.logger.info("New loquibot instance");
     }
 }

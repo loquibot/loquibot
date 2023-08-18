@@ -1,5 +1,6 @@
 package com.alphalaneous.Windows;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Services.GeometryDash.LevelData;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Swing.Components.LevelButton;
@@ -129,7 +130,8 @@ public class AprilFools{
                 table.setColumnSelectionInterval(0, 26);
             }
             catch (Exception e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
     }

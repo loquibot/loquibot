@@ -1,6 +1,7 @@
 package com.alphalaneous.Swing.Components;
 
 import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import org.imgscalr.Scalr;
@@ -51,7 +52,8 @@ public class CreditPanel extends JPanel {
                 try {
                     Utilities.openURL(new URI(link));
                 } catch (URISyntaxException ex) {
-                    ex.printStackTrace();
+                    Main.logger.error(ex.getLocalizedMessage(), ex);
+
                 }
             }
         });
@@ -71,7 +73,8 @@ public class CreditPanel extends JPanel {
                 try {
                     Utilities.openURL(new URI(link));
                 } catch (URISyntaxException ex) {
-                    ex.printStackTrace();
+                    Main.logger.error(ex.getLocalizedMessage(), ex);
+
                 }
             }
 

@@ -101,7 +101,7 @@ public class TimerData {
             Files.write(path.toAbsolutePath(), object.toString(4).getBytes());
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 

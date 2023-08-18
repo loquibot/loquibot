@@ -1,5 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Swing.SilentDeletePrevCharacter;
 import com.alphalaneous.Theming.ThemedColor;
@@ -120,7 +121,8 @@ public class FancyTextArea extends JPanel {
 						undoManager.undo();
 					}
 				} catch (CannotUndoException e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
+
 				}
 			}
 		});
@@ -131,7 +133,8 @@ public class FancyTextArea extends JPanel {
 						undoManager.redo();
 					}
 				} catch (CannotRedoException e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
+
 				}
 			}
 		});

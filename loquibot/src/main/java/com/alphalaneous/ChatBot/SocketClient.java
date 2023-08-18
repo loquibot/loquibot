@@ -33,7 +33,8 @@ public class SocketClient extends WebSocketClient {
         try {
             connectBlocking();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
+
         }
     }
 
@@ -53,7 +54,7 @@ public class SocketClient extends WebSocketClient {
 
             send(connectObj.toString());
         }
-        System.out.println("> ServerBot Started");
+        Main.logger.info("ServerBot Started");
 
         new Thread(() -> {
             while(true){
@@ -82,12 +83,11 @@ public class SocketClient extends WebSocketClient {
                 if (object.get("event") != null) {
                     event = object.get("event").toString().replaceAll("\"", "");
                 }
-                //System.out.println(event);
 
                 switch (event) {
                     case "connected" : {
                         waitTime = 1;
-                        System.out.println("> Connected to loquibot Servers");
+                        Main.logger.info("Connected to loquibot Servers");
                         String channel = object.getString("username");
                         if(object.optBoolean("is_officer")){
                             isOfficer = true;
@@ -127,7 +127,7 @@ public class SocketClient extends WebSocketClient {
                         break;
                     }
                     case "blocked_ids_updated" : {
-                        System.out.println("> Blocked IDs Updated");
+                        Main.logger.info("Blocked IDs Updated");
                         JSONArray IDs = object.getJSONObject("ids").getJSONArray("globallyBlockedIDs");
                         Requests.globallyBlockedIDs.clear();
                         for (int i = 0; i < IDs.length(); i++) {
@@ -138,7 +138,7 @@ public class SocketClient extends WebSocketClient {
                         break;
                     }
                     case "blocked_users_updated" : {
-                        System.out.println("> Blocked Users Updated");
+                        Main.logger.info("Blocked Users Updated");
                         JSONArray IDs = object.getJSONObject("users").getJSONArray("globallyBlockedUsers");
                         Requests.globallyBlockedUsers.clear();
                         for (int i = 0; i < IDs.length(); i++) {
@@ -149,7 +149,7 @@ public class SocketClient extends WebSocketClient {
                         break;
                     }
                     case "reported_ids_updated" : {
-                        System.out.println("> Reported IDs Updated");
+                        Main.logger.info("Reported IDs Updated");
 
                         JSONArray IDs = object.getJSONObject("ids").getJSONArray("reportedIDs");
                         Requests.reportedIDs.clear();
@@ -213,14 +213,14 @@ public class SocketClient extends WebSocketClient {
 
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
 
             }
     }
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        System.out.println("disconnected");
+        Main.logger.info("Disconnected from Main Socket");
     }
 
     @Override

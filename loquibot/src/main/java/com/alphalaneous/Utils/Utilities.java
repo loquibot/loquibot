@@ -46,7 +46,8 @@ public class Utilities {
 			image = ImageIO.read(Objects.requireNonNull(Main.class.getClassLoader()
 					.getResource("Icons/windowIcon.png")));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
+
 		}
 	}
 
@@ -60,7 +61,8 @@ public class Utilities {
 		try {
 			tray.add(trayIcon);
 		} catch (AWTException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
+
 		}
 		trayIcon.addActionListener(System.out::println);
 		trayIcon.addMouseListener(new MouseAdapter() {
@@ -118,7 +120,7 @@ public class Utilities {
 	}
 
 	public static void openURL(URI uri){
-		System.out.println("Opening link: " + uri.toString());
+		Main.logger.info("Opening link: " + uri.toString());
 
 		if(KeyListener.isCtrlPressed()){
 			Platform.runLater(() -> {
@@ -203,7 +205,8 @@ public class Utilities {
 		try {
 			return String.format(format, args);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
+
 			return format;
 		}
 	}
@@ -256,7 +259,7 @@ public class Utilities {
 				try {
 					Desktop.getDesktop().browse(new URI("steam://rungameid/" + id));
 				} catch (IOException | URISyntaxException e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
 				}
 			}
 			else {
@@ -265,7 +268,7 @@ public class Utilities {
 					try {
 						Desktop.getDesktop().browse(new URI("steam://rungameid/" + id));
 					} catch (IOException | URISyntaxException e) {
-						e.printStackTrace();
+						Main.logger.error(e.getLocalizedMessage(), e);
 					}
 				}
 			}
@@ -284,7 +287,7 @@ public class Utilities {
 		try {
 			Runtime.getRuntime().exec(new String[]{location}, null, new File(dir.toString()));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -292,7 +295,7 @@ public class Utilities {
 		try {
 			Runtime.getRuntime().exec(cmdArray);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -300,7 +303,7 @@ public class Utilities {
 		try {
 			Runtime.getRuntime().exec(args, envp, new File(fileDirectory));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -332,7 +335,7 @@ public class Utilities {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Main.logger.error(e.getLocalizedMessage(), e);
 			}
 		}
 		return -1;
@@ -341,8 +344,8 @@ public class Utilities {
 	static void copyFromJar(InputStream source , String destination) {
 		try {
 			Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e) {
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 
 	}
@@ -361,7 +364,7 @@ public class Utilities {
 			TimeUnit.MILLISECONDS.sleep(milliseconds);
 			TimeUnit.NANOSECONDS.sleep(nano);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 	public static ArrayList<CommandData> alphabetizeCommandData(ArrayList<CommandData> commandDataArrayList){

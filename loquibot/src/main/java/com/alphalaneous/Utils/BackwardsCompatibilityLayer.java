@@ -24,7 +24,8 @@ public class BackwardsCompatibilityLayer {
 
                 Files.setAttribute(Paths.get(System.getenv("APPDATA") + "/loquibot/.newPath"), "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
                 JOptionPane.showMessageDialog(null, "Could not move to new directory", "Error", JOptionPane.ERROR_MESSAGE);
                 Main.close();
             }
@@ -42,7 +43,8 @@ public class BackwardsCompatibilityLayer {
                 }
                 Files.copy(s, d);
             } catch(Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         });
     }

@@ -186,7 +186,7 @@ public class Moderation {
 									conn.connect();
 									return true;
 								} catch (IOException e) {
-									e.printStackTrace();
+									Main.logger.error(e.getLocalizedMessage(), e);
 									return false;
 								}
 							}

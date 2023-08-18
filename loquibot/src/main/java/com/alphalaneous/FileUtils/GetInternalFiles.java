@@ -58,7 +58,7 @@ public class GetInternalFiles {
                 }
                 return list;
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
                 return null;
             }
         }
@@ -72,7 +72,7 @@ public class GetInternalFiles {
                 }
                 return list;
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
                 return null;
             }
         }

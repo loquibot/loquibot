@@ -1,5 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Language;
 
@@ -37,7 +38,8 @@ public class LangLabel extends JLabel {
 			setText(String.format(newText, args));
 		}
 		catch (MissingFormatArgumentException e){
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
+
 		}
 	}
 	public void refreshLocale(){

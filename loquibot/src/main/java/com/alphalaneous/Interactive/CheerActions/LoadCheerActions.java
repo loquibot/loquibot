@@ -1,5 +1,6 @@
 package com.alphalaneous.Interactive.CheerActions;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
@@ -35,7 +36,7 @@ public class LoadCheerActions {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 
@@ -55,7 +56,7 @@ public class LoadCheerActions {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         CustomKeywords.loadKeywords();
     }
@@ -85,7 +86,7 @@ public class LoadCheerActions {
                 commandDataArrayList.add(cheerActionData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }
         return commandDataArrayList;

@@ -95,7 +95,7 @@ public class Assets {
 			}
 
 		} catch (Exception e) {
-			System.out.println("Failed to load " + path);
+			Main.logger.error("Failed to load asset: " + path);
 		}
 		return null;
 	}

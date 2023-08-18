@@ -4,6 +4,7 @@ import com.alphalaneous.ChatBot.KickBot;
 import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
 import com.alphalaneous.Memory.Global;
+import com.alphalaneous.Memory.Level;
 import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
@@ -38,26 +39,58 @@ import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
+import com.google.api.client.util.LoggingOutputStream;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.io.IoBuilder;
 import org.json.JSONObject;
+import org.jutils.jhardware.HardwareInfo;
+import org.jutils.jhardware.model.ProcessorInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main {
+
+    public static String logFile = "";
+
+    static{
+
+        Date now = new Date();
+        SimpleDateFormat format =
+                new SimpleDateFormat ("yyyy.MM.dd-HH.mm.ss.SSSS");
+        try {
+            if(!Files.isDirectory(Paths.get(Defaults.saveDirectory + "/loquibot"))){
+                Files.createDirectory(Paths.get(Defaults.saveDirectory + "/loquibot"));
+            }
+            if(!Files.isDirectory(Paths.get(Defaults.saveDirectory + "/loquibot/logs/"))){
+                Files.createDirectory(Paths.get(Defaults.saveDirectory + "/loquibot/logs/"));
+            }
+        } catch (IOException e) {
+            Main.logger.error(e.getLocalizedMessage(), e);
+        }
+
+        String formatted = format.format(now);
+
+        logFile = Defaults.saveDirectory + "/loquibot/logs/" + formatted;
+        ThreadContext.put("filePath", logFile);
+    }
+    public static final Logger logger = LogManager.getLogger(Main.class);
 
     static {
         System.setProperty("sun.java2d.noddraw", "true");
@@ -84,19 +117,37 @@ public class Main {
     private static final JFrame starting = new JFrame("loquibot");
     private static ConnectorSocket streamDeckSocket;
 
+    public static void logSystemInfo(){
+
+
+
+        ProcessorInfo info = HardwareInfo.getProcessorInfo();
+
+        logger.info("CPU: " + info.getModelName());
+        logger.info("Core Count: " + info.getNumCores());
+        logger.info("Max Clock Speed: " + info.getMhz() + "Mhz");
+
+
+        Runtime runtime = Runtime.getRuntime();
+        long allocatedMemory = runtime.totalMemory() - runtime.freeMemory();
+        long presumableFreeMemory = runtime.maxMemory() - allocatedMemory;
+
+
+        logger.info("Total Free Memory: " + presumableFreeMemory/1000000 + " MB");
+
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
-
-
-
         long time = System.currentTimeMillis();
-        new LoquibotSocket();
-        try {
-            URI originalURI = new URI("ws://127.0.0.1:18562");
-            CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
-            checkIfRunning.connectBlocking();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        System.setErr(IoBuilder.forLogger(LogManager.getRootLogger()).setLevel(org.apache.logging.log4j.Level.ERROR).buildPrintStream());
+
+        SettingsHandler.loadSettings();
+
+        logger.info("Settings Loaded");
+
+        boolean reopen = SettingsHandler.getSettings("hasUpdated").asBoolean();
+        SettingsHandler.writeSettings("hasUpdated", "false");
 
         try {
             Assets.load();
@@ -114,78 +165,10 @@ public class Main {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
+
         }
-        System.out.println("> Loaded Icons");
-
-        if(Defaults.isMac()) {
-            Taskbar taskbar = Taskbar.getTaskbar();
-            try {
-                taskbar.setIconImage(Main.getIconImages().get(2));
-            } catch (UnsupportedOperationException | SecurityException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Initialize JavaFX Graphics Toolkit (Hacky Solution)
-        if(!Defaults.isMac()) new Thread(JFXPanel::new).start();
-
-
-        setUI();
-
-        System.out.println("> UI Set");
-
-        new Thread(() -> {
-            Utilities.sleep(21600000);
-            if(SettingsHandler.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
-                restart();
-            }
-        }).start();
-
-        SettingsHandler.loadSettings();
-        //MacKeyListener.loadKeybinds();
-
-        System.out.println("> Settings Loaded");
-
-        boolean reopen = SettingsHandler.getSettings("hasUpdated").asBoolean();
-        SettingsHandler.writeSettings("hasUpdated", "false");
-
-        if(SettingsHandler.getSettings("channel").exists() && !SettingsHandler.getSettings("twitchEnabled").exists()){
-            SettingsHandler.writeSettings("twitchEnabled", "true");
-        }
-
-
-        if(!Defaults.isMac()) {
-            new Thread(() -> {
-                Find.setup();
-                Find.findPath();
-            }).start();
-        }
-
-        Defaults.setSystem(false);
-
-        System.out.println("> System Theme Set");
-
-        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-        logger.setLevel(Level.OFF);
-        logger.setUseParentHandlers(false);
-
-        System.out.println("> Logger Settings Set");
-
-
-        new Thread(Main::runKeyboardHook).start();
-
-        System.out.println("> Windows Keyboard Hook Initialized");
-
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("> Look and Feel Set");
-
+        logger.info("Loaded Icons");
 
         starting.setSize(200, 200);
         starting.setResizable(false);
@@ -206,12 +189,92 @@ public class Main {
 
         if(!SettingsHandler.getSettings("runAtStartup").asBoolean() || reopen) starting.setVisible(true);
 
-        System.out.println("> Start");
+        new NamedThread("SystemInfo", Main::logSystemInfo).start();
+
+        new LoquibotSocket();
+        try {
+            URI originalURI = new URI("ws://127.0.0.1:18562");
+            CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
+            checkIfRunning.connectBlocking();
+        } catch (Exception e) {
+            Main.logger.error(e.getLocalizedMessage(), e);
+
+        }
+
+        if(Defaults.isMac()) {
+            Taskbar taskbar = Taskbar.getTaskbar();
+            try {
+                taskbar.setIconImage(Main.getIconImages().get(2));
+            } catch (UnsupportedOperationException | SecurityException e) {
+                Main.logger.error(e.getLocalizedMessage(), e);
+
+            }
+        }
+
+        //Initialize JavaFX Graphics Toolkit (Hacky Solution)
+        if(!Defaults.isMac()) new Thread(JFXPanel::new).start();
+
+
+        setUI();
+
+        logger.info("UI Set");
+
+        new Thread(() -> {
+            Utilities.sleep(21600000);
+            if(SettingsHandler.getSettings("runAtStartup").asBoolean() && !Window.getWindow().isVisible()) {
+                restart();
+            }
+        }).start();
+
+
+
+
+
+        if(SettingsHandler.getSettings("channel").exists() && !SettingsHandler.getSettings("twitchEnabled").exists()){
+            SettingsHandler.writeSettings("twitchEnabled", "true");
+        }
+
+
+        if(!Defaults.isMac()) {
+            new Thread(() -> {
+                Find.setup();
+                Find.findPath();
+            }).start();
+        }
+
+        Defaults.setSystem(false);
+
+        logger.info("System Theme Set");
+
+        //java.util.logging.Logger logger =  java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        //logger.setLevel(Level.OFF);
+        //logger.setUseParentHandlers(false);
+
+        logger.info("Logger Settings Set");
+
+
+        new Thread(Main::runKeyboardHook).start();
+
+        logger.info("Windows Keyboard Hook Initialized");
+
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            Main.logger.error(e.getLocalizedMessage(), e);
+
+        }
+
+        logger.info("Look and Feel Set");
+
+
+
+        logger.info("Start");
 
         LoadGD.load();
         Themes.loadTheme();
 
-        System.out.println("> Themes Loaded");
+        logger.info("Themes Loaded");
 
         if (SettingsHandler.getSettings("onboarding").exists()) {
 
@@ -232,7 +295,7 @@ public class Main {
                 }
             }
             catch (Exception e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
                 SettingsHandler.writeSettings("kickEnabled", "false");
             }
         }
@@ -243,78 +306,78 @@ public class Main {
         Account.refreshYouTube(YouTubeAccount.name);
         Account.refreshKick(KickAccount.username, false);
 
-        System.out.println("> Twitch Loaded");
+        logger.info("Twitch Loaded");
         try {
             try {
                 Language.loadLanguage();
                 Language.startFileChangeListener();
             }
             catch (IllegalArgumentException e){
-                System.out.println("> Language Change Listener Failed");
+                logger.info("Language Change Listener Failed");
             }
 
             new Thread(Defaults::startMainThread).start();
             new Thread(streamDeckSocket = new ConnectorSocket()).start();
 
-            System.out.println("> Main Threads Started");
+            logger.info("Main Threads Started");
 
             Window.loadSettings();
 
 
-            System.out.println("> Window Settings Loaded");
+            logger.info("Window Settings Loaded");
             try {
                 Window.initFrame();
             }
             catch (Exception e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
 
-            System.out.println("> Window initialized");
+            logger.info("Window initialized");
             RequestsTab.createPanel();
-            System.out.println("> Requests Tab created");
+            logger.info("Requests Tab created");
             ChatbotTab.createPanel();
-            System.out.println("> Chatbot Tab created");
+            logger.info("Chatbot Tab created");
             SettingsTab.createPanel();
-            System.out.println("> Settings Tab created");
+            logger.info("Settings Tab created");
             OfficerWindow.create();
-            System.out.println("> Officers Window created");
+            logger.info("Officers Window created");
             Window.loadTopComponent();
-            System.out.println("> Top Tab shown");
+            logger.info("Top Tab shown");
             LoadCommands.loadCommands();
-            System.out.println("> Commands Loaded");
+            logger.info("Commands Loaded");
             LoadTimers.loadTimers();
-            System.out.println("> Timers Loaded");
+            logger.info("Timers Loaded");
             LoadPoints.loadPoints();
-            System.out.println("> Channel Points Loaded");
+            logger.info("Channel Points Loaded");
             LoadKeywords.loadKeywords();
-            System.out.println("> Keywords Loaded");
+            logger.info("Keywords Loaded");
             LoadCheerActions.loadCheerActions();
-            System.out.println("> Cheer Actions Loaded");
+            logger.info("Cheer Actions Loaded");
             LoggedID.loadLoggedIDs();
-            System.out.println("> IDs Loaded");
+            logger.info("IDs Loaded");
             TimerHandler.startTimerHandler();
-            System.out.println("> Timer Handler Started");
+            logger.info("Timer Handler Started");
 
             LevelDetailsPanel.setPanel(null);
 
             Platform.setImplicitExit(false);
 
-            System.out.println("> All Panels Created");
+            logger.info("All Panels Created");
 
             UpdateChecker.checkForUpdates();
-            System.out.println("> Started Update Checker");
+            logger.info("Started Update Checker");
 
             Defaults.initializeThemeInfo();
-            System.out.println("> Theme Info Initialized");
+            logger.info("Theme Info Initialized");
             Themes.refreshUI();
-            System.out.println("> UI Refreshed");
+            logger.info("UI Refreshed");
             if(Defaults.isAprilFools) {
                 AprilFools.create();
                 AprilFools.loadLevels();
             }
             starting.setVisible(false);
 
-            System.out.println("> Launch Finished in " + (System.currentTimeMillis() - time) + "ms");
+            logger.info("Launch Finished in " + (System.currentTimeMillis() - time) + "ms");
 
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
@@ -322,7 +385,7 @@ public class Main {
             if (!SettingsHandler.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();
                 Window.setVisible(true);
-                System.out.println("> Window Visible");
+                logger.info("Window Visible");
 
                 Onboarding.refreshUI();
                 Onboarding.isLoading = true;
@@ -337,32 +400,32 @@ public class Main {
             }
             else {
                 if(!SettingsHandler.getSettings("runAtStartup").asBoolean() || reopen) Window.setVisible(true);
-                System.out.println("> Window Visible");
+                logger.info("Window Visible");
             }
 
-            System.out.println("> Command Variables Loaded");
+            logger.info("Command Variables Loaded");
 
             ServerBot.connect();
 
 
             if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
                 new Thread(YouTubeChatListener::startChatListener).start();
-                System.out.println("> YouTube Chat Listener Started");
+                logger.info("YouTube Chat Listener Started");
             }
 
             if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
-                new Thread(() -> {
+                new NamedThread("TwitchChatListener", () -> {
                     chatReader = new TwitchChatListener(TwitchAccount.login);
                     chatReader.connect(SettingsHandler.getSettings("oauth").asString());
-                    System.out.println("> Twitch Chat Listener Started");
+                    logger.info("Twitch Chat Listener Started");
                 }).start();
-                new Thread(() -> {
+                new NamedThread("TwitchChannelPointListener", () -> {
                     try {
                         channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
                         channelPointListener.connect();
-                        System.out.println("> Channel Point Listener Started");
+                        logger.info("Channel Point Listener Started");
                     } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        Main.logger.error(e.getLocalizedMessage(), e);
                     }
                 }).start();
             }
@@ -387,7 +450,7 @@ public class Main {
                 catch (Exception ignored){
                 }
             }
-            System.out.println("> Saved IDs Loaded");
+            logger.info("Saved IDs Loaded");
             allowRequests = true;
             RequestFunctions.saveFunction();
             RequestsTab.getLevelsPanel().setSelect(0);
@@ -400,29 +463,12 @@ public class Main {
             }
             programLoaded = true;
 
-            System.out.println("> Save loop Started");
-
-            /*if(!SettingsHandler.getSettings("dontShowDonate").asBoolean()) {
-                new Thread(() -> {
-                    String choice = DialogBox.showDialogBox("Help Out Alpha!", "Hosting loquibot costs me some money.", "Any donation is appreciated!", new String[]{"Donate", "No", "Don't Show"});
-                    if (choice.equalsIgnoreCase("Donate")) {
-                        try {
-                            com.alphalaneous.Utils.Utilities.openURL(new URI("https://streamlabs.com/alphalaneous/tip"));
-                        } catch (URISyntaxException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    if (choice.equalsIgnoreCase("Don't Show")) {
-                        SettingsHandler.writeSettings("dontShowDonate", "true");
-                    }
-                }).start();
-            }*/
             if(!Defaults.isMac()) {
                 Global.onEnterLevel(() -> {
                     if (SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         if (MemoryHelper.isInFocus()) {
-                            String levelName = com.alphalaneous.Memory.Level.getLevelName();
-                            long levelID = com.alphalaneous.Memory.Level.getID();
+                            String levelName = Level.getLevelName();
+                            long levelID = Level.getID();
 
                             if (lastID == levelID) {
                                 return;
@@ -467,7 +513,7 @@ public class Main {
             Window.setVisible(true);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
             DialogBox.showDialogBox("Error!", e + ": " + e.getStackTrace()[0], "Please report to @Alphalaneous on Discord.", new String[]{"Close"});
             close();
         }
@@ -488,8 +534,8 @@ public class Main {
             Main.forceClose();
         }
         catch (Exception e){
-            System.out.println("> Failed restart, closing...");
-            e.printStackTrace();
+            logger.fatal("Failed restart, closing...");
+            Main.logger.error(e.getLocalizedMessage(), e);
             System.exit(0);
         }
     }
@@ -572,7 +618,7 @@ public class Main {
                             try {
                                 ServerBot.sendMessage(messageObj.toString());
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                Main.logger.error(e.getLocalizedMessage(), e);
                             }
                         }
                     }
@@ -609,7 +655,7 @@ public class Main {
                             try {
                                 ServerBot.sendMessage(messageObj.toString());
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                Main.logger.error(e.getLocalizedMessage(), e);
                             }
                         }
                     }
@@ -654,7 +700,7 @@ public class Main {
                 try {
                     GlobalScreen.unregisterNativeHook();
                 } catch (NativeHookException e1) {
-                    e1.printStackTrace();
+                    Main.logger.error(e1.getLocalizedMessage(), e1);
                 }
                 failed = true;
             }
@@ -703,8 +749,8 @@ public class Main {
             }
             if(!Defaults.isMac()) GlobalScreen.unregisterNativeHook();
         } catch (Exception e) {
-            System.out.println("Failed closing properly, forcing close");
-            e.printStackTrace();
+            logger.fatal("Failed closing properly, forcing close");
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         System.exit(0);
     }
@@ -751,4 +797,5 @@ public class Main {
     public static JFrame getStartingFrame(){
         return starting;
     }
+
 }

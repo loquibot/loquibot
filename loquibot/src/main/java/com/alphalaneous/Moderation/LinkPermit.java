@@ -1,5 +1,7 @@
 package com.alphalaneous.Moderation;
 
+import com.alphalaneous.Main;
+
 import java.util.ArrayList;
 
 public class LinkPermit {
@@ -12,7 +14,7 @@ public class LinkPermit {
             try {
                 Thread.sleep(60000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
             permits.remove(username);
         }).start();

@@ -52,7 +52,7 @@ public class InternalFile {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
             return null;
         }
     }

@@ -138,7 +138,7 @@ public class OfficerWindow {
                     catch (Exception ignored){}
                     String option = DialogBox.showDialogBox("Globally Unblock " + idInput.getText() + "?", "\"" + levelName + "\" will now be able to be requested anywhere using loquibot.", "" , new String[]{"$YES$", "$NO$"});
                     if(option.equalsIgnoreCase("YES")){
-                        System.out.println("unblocked");
+                        Main.logger.info("Globally Unblocked " + idInput.getText());
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("request_type", "globally_unblock_id");
                         jsonObject.put("id", idInput.getText());
@@ -158,7 +158,7 @@ public class OfficerWindow {
                         }
                         String option = DialogBox.showDialogBox("Globally Block " + idInput.getText() + "?", "\"" + levelName + "\" will no longer be able to be requested anywhere using loquibot. REASON: " + reasonInput.getText(), "", new String[]{"$YES$", "$NO$"});
                         if (option.equalsIgnoreCase("YES")) {
-                            System.out.println("blocked");
+                            Main.logger.info("Globally Blocked " + idInput.getText());
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("request_type", "globally_block_id");
                             jsonObject.put("id", idInput.getText());

@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.ChatBot.ServerBot;
@@ -36,7 +37,7 @@ public class Developer {
                 response.put("request_type", "reset_oauth");
 
                 String oauth = TwitchAPI.getBotOauth();
-                System.out.println("New oauth is: " + oauth);
+                Main.logger.info("New oauth is: " + oauth);
                 response.put("oauth", oauth);
 
                 if (oauth != null){

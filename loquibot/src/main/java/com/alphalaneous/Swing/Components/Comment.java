@@ -1,5 +1,6 @@
 package com.alphalaneous.Swing.Components;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Services.GeometryDash.GDAPI;
 import com.alphalaneous.Tabs.RequestsTab;
@@ -101,7 +102,8 @@ public class Comment extends JPanel {
                     try {
                         Utilities.openURL(new URI("https://www.gdbrowser.com/profile/" + finalCommentAuthor));
                     } catch (URISyntaxException ex) {
-                        ex.printStackTrace();
+                        Main.logger.error(ex.getLocalizedMessage(), ex);
+
                     }
                 }
             }

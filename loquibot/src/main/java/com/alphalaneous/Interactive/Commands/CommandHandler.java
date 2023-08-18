@@ -116,7 +116,7 @@ public class CommandHandler {
                 reply = (String) Class.forName("com.alphalaneous.Interactive.Commands.DefaultCommandFunctions").getMethod(foundCommand.getMessage(), ChatMessage.class).invoke(null, message);
             }
             catch (Exception e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
                 return;
             }
         }
@@ -177,8 +177,6 @@ public class CommandHandler {
                 elseData = parts[1].trim();
             }
 
-            System.out.println(ifData);
-
             int state = 0;
             int startPos = 0;
             int endPos = 0;
@@ -208,9 +206,6 @@ public class CommandHandler {
                 String ifValue = innerData.substring(startPos+1, endPos);
                 String ifValueAfter = parseParenthesis(message, ifValue, ifValue.split(" "), null, ifValue, commandData, keywordData, cheerActionData, false);
 
-                System.out.println(ifValueAfter);
-
-                newValue = ifData;
                 if(compare(ifValueAfter)) replacement = ifData;
                 else replacement = elseData;
             }
@@ -342,7 +337,7 @@ public class CommandHandler {
                         }
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Main.logger.error(e.getLocalizedMessage(), e);
                     }
                 }
 
@@ -388,7 +383,7 @@ public class CommandHandler {
                         }
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Main.logger.error(e.getLocalizedMessage(), e);
                     }
                 }
 
@@ -474,7 +469,7 @@ public class CommandHandler {
                     default: {
 
                         if(data.toLowerCase().startsWith("file://")) {
-                            System.out.println("Playing sound from file");
+                            Main.logger.info("Playing sound from file: " + dataArr[1].trim().substring(7));
                             Sounds.playSound(dataArr[1].trim().substring(7), true, true, true, false);
                         }
                         else Sounds.playSound(dataArr[1].trim(), true, true, false, true);
@@ -638,7 +633,7 @@ public class CommandHandler {
                     break;
                 }
                 catch (Exception e){
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
                     replacement = "Couldn't find location";
                     break;
                 }

@@ -1,5 +1,6 @@
 package com.alphalaneous.Interactive.Keywords;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -122,7 +123,7 @@ public class KeywordData {
             Files.write(path.toAbsolutePath(), object.toString(4).getBytes());
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 

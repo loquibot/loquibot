@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.FancyTextArea;
 import com.alphalaneous.Swing.Components.ListButton;
@@ -37,7 +38,7 @@ public class BlockedUsers {
             try {
                 sc = new Scanner(file.toFile());
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
             assert sc != null;
             while (sc.hasNextLine()) {

@@ -1,5 +1,6 @@
 package com.alphalaneous.Utils;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 
 import java.awt.*;
@@ -107,7 +108,8 @@ public class RegQuery {
                 while ((c = is.read()) != -1)
                     sw.write(c);
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
         String getResult() {

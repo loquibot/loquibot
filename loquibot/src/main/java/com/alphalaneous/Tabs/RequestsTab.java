@@ -250,7 +250,8 @@ public class RequestsTab {
                 try {
                     Utilities.openURL(new URI("https://twitter.com/alphalaneous"));
                 } catch (URISyntaxException ex) {
-                    ex.printStackTrace();
+                    Main.logger.error(ex.getLocalizedMessage(), ex);
+
                 }
             }
         });
@@ -265,7 +266,8 @@ public class RequestsTab {
                 try {
                     Utilities.openURL(new URI("https://twitter.com/alphalaneous"));
                 } catch (URISyntaxException ex) {
-                    ex.printStackTrace();
+                    Main.logger.error(ex.getLocalizedMessage(), ex);
+
                 }
             }
 

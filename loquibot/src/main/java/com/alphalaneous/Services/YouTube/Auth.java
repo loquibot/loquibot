@@ -1,5 +1,7 @@
 package com.alphalaneous.Services.YouTube;
 
+import com.alphalaneous.Main;
+import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Defaults;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -13,15 +15,13 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,17 +41,36 @@ public class Auth {
                     Files.delete(Path.of(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }
 
         Reader clientSecretReader = new InputStreamReader(Objects.requireNonNull(Auth.class.getResourceAsStream("/client_secrets.json")));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
 
+        File file = FileUtils.getUserDirectory();
 
-        File correctDirectory = new File(Defaults.saveDirectory + "\\loquibot");
+        String newDirectory = file + "\\.loquibot";
 
-        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
+        File correctDirectory;
+
+        if(SettingsHandler.getSettings("useSeparateYouTubeDir").asBoolean()){
+            correctDirectory = new File(newDirectory);
+        }
+        else{
+            correctDirectory = new File(Defaults.saveDirectory + "\\loquibot");
+        }
+
+        FileDataStoreFactory fileDataStoreFactory;
+        try {
+            fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
+        }
+        catch (Exception e){
+            SettingsHandler.writeSettings("useSeparateYouTubeDir", "true");
+            correctDirectory = new File(newDirectory);
+            fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
+        }
 
         DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentials);
 

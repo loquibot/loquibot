@@ -1,5 +1,6 @@
 package com.alphalaneous.Audio;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utilities;
 import com.alphalaneous.Windows.DialogBox;
@@ -132,12 +133,10 @@ public class Sounds {
 					}
 
 				} catch (Exception f) {
-					f.printStackTrace();
-					DialogBox.showDialogBox("Error!", f.toString(), "There was an error playing the sound!", new String[]{"OK"});
-
+					Main.logger.error(f.getLocalizedMessage(), f);
 				}
 				complete = true;
-				System.out.println("Complete " + UUID);
+				Main.logger.info("Sound Complete: " + UUID);
 				if(overlap) {
 					Utilities.sleep(5000);
 					playingSoundsOverlap.remove(this);

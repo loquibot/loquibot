@@ -249,7 +249,8 @@ public class LevelDetails extends JPanel {
                 try {
                     Utilities.openURL(new URI("https://www.youtube.com/watch?v=" + videoUsed.getVideoID()));
                 } catch (URISyntaxException ex) {
-                    ex.printStackTrace();
+                    Main.logger.error(ex.getLocalizedMessage(), ex);
+
                 }
             }
         });
@@ -425,7 +426,7 @@ public class LevelDetails extends JPanel {
                     return candidates.get(0);
 
                 } catch (IOException f) {
-                    f.printStackTrace();
+                    Main.logger.error(f.getLocalizedMessage(), f);
                 }
                 return null;
             }
@@ -491,7 +492,7 @@ public class LevelDetails extends JPanel {
             return finalSim;
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
             return 0;
         }
     }
@@ -521,7 +522,7 @@ public class LevelDetails extends JPanel {
                 return refreshComments(page, top, id);
             }
             else tries = 0;
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
             return false;
         }
         if (comments != null) {
@@ -708,7 +709,7 @@ public class LevelDetails extends JPanel {
             InputStream inputStream = connection.getInputStream();
             image = ImageIO.read(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         return image;
     }

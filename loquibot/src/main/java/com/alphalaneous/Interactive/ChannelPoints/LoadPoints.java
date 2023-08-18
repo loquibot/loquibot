@@ -1,5 +1,6 @@
 package com.alphalaneous.Interactive.ChannelPoints;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Tabs.ChatbotPages.CustomKeywords;
 import com.alphalaneous.Utils.Utilities;
@@ -35,7 +36,7 @@ public class LoadPoints {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 
@@ -54,7 +55,7 @@ public class LoadPoints {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         CustomKeywords.loadKeywords();
     }
@@ -78,7 +79,7 @@ public class LoadPoints {
                 commandDataArrayList.add(channelPointData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
             }
         }
         return commandDataArrayList;

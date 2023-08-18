@@ -108,7 +108,8 @@ public class Account {
                     LoadGD.isAuth = false;
                 }
             } catch (Exception f) {
-                f.printStackTrace();
+                Main.logger.error(f.getLocalizedMessage(), f);
+
                 usernameLabel.setForeground(red);
                 usernameLabel.setTextLang("Failed");
             }
@@ -154,7 +155,8 @@ public class Account {
                 refreshKick(KickAccount.username, false);
             }
             catch (Exception e){
-                e.printStackTrace();
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
 
         }
@@ -272,7 +274,7 @@ public class Account {
                     YouTubeAccount.setCredential(true);
                 }
                 catch (Exception e){
-                    e.printStackTrace();
+                    Main.logger.error(e.getLocalizedMessage(), e);
                 }
                 refreshYouTube(YouTubeAccount.name);
                 /*String option = DialogBox.showDialogBox("Restart loquibot?", "It is recommended to restart loquibot after logging in.", "Restart?", new String[]{"Yes", "No"});

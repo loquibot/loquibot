@@ -91,7 +91,8 @@ public class Defaults {
 					try {
 						Files.createDirectory(Paths.get(saveDirectory));
 					} catch (IOException e) {
-						e.printStackTrace();
+						Main.logger.error(e.getLocalizedMessage(), e);
+
 					}
 				}
 			}
@@ -117,7 +118,8 @@ public class Defaults {
 			SYMBOLSalt = Font.createFont(Font.TRUETYPE_FONT,
 					Objects.requireNonNull(Main.class.getClassLoader().getResourceAsStream("Fonts/SegoeFluent.ttf")));
 		} catch (FontFormatException | IOException | NullPointerException e) {
-			e.printStackTrace();
+			Main.logger.error(e.getLocalizedMessage(), e);
+
 		}
 	}
 
@@ -335,7 +337,7 @@ public class Defaults {
 
 					Utilities.sleep(1000);
 				} catch (Exception e) {
-					e.printStackTrace();
+					Main.logger.error(e.getLocalizedMessage(), e);
 				}
 			}
 

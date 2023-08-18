@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.LangLabel;
 import com.alphalaneous.Swing.Components.SettingsPage;
@@ -53,14 +54,14 @@ public class Personalization {
 
                             //Files.createLink(link, Paths.get(Settings.getSettings("installLocation").asString()));
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Main.logger.error(e.getLocalizedMessage(), e);
                         }
                     } else {
                         if (Files.exists(link)) {
                             try {
                                 Files.delete(link);
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                Main.logger.error(e.getLocalizedMessage(), e);
                             }
                         }
                     }

@@ -2,6 +2,7 @@ package com.alphalaneous.Tabs;
 
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Main;
 import com.alphalaneous.Settings.ChannelPoints;
 import com.alphalaneous.Settings.Chatbot;
 import com.alphalaneous.Settings.Logs.RequestsLog;
@@ -323,8 +324,9 @@ public class ChatbotTab {
 			}
 			try {
 				function.run();
-			} catch (Exception exception) {
-				exception.printStackTrace();
+			} catch (Exception e) {
+				Main.logger.error(e.getLocalizedMessage(), e);
+
 			}
 			for (CurvedButton component : buttons) {
 				if (component instanceof FunctionButton) {

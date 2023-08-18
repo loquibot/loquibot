@@ -1,5 +1,6 @@
 package com.alphalaneous.Utils;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.Components.CurvedButton;
 import com.alphalaneous.Swing.Components.LangButton;
 import com.alphalaneous.Swing.Components.LangLabel;
@@ -114,7 +115,7 @@ public class Language {
             }
         }
         catch(Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
         try {
             GetInternalFiles getInternalFiles = new GetInternalFiles("Languages/");
@@ -142,7 +143,7 @@ public class Language {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 
@@ -181,8 +182,9 @@ public class Language {
                         }
                     }
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                Main.logger.error(e.getLocalizedMessage(), e);
+
             }
         }).start();
     }

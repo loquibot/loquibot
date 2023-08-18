@@ -56,6 +56,7 @@ public abstract class NewChatBot {
 
     public void parseChatEvent(IRCMessageEvent event){
 
+        if(event.getUser() == null) return;
         if(event.getUser().getName().equalsIgnoreCase("loquibot")) return;
 
         Map<String, String> map = event.getTags();

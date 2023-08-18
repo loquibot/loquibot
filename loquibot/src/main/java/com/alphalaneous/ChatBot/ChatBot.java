@@ -1,5 +1,6 @@
 package com.alphalaneous.ChatBot;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Utilities;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -99,7 +100,7 @@ public abstract class ChatBot {
 				Utilities.sleep(10);
 			}
 		} catch (InterruptedException e) {
-			System.out.println("> Couldn't connect to Chat Listener");
+			Main.logger.error("Couldn't connect to Chat Listener");
 		}
 		chatReader.send("CAP REQ :twitch.tv/tags");
 		chatReader.send("CAP REQ :twitch.tv/commands");

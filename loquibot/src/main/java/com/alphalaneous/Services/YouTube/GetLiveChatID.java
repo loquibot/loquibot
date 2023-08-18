@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.YouTube;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
@@ -58,7 +59,8 @@ public class GetLiveChatID {
                         try {
                             Utilities.openURL(new URI("https://support.google.com/youtube/answer/171664?hl=en"));
                         } catch (URISyntaxException ex) {
-                            ex.printStackTrace();
+                            Main.logger.error(ex.getLocalizedMessage(), ex);
+
                         }
                     }
                 }).start();

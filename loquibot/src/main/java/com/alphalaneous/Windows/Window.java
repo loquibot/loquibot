@@ -47,7 +47,7 @@ public class Window {
         windowFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("> Closing");
+                Main.logger.info("Closing");
                 Main.close();
             }
         });
@@ -91,7 +91,7 @@ public class Window {
                 Main.restart();
             }
             catch (Exception f){
-                f.printStackTrace();
+                Main.logger.error(f.getLocalizedMessage(), f);
             }
         });
 

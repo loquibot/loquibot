@@ -1,5 +1,6 @@
 package com.alphalaneous.Settings;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
@@ -41,7 +42,7 @@ public class SettingsHandler {
 		try {
 			Utilities.load("/loquibot/config.properties", settings);
 		} catch (IOException e) {
-			System.out.println("No config.properties");
+			Main.logger.error("No config.properties");
 		}
 	}
 }

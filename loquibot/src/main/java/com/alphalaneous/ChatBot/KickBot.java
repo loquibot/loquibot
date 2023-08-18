@@ -8,6 +8,7 @@ import com.alphalaneous.KickAPI.Casterlabs.KickUser;
 import com.alphalaneous.KickAPI.Channel;
 import com.alphalaneous.KickAPI.KickClient;
 import com.alphalaneous.KickAPI.MessageEvent;
+import com.alphalaneous.Main;
 import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Settings.SettingsHandler;
 
@@ -77,7 +78,7 @@ public class KickBot {
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e.getLocalizedMessage(), e);
         }
     }
 
