@@ -2,11 +2,7 @@
 
 The loquibot Repo!
 
-Here you'll see loquibot code woah!!!
-
-Make changes if ya want, half this can probably be optimized a ton ^^!
-
-Emjoy.
+A chat bot for Twitch, Kick, and YouTube.
 
 https://loquibot.com
 
