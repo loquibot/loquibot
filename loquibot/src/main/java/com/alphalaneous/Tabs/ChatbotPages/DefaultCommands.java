@@ -30,6 +30,7 @@ public class DefaultCommands {
 		ArrayList<CommandData> alphabetizedCommands = Utilities.alphabetizeCommandData(commands);
 
 		for(CommandData commandData : alphabetizedCommands){
+			if(commandData.getUserLevel().equalsIgnoreCase("admin")) continue;
 			CommandConfigCheckbox commandConfigCheckbox = new CommandConfigCheckbox(commandData);
 			commandConfigCheckbox.resize(Window.getWindow().getWidth());
 			if(listView != null) {

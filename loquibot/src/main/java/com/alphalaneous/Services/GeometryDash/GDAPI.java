@@ -1,11 +1,15 @@
 package com.alphalaneous.Services.GeometryDash;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Servers.LevelFilter;
 import com.alphalaneous.Servers.Levels;
 import com.alphalaneous.Servers.Type;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utilities;
+import com.alphalaneous.Utils.AlreadyInQueueException;
+import com.alphalaneous.Utils.NoLevelException;
 import jdash.client.GDClient;
+import jdash.client.exception.ActionFailedException;
 import jdash.client.exception.GDClientException;
 import jdash.client.request.GDRequest;
 import jdash.client.request.GDRequests;
@@ -14,22 +18,26 @@ import jdash.client.response.GDResponse;
 import jdash.client.response.GDResponseDeserializers;
 import jdash.client.response.impl.GDCachedObjectResponse;
 import jdash.client.response.impl.GDSerializedSourceResponse;
-import jdash.common.CommentSortMode;
-import jdash.common.IconType;
-import jdash.common.LevelBrowseMode;
-import jdash.common.LevelSearchFilter;
+import jdash.common.*;
 import jdash.common.entity.*;
 import jdash.graphics.SpriteFactory;
 import org.imgscalr.Scalr;
+import org.json.JSONObject;
 import reactor.core.publisher.Flux;
 import reactor.util.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Duration;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static jdash.client.request.GDRequests.GET_GJ_LEVELS_21;
@@ -37,6 +45,12 @@ import static jdash.client.request.GDRequests.commonParams;
 import static jdash.client.response.GDResponseDeserializers.levelSearchResponse;
 
 public class GDAPI {
+
+    private static final HashSet<Long> batchQueue = new HashSet<>();
+    private static final HashSet<Long> justBatched = new HashSet<>();
+
+
+    private static final HashSet<BatchedLevel> batchLevels = new HashSet<>();
 
     private static GDClient client = GDClient.create();
     private static final SpriteFactory spriteFactory = SpriteFactory.create();
@@ -105,9 +119,72 @@ public class GDAPI {
     }
 
     public static GDLevelExtra getLevel(long ID){
-        return Objects.requireNonNull(browseLevels(LevelBrowseMode.SEARCH, String.valueOf(ID), LevelSearchFilter.create(), 0));
 
+        batchQueue.add(ID);
+
+        while (!notifyBool.get()){
+            Utilities.sleep(2);
+        }
+
+        for(BatchedLevel level : batchLevels){
+
+            if(justBatched.contains(ID)) throw new AlreadyInQueueException(level.getLevelExtra());
+
+            if(level.getID() == ID){
+                if(!level.isExists()){
+                    throw new NoLevelException();
+                }
+                justBatched.add(ID);
+                return level.getLevelExtra();
+            }
+        }
+        return null;
     }
+
+    static AtomicBoolean notifyBool = new AtomicBoolean(false);
+
+    public static void startBatchListener(){
+        new Thread(() -> {
+
+            while(true){
+
+                if(batchQueue.size() != 0){
+                    justBatched.clear();
+                    Main.logger.info("Adding batch: " + Arrays.toString(batchQueue.toArray()));
+
+                    ArrayList<GDLevelExtra> levelExtras = getLevels(batchQueue);
+
+                    for(GDLevelExtra levelExtra : levelExtras){
+                        batchLevels.add(new BatchedLevel(levelExtra.getLevel().id(), true, levelExtra));
+                    }
+
+                    ArrayList<Long> found = new ArrayList<>();
+
+                    for(long ID : batchQueue){
+                        for(BatchedLevel level : batchLevels){
+                            if(level.getID() == ID){
+                                found.add(ID);
+                            }
+                        }
+                    }
+
+                    found.forEach(batchQueue::remove);
+
+                    for(long ID : batchQueue){
+                        batchLevels.add(new BatchedLevel(ID, false, null));
+                    }
+
+                    batchQueue.clear();
+                    notifyBool.set(true);
+                    Utilities.sleep(100);
+                    notifyBool.set(false);
+                }
+                Utilities.sleep(10000);
+            }
+        }).start();
+    }
+
+
     static int wait = 0;
     public static GDLevelExtra browseLevels(LevelBrowseMode mode, @Nullable String query, @Nullable LevelSearchFilter filter,
                                             int page) {
@@ -155,35 +232,114 @@ public class GDAPI {
             }
         }
 
-
-
         return new GDLevelExtra(level, accountID);
+    }
+
+    public static ArrayList<GDLevelExtra> getLevels(HashSet<Long> IDs) {
+
+        ArrayList<GDLevelExtra> returnedLevels = new ArrayList<>();
+        
+        var request = GDRequest.of(GET_GJ_LEVELS_21)
+                .addParameters(commonParams())
+                .addParameter("page", 0)
+                .addParameter("type", 26)
+                .addParameter("total", IDs.size())
+                .addParameter("str", IDs.stream().map(Object::toString)
+                        .collect(Collectors.joining(",")));
+
+
+        GDResponse searchResponse = request.execute(client.getCache(), client.getRouter());
+        String searchString = searchResponse.deserialize(e -> e).block();
+        List<GDLevel> theLevels;
+
+        try {
+            theLevels = searchResponse.deserialize(levelSearchResponse()).flatMapMany(Flux::fromIterable).collectList().block();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return returnedLevels;
+        }
+
+        String accountsString;
+
+        if(theLevels != null) {
+
+            for (GDLevel level : theLevels) {
+                returnedLevels.add(new GDLevelExtra(level));
+            }
+
+            if (searchString != null) {
+                accountsString = searchString.split("#")[1];
+                String[] accounts = accountsString.split("\\|");
+
+                for (String str : accounts) {
+                    if (!str.equalsIgnoreCase("")) {
+                        long userID = Long.parseLong(str.split(":")[0]);
+
+                        for (GDLevelExtra level : returnedLevels) {
+                            if (level.getLevel().creatorPlayerId() == userID) {
+                                level.setAccountID(Long.parseLong(str.split(":")[2]));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return returnedLevels;
     }
 
 
     public static GDLevelExtra getTopLevelByName(String name) {
-        return Objects.requireNonNull(browseLevels(LevelBrowseMode.SEARCH, name, LevelSearchFilter.create(), 0));
+
+
+        if(SettingsHandler.getSettings("isWhitelisted").asBoolean()) {
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("name", name);
+
+            JSONObject levelData = com.alphalaneous.Utils.Utilities.getFromLoquiServers("getTopLevelByName", params);
+
+            return com.alphalaneous.Utils.Utilities.jsonToGDLevelExtra(levelData);
+        }
+        else {
+            return Objects.requireNonNull(browseLevels(LevelBrowseMode.SEARCH, name, LevelSearchFilter.create(), 0));
+        }
     }
     public static GDLevelExtra getLevelByNameByUser(String name, String username, boolean isEqual){
-        GDLevel level;
-        for(int j = 0; j < 10; j++) {
-            GDUserStats stats = getGDUserStats(username);
-            List<GDLevel> levels = client.browseLevelsByUser(stats.playerId(), j).collectList().block();
-            try {
-                for (int i = 0; i < 10; i++) {
-                    level = Objects.requireNonNull(levels).get(i);
-                    if (isEqual && level.name().equalsIgnoreCase(name)) {
-                        return new GDLevelExtra(level, stats.accountId());
-                    } else if (!isEqual && level.name().toLowerCase().startsWith(name.toLowerCase())) {
-                        return new GDLevelExtra(level, stats.accountId());
+
+        if(SettingsHandler.getSettings("isWhitelisted").asBoolean()) {
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("name", name);
+            params.put("username", username);
+            params.put("isEqual", String.valueOf(isEqual));
+
+            JSONObject levelData = com.alphalaneous.Utils.Utilities.getFromLoquiServers("getLevelByNameByUser", params);
+
+            return com.alphalaneous.Utils.Utilities.jsonToGDLevelExtra(levelData);
+        }
+        else {
+            GDLevel level;
+            for(int j = 0; j < 10; j++) {
+                GDUserStats stats = getGDUserStats(username);
+                List<GDLevel> levels = client.browseLevelsByUser(stats.playerId(), j).collectList().block();
+                try {
+                    for (int i = 0; i < 10; i++) {
+                        level = Objects.requireNonNull(levels).get(i);
+                        if (isEqual && level.name().equalsIgnoreCase(name)) {
+                            return new GDLevelExtra(level, stats.accountId());
+                        } else if (!isEqual && level.name().toLowerCase().startsWith(name.toLowerCase())) {
+                            return new GDLevelExtra(level, stats.accountId());
+                        }
                     }
                 }
+                catch (IndexOutOfBoundsException e){
+                    return null;
+                }
             }
-            catch (IndexOutOfBoundsException e){
-                return null;
-            }
+            return null;
         }
-        return null;
     }
 
 
@@ -192,9 +348,9 @@ public class GDAPI {
             CommentSortMode commentSortMode = CommentSortMode.RECENT;
             if (mostLiked) commentSortMode = CommentSortMode.MOST_LIKED;
 
-            return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofMillis(2500));
+            return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofSeconds(2));
         }
-        catch (GDClientException e){
+        catch (Exception e){
             return null;
         }
     }

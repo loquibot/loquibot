@@ -5,14 +5,35 @@ import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
-import javazoom.jl.player.Player;
+import javazoom.jl.decoder.Equalizer;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.*;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.SourceDataLine;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class Sounds {
+
+
+	private static AudioDevice device;
+
+	static {
+		try {
+			device = FactoryRegistry.systemRegistry().createAudioDevice();
+		} catch (JavaLayerException e) {
+			Main.logger.error(e.getLocalizedMessage(), e);
+		}
+	}
+
+
+	private static FloatControl volControl;
 
 	static ConcurrentHashMap<String, Sound> sounds = new ConcurrentHashMap<>();
 	static {
@@ -40,6 +61,40 @@ public class Sounds {
 			}
 		}).start();
 	}
+
+	public static void setVolume(float gain){
+		Class<JavaSoundAudioDevice> clazz = JavaSoundAudioDevice.class;
+		Field[] fields = clazz.getDeclaredFields();
+
+		try{
+			SourceDataLine source;
+			for(Field field : fields) {
+				if("source".equals(field.getName())) {
+
+					JavaSoundAudioDevice a = new JavaSoundAudioDevice();
+
+					field.setAccessible(true);
+					source = (SourceDataLine) field.get(device);
+					field.setAccessible(false);
+
+					if(source != null) {
+
+						FloatControl volControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
+						if (volControl != null) {
+							float newGain = Math.min(Math.max(gain, volControl.getMinimum()), volControl.getMaximum());
+
+							System.out.println(volControl.getMinimum() + " | " + volControl.getMaximum() + " | " + newGain);
+
+							volControl.setValue(newGain);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			Main.logger.error(e.getLocalizedMessage(), e);
+		}
+	}
+
 
 	public static void querySound(){
 		new Thread(() -> {
@@ -70,7 +125,7 @@ public class Sounds {
 
 	public static String getLocationID(String location){
 		for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
-			if (((Sound) ((Map.Entry) stringSoundEntry).getValue()).location.equalsIgnoreCase(location)) {
+			if (stringSoundEntry.getValue().location.equalsIgnoreCase(location)) {
 				return stringSoundEntry.toString();
 			}
 		}
@@ -79,19 +134,17 @@ public class Sounds {
 
 	public static boolean contains(String location){
 		for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
-			if (((Sound) ((Map.Entry) stringSoundEntry).getValue()).location.equalsIgnoreCase(location)) {
+			if (stringSoundEntry.getValue().location.equalsIgnoreCase(location)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-
-	@SuppressWarnings("rawtypes")
 	public static void stopAllSounds() {
 
 		for (Map.Entry<String, Sound> stringSoundEntry : sounds.entrySet()) {
-			((Sound) ((Map.Entry) stringSoundEntry).getValue()).stopSound();
+			stringSoundEntry.getValue().stopSound();
 		}
 		Sounds.sounds.clear();
 	}
@@ -105,6 +158,8 @@ public class Sounds {
 		boolean isURL;
 		boolean overlap;
 		Player mp3player;
+
+
 
 		public Sound(String location, boolean isFile, boolean isURL, boolean overlap) {
 			this.location = location;
@@ -127,9 +182,19 @@ public class Sounds {
 							inp = new BufferedInputStream(Sounds.class
 									.getResource(location).openStream());
 						}
-						mp3player = new Player(inp);
+
+						mp3player = new Player(inp, device);
+
+
+
+
 						mp3player.play();
+
+						Sounds.setVolume(2f);
+
+
 						inp.close();
+						device.close();
 					}
 
 				} catch (Exception f) {

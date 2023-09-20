@@ -60,7 +60,17 @@ public class BotHandler {
                             if (chatID != null) {
                                 chatIDL = Long.parseLong(chatID);
                             }
-                            Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), chatMessage.getSender(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getMessage(), chatMessage.getTag("id"), chatIDL, false, chatMessage);
+
+                            long ID = -1;
+
+                            try {
+                                ID = Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", ""));
+                            } catch (NumberFormatException ignored) {
+                            }
+
+                            if (ID != -1) {
+                                Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), chatMessage.getSender(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getMessage(), chatMessage.getTag("id"), chatIDL, false, chatMessage);
+                            }
                         }
                     }
 

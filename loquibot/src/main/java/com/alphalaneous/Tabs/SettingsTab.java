@@ -2,6 +2,7 @@ package com.alphalaneous.Tabs;
 
 import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Images.Assets;
+import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.*;
 import com.alphalaneous.Settings.Logs.RequestsLog;
@@ -32,6 +33,8 @@ public class SettingsTab {
 	private static final JPanel shortcutsPage = Keybinds.createPanel();
 	private static final JPanel personalizationPage = Personalization.createPanel();
 	private static final JPanel blockedPage = BlockedIDs.createPanel();
+	private static final JPanel blockedSongIDsPage = BlockedSongIDs.createPanel();
+
 	private static final JPanel blockedUsersPage = BlockedUsers.createPanel();
 	private static final JPanel blockedCreatorsPage = BlockedCreators.createPanel();
 	private static final JPanel loggedIDsPage = RequestsLog.createPanel();
@@ -66,58 +69,48 @@ public class SettingsTab {
 
 	private static final SettingsButton requests = createButton("$REQUESTS_SETTINGS$", "\uF26F", () -> {
 		generalPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton mods = createButton("$MODS_SETTINGS$", "\uF1B2", () -> {
 		modsPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton outputs = createButton("$OUTPUTS_SETTINGS$", "\uF68D", () -> {
 		overlayPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton accounts = createButton("$ACCOUNTS_SETTINGS$", "\uF133", () -> {
 		accountsPage.setVisible(true);
-		return null;
 	});
 
 	private static final SettingsButton filters = createButton("$FILTERS_SETTINGS$", "\uF309", () -> {
 		requestsPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton shortcuts = createButton("$SHORTCUTS_SETTINGS$", "\uF105", () -> {
 		shortcutsPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton personalization = createButton("$PERSONALIZATION_SETTINGS$", "\uF1B9", () -> {
 		personalizationPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton blocked = createButton("$BLOCKED_IDS_SETTINGS$", "\uF313", () -> {
 		blockedPage.setVisible(true);
-		return null;
+	});
+	private static final SettingsButton blockedSongIDs = createButton("$BLOCKED_SONG_IDS_SETTINGS$", "\uF181", () -> {
+		blockedSongIDsPage.setVisible(true);
 	});
 	private static final SettingsButton blockedUsers = createButton("$BLOCKED_USERS_SETTINGS$", "\uF5D2", () -> {
 		blockedUsersPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton blockedCreators = createButton("$BLOCKED_CREATORS_SETTINGS$", "\uF5D1", () -> {
 		blockedCreatorsPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton loggedIDs = createButton("$LOGGED_IDS_SETTINGS$", "\uF0D6", () -> {
 		loggedIDsPage.setVisible(true);
 		RequestsLog.loadIDs();
-		return null;
 	});
 	private static final SettingsButton developer = createButton("$DEVELOPER_SETTINGS$", "\uF114", () -> {
 		devPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton reportedIDs = createButton("$REPORTED_ID_SETTINGS$", "\uF04A", () -> {
 		reportedIDsPage.setVisible(true);
 		ReportedIDs.loadIDs();
-		return null;
 	});
 	//private static final SettingsButton legal = createButton("$LEGAL_SETTINGS$", null, () -> {
 	//	legalPage.setVisible(true);
@@ -125,19 +118,15 @@ public class SettingsTab {
 	//});
 	private static final SettingsButton privacy = createButton("$PRIVACY_SETTINGS$", null, () -> {
 		privacyPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton warranty = createButton("$WARRANTY_SETTINGS$", null, () -> {
 		warrantyPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton terms = createButton("$TERMS_SETTINGS$", null, () -> {
 		termsPage.setVisible(true);
-		return null;
 	});
 	private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uF4F3", () -> {
 		languagePage.setVisible(true);
-		return null;
 	});
 	private static final GridBagConstraints gbc = new GridBagConstraints();
 
@@ -197,6 +186,7 @@ public class SettingsTab {
 		content.add(shortcutsPage);
 		content.add(personalizationPage);
 		content.add(blockedPage);
+		content.add(blockedSongIDsPage);
 		content.add(blockedUsersPage);
 		content.add(blockedCreatorsPage);
 		content.add(loggedIDsPage);
@@ -218,6 +208,7 @@ public class SettingsTab {
 		shortcutsPage.setVisible(false);
 		personalizationPage.setVisible(false);
 		blockedPage.setVisible(false);
+		blockedSongIDsPage.setVisible(false);
 		blockedUsersPage.setVisible(false);
 		blockedCreatorsPage.setVisible(false);
 		loggedIDsPage.setVisible(false);
@@ -250,6 +241,7 @@ public class SettingsTab {
 		buttons.add(outputs, gbc);
 		buttons.add(shortcuts, gbc);
 		buttons.add(blocked, gbc);
+		buttons.add(blockedSongIDs, gbc);
 		buttons.add(blockedUsers, gbc);
 		buttons.add(blockedCreators, gbc);
 		buttons.add(loggedIDs, gbc);
@@ -407,11 +399,11 @@ public class SettingsTab {
 
 	private static class SettingsButton extends CurvedButton {
 
-		private final Callable<Void> method;
+		private final Function method;
 		private final LangLabel label;
 
 
-		SettingsButton(String text, String icon, Callable<Void> method){
+		SettingsButton(String text, String icon, Function method){
 			super("");
 			this.method = method;
 
@@ -453,7 +445,7 @@ public class SettingsTab {
 				}
 			}
 			try {
-				method.call();
+				method.run();
 			} catch (Exception e) {
 				Main.logger.error(e.getLocalizedMessage(), e);
 			}
@@ -470,7 +462,7 @@ public class SettingsTab {
 
 	}
 
-	private static SettingsButton createButton(String text, String icon, Callable<Void> method) {
+	private static SettingsButton createButton(String text, String icon, Function method) {
 		return new SettingsButton(text, icon, method);
 	}
 

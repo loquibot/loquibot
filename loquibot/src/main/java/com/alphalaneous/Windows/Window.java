@@ -396,6 +396,9 @@ public class Window {
                         Defaults.screenNum = Integer.parseInt(screen.getIDstring().replaceAll("Display", "").replace("\\", "").trim());
                     }
                 }
+                SettingsHandler.writeSettings("window", windowFrame.getX() + "," + windowFrame.getY());
+                SettingsHandler.writeSettings("windowState", String.valueOf(windowFrame.getExtendedState()));
+                SettingsHandler.writeSettings("windowSize", windowFrame.getWidth() + "," + windowFrame.getHeight());
             }
         });
     }

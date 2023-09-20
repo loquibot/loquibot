@@ -6,6 +6,7 @@ import com.alphalaneous.Interactive.CheerActions.CheerActionData;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Interactive.Timers.TimerData;
+import com.alphalaneous.Services.GeometryDash.GDLevelExtra;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Windows.DialogBox;
@@ -17,6 +18,12 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import jdash.common.DemonDifficulty;
+import jdash.common.Difficulty;
+import jdash.common.Length;
+import jdash.common.entity.GDLevel;
+import jdash.common.entity.GDSong;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,8 +33,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -437,4 +444,233 @@ public class Utilities {
 		}
 		return newTimerArrayList;
 	}
+
+	public static String getParamsString(Map<String, String> params)
+			throws UnsupportedEncodingException{
+		StringBuilder result = new StringBuilder();
+
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
+			result.append("=");
+			result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+			result.append("&");
+		}
+
+		String resultString = result.toString();
+		return resultString.length() > 0
+				? resultString.substring(0, resultString.length() - 1)
+				: resultString;
+	}
+
+	public static GDLevelExtra jsonToGDLevelExtra(JSONObject object){
+
+		if(object == null){
+			return null;
+		}
+
+		if(object.has("error")){
+			boolean error = object.getBoolean("error");
+			if(error) return null;
+		}
+
+		GDLevel level = new GDLevel() {
+			@Override
+			public long id() {
+				return object.getLong("ID");
+			}
+
+			@Override
+			public String name() {
+				return object.getString("name");
+			}
+
+			@Override
+			public long creatorPlayerId() {
+				return object.getLong("playerID");
+			}
+
+			@Override
+			public String description() {
+				return object.getString("description");
+			}
+
+			@Override
+			public Difficulty difficulty() {
+				return Difficulty.parse(String.valueOf(object.getInt("difficulty")));
+			}
+
+			@Override
+			public DemonDifficulty demonDifficulty() {
+				return DemonDifficulty.parse(String.valueOf(object.getInt("demonDifficulty")));
+			}
+
+			@Override
+			public int stars() {
+				return object.getInt("stars");
+			}
+
+			@Override
+			public int featuredScore() {
+				return object.getInt("featuredScore");
+			}
+
+			@Override
+			public boolean isEpic() {
+				return object.getBoolean("isEpic");
+			}
+
+			@Override
+			public int downloads() {
+				return object.getInt("downloads");
+			}
+
+			@Override
+			public int likes() {
+				return object.getInt("likes");
+			}
+
+			@Override
+			public Length length() {
+				return Length.parse(String.valueOf(object.getInt("length")));
+			}
+
+			@Override
+			public int coinCount() {
+				return object.getInt("coinCount");
+			}
+
+			@Override
+			public boolean hasCoinsVerified() {
+				return object.getBoolean("hasCoinsVerified");
+			}
+
+			@Override
+			public int levelVersion() {
+				return object.getInt("levelVersion");
+			}
+
+			@Override
+			public int gameVersion() {
+				return object.getInt("gameVersion");
+			}
+
+			@Override
+			public int objectCount() {
+				return object.getInt("objectCount");
+			}
+
+			@Override
+			public boolean isDemon() {
+				return object.getBoolean("isDemon");
+			}
+
+			@Override
+			public boolean isAuto() {
+				return object.getBoolean("isAuto");
+			}
+
+			@Override
+			public Optional<Long> originalLevelId() {
+				if(!object.has("originalLevelID")) return Optional.empty();
+				else return Optional.of(object.getLong("originalLevelID"));
+			}
+
+			@Override
+			public int requestedStars() {
+				return object.getInt("requestedStars");
+			}
+
+			@Override
+			public Optional<Long> songId() {
+				if(!object.has("songID")) return Optional.empty();
+				else return Optional.of(object.getLong("songID"));
+			}
+
+			@Override
+			public Optional<GDSong> song() {
+
+				if(!object.has("song")) return Optional.empty();
+				else {
+					JSONObject songData = object.getJSONObject("song");
+					GDSong song = new GDSong() {
+						@Override
+						public long id() {
+							return songData.getLong("id");
+						}
+
+						@Override
+						public String title() {
+							return songData.getString("title");
+						}
+
+						@Override
+						public String artist() {
+							return songData.getString("artist");
+						}
+
+						@Override
+						public Optional<String> size() {
+							if(!songData.has("size")) return Optional.empty();
+							else return Optional.of(songData.getString("size"));
+						}
+
+						@Override
+						public Optional<String> downloadUrl() {
+							if(!songData.has("downloadURL")) return Optional.empty();
+							else return Optional.of(songData.getString("downloadURL"));
+						}
+					};
+					return Optional.of(song);
+				}
+			}
+
+			@Override
+			public Optional<String> creatorName() {
+				if(!object.has("creatorName")) return Optional.empty();
+				else return Optional.of(object.getString("creatorName"));
+			}
+		};
+
+		long accountID = object.getLong("accountID");
+
+		return new GDLevelExtra(level, accountID);
+	}
+
+	public static JSONObject getFromLoquiServers(String endpoint, Map<String, String> params){
+		try {
+
+			URL url = new URL("http://164.152.25.111:66190/" + endpoint + "?" + getParamsString(params));
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setConnectTimeout(60000);
+			con.setReadTimeout(60000);
+
+			int status = con.getResponseCode();
+
+			Reader streamReader = null;
+
+			if (status > 299) {
+				streamReader = new InputStreamReader(con.getErrorStream());
+			} else {
+				streamReader = new InputStreamReader(con.getInputStream());
+			}
+
+			BufferedReader in = new BufferedReader(streamReader);
+			String inputLine;
+			StringBuilder content = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				content.append(inputLine);
+			}
+			in.close();
+
+			con.disconnect();
+
+			return new JSONObject(content.toString());
+		}
+		catch (Exception e){
+			return null;
+		}
+	}
+
+
 }

@@ -5,10 +5,7 @@ import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Commands.DefaultCommandFunctions;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
-import com.alphalaneous.Settings.BlockedIDs;
-import com.alphalaneous.Settings.BlockedUsers;
-import com.alphalaneous.Settings.SettingData;
-import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Settings.*;
 import com.alphalaneous.Swing.Components.LevelButton;
 import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Tabs.RequestsTab;
@@ -22,7 +19,6 @@ import jdash.common.Difficulty;
 import jdash.common.Length;
 import jdash.common.entity.GDLevel;
 import jdash.common.entity.GDSong;
-import jdash.common.entity.GDUserStats;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -681,6 +677,63 @@ public class RequestsUtils {
 		return response;
 	}
 
+	public static String blockSong(String[] arguments) {
+		String response;
+		try {
+			String blockedUser = arguments[1].replace("@", "");
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blockedSongIDs.txt");
+			if (!Files.exists(file)) {
+				Files.createFile(file);
+			}
+			Scanner sc = new Scanner(file.toFile());
+			while (sc.hasNextLine()) {
+				if (String.valueOf(blockedUser).equals(sc.nextLine())) {
+					sc.close();
+					return Utilities.format("$BLOCK_SONG_ID_EXISTS_MESSAGE$");
+				}
+			}
+			sc.close();
+
+			response = Utilities.format("$BLOCK_SONG_ID_MESSAGE$", blockedUser);
+			BlockedSongIDs.addBlockedSong(blockedUser);
+
+		} catch (Exception e) {
+			Main.logger.error(e.getLocalizedMessage(), e);
+			response = Utilities.format("$BLOCK_SONG_ID_FAILED_MESSAGE$");
+		}
+		return response;
+	}
+	public static String unblockSong(String[] arguments) {
+		String response = "";
+		String unblocked = arguments[1].replace("@", "");
+
+		try {
+			boolean exists = false;
+			Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\blockedSongIDs.txt");
+			if (Files.exists(file)) {
+				Scanner sc = new Scanner(file);
+				while (sc.hasNextLine()) {
+					if (String.valueOf(unblocked).equals(sc.nextLine())) {
+						exists = true;
+						break;
+					}
+				}
+				sc.close();
+				if (exists) {
+
+					response = Utilities.format("$UNBLOCK_SONG_ID_MESSAGE$", unblocked);
+					BlockedSongIDs.removeBlockedSong(unblocked);
+				} else {
+					response = Utilities.format("$UNBLOCK_SONG_ID_DOESNT_EXISTS_MESSAGE$");
+
+				}
+			}
+		} catch (IOException ex) {
+			Main.logger.error(ex.getLocalizedMessage(), ex);
+			response = Utilities.format("$UNBLOCK_SONG_ID_FAILED_MESSAGE$");
+		}
+		return response;
+	}
 	@SuppressWarnings("unused")
 	public static String blockUser(String[] arguments) {
 		String response;

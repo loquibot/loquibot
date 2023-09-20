@@ -84,10 +84,15 @@ SONG_MESSAGE =  The song name is %s by %s (%s).
 TOP_MESSAGE =  %s has been moved to the top.
 TOP_FAILED_MESSAGE =  Failed to move %s.
 TOP_NO_ID_MESSAGE =  Please specify an ID.
-BLOCK_MESSAGE =  Successfully blocked %s.
-BLOCK_EXISTS_MESSAGE =  That is already blocked.
-BLOCK_FAILED_MESSAGE =  Failed to block, try again.
+BLOCK_MESSAGE =  Successfully blocked level: %s.
+BLOCK_SONG_ID_MESSAGE =  Successfully blocked song: %s.
+
+BLOCK_EXISTS_MESSAGE =  That level is already blocked.
+BLOCK_SONG_ID_EXISTS_MESSAGE =  That song is already blocked.
+BLOCK_FAILED_MESSAGE =  Failed to block level, try again.
+BLOCK_SONG_ID_FAILED_MESSAGE =  Failed to block song, try again.
 BLOCK_NO_ID_MESSAGE =  Please specify an ID.
+BLOCK_NO_SONG_ID_MESSAGE =  Please specify a song ID.
 ADD_COMMAND_NO_ARGS_MESSAGE =  Failed to add command, no command entered.
 ADD_COMMAND_ALREADY_EXISTS_MESSAGE =  Failed to add command, "%s" already exists.
 DELETE_COMMAND_NO_ARGS_MESSAGE =  Failed to delete command, no command specified.
@@ -97,14 +102,21 @@ BLOCK_USER_MESSAGE =  Successfully blocked %s.
 BLOCK_USER_EXISTS_MESSAGE =  User is already blocked.
 BLOCK_USER_FAILED_MESSAGE =  Failed to block, try again.
 BLOCK_NO_USER_MESSAGE =  Please specify a username.
-
-UNBLOCK_MESSAGE =  Successfully unblocked %s.
-UNBLOCK_DOESNT_EXISTS_MESSAGE =  That isn't blocked.
-UNBLOCK_FAILED_MESSAGE =  Failed to unblock, try again.
-
-UNBLOCK_USER_MESSAGE =  Successfully unblocked %s.
+WHERE_FOUND_MESSAGE = %s (%s) is at position %s.
+WHERE_MAYBE_FOUND_MESSAGE = Could not find %s, did you mean %s (%s) at position %s?
+WHERE_NOT_FOUND_MESSAGE = Could not find %s.
+WHERE_NO_QUERY_MESSAGE = Failed to search for level, no ID or name specified.
+UNBLOCK_MESSAGE =  Successfully unblocked level: %s.
+UNBLOCK_SONG_ID_MESSAGE =  Successfully unblocked song: %s.
+UNBLOCK_DOESNT_EXISTS_MESSAGE =  That level isn't blocked.
+UNBLOCK_SONG_ID_DOESNT_EXISTS_MESSAGE =  That song isn't blocked.
+UNBLOCK_FAILED_MESSAGE =  Failed to unblock level, try again.
+UNBLOCK_SONG_ID_FAILED_MESSAGE =  Failed to unblock song, try again.
+UNBLOCK_USER_MESSAGE =  Successfully unblocked user: %s.
 UNBLOCK_USER_DOESNT_EXISTS_MESSAGE =  User isn't blocked.
-UNBLOCK_USER_FAILED_MESSAGE =  Failed to unblock, try again.
+UNBLOCK_USER_FAILED_MESSAGE =  Failed to unblock user, try again.
+
+FILESAY_COMMAND_NO_ARGS_MESSAGE = No arguments provided, try again.
 
 HELP_NO_INFO = There is no info for this command.
 HELP_NO_COMMAND = Please specify a command.
@@ -134,6 +146,7 @@ MAXIMUM_LEVELS_MESSAGE =  You have the maximum amount of levels in the queue.
 MAXIMUM_LEVELS_STREAM_MESSAGE =  You reached the maximum amount of levels for the stream.
 REQUESTED_BEFORE_MESSAGE =  That level has been requested before.
 BLOCKED_LEVEL_MESSAGE =  That level is blocked.
+BLOCKED_SONG_ID_MESSAGE =  That song is blocked.
 LEVEL_ID_DOESNT_EXIST_MESSAGE =  That level ID doesn't exist.
 SEARCH_FAILED =  Level search failed... (Servers down or the streamer is rate limited)
 REQUEST_FAILED =  The level couldn't be added.
@@ -217,6 +230,7 @@ FILTERS_SETTINGS = Filters
 SHORTCUTS_SETTINGS = Keybinds
 PERSONALIZATION_SETTINGS = Personalization
 BLOCKED_IDS_SETTINGS = Blocked IDs
+BLOCKED_SONG_IDS_SETTINGS = Blocked Songs
 BLOCKED_USERS_SETTINGS = Blocked Users
 BLOCKED_CREATORS_SETTINGS = Blocked Creators
 LOGGED_IDS_SETTINGS = Logged IDs
@@ -408,12 +422,19 @@ ADD_ID_TOOLTIP = Add ID
 UNBLOCK_ID_DIALOG_TITLE = Unblock %s?
 UNBLOCK_ID_DIALOG_INFO = This will unblock the ID and allow it to be requested again.
 
+#Blocked Songs Settings
+
+BLOCKED_SONG_IDS = Blocked Songs
+ADD_SONG_ID_TOOLTIP = Add Song ID
+UNBLOCK_SONG_ID_DIALOG_TITLE = Unblock %s?
+UNBLOCK_SONG_ID_DIALOG_INFO = This will unblock the song ID and allow it to be used again.
+
 #Blocked Users Settings
 
 BLOCKED_USERS = Blocked Users
 ADD_USER_TOOLTIP = Add User
 UNBLOCK_USER_DIALOG_TITLE = Unblock %s?
-UNBLOCK_USER_DIALOG_INFO = This will unblock the ID and allow it to be requested again.
+UNBLOCK_USER_DIALOG_INFO = This will unblock the user and allow them to request again.
 
 #Blocked Creators Settings
 

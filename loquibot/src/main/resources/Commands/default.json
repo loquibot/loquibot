@@ -51,6 +51,13 @@
       "message" : "runEnd"
     },
     {
+      "name" : "as",
+      "level" : "moderator",
+      "description" : "Send a message as any user in chat | Usage: \"%pas <Username> <Message>\"",
+      "runMethod": true,
+      "message" : "runAs"
+    },
+    {
       "name" : "stopallsounds",
       "level" : "moderator",
       "description" : "Stops all sounds playing in loquibot | Usage: \"%pstopallsounds\"",

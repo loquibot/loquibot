@@ -23,19 +23,7 @@ public class Moderation {
 
 	private static final HashMap<String, Warning> warningHashMap = new HashMap<>();
 
-	private static final GibberishDetector gibberishDetector;
-	static {
-		BufferedReader bigEnglishReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Moderation.class.getResourceAsStream("/GibberishResources/bigEnglish.txt"))));
-		BufferedReader goodEnglishReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Moderation.class.getResourceAsStream("/GibberishResources/goodEnglish.txt"))));
-		BufferedReader badEnglishReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Moderation.class.getResourceAsStream("/GibberishResources/badEnglish.txt"))));
 
-		String bigEnglishString = bigEnglishReader.lines().collect(Collectors.joining());
-		String goodEnglishString = goodEnglishReader.lines().collect(Collectors.joining());
-		String badEnglishString = badEnglishReader.lines().collect(Collectors.joining());
-
-		GibberishDetectorFactory gibberishDetectorFactory = new GibberishDetectorFactory(GibberishDetectorExtended.class);
-		gibberishDetector = gibberishDetectorFactory.createGibberishDetector(Arrays.asList(bigEnglishString.split("\n")), Arrays.asList(goodEnglishString.split("\n")), Arrays.asList(badEnglishString.split("\n")), "abcdefghijklmnopqrstuvwxyz ");
-	}
 
 	public static void checkMessage(ChatMessage chatMessage) {
 
@@ -112,8 +100,7 @@ public class Moderation {
 		}
 		//if contains no space and is smaller than 16 but greater than 8
 		if((((!messageEmoteless.contains(" ") && messageEmoteless.length() <= 16 && messageEmoteless.length() >= 8)
-				|| messageEmoteless.length() > 16)
-				&& gibberishDetector.isGibberish(messageEmoteless))
+				|| messageEmoteless.length() > 16))
 				&& gibberishDetectionEnabled){
 			Main.sendMessage("@" + chatMessage.getSender() + ", please don't send gibberish!");
 			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
@@ -218,10 +205,12 @@ public class Moderation {
 		String[] emotes = emoteTag.split("/");
 		int count = 0;
 		for(String emote : emotes){
-			String positionsString = emote.split(":")[1];
-			String[] positionsEach = positionsString.split(",");
-			for(String ignored : positionsEach){
-				count++;
+			if(emote.split(":").length > 1) {
+				String positionsString = emote.split(":")[1];
+				String[] positionsEach = positionsString.split(",");
+				for (String ignored : positionsEach) {
+					count++;
+				}
 			}
 		}
 		return count;
@@ -235,13 +224,15 @@ public class Moderation {
 		String newMessage = message + " ";
 		String[] emotes = emoteTag.split("/");
 		for(String emote : emotes){
-			String positionsString = emote.split(":")[1];
-			String[] positionsEach = positionsString.split(",");
-			for(String position : positionsEach){
-				int start = Integer.parseInt(position.split("-")[0]);
-				int stop = Integer.parseInt(position.split("-")[1]) + 1;
-				String strToReplace = message.substring(start, stop) + " ";
-				newMessage = newMessage.replaceFirst(Pattern.quote(strToReplace), "");
+			if(emote.split(":").length > 1) {
+				String positionsString = emote.split(":")[1];
+				String[] positionsEach = positionsString.split(",");
+				for (String position : positionsEach) {
+					int start = Integer.parseInt(position.split("-")[0]);
+					int stop = Integer.parseInt(position.split("-")[1]) + 1;
+					String strToReplace = message.substring(start, stop) + " ";
+					newMessage = newMessage.replaceFirst(Pattern.quote(strToReplace), "");
+				}
 			}
 		}
 		return newMessage;
@@ -257,14 +248,16 @@ public class Moderation {
 		String[] emotes = emoteTag.split("/");
 		int emoteCount = 0;
 		for(String emote : emotes){
-			String positionsString = emote.split(":")[1];
-			String[] positionsEach = positionsString.split(",");
-			for(String position : positionsEach){
-				emoteCount++;
-				int start = Integer.parseInt(position.split("-")[0]);
-				int stop = Integer.parseInt(position.split("-")[1]) + 1;
-				String strToReplace = message.substring(start, stop) + " ";
-				newMessage = newMessage.replaceFirst(strToReplace, "");
+			if(emote.split(":").length > 1) {
+				String positionsString = emote.split(":")[1];
+				String[] positionsEach = positionsString.split(",");
+				for (String position : positionsEach) {
+					emoteCount++;
+					int start = Integer.parseInt(position.split("-")[0]);
+					int stop = Integer.parseInt(position.split("-")[1]) + 1;
+					String strToReplace = message.substring(start, stop) + " ";
+					newMessage = newMessage.replaceFirst(strToReplace, "");
+				}
 			}
 		}
 

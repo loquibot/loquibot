@@ -10,7 +10,9 @@ import com.alphalaneous.Settings.Filters;
 import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Utils.AlreadyInQueueException;
 import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Utils.NoLevelException;
 import com.alphalaneous.Utils.Utilities;
 import com.vdurmont.emoji.EmojiManager;
 import jdash.client.exception.ActionFailedException;
@@ -237,6 +239,14 @@ public class Requests {
                         sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
+
+                    if(level.getLevel().song().isPresent()){
+                        if (checkList(level.getLevel().song().get().id(), "\\loquibot\\blockedSongIDs.txt")) {
+                            sendUnallowed(Utilities.format("$BLOCKED_SONG_ID_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            return;
+                        }
+                    }
+
                     if (Files.exists(logged) && (SettingsHandler.getSettings("repeatedRequestsAll").asBoolean() && !SettingsHandler.getSettings("updatedRepeated").asBoolean()) && Main.programLoaded) {
                         Scanner sc = new Scanner(logged.toFile());
                         while (sc.hasNextLine()) {
@@ -611,13 +621,34 @@ public class Requests {
                 } else if (Utilities.isCausedBy(e, ResponseDeserializationException.class)) {
                     sendError(Utilities.format("$REQUEST_FAILED$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                 } else {
-
-
                     sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                     Main.logger.error("Failed to add request: " + IDa + " with message: " + message);
                     Main.logger.error(e.getLocalizedMessage(), e);
                 }
-            } catch (Exception e) {
+            } catch (NoLevelException e){
+                sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+            } catch (AlreadyInQueueException e){
+
+                for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+                    if (e.getLevel().getLevel().id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().getLevel().id()) {
+                        int j = k + 1;
+
+                        if(SettingsHandler.getSettings("autoDeleteRepeatSend").asBoolean()){
+                            Main.sendMessage("/delete " + finalChatMessage.getTag("id"));
+                        }
+                        if(!SettingsHandler.getSettings("disableInQueueMessage").asBoolean()) {
+                            if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
+                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", j), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            } else {
+                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+
+            catch (Exception e) {
                 Main.logger.error(e.getLocalizedMessage(), e);
                 sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
             }

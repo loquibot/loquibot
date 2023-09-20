@@ -6,10 +6,7 @@ import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
 import com.alphalaneous.Memory.Global;
 import com.alphalaneous.Memory.Level;
 import com.alphalaneous.Memory.MemoryHelper;
-import com.alphalaneous.Services.GeometryDash.LoadGD;
-import com.alphalaneous.Services.GeometryDash.RequestFunctions;
-import com.alphalaneous.Services.GeometryDash.Requests;
-import com.alphalaneous.Services.GeometryDash.RequestsUtils;
+import com.alphalaneous.Services.GeometryDash.*;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.LoadPoints;
 import com.alphalaneous.Interactive.Commands.LoadCommands;
@@ -40,6 +37,7 @@ import com.alphalaneous.Windows.Window;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.google.api.client.util.LoggingOutputStream;
+import dev.webview.Webview;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.apache.logging.log4j.LogManager;
@@ -82,7 +80,7 @@ public class Main {
                 Files.createDirectory(Paths.get(Defaults.saveDirectory + "/loquibot/logs/"));
             }
         } catch (IOException e) {
-            Main.logger.error(e.getLocalizedMessage(), e);
+            System.out.println("Failed to create log file directories");
         }
 
         String formatted = format.format(now);
@@ -90,6 +88,7 @@ public class Main {
         logFile = Defaults.saveDirectory + "/loquibot/logs/" + formatted;
         ThreadContext.put("filePath", logFile);
     }
+
     public static final Logger logger = LogManager.getLogger(Main.class);
 
     static {
@@ -138,6 +137,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+
         long time = System.currentTimeMillis();
 
         System.setErr(IoBuilder.forLogger(LogManager.getRootLogger()).setLevel(org.apache.logging.log4j.Level.ERROR).buildPrintStream());
@@ -272,6 +273,7 @@ public class Main {
         logger.info("Start");
 
         LoadGD.load();
+        GDAPI.startBatchListener();
         Themes.loadTheme();
 
         logger.info("Themes Loaded");

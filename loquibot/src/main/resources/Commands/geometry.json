@@ -9,6 +9,13 @@
       "message" : "runBlock"
     },
     {
+      "name" : "blocksong",
+      "level" : "moderator",
+      "description" : "Blocks a song ID | Usage: \"%pblocksong <Song ID>\" to block a specific song",
+      "runMethod" : true,
+      "message" : "runBlockSong"
+    },
+    {
       "name" : "blockuser",
       "level" : "moderator",
       "description" : "Blocks a user | Usage: \"%pblockuser <Username>\" to block a specific user",
@@ -53,7 +60,7 @@
       "description" : "Finds your position in the queue | Usage: \"%pposition\" | \"%pposition <Number of Requested Level>\"",
       "runMethod" : true,
       "message" : "runPosition",
-      "aliases" : ["p", "where"]
+      "aliases" : ["p"]
     },
     {
       "name" : "queue",
@@ -104,6 +111,13 @@
       "message" : "runUnblock"
     },
     {
+      "name" : "unblocksong",
+      "level" : "moderator",
+      "description" : "Unblocks a song ID | Usage: \"%punblocksong <Song ID>\" to unblock a specific song",
+      "runMethod" : true,
+      "message" : "runUnblockSong"
+    },
+    {
       "name" : "unblockuser",
       "level" : "moderator",
       "description" : "Unblocks a user | Usage: \"%punblockuser <Username>\" to unblock a specific user",
@@ -130,6 +144,13 @@
       "runMethod" : true,
       "message" : "runSize",
       "aliases" : ["amount"]
+    },
+    {
+      "name" : "where",
+      "description" : "Returns the position of a level ID or name | Usage \"%pwhereis <Level Name/ID>\"",
+      "runMethod" : true,
+      "message" : "runWhere",
+      "aliases" : ["whereis"]
     }
   ]
 }

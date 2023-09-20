@@ -149,8 +149,10 @@ public abstract class NewChatBot {
         TwitchAPI.twitchClient.getChat().sendRaw(message);
     }
     public void disconnect(){
-        TwitchAPI.twitchClient.getChat().leaveChannel(channel);
-        TwitchAPI.twitchClient.getChat().disconnect();
+        if(TwitchAPI.twitchClient != null) {
+            TwitchAPI.twitchClient.getChat().leaveChannel(channel);
+            TwitchAPI.twitchClient.getChat().disconnect();
+        }
     }
     public boolean isClosed(){
         return !TwitchAPI.twitchClient.getChat().isChannelJoined(channel);

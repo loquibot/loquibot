@@ -2,15 +2,20 @@ package com.alphalaneous.Interactive.Commands;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
+import com.alphalaneous.ChatBot.NewChatBot;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.CommandConfigCheckbox;
 import com.alphalaneous.Moderation.LinkPermit;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Swing.Components.LevelButton;
+import com.alphalaneous.Tabs.RequestsTab;
 import com.alphalaneous.Utils.Board;
 import com.alphalaneous.Utils.Utilities;
+import info.debatty.java.stringsimilarity.Levenshtein;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -19,12 +24,103 @@ import java.util.List;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class DefaultCommandFunctions {
 
+    private static final Levenshtein levenshtein = new Levenshtein();
+
+
+    public static String runAs(ChatMessage message){
+
+        String[] split = message.getMessage().split(" ",3);
+
+        if(split.length < 3){
+            return "";
+        }
+
+        String username = split[1].replace("@", "");
+
+        String last = split[2];
+
+        ChatMessage newMessage = new ChatMessage(
+            new String[]{},
+            username,
+            username,
+            last,
+            new String[]{},
+            true,
+            true,
+            true,
+            0,
+            false,
+            false);
+
+        TwitchChatListener.getCurrentListener().onMessage(newMessage);
+        return "";
+    }
+
+    public static String runWhere(ChatMessage message){
+        if(message.getArgs().length <= 1){
+            return Utilities.format("$WHERE_NO_QUERY_MESSAGE$");
+        }
+
+        String query = message.getMessage().split(" ", 2)[1];
+
+        boolean isInteger = message.getArgs()[1].matches("^\\d+$");
+
+        String name;
+        long ID;
+
+        if(isInteger){
+            int pos = Requests.getPosFromID(Integer.parseInt(query));
+            if(pos != -1) {
+                LevelButton button = RequestsTab.getRequest(pos);
+                name = button.getLevelData().getGDLevel().getLevel().name();
+                ID = button.getLevelData().getGDLevel().getLevel().id();
+                return Utilities.format("$WHERE_FOUND_MESSAGE$", name, ID, pos + 1);
+            }
+        }
+
+        for(int i = 0; i < RequestsTab.getQueueSize(); i++){
+            LevelButton button = RequestsTab.getRequest(i);
+            if(button.getLevelData().getGDLevel().getLevel().name().equalsIgnoreCase(query)){
+                name = button.getLevelData().getGDLevel().getLevel().name();
+                ID = button.getLevelData().getGDLevel().getLevel().id();
+                return Utilities.format("$WHERE_FOUND_MESSAGE$", name, ID, i+1);
+            }
+        }
+
+        for(int i = 0; i < RequestsTab.getQueueSize(); i++){
+            LevelButton button = RequestsTab.getRequest(i);
+
+            double distance = levenshtein.distance(query.toLowerCase(), button.getLevelData().getGDLevel().getLevel().name().toLowerCase());
+
+            int nameLength = button.getLevelData().getGDLevel().getLevel().name().length();
+
+            double percentage = distance/nameLength;
+
+            if(percentage < 0.4){
+                name = button.getLevelData().getGDLevel().getLevel().name();
+                ID = button.getLevelData().getGDLevel().getLevel().id();
+                return Utilities.format("$WHERE_MAYBE_FOUND_MESSAGE$", query, name, ID, i+1);
+            }
+        }
+
+        return Utilities.format("$WHERE_NOT_FOUND_MESSAGE$", query);
+
+    }
+
     public static String runBlock(ChatMessage message){
         if(message.getArgs().length == 1){
             return Utilities.format("$BLOCK_NO_ID_MESSAGE$");
         }
         return RequestsUtils.block(message.getArgs());
     }
+
+    public static String runBlockSong(ChatMessage message){
+        if(message.getArgs().length == 1){
+            return Utilities.format("$BLOCK_NO_SONG_ID_MESSAGE$");
+        }
+        return RequestsUtils.blockSong(message.getArgs());
+    }
+
     public static String runBlockUser(ChatMessage message){
         if(message.getArgs().length == 1){
             return Utilities.format("$BLOCK_NO_USER_MESSAGE$");
@@ -312,6 +408,12 @@ public class DefaultCommandFunctions {
             return Utilities.format("$BLOCK_NO_ID_MESSAGE$");
         }
         return RequestsUtils.unblock(message.getArgs());
+    }
+    public static String runUnblockSong(ChatMessage message){
+        if(message.getArgs().length == 1){
+            return Utilities.format("$BLOCK_NO_SONG_ID_MESSAGE$");
+        }
+        return RequestsUtils.unblockSong(message.getArgs());
     }
     public static String runUnblockUser(ChatMessage message){
         if(message.getArgs().length == 1){

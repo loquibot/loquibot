@@ -37,7 +37,7 @@ public class ListView extends JPanel {
 
         settingsTitle = new SettingsTitle(title);
         settingsTitle.setBackground(new Color(0,0,0,0));
-        settingsTitle.setBounds(0,0,settingsTitle.getPreferredSize().width, 80);
+        settingsTitle.setBounds(0,0,300, 80);
 
 
         scrollPane.setBackground(new ThemedColor("color3", scrollPane, ThemedColor.BACKGROUND));
