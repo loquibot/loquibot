@@ -14,7 +14,7 @@ public class Requests {
         settingsPage.addCheckbox("$GD_MODE$", "$GD_MODE_DESC$", "gdMode", true, DefaultCommands::loadCommands);
         settingsPage.addCheckbox("$AUTO_DELETE_REPEAT_SEND$", "$AUTO_DELETE_REPEAT_SEND_DESC$", "autoDeleteRepeatSend");
         settingsPage.addCheckbox("$WAIT_A_SECOND$", "$WAIT_A_SECOND_DESC$", "waitForRequests");
-        settingsPage.addCheckbox("$FOLLOWERS_ONLY$ (Twitch)", "", "followers");
+        //settingsPage.addCheckbox("$FOLLOWERS_ONLY$ (Twitch)", "", "followers");
         settingsPage.addCheckbox("$SUBSCRIBERS_ONLY$ (Twitch)", "", "subscribers");
         settingsPage.addCheckbox("$CHANNEL_POINTS_ONLY$ (Twitch)", "", "requestsChannelPointsOnly");
         settingsPage.addCheckbox("$STREAMER_BYPASS$", "$STREAMER_BYPASS_DESC$", "streamerBypass", true, null);

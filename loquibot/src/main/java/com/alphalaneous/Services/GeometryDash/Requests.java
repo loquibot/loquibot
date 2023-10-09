@@ -271,14 +271,14 @@ public class Requests {
                             }
                         }
                     }
-                    if (SettingsHandler.getSettings("followers").asBoolean()) {
+                    /*if (SettingsHandler.getSettings("followers").asBoolean()) {
                         if(!finalChatMessage.isYouTube() && !finalChatMessage.isKick()) {
                             if (TwitchAPI.isNotFollowing(finalUser, userID)) {
                                 sendUnallowed(Utilities.format("$FOLLOW_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                                 return;
                             }
                         }
-                    }
+                    }*/
                     if (level.getLevel().id() < SettingsHandler.getSettings("minID").asInteger() && SettingsHandler.getSettings("minIDOption").asBoolean()) {
                         sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", SettingsHandler.getSettings("minID").asInteger()), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
                         return;

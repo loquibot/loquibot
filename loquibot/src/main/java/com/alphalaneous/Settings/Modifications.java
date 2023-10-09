@@ -111,7 +111,15 @@ public class Modifications {
                     throw new RuntimeException(e);
                 }
 
-                if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\hackpro.dll"))) {
+                boolean isGeode = false;
+
+                if(Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\Geode.dll"))){
+                    Main.logger.info("User has Geode");
+                    installDir = "geode\\mods";
+                    isGeode = true;
+                }
+
+                else if (Files.exists(Paths.get(Paths.get(path).getParent().toString() + "\\hackpro.dll"))) {
                     Main.logger.info("User has MegaHack");
                     installDir = "extensions";
                 }
@@ -139,20 +147,31 @@ public class Modifications {
                     }
                 }
 
+
                 if(installDir != null){
-                    installMod(Paths.get(path).getParent().toString() + "\\" + installDir);
+                    installMod(Paths.get(path).getParent().toString() + "\\" + installDir, isGeode);
                     if(isGDOpen) com.alphalaneous.Utils.Utilities.openSteamApp(322170, true);
                 }
             }
         }).start();
 
     }
-    public static void installMod(String installDir) {
+
+    public static void installMod(String installDir, boolean isGeode) {
+
+
 
         try {
-            FileUtils.copyURLToFile(Objects.requireNonNull(Main.class.getClassLoader()
-                    .getResource("LoquiExtension.dll")), Path.of(installDir + "\\LoquiExtension.dll").toFile());
-        } catch (Exception e) {
+            if(isGeode){
+                FileUtils.copyURLToFile(Objects.requireNonNull(Main.class.getClassLoader()
+                        .getResource("alphalaneous.integrated_loquibot.geode")), Path.of(installDir + "\\alphalaneous.integrated_loquibot.geode").toFile());
+            }
+            else {
+                FileUtils.copyURLToFile(Objects.requireNonNull(Main.class.getClassLoader()
+                        .getResource("LoquiExtension.dll")), Path.of(installDir + "\\LoquiExtension.dll").toFile());
+            }
+        }
+        catch (Exception e) {
             Main.logger.error(e.getLocalizedMessage(), e);
 
             DialogBox.showDialogBox("Error", "Failed to install mod!", e.toString(), new String[] {"Okay"});

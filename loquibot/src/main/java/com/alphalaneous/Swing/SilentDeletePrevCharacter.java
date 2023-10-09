@@ -7,6 +7,7 @@ public class SilentDeletePrevCharacter extends TextAction {
 
     //Stops sound playing when cannot backspace
 
+
     public SilentDeletePrevCharacter() {
         super(DefaultEditorKit.deletePrevCharAction);
     }
