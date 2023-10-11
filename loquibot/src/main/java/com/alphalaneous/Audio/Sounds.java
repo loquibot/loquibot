@@ -22,19 +22,6 @@ import java.util.logging.Logger;
 public class Sounds {
 
 
-	private static AudioDevice device;
-
-	static {
-		try {
-			device = FactoryRegistry.systemRegistry().createAudioDevice();
-		} catch (JavaLayerException e) {
-			Main.logger.error(e.getLocalizedMessage(), e);
-		}
-	}
-
-
-	private static FloatControl volControl;
-
 	static ConcurrentHashMap<String, Sound> sounds = new ConcurrentHashMap<>();
 	static {
 		querySound();
@@ -60,39 +47,6 @@ public class Sounds {
 				Utilities.sleep(10);
 			}
 		}).start();
-	}
-
-	public static void setVolume(float gain){
-		Class<JavaSoundAudioDevice> clazz = JavaSoundAudioDevice.class;
-		Field[] fields = clazz.getDeclaredFields();
-
-		try{
-			SourceDataLine source;
-			for(Field field : fields) {
-				if("source".equals(field.getName())) {
-
-					JavaSoundAudioDevice a = new JavaSoundAudioDevice();
-
-					field.setAccessible(true);
-					source = (SourceDataLine) field.get(device);
-					field.setAccessible(false);
-
-					if(source != null) {
-
-						FloatControl volControl = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
-						if (volControl != null) {
-							float newGain = Math.min(Math.max(gain, volControl.getMinimum()), volControl.getMaximum());
-
-							System.out.println(volControl.getMinimum() + " | " + volControl.getMaximum() + " | " + newGain);
-
-							volControl.setValue(newGain);
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			Main.logger.error(e.getLocalizedMessage(), e);
-		}
 	}
 
 
@@ -183,18 +137,10 @@ public class Sounds {
 									.getResource(location).openStream());
 						}
 
-						mp3player = new Player(inp, device);
-
-
-
+						mp3player = new Player(inp);
 
 						mp3player.play();
-
-						Sounds.setVolume(2f);
-
-
 						inp.close();
-						device.close();
 					}
 
 				} catch (Exception f) {
