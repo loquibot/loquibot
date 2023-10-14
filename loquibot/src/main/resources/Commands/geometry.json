@@ -64,7 +64,7 @@
     },
     {
       "name" : "queue",
-      "cooldown" : 200,
+      "cooldown" : 10,
       "description" : "Gets the current level request queue | Usage: \"%pqueue\" | \"%pqueue <Page>\"",
       "runMethod" : true,
       "message" : "runQueue",
@@ -81,6 +81,7 @@
       "description" : "Sends requests | Usage: \"%prequest <Level ID>\" | \"%prequest <Level Name> by <User>\" (Use quotation marks to search by exact name) | \"%prequest <Level Name>\"",
       "runMethod" : true,
       "message" : "runRequest",
+      "cooldown" : 10,
       "aliases" : ["r", "req", "add", "send"]
     },
     {

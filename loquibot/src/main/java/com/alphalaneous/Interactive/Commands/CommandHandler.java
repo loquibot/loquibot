@@ -110,10 +110,11 @@ public class CommandHandler {
             }
         }
 
-        if(foundCommand != null && foundCommand.isMethod() && foundCommand.isEnabled() && checkUserLevel(foundCommand, message)){
+        if(foundCommand != null && foundCommand.isMethod() && foundCommand.isEnabled() && !isCooldown(foundCommand, message) && checkUserLevel(foundCommand, message)){
             if(foundCommand.isGD() && (!SettingsHandler.getSettings("gdMode").asBoolean() || !Window.getWindow().isVisible())) return;
             try {
                 reply = (String) Class.forName("com.alphalaneous.Interactive.Commands.DefaultCommandFunctions").getMethod(foundCommand.getMessage(), ChatMessage.class).invoke(null, message);
+                startCooldown(foundCommand);
             }
             catch (Exception e){
                 Main.logger.error(e.getLocalizedMessage(), e);
@@ -989,6 +990,7 @@ public class CommandHandler {
     public static void startCooldown(CommandData commandData){
         new Thread(() -> {
             commandDataList.add(commandData);
+            System.out.println(commandData.getCommand());
             Utilities.sleep(commandData.getCooldown()*1000);
             commandDataList.remove(commandData);
         }).start();

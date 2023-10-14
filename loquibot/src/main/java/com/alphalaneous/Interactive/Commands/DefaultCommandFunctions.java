@@ -345,7 +345,8 @@ public class DefaultCommandFunctions {
         return RequestsUtils.remove(message.getSenderElseDisplay(), message.isMod(), intArg);
     }
     public static String runRequest(ChatMessage message){
-        if(message.getArgs().length == 1){
+        return "Using the !request command is disabled, send an ID in chat without a command.";
+        /*if(message.getArgs().length == 1){
             return Utilities.format("$SPECIFY_ID_MESSAGE$");
         }
         String userID = message.getTag("user-id");
@@ -355,7 +356,7 @@ public class DefaultCommandFunctions {
         }
 
         Requests.request(message.getSenderElseDisplay(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), lUserID, message);
-        return "";
+        return "";*/
     }
     public static String runSong(ChatMessage message){
         if(!SettingsHandler.getSettings("basicMode").asBoolean()) {
