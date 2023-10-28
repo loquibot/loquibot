@@ -4,9 +4,6 @@ import com.alphalaneous.*;
 import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
 import com.alphalaneous.Interactive.CheerActions.CheerActionData;
-import com.alphalaneous.Memory.Global;
-import com.alphalaneous.Memory.MemoryHelper;
-import com.alphalaneous.Servers.Levels;
 import com.alphalaneous.Services.GeometryDash.LevelData;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
@@ -658,14 +655,14 @@ public class CommandHandler {
                 replacement = String.valueOf(RequestsTab.getQueueSize());
                 break;
             }
-            case "levelpercent":
+            /*case "levelpercent":
             case "level_percent": {
                 if(Global.isGDOpen() && Global.isInLevel()){
                     replacement = String.valueOf(com.alphalaneous.Memory.Level.getPercent());
                 }
                 replacement = String.valueOf(0);
                 break;
-            }
+            }*/
             case "emptymessage":
             case "empty_message": {
                 String command = message.getMessage().split(" ")[0].trim();

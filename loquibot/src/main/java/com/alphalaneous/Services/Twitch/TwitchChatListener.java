@@ -6,6 +6,7 @@ import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.Main;
 import com.alphalaneous.Moderation.Moderation;
 import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Utils.SelfDestructingMessage;
 import com.alphalaneous.Utils.Utilities;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -64,22 +65,6 @@ public class TwitchChatListener extends NewChatBot {
 
 	@Override
 	public void onRawMessage(String s) {
-	}
-
-	public static class SelfDestructingMessage{
-
-		private static final List<SelfDestructingMessage> selfDestructingMessages = Collections.synchronizedList(new ArrayList<>());
-
-		public SelfDestructingMessage(){
-			new Thread(() -> {
-				selfDestructingMessages.add(this);
-				Utilities.sleep(60000*5);
-				selfDestructingMessages.remove(this);
-			}).start();
-		}
-		public static int getSize(){
-			return selfDestructingMessages.size();
-		}
 	}
 
 	public static class SelfDestructingViewer{

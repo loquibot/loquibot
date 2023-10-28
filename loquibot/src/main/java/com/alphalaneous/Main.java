@@ -3,9 +3,6 @@ package com.alphalaneous;
 import com.alphalaneous.ChatBot.KickBot;
 import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
-import com.alphalaneous.Memory.Global;
-import com.alphalaneous.Memory.Level;
-import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Services.GeometryDash.*;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.LoadPoints;
@@ -36,8 +33,6 @@ import com.alphalaneous.Windows.*;
 import com.alphalaneous.Windows.Window;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
-import com.google.api.client.util.LoggingOutputStream;
-import dev.webview.Webview;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +47,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -93,6 +87,7 @@ public class Main {
 
     static {
         System.setProperty("sun.java2d.noddraw", "true");
+        //System.setProperty("io.netty.tryReflectionSetAccessible", "true");
         BackwardsCompatibilityLayer.setNewLocation();
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -137,7 +132,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
 
         long time = System.currentTimeMillis();
 
@@ -384,6 +378,7 @@ public class Main {
             //If first time launch, the user has to go through onboarding
             //Show it and wait until finished
 
+
             if (!SettingsHandler.getSettings("onboarding").exists()) {
                 Onboarding.createPanel();
                 Window.setVisible(true);
@@ -465,7 +460,7 @@ public class Main {
             }
             programLoaded = true;
 
-            if(!Defaults.isMac()) {
+            /*if(!Defaults.isMac()) {
                 Global.onEnterLevel(() -> {
                     if (SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         if (MemoryHelper.isInFocus()) {
@@ -511,7 +506,7 @@ public class Main {
                         }
                     }
                 });
-            }
+            }*/
             Window.setVisible(true);
 
         } catch (Exception e) {

@@ -57,12 +57,14 @@ public class Requests {
 
         public static long getTimeRemaining(String username){
             for(RequestCooldown requestCooldown : requestCooldowns){
-                if(requestCooldown.username.equalsIgnoreCase(username)){
+                if(requestCooldown != null && requestCooldown.username != null) {
+                    if (requestCooldown.username.equalsIgnoreCase(username)) {
 
-                    long newTime = System.currentTimeMillis();
-                    long timeElapsed = newTime - requestCooldown.time;
+                        long newTime = System.currentTimeMillis();
+                        long timeElapsed = newTime - requestCooldown.time;
 
-                    return requestCooldown.cooldown - timeElapsed;
+                        return requestCooldown.cooldown - timeElapsed;
+                    }
                 }
             }
             return 0;
@@ -73,8 +75,10 @@ public class Requests {
         }
         public static boolean contains(String username){
             for(RequestCooldown requestCooldown : requestCooldowns){
-                if(requestCooldown.username.equalsIgnoreCase(username)){
-                    return true;
+                if(requestCooldown != null && requestCooldown.username != null) {
+                    if (requestCooldown.username.equalsIgnoreCase(username)) {
+                        return true;
+                    }
                 }
             }
             return false;

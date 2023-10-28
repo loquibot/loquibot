@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authorization Success</title>
+</head>
+<body>
+<p>Waiting...</p>
+<script>
+    const Http = new XMLHttpRequest();
+    const url="http://localhost:23522/?" + document.location.hash.substring(1);
+    Http.open("GET", url);
+    Http.send();
+
+    Http.onreadystatechange = (e) => {
+        window.location.href = 'https://loquibot.com/AuthSuccess.html';
+    }
+</script>
+</body>
+</html>

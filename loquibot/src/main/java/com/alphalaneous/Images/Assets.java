@@ -2,7 +2,7 @@ package com.alphalaneous.Images;
 
 
 import com.alphalaneous.Main;
-import com.alphalaneous.Utilities;
+import com.alphalaneous.Utils.Utilities;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;

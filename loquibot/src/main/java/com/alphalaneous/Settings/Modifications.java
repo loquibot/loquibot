@@ -1,16 +1,10 @@
 package com.alphalaneous.Settings;
 
 import com.alphalaneous.Main;
-import com.alphalaneous.Memory.Global;
-import com.alphalaneous.Memory.Hacks;
-import com.alphalaneous.Memory.Level;
-import com.alphalaneous.Memory.MemoryHelper;
 import com.alphalaneous.Swing.Components.KeybindButton;
 import com.alphalaneous.Swing.Components.SettingsComponent;
 import com.alphalaneous.Swing.Components.SettingsPage;
-import com.alphalaneous.Utilities;
-import com.alphalaneous.Utils.Defaults;
-import com.alphalaneous.Utils.Find;
+import com.alphalaneous.Utils.MemoryHelper;
 import com.alphalaneous.Utils.RegQuery;
 import com.alphalaneous.Windows.DialogBox;
 import org.apache.commons.io.FileUtils;
@@ -27,11 +21,11 @@ public class Modifications {
 
     public static JPanel createPanel() {
 
-        loadMods();
+        //loadMods();
 
         SettingsPage settingsPage = new SettingsPage("$MODS_SETTINGS$");
 
-        settingsPage.addCheckbox("$IN_GAME_NOW_PLAYING$", "$IN_GAME_NOW_PLAYING_DESC$", "inGameNowPlaying");
+        /*settingsPage.addCheckbox("$IN_GAME_NOW_PLAYING$", "$IN_GAME_NOW_PLAYING_DESC$", "inGameNowPlaying");
         settingsPage.addCheckbox("$PRACTICE_MUSIC_HACK$", "$PRACTICE_MUSIC_HACK_DESC$", "practiceMusicHack",
                 () -> Hacks.setPracticeMusicHack(SettingsHandler.getSettings("practiceMusicHack").asBoolean()));
         settingsPage.addCheckbox("$SAFE_NOCLIP_HACK$", "$SAFE_NOCLIP_HACK_DESC$", "safeNoclipHack",
@@ -40,14 +34,16 @@ public class Modifications {
             Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
                 });
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$SAFE_NOCLIP_SHORTCUT$", "safeNoclipKeybind")));
+        */
         settingsPage.addButton("Install loquibot GD Mod", Modifications::installLoquiMod);
+
 
         return settingsPage;
     }
     static Thread inLevel;
     static Thread onDeath;
     public static void setSafeMode(){
-        boolean isSafe = getSafeMode();
+        /*boolean isSafe = getSafeMode();
 
         if(Global.isInLevel() && !isSafe){
             inLevel = Global.onLeaveLevel(() -> {
@@ -61,7 +57,7 @@ public class Modifications {
         }
         else{
             Hacks.setSafeMode(isSafe);
-        }
+        }*/
     }
 
     public static void installLoquiMod(){
@@ -86,7 +82,7 @@ public class Modifications {
                 }
             }
             if(!skip) {
-                boolean isGDOpen = Global.isGDOpen();
+                boolean isGDOpen = MemoryHelper.isGDOpen();
 
                 if(isGDOpen) {
                     String choice = DialogBox.showDialogBox("Woah, wait a sec", "This will restart GD to install!", "", new String[]{"Okay", "Cancel"});
@@ -204,7 +200,7 @@ public class Modifications {
 
 
     public static void loadMods(){
-        if(Defaults.isMac()) return;
+        /*if(Defaults.isMac()) return;
 
         new Thread(() -> {
             boolean GDOpen = false;
@@ -231,7 +227,7 @@ public class Modifications {
                 }
                 Utilities.sleep(100);
             }
-        }).start();
+        }).start();*/
     }
     private static SettingsComponent createKeybindComponent(KeybindButton button){
         return new SettingsComponent(button, new Dimension(475,30)){

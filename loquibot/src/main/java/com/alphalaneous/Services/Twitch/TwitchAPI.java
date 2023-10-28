@@ -1,28 +1,18 @@
 package com.alphalaneous.Services.Twitch;
 
 import com.alphalaneous.ChatBot.ServerBot;
-import com.alphalaneous.Services.GeometryDash.RequestFunctions;
-import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interactive.ChannelPoints.ChannelPointReward;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.BrowserWindow;
-import com.alphalaneous.Swing.Components.LevelButton;
-import com.alphalaneous.Swing.Components.LevelDetailsPanel;
 import com.alphalaneous.Settings.Account;
-import com.alphalaneous.Tabs.RequestsTab;
+import com.alphalaneous.Utils.TwitchHTTPServer;
 import com.alphalaneous.Utils.Utilities;
-import com.alphalaneous.Windows.Window;
 import com.github.twitch4j.TwitchClient;
-import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.helix.domain.Chatter;
 import com.github.twitch4j.helix.domain.ChattersList;
-import com.github.twitch4j.tmi.domain.Chatters;
 import com.github.twitch4j.util.PaginationUtil;
-import com.mb3364.twitch.api.Twitch;
-import com.mb3364.twitch.api.auth.Scopes;
-import com.netflix.hystrix.HystrixCommand;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
@@ -44,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 public class TwitchAPI {
 
@@ -322,6 +311,10 @@ public class TwitchAPI {
 		}
 		catch (Exception e){
 			setOauth();
+
+			while (TwitchAPI.oauthOpen){
+				Utilities.sleep(10);
+			}
 			Main.logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
@@ -339,16 +332,15 @@ public class TwitchAPI {
 				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("channel").asString());
 			}
 			if(userID == null){
-				TwitchAPI.setOauth();
-				return getInfo();
+				return null;
 			}
 
 			return userID.getJSONArray("data").getJSONObject(0);
 		}
 		catch (Exception e){
-			TwitchAPI.setOauth();
+			Main.logger.error(e.getLocalizedMessage(), e);
+			return null;
 		}
-		return getInfo();
 	}
 
 	private static JSONObject user;
@@ -403,91 +395,96 @@ public class TwitchAPI {
 	}
 
 	public static boolean oauthOpen = false;
+
+	public static String authorize(boolean forceVerify, String... params) throws URISyntaxException {
+		StringBuilder authLink = new StringBuilder("https://id.twitch.tv/oauth2/authorize?");
+
+		authLink.append("response_type=token");
+		authLink.append("&client_id=").append(clientID);
+		authLink.append("&redirect_uri=http://localhost:23522");
+		authLink.append("&scope=");
+
+		for(String param : params){
+			authLink.append(param);
+			authLink.append("+");
+		}
+
+		authLink.deleteCharAt(authLink.length()-1);
+
+		if(forceVerify) {
+			authLink.append("&force_verify=true");
+		}
+
+		Utilities.openURL(new URI(authLink.toString()));
+		TwitchHTTPServer.awaitAccessToken();
+
+		System.out.println("Here lol");
+
+		return TwitchHTTPServer.getAccessToken();
+	}
+
 	public static void setOauth() {
-		success.set(false);
-		try {
-			Twitch twitch = new Twitch();
-			URI callbackUri = new URI("http://localhost:23522");
 
-			twitch.setClientId(clientID);
+		if(!oauthOpen) {
+			new Thread(() -> {
+				try {
+					success.set(false);
+					oauthOpen = true;
 
-			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
-					twitch.getClientId(), callbackUri, Scopes.USER_READ
-			//) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read+moderator:manage:announcements+moderator:manage:banned_users+moderator:manage:chat_messages&force_verify=true");
-			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read+moderator:read:chatters&force_verify=true");
-			authUrl = new URI(authUrl.toString().replace("https://api.twitch.tv/kraken/", "https://id.twitch.tv/"));
-			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
-			oauthOpen = true;
-			if (twitch.auth().awaitAccessToken()) {
-				SettingsHandler.writeSettings("oauth", twitch.auth().getAccessToken());
-				SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
-				TwitchAccount.setInfo(true);
-				Account.refreshTwitch(SettingsHandler.getSettings("channel").asString(), true);
-				//Main.refreshBot();
-				success.set(true);
-				oauthOpen = false;
-				ServerBot.disconnect();
-			} else {
-				Main.logger.error(twitch.auth().getAuthenticationError());
-				oauthOpen = false;
-			}
-		} catch (Exception e) {
-			Main.logger.error(e.getLocalizedMessage(), e);
-			oauthOpen = false;
+					String token = authorize(true, "user_read",
+							"chat:edit",
+							"channel:moderate",
+							"channel:read:redemptions",
+							"channel:read:subscriptions",
+							"moderation:read",
+							"channel:manage:broadcast",
+							"chat:read",
+							"moderator:read:chatters");
+
+					if (token != null) {
+						SettingsHandler.writeSettings("oauth", token);
+						SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
+						TwitchAccount.setInfo(true);
+						Account.refreshTwitch(SettingsHandler.getSettings("channel").asString(), true);
+						success.set(true);
+						ServerBot.disconnect();
+					} else {
+						Main.logger.error("Failed to get Twitch Token");
+					}
+					oauthOpen = false;
+				} catch (Exception e) {
+					Main.logger.error(e.getLocalizedMessage(), e);
+				}
+			}).start();
 		}
 	}
 
 	public static String getBotOauth(){
+
 		try {
-			Twitch twitch = new Twitch();
-			URI callbackUri = new URI("http://localhost:23522");
-
-			twitch.setClientId(clientID);
-
-			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
-					twitch.getClientId(), callbackUri, Scopes.USER_READ
-			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read+moderator:manage:announcements+moderator:manage:banned_users+moderator:manage:chat_messages&force_verify=true");
-			authUrl = new URI(authUrl.toString().replace("https://api.twitch.tv/kraken/", "https://id.twitch.tv/"));
-			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
 			oauthOpen = true;
+			String token = authorize(true, "user_read",
+					"chat:edit",
+					"channel:moderate",
+					"channel:read:redemptions",
+					"channel:read:subscriptions",
+					"moderation:read",
+					"channel:manage:broadcast",
+					"chat:read",
+					"moderator:read:chatters",
+					"moderator:manage:announcements",
+					"moderator:manage:banned_users",
+					"moderator:manage:chat_messages");
 
-			if (twitch.auth().awaitAccessToken()) {
-				oauthOpen = false;
-				return twitch.auth().getAccessToken();
+
+			if (token != null) {
+				return token;
 			} else {
-				Main.logger.error(twitch.auth().getAuthenticationError());
-				oauthOpen = false;
+				Main.logger.error("Failed to get Twitch Token");
 			}
-		} catch (Exception e) {
 			oauthOpen = false;
-			Main.logger.error(e.getLocalizedMessage(), e);
 		}
-		return null;
-	}
-
-	public static String getOauth() {
-		try {
-			Twitch twitch = new Twitch();
-			URI callbackUri = new URI("http://localhost:23522");
-
-			twitch.setClientId(clientID);
-
-			URI authUrl = new URI(twitch.auth().getAuthenticationUrl(
-					twitch.getClientId(), callbackUri, Scopes.USER_READ
-			) + "chat:edit+channel:moderate+channel:read:redemptions+channel:read:subscriptions+moderation:read+channel:manage:broadcast+chat:read+user_read&force_verify=true");
-			authUrl = new URI(authUrl.toString().replace("https://api.twitch.tv/kraken/", "https://id.twitch.tv/"));
-			BrowserWindow browserWindow = new BrowserWindow(authUrl.toString());
-			oauthOpen = true;
-
-			if (twitch.auth().awaitAccessToken()) {
-				oauthOpen = false;
-				return twitch.auth().getAccessToken();
-			} else {
-				Main.logger.error(twitch.auth().getAuthenticationError());
-				oauthOpen = false;
-			}
-		} catch (Exception e) {
-			oauthOpen = false;
+		catch (Exception e){
 			Main.logger.error(e.getLocalizedMessage(), e);
 		}
 		return null;
@@ -502,7 +499,7 @@ public class TwitchAPI {
 		JSONObject newChannelInfo = new JSONObject();
 		JSONObject gameInfo = twitchAPI("https://api.twitch.tv/helix/games?name=" + URLEncoder.encode(game, StandardCharsets.UTF_8));
 		assert gameInfo != null;
-		if(gameInfo.getJSONArray("data").length() == 0){
+		if(gameInfo.getJSONArray("data").isEmpty()){
 			return "no_game";
 		}
 		String gameID = gameInfo.getJSONArray("data").getJSONObject(0).getString("id");

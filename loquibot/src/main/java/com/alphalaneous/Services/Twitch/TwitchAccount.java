@@ -36,6 +36,11 @@ public class TwitchAccount {
 
 			JSONObject data = TwitchAPI.getInfo();
 
+			if(data == null){
+				setInfo();
+				return;
+			}
+
 			broadcaster_type = data.getString("broadcaster_type");
 			offline_image_url = data.getString("offline_image_url");
 			description = data.getString("description");

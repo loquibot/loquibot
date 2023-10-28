@@ -108,7 +108,9 @@ public class LogWindow {
         else {
             frame.setVisible(!frame.isVisible());
         }
-        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+        if(scrollPane.getVerticalScrollBar() != null) {
+            scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+        }
         frame.setIconImages(Main.getIconImages());
     }
 

@@ -2,22 +2,14 @@ package com.alphalaneous.Audio;
 
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
-import com.alphalaneous.Utilities;
-import com.alphalaneous.Windows.DialogBox;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.Window;
-import javazoom.jl.decoder.Equalizer;
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.*;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.SourceDataLine;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 public class Sounds {
 

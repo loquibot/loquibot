@@ -5,6 +5,7 @@ import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Main;
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Utils.SelfDestructingMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -80,7 +81,7 @@ public class TimerData {
     }
 
     public void runTimer(int minute){
-        if(minute % interval == 0 && isEnabled && TwitchChatListener.SelfDestructingMessage.getSize() >= lines) {
+        if(minute % interval == 0 && isEnabled && SelfDestructingMessage.getSize() >= lines) {
             if (runCommand != null && !runCommand.equalsIgnoreCase("")) {
                 ChatMessage message = new ChatMessage(new String[]{}, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false, false);
                 CommandHandler.run(message);
@@ -91,7 +92,6 @@ public class TimerData {
                 Main.sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
                 Main.sendYTMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null), null);
                 Main.sendKickMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null), null);
-
             }
         }
     }

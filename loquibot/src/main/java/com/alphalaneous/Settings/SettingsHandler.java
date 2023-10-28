@@ -1,19 +1,11 @@
 package com.alphalaneous.Settings;
 
 import com.alphalaneous.Main;
-import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
-import com.alphalaneous.Windows.DialogBox;
+import org.apache.logging.log4j.Level;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
 
 public class SettingsHandler {
 
@@ -24,11 +16,16 @@ public class SettingsHandler {
 	}
 
 	public static void writeSettings(String key, String setting) {
-		if(key != null && !key.equalsIgnoreCase("null")) {
+		if(key != null && !key.equalsIgnoreCase("null") && !key.trim().equalsIgnoreCase("")) {
 			settings.put(key, setting.replace("\n", "\\n"));
 			saveSettings();
+			if(!key.equalsIgnoreCase("oauth")
+					&& !key.equalsIgnoreCase("window")
+					&& !key.equalsIgnoreCase("windowState")
+					&& !key.equalsIgnoreCase("windowSize")) {
+				Main.logger.log(Level.getLevel("SETTINGS"), "WRITE - " + key + ": " + setting);
+			}
 		}
-
 	}
 
 	public static SettingData getSettings(String key) {
@@ -44,5 +41,16 @@ public class SettingsHandler {
 		} catch (IOException e) {
 			Main.logger.error("No config.properties");
 		}
+
+
+		settings.forEach((k, v) -> {
+			if(!k.equalsIgnoreCase("oauth")) {
+				String setting = v;
+				if(setting.trim().isEmpty()){
+					setting = "UNASSIGNED";
+				}
+				Main.logger.log(Level.getLevel("SETTINGS"), "LOAD - " + k + ": " + setting);
+			}
+		});
 	}
 }

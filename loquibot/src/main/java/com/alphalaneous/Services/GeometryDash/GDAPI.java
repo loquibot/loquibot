@@ -1,13 +1,10 @@
 package com.alphalaneous.Services.GeometryDash;
 
 import com.alphalaneous.Main;
-import com.alphalaneous.Servers.LevelFilter;
-import com.alphalaneous.Servers.Levels;
-import com.alphalaneous.Servers.Type;
 import com.alphalaneous.Settings.SettingsHandler;
-import com.alphalaneous.Utilities;
 import com.alphalaneous.Utils.AlreadyInQueueException;
 import com.alphalaneous.Utils.NoLevelException;
+import com.alphalaneous.Utils.Utilities;
 import jdash.client.GDClient;
 import jdash.client.exception.ActionFailedException;
 import jdash.client.exception.GDClientException;
