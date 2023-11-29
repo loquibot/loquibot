@@ -1,10 +1,14 @@
 package com.alphalaneous;
 
+import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Components.RoundedButton;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utilities.Assets;
+import com.alphalaneous.Utilities.Fonts;
+import com.alphalaneous.Utilities.SettingsHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +66,7 @@ public class Onboarding {
 						nextButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						nextButton.setEnabled(true);
 						nextButton.setForeground("foreground", "foreground");
-						twitchButton.setUsername(TwitchAccount.login);
+						twitchButton.setUsername(TwitchAccount.display_name);
 						authInfo.setVisible(true);
 
 					}).start();

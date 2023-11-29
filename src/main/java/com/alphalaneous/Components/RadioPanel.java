@@ -1,29 +1,29 @@
 package com.alphalaneous.Components;
 
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RadioPanel extends ThemeableJPanel {
 
 	public ArrayList<RadioButton> buttons = new ArrayList<>();
 	public String currentSelect = "";
 
-	public RadioPanel(String... labels) {
-		int pos = 0;
+	public RadioPanel(HashMap<String, String> labels) {
+
 		setOpaque(false);
-		setLayout(null);
-		for (String label : labels) {
-			RadioButton radioButton = new RadioButton(label);
-			radioButton.setBounds(0, pos, 475, 30);
+		setLayout(new MigLayout("flowy, insets 0"));
+
+		labels.forEach((k, v) -> {
+			RadioButton radioButton = new RadioButton(k, v);
 			radioButton.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
 			radioButton.setBorder(BorderFactory.createEmptyBorder());
-			pos = pos + 30;
 
 			radioButton.addMouseListener(new MouseAdapter() {
 				@Override
@@ -36,21 +36,20 @@ public class RadioPanel extends ThemeableJPanel {
 							button.setChecked(false);
 						}
 					}
-					changeFired(radioButton.getText());
+					changeFired(v);
 				}
 			});
 			buttons.add(radioButton);
-			add(radioButton);
-		}
-		setPreferredSize(new Dimension(getWidth(), pos + 30));
+			add(radioButton, "width 100%");
+		});
 	}
 
-	public void changeFired(String identifier){
+	public void changeFired(String setting){
 	}
 
 	public void setChecked(String option) {
 		for (RadioButton button : buttons) {
-			if (button.getText().equalsIgnoreCase(option)) {
+			if (button.getSetting().equals(option)) {
 				button.setChecked(true);
 				currentSelect = option;
 			} else {
@@ -66,13 +65,5 @@ public class RadioPanel extends ThemeableJPanel {
 			}
 		}
 		return null;
-	}
-
-
-	public void setWidth(int width){
-		for (RadioButton button : buttons) {
-			button.setPreferredSize(new Dimension(width, button.getHeight()));
-			button.setBounds(button.getX(), button.getY(), width, button.getHeight());
-		}
 	}
 }

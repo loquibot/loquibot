@@ -1,6 +1,8 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.SettingsHandler;
+import com.alphalaneous.Utilities.Assets;
+import com.alphalaneous.Utilities.Logging;
+import com.alphalaneous.Utilities.SettingsHandler;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -40,9 +42,9 @@ public class TwitchAccount {
 		type = data.getString("type");
 		view_count = data.getLong("view_count");
 		try {
-			profileImage = ImageIO.read(new URL(profile_image_url));
+			profileImage = Assets.downloadAsset(profile_image_url);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.getLogger().error(e.getLocalizedMessage(), e);
 		}
 	}
 }

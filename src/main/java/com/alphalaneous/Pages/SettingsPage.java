@@ -1,19 +1,18 @@
 package com.alphalaneous.Pages;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Assets;
+import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Components.RoundedButton;
 import com.alphalaneous.Components.SmoothScrollPane;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Pages.SettingsSubPages.SettingsSubPage;
-import com.alphalaneous.SidebarSwitcher;
+import com.alphalaneous.Components.SidebarSwitcher;
 import com.alphalaneous.Utilities.GraphicsFunctions;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ public class SettingsPage {
 
     private static final HashMap<RoundedButton, SettingsSubPage> pages = new HashMap<>();
     static ThemeableJPanel buttonsPanel = new ThemeableJPanel();
-    static ThemeableJPanel buttonsContainer = new ThemeableJPanel();
     static ThemeableJPanel buttonsScrollContainer = new ThemeableJPanel(){
         @Override
         public void paintComponent(Graphics g) {
@@ -32,15 +30,14 @@ public class SettingsPage {
         }
     };
 
-    static SmoothScrollPane buttonsScroll = new SmoothScrollPane(buttonsContainer);
+    static SmoothScrollPane buttonsScroll = new SmoothScrollPane(buttonsPanel);
 
     public static final ThemeableJPanel pagePanel = new ThemeableJPanel();
     public static final ThemeableJPanel contentPanel = new ThemeableJPanel();
 
-    static GridBagConstraints gbc = new GridBagConstraints();
-    static Page page = new Page("Settings", true);
+    static Page page = new Page("$SETTINGS_TITLE$", false);
 
-    @OnLoad(order = 2)
+    @OnLoad(order = 10000)
     public static void init() {
 
         page.setBackground("background");
@@ -48,33 +45,29 @@ public class SettingsPage {
 
         contentPanel.setLayout(new MigLayout());
 
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-
-        buttonsPanel.setLayout(new GridBagLayout());
-        buttonsPanel.setBorder(new EmptyBorder(0,7,0,0));
         buttonsPanel.setOpaque(false);
+        buttonsPanel.setLayout(new GridLayout(0,1,0,5));
 
-        buttonsContainer.setOpaque(false);
+
         buttonsScroll.setOpaque(false);
         buttonsScroll.getViewport().setOpaque(false);
-
-        buttonsContainer.add(buttonsPanel);
 
         buttonsScrollContainer.setBackground("background");
 
         buttonsScrollContainer.add(buttonsScroll);
-        buttonsScrollContainer.setPreferredSize(new Dimension(300, 10));
         buttonsScrollContainer.setOpaque(false);
+        buttonsScrollContainer.setBorder(new EmptyBorder(2,7,0,0));
 
-        contentPanel.setBorder(new EmptyBorder(0,0,14,0));
-
+        pagePanel.setOpaque(false);
+        pagePanel.setLayout(new MigLayout("insets 0"));
 
         contentPanel.setOpaque(false);
 
-        contentPanel.add(buttonsScrollContainer, "w 200px, h 100%");
-        page.add(contentPanel);
+        contentPanel.add(buttonsScrollContainer, "w 200px, h 100%, wmin 0");
+        contentPanel.add(pagePanel, "w 100% - 200px, h 100%, wmin 0");
+
+        page.getContentPane().setBorder(new EmptyBorder(0,0,14,0));
+        page.getContentPane().add(contentPanel);
 
         SidebarSwitcher.addPage(Assets.getImage("settings-button"), page, () -> {});
     }
@@ -96,10 +89,12 @@ public class SettingsPage {
 
                 SettingsSubPage page1 = set.getValue();
                 page1.setVisible(false);
+                pagePanel.remove(page1);
             }
 
             button.setSelected(true);
             settingsSubPage.setVisible(true);
+            pagePanel.add(settingsSubPage, "w 100%, h 100%");
 
             if(!pageWasVisible) {
                 if (clickFunction != null) clickFunction.run();
@@ -107,16 +102,14 @@ public class SettingsPage {
         });
 
         pages.put(button, settingsSubPage);
-        buttonsPanel.add(button, gbc);
-        buttonsPanel.add(Box.createVerticalStrut(5), gbc);
+        buttonsPanel.add(button);
 
         if(pages.size() == 1){
             button.setSelected(true);
             settingsSubPage.setVisible(true);
+            pagePanel.add(settingsSubPage, "w 100%, h 100%");
             if (clickFunction != null) clickFunction.run();
         }
-
-        pagePanel.add(settingsSubPage);
     }
 
     private static class SettingsButton extends RoundedButton {
@@ -147,7 +140,7 @@ public class SettingsPage {
             setHoverColor("list-hover-normal","list-hover-selected");
             setClicked("list-clicked-normal","list-clicked-selected");
             setForeground("list-foreground-normal", "list-background-selected");
-            setBorder(BorderFactory.createEmptyBorder());
+
             setPreferredSize(new Dimension(180, 32));
             setOpaque(false);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

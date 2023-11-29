@@ -2,12 +2,15 @@ package com.alphalaneous;
 
 import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Components.ContextMenu;
+import com.alphalaneous.Components.SidebarSwitcher;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Components.TwitchChat;
 import com.alphalaneous.Pages.CommandPages.ChatPageComponent;
 import com.alphalaneous.Pages.ChatPage;
 import com.alphalaneous.Pages.Page;
-import com.alphalaneous.Utilities.Logging;
+import com.alphalaneous.Pages.StreamInteractionsPage;
+import com.alphalaneous.Utilities.Assets;
+import com.alphalaneous.Utilities.SettingsHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -155,6 +158,10 @@ public class Window {
             setCorrectedBounds(page, 0, 0,width - 492, height-71);
         }
 
+        for(ChatPageComponent page : StreamInteractionsPage.getPages()){
+            setCorrectedBounds(page, 0, 0,width - 492, height-71);
+        }
+
         if(frame.getExtendedState() != Frame.MAXIMIZED_BOTH && frame.getState() != Frame.MAXIMIZED_VERT && frame.getState() != Frame.MAXIMIZED_HORIZ) {
             SettingsHandler.writeSettings("windowSizeWidth", String.valueOf(width));
             SettingsHandler.writeSettings("windowSizeHeight", String.valueOf(height));
@@ -291,6 +298,22 @@ public class Window {
         contextMenu = panel;
 
         panel.setBounds(pos.x, pos.y, panel.getWidth(), panel.getHeight());
+        layeredContentPanel.add(contextMenu, 2, -1);
+    }
+
+    public static void addContextMenu(ContextMenu panel) {
+        contextMenu = panel;
+
+        int posXnew = posX;
+        int posYnew = posY;
+
+        if (posY + panel.getHeight() >= frame.getHeight()) {
+            posYnew = frame.getHeight() - panel.getHeight() - 25;
+        }
+        if (posX + panel.getWidth() + 45 >= frame.getWidth()) {
+            posXnew = frame.getWidth() - panel.getWidth() - 45;
+        }
+        panel.setBounds(posXnew, posYnew, panel.getWidth(), panel.getHeight());
         layeredContentPanel.add(contextMenu, 2, -1);
     }
 

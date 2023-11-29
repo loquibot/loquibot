@@ -1,13 +1,13 @@
 package com.alphalaneous.Pages;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Assets;
+import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Components.RoundedButton;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Pages.CommandPages.ChatPageComponent;
-import com.alphalaneous.SidebarSwitcher;
+import com.alphalaneous.Components.SidebarSwitcher;
 
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -20,7 +20,6 @@ public class ChatPage {
     private static final HashMap<RoundedButton, ChatPageComponent> pages = new HashMap<>();
     static Page page = new Page();
     static ThemeableJPanel buttonsPanel = new ThemeableJPanel();
-    static ThemeableJPanel editPanel = new ThemeableJPanel();
 
     static Function currentFunction;
 
@@ -30,10 +29,6 @@ public class ChatPage {
     public static void init() {
 
         page.setBackground("background");
-
-        RoundedButton commandsButton = new RoundedButton("Commands");
-        RoundedButton keywordsButton = new RoundedButton("Keywords");
-        RoundedButton timersButton = new RoundedButton("Timers");
 
         buttonsPanel.setLayout(new GridLayout(1,3,5,5));
         buttonsPanel.setBorder(new EmptyBorder(5,5,5,5));
@@ -59,17 +54,8 @@ public class ChatPage {
 
         page.getTitleCard().add(addButtonPanel, BorderLayout.EAST);
 
-        //page.getTitleCard().setBorder(new EmptyBorder(5,5,5,5));
-
         pagePanel.setLayout(null);
         pagePanel.setOpaque(false);
-
-        /*addPage("Keywords", new ChatPageComponent(){{
-            add(new JLabel("kwd"));
-        }}, () -> {});
-        addPage("Timers", new ChatPageComponent(){{
-            add(new JLabel("tmr"));
-        }}, () -> {});*/
 
         page.getContentPane().add(pagePanel);
 

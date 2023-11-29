@@ -1,7 +1,7 @@
 package com.alphalaneous.Components;
 
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJButton;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.GraphicsFunctions;
 
 import javax.swing.*;
@@ -20,7 +20,6 @@ public class RoundedButton extends ThemeableJButton {
         setBorder(BorderFactory.createEmptyBorder());
         setForeground("foreground", "foreground");
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        setBorder(BorderFactory.createEmptyBorder());
         setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
         setText(text);
         setOpaque(false);

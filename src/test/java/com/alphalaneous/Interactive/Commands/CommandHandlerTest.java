@@ -19,7 +19,7 @@ class CommandHandlerTest {
     @MethodSource("provideChatData")
     void testReplaceBetweenParentheses(ChatMessage message, String text, CustomData data, String expected) {
 
-        assertEquals(expected, CommandHandler.replaceBetweenParentheses(message, text, data));
+        assertEquals(expected, CommandHandler.replaceBetweenParentheses(message, text, data, null));
 
     }
 
@@ -49,7 +49,7 @@ class CommandHandlerTest {
         QuickChatMessage chatMessage = new QuickChatMessage("Hello",
                 UserLevel.EVERYONE, 0);
 
-        CommandHandler.replaceBetweenParentheses(chatMessage, data.getMessage(), data);
+        CommandHandler.replaceBetweenParentheses(chatMessage, data.getMessage(), data, null);
 
         assertEquals(1, data.getCounter());
 
@@ -60,14 +60,14 @@ class CommandHandlerTest {
         QuickChatMessage chatMessage2 = new QuickChatMessage("Hello",
                 UserLevel.EVERYONE, 0);
 
-        CommandHandler.replaceBetweenParentheses(chatMessage2, data2.getMessage(), data2);
-        CommandHandler.replaceBetweenParentheses(chatMessage2, data2.getMessage(), data2);
+        CommandHandler.replaceBetweenParentheses(chatMessage2, data2.getMessage(), data2, null);
+        CommandHandler.replaceBetweenParentheses(chatMessage2, data2.getMessage(), data2, null);
 
         assertEquals(46, data2.getCounter());
 
         data2.setMessage("$(count -48)");
 
-        CommandHandler.replaceBetweenParentheses(chatMessage2, data2.getMessage(), data2);
+        CommandHandler.replaceBetweenParentheses(chatMessage2, data2.getMessage(), data2, null);
 
         assertEquals(-2, data2.getCounter());
     }

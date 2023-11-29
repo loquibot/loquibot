@@ -21,9 +21,8 @@ public class ChatMessage {
     private final boolean isFirstMessage;
     private final boolean isCustomReward;
 
-    private final int cheerCount;
 
-    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, int cheerCount, boolean isFirstMessage, boolean isCustomReward) {
+    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, boolean isFirstMessage, boolean isCustomReward) {
         this.tags = tags;
         this.sender = sender;
         this.displayName = displayName;
@@ -32,7 +31,6 @@ public class ChatMessage {
         this.isMod = isMod;
         this.isSub = isSub;
         this.isVIP = isVIP;
-        this.cheerCount = cheerCount;
         this.isFirstMessage = isFirstMessage;
         this.isCustomReward = isCustomReward;
         this.args = message.split(" ");
@@ -95,10 +93,6 @@ public class ChatMessage {
 
     public boolean isSub() {
         return this.isSub;
-    }
-
-    public int getCheerCount() {
-        return this.cheerCount;
     }
 
     public boolean hasBadge(String badge) {

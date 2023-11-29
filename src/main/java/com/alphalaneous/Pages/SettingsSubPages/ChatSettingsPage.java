@@ -5,12 +5,12 @@ import com.alphalaneous.Pages.SettingsPage;
 
 public class ChatSettingsPage {
 
-    static SettingsSubPage page = new SettingsSubPage();
+    static SettingsSubPage page = new SettingsSubPage("$CHAT_TITLE$");
 
-    @OnLoad(order = 4)
+    @OnLoad(order = 10005)
     public static void init(){
 
-        SettingsPage.addPage("Chat", "\uF162", page, null);
+        SettingsPage.addPage("$CHAT_TITLE$", "\uF162", page, null);
 
     }
 }

@@ -15,6 +15,6 @@ public class OptionComponent extends ThemeableJPanel {
         add(panel);
     }
 
-    protected void resizeComponent(Dimension dimension){
+    public void resizeComponent(Dimension dimension){
     }
 }

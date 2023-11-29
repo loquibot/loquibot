@@ -3,8 +3,9 @@ package com.alphalaneous.Components;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableColor;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableTextArea;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.GraphicsFunctions;
+import com.alphalaneous.Window;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -108,7 +109,7 @@ public class SpecialTextArea extends ThemeableJPanel {
 				super.mouseReleased(e);
 				if(SwingUtilities.isRightMouseButton(e) && textArea.isEditable()){
 					textArea.requestFocus();
-					//com.alphalaneous.Windows.Window.addContextMenu(new TextContextMenu(textArea));
+					Window.addContextMenu(new TextContextMenu(textArea));
 				}
 			}
 		});

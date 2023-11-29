@@ -1,32 +1,78 @@
 package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.SettingsHandler;
-import com.alphalaneous.Utilities.Logging;
-import com.alphalaneous.Utilities.Utilities;
+import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointReward;
+import com.alphalaneous.Utilities.*;
 import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.helix.domain.InboundFollowers;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TwitchAPI {
 
 	public static TwitchClient twitchClient;
-	public static AtomicBoolean success = new AtomicBoolean(false);
 	@SuppressWarnings("SpellCheckingInspection")
 	static final String clientID = "fzwze6vc6d2f7qodgkpq2w8nnsz3rl";
 
 	private static final HashMap<String, String> userIDCache = new HashMap<>();
+
+
+	public static ArrayList<ChannelPointReward> getChannelPoints() {
+		JSONArray awards = Objects.requireNonNull(twitchAPI("https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=" + getUserID())).getJSONArray("data");
+		ArrayList<ChannelPointReward> rewards = new ArrayList<>();
+		for (int i = 0; i < awards.length(); i++) {
+			String id = awards.getJSONObject(i).getString("id");
+			String title = awards.getJSONObject(i).getString("title");
+			String prompt = awards.getJSONObject(i).getString("prompt");
+			long cost = awards.getJSONObject(i).getLong("cost");
+			Color bgColor = Color.decode(awards.getJSONObject(i).getString("background_color"));
+			String imgURL;
+			ImageIcon image = null;
+			boolean defaultIcon = false;
+			try {
+				imgURL = awards.getJSONObject(i).getJSONObject("image").getString("url_2x");
+				image = new ImageIcon(Assets.downloadAsset(imgURL).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+
+			} catch (JSONException | IOException e) {
+				imgURL = "https://static-cdn.jtvnw.net/custom-reward-images/default-2.png";
+				try {
+					image = new ImageIcon(Assets.downloadAsset(imgURL).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+					defaultIcon = true;
+				}
+				catch (Exception f){
+					Logging.getLogger().error(f.getLocalizedMessage(), f);
+				}
+			}
+
+			ChannelPointReward reward = null;
+			try {
+				reward = new ChannelPointReward(id, title, prompt, cost, bgColor, new URL(imgURL), image, defaultIcon);
+			} catch (MalformedURLException e) {
+				Logging.getLogger().error(e.getLocalizedMessage(), e);
+			}
+			if (reward != null) {
+				rewards.add(reward);
+			}
+		}
+		return rewards;
+	}
 
 	public static String fetchURL(String url) {
 		return fetchURL(url, false);
@@ -43,7 +89,7 @@ public class TwitchAPI {
 			}
 			s.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logging.getLogger().error(e.getLocalizedMessage(), e);
 		}
 		return response.toString();
 	}
@@ -56,6 +102,73 @@ public class TwitchAPI {
 		return Long.parseLong(total);
 	}
 
+	public static String getFollowerAge(String user){
+
+		String ID = getIDs(user);
+
+		if(user.equalsIgnoreCase(TwitchAccount.login)) return user + " is the broadcaster!";
+
+		if(ID == null) return user + " doesn't exist!";
+
+		InboundFollowers iF = TwitchAPI.twitchClient.getHelix().getChannelFollowers(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.id, ID, null, null).execute();
+
+		String followAge = "";
+
+		if(iF.getFollows() != null){
+			if(!iF.getFollows().isEmpty()) {
+				Instant time = iF.getFollows().get(0).getFollowedAt();
+				Duration age = Duration.between(time, Instant.now());
+
+				TemporalDuration duration = new TemporalDuration(age);
+
+				followAge = user + " has been following for " + duration + ".";
+			}
+			else{
+				followAge = user + " is not following " + TwitchAccount.display_name + ".";
+			}
+		}
+
+		if(followAge.isEmpty()){
+			followAge = "Failed to get follow age for " + user;
+		}
+
+		return followAge;
+	}
+
+	public static String getFollowerAgeTime(String user){
+
+		String ID = getIDs(user);
+
+		if(user.equalsIgnoreCase(TwitchAccount.login)) return "IS_BROADCASTER";
+
+		if(ID == null) return "NO_USER";
+
+		InboundFollowers iF = TwitchAPI.twitchClient.getHelix().getChannelFollowers(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.id, ID, null, null).execute();
+
+		String followAge = "";
+
+		if(iF.getFollows() != null){
+			if(!iF.getFollows().isEmpty()) {
+				Instant time = iF.getFollows().get(0).getFollowedAt();
+				Duration age = Duration.between(time, Instant.now());
+
+				TemporalDuration duration = new TemporalDuration(age);
+
+				followAge = duration.toBasicString();
+			}
+			else{
+				followAge = "NOT_FOLLOWING";
+			}
+		}
+
+		if(followAge.isEmpty()){
+			followAge = "ERROR";
+		}
+
+		return followAge;
+	}
+
+
 	public static String getChannel() {
 
 		JSONObject nameObj = twitchAPI("https://api.twitch.tv/helix/users");
@@ -64,7 +177,7 @@ public class TwitchAPI {
 			return nameObj.getJSONArray("data").getJSONObject(0).get("login").toString().replaceAll("\"", "");
 		}
 		catch (JSONException e){
-			e.printStackTrace();
+			Logging.getLogger().error(e.getLocalizedMessage(), e);
 			return null;
 		}
 
@@ -74,9 +187,12 @@ public class TwitchAPI {
 
 		String id = getIDs(username);
 
-		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&user_id=" + id);
-		if(moderators == null) return false;
-		return moderators.getJSONArray("data").length() > 0;
+		if(id != null) {
+			JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&user_id=" + id);
+			if (moderators == null) return false;
+			return !moderators.getJSONArray("data").isEmpty();
+		}
+		return false;
 	}
 
 	public static JSONObject getChannelInfo(){
@@ -103,7 +219,7 @@ public class TwitchAPI {
 			}
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			Logging.getLogger().error(e.getLocalizedMessage(), e);
 		}
 		return null;
 	}
@@ -143,7 +259,7 @@ public class TwitchAPI {
 			try {
 				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("twitchUsername").asString());
 			} catch (JSONException e) {
-				e.printStackTrace();
+				Logging.getLogger().error(e.getLocalizedMessage(), e);
 				SettingsHandler.writeSettings("channel", Objects.requireNonNull(getChannel()));
 				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("twitchUsername").asString());
 			}
@@ -188,11 +304,12 @@ public class TwitchAPI {
 			JSONObject userIDObject = twitchAPI("https://api.twitch.tv/helix/users?login=" + username.toLowerCase());
 			assert userIDObject != null;
 
-			String userID = userIDObject.getJSONArray("data").getJSONObject(0).get("id").toString().replaceAll("\"", "");
-
-			userIDCache.put(username, userID);
-
-			return userID;
+			if(!userIDObject.getJSONArray("data").isEmpty()) {
+				String userID = userIDObject.getJSONArray("data").getJSONObject(0).get("id").toString().replaceAll("\"", "");
+				userIDCache.put(username, userID);
+				return userID;
+			}
+			return null;
 		}
 	}
 
@@ -206,7 +323,7 @@ public class TwitchAPI {
 			String x = br.readLine();
 			return new JSONObject(x).get("client_id").toString().replace("\"", "");
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.getLogger().error(e.getLocalizedMessage(), e);
 			return "";
 		}
 	}
@@ -251,13 +368,18 @@ public class TwitchAPI {
 			try {
 				String token = authorize(true, "user_read",
 						"chat:edit",
+						"chat:read",
 						"channel:moderate",
 						"channel:read:redemptions",
 						"channel:read:subscriptions",
-						"moderation:read",
+						"channel:read:predictions",
+						"channel:read:polls",
+						"channel:manage:redemptions",
 						"channel:manage:broadcast",
-						"chat:read",
-						"moderator:read:chatters");
+						"channel:manage:polls",
+						"moderator:read:followers",
+						"moderator:read:chatters",
+						"moderation:read");
 
 				if (token != null) {
 					SettingsHandler.writeSettings("oauth", token);
@@ -268,7 +390,7 @@ public class TwitchAPI {
 				}
 			}
 			catch (Exception e){
-				e.printStackTrace();
+				Logging.getLogger().error(e.getLocalizedMessage(), e);
 			}
 
 			oauthOpen = false;

@@ -3,7 +3,7 @@ package com.alphalaneous.Pages;
 import com.alphalaneous.Components.SmoothScrollPane;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.GraphicsFunctions;
 
 import javax.swing.border.EmptyBorder;

@@ -7,6 +7,7 @@ import com.alphalaneous.Utilities.Utilities;
 import com.alphalaneous.Enums.UserLevel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,19 +37,18 @@ public class KeywordHandler {
                 }
             }
 
-
             if (foundKeyword != null
                     && foundKeyword.isEnabled()
                     && !isCooldown(foundKeyword)
                     && checkUserLevel(foundKeyword, message)) {
-                foundKeyword.setFoundWord(foundWord);
                 String response = foundKeyword.getMessage();
-                String[] messageSplit = message.getMessage().split(" ");
-                if (messageSplit.length > 1) {
-                    reply = CommandHandler.replaceBetweenParentheses(message, response, foundKeyword);
-                } else {
-                    reply = CommandHandler.replaceBetweenParentheses(message, response, foundKeyword);
-                }
+
+                HashMap<String, String> extraData = new HashMap<>();
+
+                extraData.put("foundWord", foundWord);
+
+                reply = CommandHandler.replaceBetweenParentheses(message, response, foundKeyword, extraData);
+
                 startCooldown(foundKeyword);
             }
             if (!reply.equalsIgnoreCase("")) {

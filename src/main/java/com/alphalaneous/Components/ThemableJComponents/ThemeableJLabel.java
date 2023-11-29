@@ -1,14 +1,24 @@
 package com.alphalaneous.Components.ThemableJComponents;
 
+import com.alphalaneous.Utilities.Language;
+import org.jdesktop.swingx.JXLabel;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class ThemeableJLabel extends JLabel {
+public class ThemeableJLabel extends JXLabel {
 
     Color prevBG;
     Color prevFG;
+
+    String prevText = "";
+    String text;
+
     public ThemeableJLabel(String text){
-        super(text);
+
+        super(Language.setLocale(text));
+        this.text = text;
+
     }
 
     public ThemeableJLabel(){
@@ -16,6 +26,13 @@ public class ThemeableJLabel extends JLabel {
 
     String bgColorName;
     String fgColorName;
+
+    @Override
+    public void setText(String text){
+        super.setText(Language.setLocale(text));
+        this.text = text;
+    }
+
 
     public void setBackground(String colorName){
         this.bgColorName = colorName;
@@ -33,16 +50,23 @@ public class ThemeableJLabel extends JLabel {
         Color currentBGColor = ThemeableColor.getColorByName(bgColorName);
         Color currentFGColor = ThemeableColor.getColorByName(fgColorName);
 
+        String currentText = Language.setLocale(text);
+
+        if(!prevText.equalsIgnoreCase(currentText)){
+            prevText = currentText;
+            setText(text);
+        }
+
         if(prevBG != currentBGColor) {
             prevBG = currentBGColor;
             setBackground(currentBGColor);
-            updateUI();
+            revalidate();
         }
 
         if(prevFG != currentFGColor) {
             prevFG = currentFGColor;
             setForeground(currentFGColor);
-            updateUI();
+            revalidate();
         }
 
 

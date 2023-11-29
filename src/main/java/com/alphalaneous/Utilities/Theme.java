@@ -1,9 +1,11 @@
-package com.alphalaneous;
+package com.alphalaneous.Utilities;
 
 import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableColor;
+import com.alphalaneous.Exceptions.ColorNotFoundException;
 import com.alphalaneous.FileUtils.FileList;
 import com.alphalaneous.FileUtils.GetInternalFiles;
+import com.alphalaneous.Utilities.RegQuery;
 import com.alphalaneous.Utilities.Utilities;
 
 import java.awt.*;
@@ -16,7 +18,7 @@ public class Theme {
         GetInternalFiles getInternalFiles = new GetInternalFiles("Themes/");
         FileList files = getInternalFiles.getFiles();
 
-        String[] colors = files.getFile("default-theme.colors").getString().split("\n");
+        String[] colors = files.getFile("dark-theme.colors").getString().split("\n");
 
         for(String line : colors){
 
@@ -42,6 +44,35 @@ public class Theme {
             new ThemeableColor("accent", new Color(66, 69, 255));
         }
     }
+
+    public static void loadTheme(String theme){
+
+        GetInternalFiles getInternalFiles = new GetInternalFiles("Themes/");
+        FileList files = getInternalFiles.getFiles();
+
+        String[] colors = files.getFile(theme + ".colors").getString().split("\n");
+
+        for(String line : colors){
+
+            try {
+                String[] kv = line.split("=", 2);
+                String name = kv[0].trim();
+                String color = kv[1].trim();
+
+                try {
+                    ThemeableColor.setColorByName(name, Color.decode(color));
+                }
+                catch (ColorNotFoundException e){
+                    new ThemeableColor(name, Color.decode(color));
+                }
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     public static void accentChangeListener(){

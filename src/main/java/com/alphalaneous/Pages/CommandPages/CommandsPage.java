@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CommandsPage {
 
@@ -34,7 +35,7 @@ public class CommandsPage {
 
         page.getContentPane().add(buttonPanel, BorderLayout.NORTH);
 
-        ChatPage.addPage("Commands", page, CommandsPage::load, CommandsPage::showEditMenu);
+        ChatPage.addPage("$COMMANDS_TITLE$", page, CommandsPage::load, CommandsPage::showEditMenu);
     }
 
 
@@ -55,33 +56,43 @@ public class CommandsPage {
 
     public static void showEditMenu(CommandData dataParam){
 
-        String title = "Edit Command";
+        String title = "$EDIT_COMMAND$";
 
-        if(dataParam.getName() == null) title = "Add Command";
+        if(dataParam.getName() == null) title = "$ADD_COMMAND$";
 
         EditCommandPanel editCommandPanel = new EditCommandPanel(title, dataParam, (kv, d, e) -> {
 
             CommandData data;
-            if(d.getName() == null){
-                data = new CommandData(kv.get("name"));
-                data.register();
+
+            AtomicBoolean hasName = new AtomicBoolean(false);
+
+            CommandData.getRegisteredCommands().forEach(c -> {
+                if(dataParam.getName() == null && kv.get("name").equalsIgnoreCase(c.getName())) hasName.set(true);
+            });
+
+            if(hasName.get()){
+                e.setTitleLabelError(true);
             }
-            else{
-                data = (CommandData) d;
+            else {
+                e.setTitleLabelError(false);
+                if (d.getName() == null) {
+                    data = new CommandData(kv.get("name"));
+                    data.register();
+                } else {
+                    data = (CommandData) d;
+                }
+
+                Utilities.ifNotNull(kv.get("aliases"), o -> data.setAliases(Arrays.asList(((String) o).split(","))));
+                Utilities.ifNotNull(kv.get("cooldown"), o -> data.setCooldown(Integer.parseInt((String) o)));
+                Utilities.ifNotNull(kv.get("userlevel"), o -> data.setUserLevel(UserLevel.parse(Integer.parseInt((String) o))));
+                Utilities.ifNotNull(kv.get("message"), o -> data.setMessage((String) o));
+                data.setName(kv.get("name"));
+
+                data.save(true);
+                e.close();
             }
-
-            Utilities.ifNotNull(kv.get("aliases"), o -> data.setAliases(Arrays.asList(((String)o).split(","))));
-            Utilities.ifNotNull(kv.get("cooldown"), o -> data.setCooldown(Integer.parseInt((String)o)));
-            Utilities.ifNotNull(kv.get("userlevel"), o -> data.setUserLevel(UserLevel.parse(Integer.parseInt((String)o))));
-            Utilities.ifNotNull(kv.get("message"), o -> data.setMessage((String)o));
-            data.setName(kv.get("name"));
-
-            //todo check name collisions
-
-            data.save(true);
-            e.close();
         });
-        editCommandPanel.addNameInput("Command:", "The command name, what must be typed in chat to run.");
+        editCommandPanel.addNameInput("$COMMAND_NAME_INPUT$", "$COMMAND_NAME_DESC$");
         editCommandPanel.addMessageInput();
         editCommandPanel.addUserLevelsInput();
         editCommandPanel.addCooldownInput();

@@ -1,61 +1,68 @@
 package com.alphalaneous.ChatBot;
 
-import com.alphalaneous.Services.Twitch.TwitchAPI;
-import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
-import com.github.philippheuer.events4j.simple.SimpleEventHandler;
-import com.github.twitch4j.TwitchClientBuilder;
+import com.alphalaneous.Interactive.TwitchExclusive.BasicEvents.BasicEventHandler;
+import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointHandler;
+import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerHandler;
+import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.ChatConnectionStateEvent;
-import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
+import com.github.twitch4j.chat.events.channel.*;
 import com.github.twitch4j.client.websocket.domain.WebsocketConnectionState;
+import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public abstract class ChatBot {
+public class TwitchEvents {
 
-    private final String channel;
+    private final TwitchEventUtils twitchEventUtils;
 
-
-
-    public ChatBot(String channel){
-        this.channel = channel;
+    public TwitchEvents(TwitchEventUtils twitchEventUtils){
+        this.twitchEventUtils = twitchEventUtils;
     }
 
-
-    public void connect(String oauth){
-        OAuth2Credential credential = new OAuth2Credential("twitch", oauth);
-
-        TwitchAPI.twitchClient = TwitchClientBuilder.builder()
-                .withEnableHelix(true)
-                .withEnableChat(true)
-                .withDefaultAuthToken(credential)
-                .withClientId(TwitchAPI.getClientID())
-                .withChatAccount(credential)
-                .build();
-
-
-        //TwitchAPI.twitchClient.getChat().joinChannel(channel);
-
-        SimpleEventHandler eventHandler = TwitchAPI.twitchClient.getChat().getEventManager().getEventHandler(SimpleEventHandler.class);
-        eventHandler.onEvent(IRCMessageEvent.class, this::parseChatEvent);
-        eventHandler.onEvent(ChatConnectionStateEvent.class, this::parseConnectionEvent);
+    @EventSubscriber
+    public void parseChannelPointRedeemEvent(RewardRedeemedEvent event){
+        ChannelPointHandler.run(event);
     }
 
+    @EventSubscriber
+    public void parseRaidEvent(RaidEvent event){
+        BasicEventHandler.run(event);
+    }
+
+    @EventSubscriber
+    public void parseCheerEvent(CheerEvent event){
+        CheerHandler.run(event);
+    }
+
+    @EventSubscriber
+    public void parseSubscriptionEvent(SubscriptionEvent event){
+        BasicEventHandler.run(event);
+    }
+
+    @EventSubscriber
+    public void parseFollowEvent(FollowEvent event){
+        BasicEventHandler.run(event);
+    }
+
+    @EventSubscriber
     public void parseConnectionEvent(ChatConnectionStateEvent event){
 
         WebsocketConnectionState state = event.getState();
 
         if(state == WebsocketConnectionState.CONNECTED){
-            onOpen();
+            twitchEventUtils.onOpen();
         }
         if(state == WebsocketConnectionState.DISCONNECTED || state == WebsocketConnectionState.LOST){
-            onClose();
+            twitchEventUtils.onClose();
         }
     }
 
-    public void parseChatEvent(IRCMessageEvent event){
+    @EventSubscriber
+    public void parseChatEvent(ChannelMessageEvent eventA){
+        if(eventA.getUser() == null) return;
 
-        if(event.getUser() == null) return;
+        IRCMessageEvent event = eventA.getMessageEvent();
 
         Map<String, String> map = event.getTags();
 
@@ -127,41 +134,12 @@ public abstract class ChatBot {
                 isMod,
                 isSub,
                 isVIP,
-                cheerCount,
                 isFirstMessage,
                 isCustomReward);
 
         if(event.getMessage().isPresent() && event.getUserName() != null && event.getCommandType().equalsIgnoreCase("PRIVMSG")){
-            onMessage(message);
+            twitchEventUtils.onMessage(message);
         }
-        onRawMessage(event.getRawMessage());
+        twitchEventUtils.onRawMessage(event.getRawMessage());
     }
-
-    public void sendMessage(String message){
-        if(!message.trim().isEmpty()) {
-            if (TwitchAPI.twitchClient != null) {
-                TwitchAPI.twitchClient.getChat().sendMessage(channel, message);
-            }
-        }
-    }
-    public void sendRawMessage(String message){
-        if(!message.trim().isEmpty()) {
-            TwitchAPI.twitchClient.getChat().sendRaw(message);
-        }
-    }
-    public void disconnect(){
-        if(TwitchAPI.twitchClient != null) {
-            TwitchAPI.twitchClient.getChat().leaveChannel(channel);
-            TwitchAPI.twitchClient.getChat().disconnect();
-        }
-    }
-    public boolean isClosed(){
-        return !TwitchAPI.twitchClient.getChat().isChannelJoined(channel);
-    }
-
-    public abstract void onOpen();
-    public abstract void onClose();
-    public abstract void onMessage(ChatMessage message);
-    public abstract void onRawMessage(String message);
-
 }

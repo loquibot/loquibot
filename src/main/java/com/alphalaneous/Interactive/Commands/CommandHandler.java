@@ -4,7 +4,13 @@ import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Enums.SoundType;
 import com.alphalaneous.Interactive.CustomData;
+import com.alphalaneous.Interactive.Keywords.KeywordData;
+import com.alphalaneous.Interactive.TwitchExclusive.BasicEvents.BasicEventData;
+import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointData;
+import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerData;
+import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
@@ -27,6 +33,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -37,6 +44,8 @@ public class CommandHandler {
     public static void run(ChatMessage message) {
         new Thread(() -> {
             String reply = "";
+
+            if(message.isCustomReward()) return;
 
             CommandData foundCommand = null;
 
@@ -60,7 +69,7 @@ public class CommandHandler {
 
                 String response = foundCommand.getMessage();
 
-                reply = replaceBetweenParentheses(message, response, foundCommand);
+                reply = replaceBetweenParentheses(message, response, foundCommand, null);
                 startCooldown(foundCommand);
             }
 
@@ -71,14 +80,14 @@ public class CommandHandler {
 
     }
 
-    public static String replaceBetweenParentheses(ChatMessage message, String text, CustomData data) {
+    public static String replaceBetweenParentheses(ChatMessage message, String text, CustomData data, HashMap<String, String> extraData) {
 
         if(text == null) text = "";
 
-        return replaceBetweenParentheses(message, text, null, text, data);
+        return replaceBetweenParentheses(message, text, null, text, data, extraData);
     }
 
-    private static String evaluateIfStatements(String value, ChatMessage message, CustomData commandData){
+    private static String evaluateIfStatements(String value, ChatMessage message, CustomData commandData, HashMap<String, String> extraData){
 
         String identifier = value.split(" ")[0];
         String replacement = "";
@@ -120,7 +129,7 @@ public class CommandHandler {
 
             if(state == 2){
                 String ifValue = innerData.substring(startPos+1, endPos);
-                String ifValueAfter = parseParenthesis(message, ifValue, null, ifValue, commandData, false);
+                String ifValueAfter = parseParenthesis(message, ifValue, null, ifValue, commandData, extraData, false);
 
                 if(compare(ifValueAfter)) replacement = ifData;
                 else replacement = elseData;
@@ -147,7 +156,11 @@ public class CommandHandler {
         }
     }
 
-    private static String runCommandActions(String value, CustomData customData, ChatMessage message){
+    private static String runCommandActions(String value, CustomData customData, ChatMessage message, HashMap<String, String> extraData){
+
+        if(extraData == null){
+            extraData = new HashMap<>();
+        }
 
         String data;
         String[] dataArr = value.split(" ", 2);
@@ -260,9 +273,9 @@ public class CommandHandler {
 
                 if(data.toLowerCase().startsWith("file://")) {
                     Logging.getLogger().info("Playing sound from file: " + dataArr[1].trim().substring(7));
-                    Sounds.playSound(dataArr[1].trim().substring(7), true, true, true, false);
+                    Sounds.playSound(dataArr[1].trim().substring(7), true, true, true, false, SoundType.SOUND);
                 }
-                else Sounds.playSound(dataArr[1].trim(), true, true, false, true);
+                else Sounds.playSound(dataArr[1].trim(), true, true, false, true, SoundType.SOUND);
 
                 break;
             }
@@ -358,15 +371,11 @@ public class CommandHandler {
                 break;
             }
             case "followage": {
-                try {
-                    replacement = Utilities.fetchURL("https://2g.be/twitch/following.php?user="
-                            + data.split(" ")[0].trim()
-                            + "&channel="
-                            + TwitchAccount.login + "&format=mwdhms" );
-                }
-                catch (Exception e){
-                    replacement = "Error";
-                }
+                replacement = TwitchAPI.getFollowerAge(data.split(" ")[0].trim());
+                break;
+            }
+            case "followage_time": {
+                replacement = TwitchAPI.getFollowerAgeTime(data.split(" ")[0].trim());
                 break;
             }
             case "weather": {
@@ -384,15 +393,154 @@ public class CommandHandler {
                     break;
                 }
             }
+            case "foundword": {
+                if(customData instanceof KeywordData){
+                    replacement = extraData.get("foundWord");
+                }
+                break;
+            }
+            case "reward_time": {
+                if(customData instanceof ChannelPointData){
+                    replacement = extraData.get("rewardTime");
+                }
+                break;
+            }
+            case "reward_cost": {
+                if(customData instanceof ChannelPointData){
+                    replacement = extraData.get("rewardCost");
+                }
+                break;
+            }
+            case "reward_title": {
+                if(customData instanceof ChannelPointData){
+                    replacement = extraData.get("rewardTitle");
+                }
+                break;
+            }
+            case "reward_id": {
+                if(customData instanceof ChannelPointData){
+                    replacement = ((ChannelPointData) customData).getId();
+                }
+                break;
+            }
+            case "cheer_amount": {
+                if(customData instanceof CheerData){
+                    replacement = extraData.get("cheerAmount");
+                }
+                break;
+            }
+            case "raid_time": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.RAID) {
+                        replacement = extraData.get("raidTime");
+                    }
+                }
+                break;
+            }
+            case "raid_viewers": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.RAID) {
+                        replacement = extraData.get("raidViewers");
+                    }
+                }
+                break;
+            }
+            case "follow_time": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.FOLLOW) {
+                        replacement = extraData.get("followTime");
+                    }
+                }
+                break;
+            }
+            case "subscription_time": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionTime");
+                    }
+                }
+                break;
+            }
+            case "subscription_gifted": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionGifted");
+                    }
+                }
+                break;
+            }
+            case "subscription_gifted_by": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionGiftedBy");
+                    }
+                }
+                break;
+            }
+            case "subscription_gifted_months": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionGiftedMonths");
+                    }
+                }
+                break;
+            }
+            case "subscription_plan": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionPlan");
+                    }
+                }
+                break;
+            }
+            case "subscription_streak": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionStreak");
+                    }
+                }
+                break;
+            }
+            case "subscription_multi_month_duration": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionMultiMonthDuration");
+                    }
+                }
+                break;
+            }
+            case "subscription_multi_month_tenure": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionMultiMonthTenure");
+                    }
+                }
+                break;
+            }
+            case "subscription_months": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionMonths");
+                    }
+                }
+                break;
+            }
+            case "subscription_length": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.SUBSCRIBE) {
+                        replacement = extraData.get("subscriptionLength");
+                    }
+                }
+                break;
+            }
             case "emptymessage":
             case "empty_message": {
                 String command = message.getMessage().split(" ")[0].trim();
                 String query = message.getMessage().substring(command.length()).trim();
-                replacement = String.valueOf(query.trim().equals(""));
+                replacement = String.valueOf(query.trim().isEmpty());
                 break;
             }
             default: {
-
                 replacement = "$(" + value + ")";
                 break;
             }
@@ -400,7 +548,7 @@ public class CommandHandler {
         return replacement;
     }
 
-    public static String parseParenthesis(ChatMessage message, String text, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CustomData customData, boolean ifPass){
+    public static String parseParenthesis(ChatMessage message, String text, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CustomData customData, HashMap<String, String> extraData, boolean ifPass){
 
         String newResult = original;
 
@@ -438,7 +586,7 @@ public class CommandHandler {
             }
             String filled = StringUtils.repeat("█", eIndex - sIndex);
             String result = strS + filled + strE;
-            return parseParenthesis(message, result, parenthesisSubstrings, original, customData, ifPass);
+            return parseParenthesis(message, result, parenthesisSubstrings, original, customData, extraData, ifPass);
         }
 
         String lastResult = original;
@@ -454,9 +602,9 @@ public class CommandHandler {
 
                     String replacement = "";
                     if (ifPass) {
-                        replacement = evaluateIfStatements(value, message, customData);
+                        replacement = evaluateIfStatements(value, message, customData, extraData);
                     } else {
-                        replacement = runCommandActions(value, customData, message);
+                        replacement = runCommandActions(value, customData, message, extraData);
                     }
 
 
@@ -479,10 +627,10 @@ public class CommandHandler {
         return newResult;
     }
 
-    public static String replaceBetweenParentheses(ChatMessage message, String text, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CustomData customData) {
+    public static String replaceBetweenParentheses(ChatMessage message, String text, ArrayList<ParenthesisSubstrings> parenthesisSubstrings, String original, CustomData customData, HashMap<String, String> extraData) {
 
-        String value = parseParenthesis(message, text, parenthesisSubstrings, original, customData, true);
-        return parseParenthesis(message, value, parenthesisSubstrings, value, customData, false);
+        String value = parseParenthesis(message, text, parenthesisSubstrings, original, customData, extraData, true);
+        return parseParenthesis(message, value, parenthesisSubstrings, value, customData, extraData, false);
 
     }
 

@@ -1,4 +1,4 @@
-package com.alphalaneous;
+package com.alphalaneous.Utilities;
 
 import java.awt.*;
 import java.io.IOException;

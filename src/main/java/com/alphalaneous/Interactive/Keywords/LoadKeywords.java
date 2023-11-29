@@ -80,8 +80,4 @@ public class LoadKeywords {
         }
         return commandDataArrayList;
     }
-
-    private static String readIntoString(BufferedReader reader){
-        return Utilities.readIntoString(reader);
-    }
 }

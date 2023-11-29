@@ -1,4 +1,4 @@
-package com.alphalaneous;
+package com.alphalaneous.Utilities;
 
 import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.FileUtils.FileList;
@@ -24,7 +24,7 @@ public class Fonts {
             if(!name.equals("Fonts")) {
                 try {
                     Font font = file.getFont();
-
+                    GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
                     fonts.put(name, font);
                 } catch (Exception e) {
                     e.printStackTrace();

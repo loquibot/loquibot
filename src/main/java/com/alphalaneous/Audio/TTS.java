@@ -1,5 +1,7 @@
 package com.alphalaneous.Audio;
 
+import com.alphalaneous.Enums.SoundType;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -7,7 +9,7 @@ public class TTS {
 
     public static void playTTS(String text, boolean overlap, String voice) {
         if (!text.trim().equalsIgnoreCase("")) {
-            Sounds.playSound("https://api.streamelements.com/kappa/v2/speech?voice=" + voice + "&text=" + URLEncoder.encode(text, StandardCharsets.UTF_8), false, overlap, false, true);
+            Sounds.playSound("https://api.streamelements.com/kappa/v2/speech?voice=" + voice + "&text=" + URLEncoder.encode(text, StandardCharsets.UTF_8), false, overlap, false, true, SoundType.TTS);
         }
     }
 

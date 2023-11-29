@@ -1,7 +1,7 @@
-package com.alphalaneous;
+package com.alphalaneous.Utilities;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Utilities.Utilities;
+import org.apache.logging.log4j.Level;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,11 +15,10 @@ public class SettingsHandler {
 	}
 
 	public static void writeSettings(String key, String setting) {
-		if(key != null && !key.equalsIgnoreCase("null")) {
+		if(key != null && !key.equalsIgnoreCase("null") && !key.trim().equalsIgnoreCase("")) {
 			settings.put(key, setting.replace("\n", "\\n"));
 			saveSettings();
 		}
-
 	}
 
 	public static SettingData getSettings(String key) {
@@ -29,12 +28,21 @@ public class SettingsHandler {
 		return new SettingData(true);
 	}
 
-	@OnLoad
+	@OnLoad(order = -1000)
 	public static void loadSettings() {
 		try {
 			Utilities.load("config.properties", settings);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		settings.forEach((k, v) -> {
+			if(!k.equalsIgnoreCase("oauth")) {
+				String setting = v;
+				if(setting.trim().isEmpty()){
+					setting = "UNASSIGNED";
+				}
+				Logging.getLogger().log(Level.getLevel("SETTINGS"), "LOAD - " + k + ": " + setting);
+			}
+		});
 	}
 }

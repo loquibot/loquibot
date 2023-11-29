@@ -1,14 +1,14 @@
 package com.alphalaneous.Pages;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Assets;
+import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Components.ConfigCheckbox;
 import com.alphalaneous.Components.EditCommandPanel;
 import com.alphalaneous.Components.RoundedButton;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interactive.Actions.ActionData;
-import com.alphalaneous.SidebarSwitcher;
+import com.alphalaneous.Components.SidebarSwitcher;
 import com.alphalaneous.Utilities.Utilities;
 
 import javax.swing.*;
@@ -59,9 +59,9 @@ public class ActionsPage {
 
     public static void showEditMenu(ActionData dataParam){
 
-        String title = "Edit Action";
+        String title = "$EDIT_ACTION$";
 
-        if(dataParam.getName() == null) title = "Add Action";
+        if(dataParam.getName() == null) title = "$ADD_ACTION$";
 
         EditCommandPanel editCommandPanel = new EditCommandPanel(title, dataParam, (kv, d, e) -> {
 
@@ -77,12 +77,10 @@ public class ActionsPage {
             Utilities.ifNotNull(kv.get("message"), o -> data.setMessage((String)o));
             data.setName(kv.get("name"));
 
-            //todo check name collisions
-
             data.save(true);
             e.close();
         });
-        editCommandPanel.addNameInput("Action:", "The name of the action to be run.");
+        editCommandPanel.addNameInput("$ACTION_NAME_INPUT$", "$ACTION_NAME_DESC$");
         editCommandPanel.addMessageInput();
         editCommandPanel.setBounds(0,0,800,370);
 

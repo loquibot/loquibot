@@ -2,12 +2,15 @@ package com.alphalaneous.ChatBot;
 
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
-import com.alphalaneous.SettingsHandler;
+import com.alphalaneous.Services.Twitch.TwitchAPI;
+import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Chat.SelfDestructingMessage;
 import com.alphalaneous.Utilities.Chat.SelfDestructingViewer;
 import com.alphalaneous.Utilities.Logging;
+import com.alphalaneous.Utilities.Utilities;
 
-public class TwitchChatListener extends ChatBot {
+public class TwitchChatListener extends TwitchEventUtils {
 
 	private static TwitchChatListener currentListener;
 
@@ -24,7 +27,8 @@ public class TwitchChatListener extends ChatBot {
 	@Override
 	public void onOpen() {
 		Logging.getLogger().info("Connected to Twitch IRC");
-
+		Utilities.sleep(1000);
+		sendMessage("Loquibot has connected to chat!");
 	}
 
 	@Override

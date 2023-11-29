@@ -58,7 +58,7 @@ public class LoadActions {
             jsonObject = new JSONObject(jsonData);
         }
         catch (Exception e){
-            jsonData = "{\"commands\": []}";
+            jsonData = "{\"actions\": []}";
             jsonObject = new JSONObject(jsonData);
         }
 
@@ -78,9 +78,5 @@ public class LoadActions {
             }
         }
         return actionDataArrayList;
-    }
-
-    private static String readIntoString(BufferedReader reader){
-        return Utilities.readIntoString(reader);
     }
 }

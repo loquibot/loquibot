@@ -2,12 +2,13 @@ package com.alphalaneous.Components;
 
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.DialogBox;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerData;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Interfaces.SaveAdapter;
+import com.alphalaneous.Utilities.Language;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import com.alphalaneous.Window;
@@ -34,6 +35,7 @@ public class EditCommandPanel extends ThemeableJPanel {
 
     private final ArrayList<ThemeableJLabel> titleLabels = new ArrayList<>();
 
+    private final RoundedButton deleteButton;
 
 
     public EditCommandPanel(String titleText, CustomData data, SaveAdapter saveAdapter) {
@@ -78,10 +80,8 @@ public class EditCommandPanel extends ThemeableJPanel {
         ThemeableJPanel bottomPanel = new ThemeableJPanel();
         bottomPanel.setOpaque(false);
 
-        RoundedButton saveButton = new RoundedButton("Save");
+        RoundedButton saveButton = new RoundedButton("$SAVE$");
         saveButton.addActionListener(e -> {
-
-            Logging.getLogger().info(values.get("name"));
 
             if(values.get("name") == null || values.get("name").isBlank()){
                 titleLabels.get(0).setForeground("error-red");
@@ -94,11 +94,11 @@ public class EditCommandPanel extends ThemeableJPanel {
         });
         saveButton.setPreferredSize(new Dimension(100,40));
 
-        RoundedButton cancelButton = new RoundedButton("Cancel");
+        RoundedButton cancelButton = new RoundedButton("$CANCEL$");
         cancelButton.addActionListener(e -> close());
         cancelButton.setPreferredSize(new Dimension(100,40));
 
-        RoundedButton deleteButton = createDeleteButton(data);
+        deleteButton = createDeleteButton(data);
 
         bottomPanel.setPreferredSize(new Dimension(100,60));
 
@@ -114,14 +114,20 @@ public class EditCommandPanel extends ThemeableJPanel {
 
     }
 
+    public void removeDeleteButton(){
+        JPanel p = (JPanel) deleteButton.getParent();
+        deleteButton.getParent().remove(deleteButton);
+        p.updateUI();
+    }
+
     private RoundedButton createDeleteButton(CustomData data) {
-        RoundedButton deleteButton = new RoundedButton("Delete");
+        RoundedButton deleteButton = new RoundedButton("$DELETE$");
         deleteButton.setForeground("error-red", "error-red");
         AtomicInteger delClicks = new AtomicInteger();
         deleteButton.addActionListener(e -> {
             delClicks.getAndIncrement();
             if(delClicks.get() == 1){
-                deleteButton.setText("Sure?");
+                deleteButton.setText("$SURE$");
             }
             if(delClicks.get() == 2) {
                 delete(data);
@@ -149,26 +155,44 @@ public class EditCommandPanel extends ThemeableJPanel {
         else titleLabels.get(0).setForeground("foreground");
     }
 
+    public void setRangeLabelError(boolean b){
+
+        if(b) titleLabels.get(2).setForeground("error-red");
+        else titleLabels.get(2).setForeground("foreground");
+    }
+
+    public void addDisabledNameInput(String name, String desc){
+        ThemeableJPanel cmdInput = createSettingTextInput(name, "name", desc, data.getName(),1, false);
+        innerPanel.add(cmdInput, gbc);
+        gbc.gridy++;
+    }
+
     public void addNameInput(String name, String desc){
-        ThemeableJPanel cmdInput = createSettingTextInput(name, "name", desc, data.getName(),1);
+        ThemeableJPanel cmdInput = createSettingTextInput(name, "name", desc, data.getName(),1, true);
         innerPanel.add(cmdInput, gbc);
         gbc.gridy++;
     }
 
     public void addMessageInput(){
-        ThemeableJPanel messageInput = createSettingTextInput("Message:", "message", "The response sent in chat when this action runs.", data.getMessage(),4);
+        ThemeableJPanel messageInput = createSettingTextInput("$MESSAGE_INPUT$", "message", "$MESSAGE_INPUT_DESC$", data.getMessage(),4, true);
         innerPanel.add(messageInput, gbc);
         gbc.gridy++;
     }
 
     public void addAliasesInput(){
-        ThemeableJPanel messageInput = createSettingTextInput("Aliases:", "aliases", "Other command names that will activate this command (comma separated).", String.join(",", ((CommandData)data).getAliases()),1);
+        ThemeableJPanel messageInput = createSettingTextInput("$ALIASES_INPUT$", "aliases", "$ALIASES_INPUT_DESC$", String.join(",", ((CommandData)data).getAliases()),1, true);
+        innerPanel.add(messageInput, gbc);
+        gbc.gridy++;
+    }
+
+    public void addRangeInput(){
+        ThemeableJPanel messageInput = createSettingTextInput("$RANGES_INPUT$", "range", "$RANGES_INPUT_DESC$", ((CheerData)data).getRange() ,1, true);
         innerPanel.add(messageInput, gbc);
         gbc.gridy++;
     }
 
     public void addRunCommandInput(){
-        ThemeableJPanel runCommandInput = createSettingTextInput("Command:", "runCommand", "A command that will activate when this runs, overrides message.", ((TimerData)data).getRunCommand(),1);
+        ThemeableJPanel runCommandInput = createSettingTextInput("$COMMAND_INPUT$", "runCommand", "$COMMAND_INPUT_DESC$", ((TimerData)data).getRunCommand(),1, true);
         innerPanel.add(runCommandInput, gbc);
         gbc.gridy++;
     }
@@ -187,7 +211,7 @@ public class EditCommandPanel extends ThemeableJPanel {
     public void addCooldownInput(){
 
         try {
-            ThemeableJPanel sliderInput = createSettingSliderInput("Cooldown:", "The waiting time before the action can be ran again.", "cooldown", "%s Second", "%s Seconds", 0, 300, (Integer) data.getClass().getMethod("getCooldown").invoke(data));
+            ThemeableJPanel sliderInput = createSettingSliderInput("$COOLDOWN_INPUT$", "$COOLDOWN_INPUT_DESC$", "cooldown", "$COOLDOWN_COUNTER_S$", "$COOLDOWN_COUNTER_P$", 0, 300, (Integer) data.getClass().getMethod("getCooldown").invoke(data));
             innerPanel.add(sliderInput, gbc);
             gbc.gridy++;
         }
@@ -198,7 +222,7 @@ public class EditCommandPanel extends ThemeableJPanel {
 
     public void addMessagesInput(){
 
-        ThemeableJPanel sliderInput = createSettingSliderInput("Messages:", "Amount of messages within 5 minutes for a timer to execute.", "lines", "%s message", "%s messages", 2, 100, ((TimerData)data).getLines());
+        ThemeableJPanel sliderInput = createSettingSliderInput("$MESSAGES_INPUT$", "$MESSAGES_INPUT_DESC$", "lines", "$MESSAGES_COUNTER_S$", "$MESSAGES_COUNTER_P$", 2, 100, ((TimerData)data).getLines());
         innerPanel.add(sliderInput, gbc);
         gbc.gridy++;
     }
@@ -211,12 +235,12 @@ public class EditCommandPanel extends ThemeableJPanel {
             value = ((TimerData)data).getInterval();
         }
 
-        ThemeableJPanel sliderInput = createSettingSliderInput("Interval:", "Repeat Interval (Exact per hour, example: 15 minutes is 2:00, 2:15, 2:30, 2:45)", "interval", "%s minute", "%s minutes", 1, 60, value);
+        ThemeableJPanel sliderInput = createSettingSliderInput("$INTERVAL_INPUT$", "$INTERVAL_INPUT_DESC$", "interval", "$INTERVAL_COUNTER_S$", "$INTERVAL_COUNTER_P$", 1, 60, value);
         innerPanel.add(sliderInput, gbc);
         gbc.gridy++;
     }
 
-    public ThemeableJPanel createSettingTextInput(String text, String identifier, String description, String value, int lineCount){
+    public ThemeableJPanel createSettingTextInput(String text, String identifier, String description, String value, int lineCount, boolean enabled){
 
         ThemeableJPanel panel = new ThemeableJPanel();
 
@@ -232,6 +256,9 @@ public class EditCommandPanel extends ThemeableJPanel {
             values.put(identifier, value);
             textArea.setText(value);
         }
+
+        textArea.clearUndo();
+        textArea.getTextInput().setEditable(enabled);
 
         textArea.getTextInput().addKeyListener(new KeyAdapter() {
             @Override
@@ -299,7 +326,6 @@ public class EditCommandPanel extends ThemeableJPanel {
         String levelText = value.toString();
         if(levelText.equals("Vip")) levelText = "VIP";
 
-        //todo make User Level button work
         RoundedButton ulButton = new RoundedButton(levelText);
 
         ulButton.addActionListener(e -> UserLevelsMenu.show(Utilities.getRectInFrame(ulButton, Window.getFrame()), c -> {
@@ -313,7 +339,7 @@ public class EditCommandPanel extends ThemeableJPanel {
         }));
 
 
-        ThemeableJLabel textLabel = new ThemeableJLabel("User Level:");
+        ThemeableJLabel textLabel = new ThemeableJLabel("$USER_LEVEL$");
         textLabel.setPreferredSize(new Dimension(100, 0));
         textLabel.setForeground("foreground");
         textLabel.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
@@ -356,10 +382,10 @@ public class EditCommandPanel extends ThemeableJPanel {
         sliderValue.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
 
         if(value == 1){
-            sliderValue.setText(String.format(formattedCounter, value));
+            sliderValue.setText(String.format(Language.setLocale(formattedCounter), value));
         }
         else{
-            sliderValue.setText(String.format(formattedCounterPlural, value));
+            sliderValue.setText(String.format(Language.setLocale(formattedCounterPlural), value));
         }
 
         values.put(identifier, String.valueOf(value));
@@ -374,9 +400,9 @@ public class EditCommandPanel extends ThemeableJPanel {
         slider.setBorder(BorderFactory.createEmptyBorder());
         slider.addChangeListener(e -> {
             if (slider.getValue() == 1) {
-                sliderValue.setText(String.format(formattedCounter, slider.getValue()));
+                sliderValue.setText(String.format(Language.setLocale(formattedCounter), slider.getValue()));
             } else {
-                sliderValue.setText(String.format(formattedCounterPlural, slider.getValue()));
+                sliderValue.setText(String.format(Language.setLocale(formattedCounterPlural), slider.getValue()));
             }
 
             values.put(identifier, String.valueOf(slider.getValue()));

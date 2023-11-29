@@ -2,7 +2,7 @@ package com.alphalaneous.Components;
 
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interfaces.CheckListener;
 
 import javax.swing.*;

@@ -3,8 +3,7 @@ package com.alphalaneous.Components;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJFXPanel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Fonts;
-import com.alphalaneous.Utilities.Cookies._CookieStore;
+import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.GraphicsFunctions;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
@@ -17,9 +16,6 @@ import org.w3c.dom.Text;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.URI;
 
 public class TwitchChat extends ThemeableJPanel{

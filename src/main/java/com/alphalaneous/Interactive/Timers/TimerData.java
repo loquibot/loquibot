@@ -125,11 +125,11 @@ public class TimerData extends CustomData {
         new Thread(() -> {
             if(minute % interval == 0 && isEnabled && SelfDestructingMessage.getSize() >= lines) {
                 if (runCommand != null && !runCommand.equalsIgnoreCase("")) {
-                    ChatMessage message = new ChatMessage(new String[]{}, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, 0, false, false);
+                    ChatMessage message = new ChatMessage(new String[]{}, "TimerHandler", "TimerHandler", runCommand, new String[0], true, true, true, false, false);
                     CommandHandler.run(message);
                 } else {
-                    ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0, false, false);
-                    TwitchChatListener.getCurrentListener().sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, this));
+                    ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, false, false);
+                    TwitchChatListener.getCurrentListener().sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, this, null));
                 }
             }
         }).start();

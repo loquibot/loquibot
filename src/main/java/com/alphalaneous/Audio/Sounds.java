@@ -1,18 +1,14 @@
 package com.alphalaneous.Audio;
 
-import com.alphalaneous.SettingsHandler;
+import com.alphalaneous.Enums.SoundType;
+import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.LimitedList;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import com.alphalaneous.Window;
-import javazoom.jl.player.*;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.FloatControl;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,8 +27,8 @@ public class Sounds {
 		queryOverlapSound();
 	}
 
-	public static void playSound(String location, boolean restart, boolean overlap) {
-		playSound(location, restart, overlap, true, false);
+	public static void playSound(String location, boolean restart, boolean overlap, SoundType soundType) {
+		playSound(location, restart, overlap, true, false, soundType);
 	}
 
 
@@ -71,8 +67,8 @@ public class Sounds {
 		}).start();
 	}
 
-	public static void playSound(String location, boolean restart, boolean overlap, boolean isFile, boolean isURL) {
-		new Sound(location, isFile, isURL, overlap);
+	public static void playSound(String location, boolean restart, boolean overlap, boolean isFile, boolean isURL, SoundType soundType) {
+		new Sound(location, isFile, isURL, overlap, soundType);
 	}
 
 	public static void stopSound(String location) {
@@ -102,13 +98,17 @@ public class Sounds {
 		boolean isFile;
 		boolean isURL;
 		boolean overlap;
-		SoundEngine mp3player;
+		SoundEngine soundPlayer;
 
-		public Sound(String location, boolean isFile, boolean isURL, boolean overlap) {
+		SoundType soundType;
+
+		public Sound(String location, boolean isFile, boolean isURL, boolean overlap, SoundType soundType) {
 			this.location = location;
 			this.isFile = isFile;
 			this.isURL = isURL;
 			this.overlap = overlap;
+			this.soundType = soundType;
+
 			Sounds.sounds.put(UUID, this);
 		}
 
@@ -117,29 +117,34 @@ public class Sounds {
 			new Thread(() -> {
 				try {
 					if(Window.isVisible() || SettingsHandler.getSettings("playSoundsWhileHidden").asBoolean()) {
-						BufferedInputStream inp;
+						BufferedInputStream inp = null;
 
-						if (isURL) {
-							inp = new BufferedInputStream(new URL(location).openStream());
-						} else if (isFile) {
+						if (isFile) {
 							if(Files.exists(Paths.get(location))) {
 								inp = new BufferedInputStream(new FileInputStream(location));
-							} else {
-                                inp = null;
-                            }
-                        } else {
+							}
+
+                        } else if (!isURL){
 							inp = new BufferedInputStream(Objects.requireNonNull(Sounds.class
 									.getResource(location)).openStream());
 						}
 
-						if(inp != null) {
+						if(inp != null || isURL) {
 							playedSounds.add(UUID);
-							mp3player = new SoundEngine(inp);
-							if(SettingsHandler.getSettings("soundVolume").exists()){
-								mp3player.setVolume(SettingsHandler.getSettings("soundVolume").asInteger());
+
+							if(isURL) soundPlayer = new SoundEngine(new URL(location));
+							else soundPlayer = new SoundEngine(inp);
+
+							switch (soundType){
+								case SOUND:
+									soundPlayer.setVolume(SettingsHandler.getSettings("soundVolume").asInteger());
+									break;
+								case TTS:
+									soundPlayer.setVolume(SettingsHandler.getSettings("ttsVolume").asInteger());
+									break;
 							}
-							mp3player.play();
-							inp.close();
+							soundPlayer.play();
+							//inp.close();
 
 							complete = true;
 							Logging.getLogger().info("Sound Complete: " + location + " (" + UUID + ")");
@@ -160,8 +165,8 @@ public class Sounds {
 		}
 
 		public void stopSound() {
-			if(mp3player != null) {
-				mp3player.close();
+			if(soundPlayer != null) {
+				soundPlayer.close();
 			}
 			complete = true;
 		}

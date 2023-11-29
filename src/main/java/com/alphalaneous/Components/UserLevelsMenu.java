@@ -32,11 +32,7 @@ public class UserLevelsMenu {
         String levelText = level.toString();
         if(levelText.equals("Vip")) levelText = "VIP";
 
-        return new ContextButton(levelText, f){{
-
-            addActionListener(e -> Window.destroyContextMenu());
-
-        }};
+        return new ContextButton(levelText, f);
 
     }
 

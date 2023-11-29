@@ -11,21 +11,21 @@ public class ContextMenu extends ThemeableJPanel {
 
     private final GridBagConstraints gbc = new GridBagConstraints();
 
-    private int height = 0;
+    private double height = 0;
     private int width = 175;
     public ContextMenu() {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.insets = new Insets(0, 0, 5, 0);
+        gbc.insets = new Insets(2, 0, 2, 0);
         gbc.weightx = 1;
         gbc.weighty = 0;
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         setLayout(new GridBagLayout());
-        setBorder(BorderFactory.createEmptyBorder(5,5,0,5));
+        setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
         addMouseListener(new MouseAdapter() {});
         setOpaque(false);
-        setBackground("background");
+        setBackground("background-intense");
         //setBackground(new Color(Defaults.COLOR6.getRed(), Defaults.COLOR6.getGreen(), Defaults.COLOR6.getBlue(), 200));
 
     }
@@ -36,14 +36,14 @@ public class ContextMenu extends ThemeableJPanel {
     }
 
     public void addButton(ContextButton button){
-        height += 37; //Brute forced the right value, no idea why it's 37
-        setBounds(0,0,width,height+5);
+        height += 30;
+        setBounds(0,0,width, (int) (height+4));
         add(button, gbc);
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        GraphicsFunctions.roundCorners(g, getBackground(), getSize());
+        GraphicsFunctions.roundCorners(g, getBackground(), getSize(), 12);
         super.paintComponent(g);
     }
 }

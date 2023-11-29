@@ -34,13 +34,13 @@ public class ThemeableTextArea extends JTextArea {
         if(prevBG != currentBGColor) {
             prevBG = currentBGColor;
             setBackground(currentBGColor);
-            updateUI();
+            revalidate();
         }
 
         if(prevFG != currentFGColor) {
             prevFG = currentFGColor;
             setForeground(currentFGColor);
-            updateUI();
+            revalidate();
         }
 
 

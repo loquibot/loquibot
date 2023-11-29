@@ -13,9 +13,11 @@ public class TimerHandler {
             while(true){
                 Utilities.sleep(60000);
                 for(TimerData data : TimerData.getRegisteredTimers()){
-                    int minute = LocalDateTime.now().getMinute();
-                    if(minute == 0) minute = 60;
-                    data.runTimer(minute);
+                    if(data.isEnabled()) {
+                        int minute = LocalDateTime.now().getMinute();
+                        if (minute == 0) minute = 60;
+                        data.runTimer(minute);
+                    }
                 }
             }
         }).start();

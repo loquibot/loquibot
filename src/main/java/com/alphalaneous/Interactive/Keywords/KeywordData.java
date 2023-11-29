@@ -23,7 +23,6 @@ public class KeywordData extends CustomData {
 
     private int cooldown = 0;
     private long counter = 0;
-    private String foundWord;
 
 
     public KeywordData(String keyword){
@@ -45,10 +44,6 @@ public class KeywordData extends CustomData {
     public void setName(String keyword) {
         this.keyword = keyword;
 
-    }
-
-    public void setFoundWord(String foundWord){
-        this.foundWord = foundWord;
     }
 
     @Override
@@ -114,9 +109,6 @@ public class KeywordData extends CustomData {
         return cooldown;
     }
 
-    public String getFoundWord(){
-        return foundWord;
-    }
 
     public static ArrayList<KeywordData> getRegisteredKeywords(){
         return registeredKeywords;

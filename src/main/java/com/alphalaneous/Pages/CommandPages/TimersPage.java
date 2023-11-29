@@ -32,7 +32,7 @@ public class TimersPage {
 
         page.getContentPane().add(buttonPanel, BorderLayout.NORTH);
 
-        ChatPage.addPage("Timers", page, TimersPage::load, TimersPage::showEditMenu);
+        ChatPage.addPage("$TIMERS_TITLE$", page, TimersPage::load, TimersPage::showEditMenu);
     }
 
     public static void showEditMenu(){
@@ -41,9 +41,9 @@ public class TimersPage {
 
     public static void showEditMenu(TimerData dataParam){
 
-        String title = "Edit Timer";
+        String title = "$EDIT_TIMERS$";
 
-        if(dataParam.getName() == null) title = "Add Timer";
+        if(dataParam.getName() == null) title = "$ADD_TIMERS$";
 
         EditCommandPanel editCommandPanel = new EditCommandPanel(title, dataParam, (kv, d, e) -> {
 
@@ -63,12 +63,10 @@ public class TimersPage {
 
             data.setName(kv.get("name"));
 
-            //todo check name collisions
-
             data.save(true);
             e.close();
         });
-        editCommandPanel.addNameInput("Timer Name:", "The name of the timer to be run.");
+        editCommandPanel.addNameInput("$TIMERS_NAME_INPUT$", "$TIMERS_NAME_DESC$");
         editCommandPanel.addMessageInput();
         editCommandPanel.addIntervalInput();
         editCommandPanel.addMessagesInput();

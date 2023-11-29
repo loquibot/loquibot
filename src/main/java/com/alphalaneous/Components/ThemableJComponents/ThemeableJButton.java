@@ -1,6 +1,7 @@
 package com.alphalaneous.Components.ThemableJComponents;
 
 import com.alphalaneous.Components.JButtonUI;
+import com.alphalaneous.Utilities.Language;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,9 @@ public class ThemeableJButton extends JButton {
     Color prevBG;
     Color prevFG;
 
+    String prevText = "";
+    String text;
+
     boolean isSelected = false;
     private final JButtonUI normalUI = new JButtonUI();
     private final JButtonUI disabledUI = new JButtonUI();
@@ -27,6 +31,14 @@ public class ThemeableJButton extends JButton {
 
     {
         setUI(normalUI);
+    }
+
+    public ThemeableJButton(){
+    }
+
+    public ThemeableJButton(String text){
+        super(Language.setLocale(text));
+        this.text = text;
     }
 
     public void setBackground(String normalBackground, String selectedBackground){
@@ -68,6 +80,12 @@ public class ThemeableJButton extends JButton {
         }
     }
 
+    @Override
+    public void setText(String text){
+        super.setText(Language.setLocale(text));
+        this.text = text;
+    }
+
     public boolean getSelected(){
         return isSelected;
     }
@@ -79,25 +97,6 @@ public class ThemeableJButton extends JButton {
 
         Color currentBGColor;
         Color currentFGColor;
-
-        if(isSelected){
-            currentBGColor = ThemeableColor.getColorByName(bgSelectedColorName);
-            currentFGColor = ThemeableColor.getColorByName(fgSelectedColorName);
-        }
-        else{
-            currentBGColor = ThemeableColor.getColorByName(bgNormalColorName);
-            currentFGColor = ThemeableColor.getColorByName(fgNormalColorName);
-        }
-
-        if(prevBG != currentBGColor) {
-            prevBG = currentBGColor;
-            setBackground(currentBGColor);
-        }
-
-        if(prevFG != currentFGColor) {
-            prevFG = currentFGColor;
-            setForeground(currentFGColor);
-        }
 
         normalUI.setColors(ThemeableColor.getColorByName(bgNormalColorName),
                 ThemeableColor.getColorByName(hoverNormalColorName),
@@ -111,5 +110,32 @@ public class ThemeableJButton extends JButton {
                 ThemeableColor.getColorByName(bgNormalColorName),
                 ThemeableColor.getColorByName(bgNormalColorName));
 
+        String currentText = Language.setLocale(text);
+
+        if(!prevText.equalsIgnoreCase(currentText)){
+            prevText = currentText;
+            setText(text);
+        }
+
+        if(isSelected){
+            currentBGColor = ThemeableColor.getColorByName(bgSelectedColorName);
+            currentFGColor = ThemeableColor.getColorByName(fgSelectedColorName);
+        }
+        else{
+            currentBGColor = ThemeableColor.getColorByName(bgNormalColorName);
+            currentFGColor = ThemeableColor.getColorByName(fgNormalColorName);
+        }
+
+        if(prevBG != currentBGColor) {
+            prevBG = currentBGColor;
+            setBackground(currentBGColor);
+            revalidate();
+        }
+
+        if(prevFG != currentFGColor) {
+            prevFG = currentFGColor;
+            setForeground(currentFGColor);
+            revalidate();
+        }
     }
 }

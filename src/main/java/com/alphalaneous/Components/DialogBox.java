@@ -1,9 +1,10 @@
-package com.alphalaneous;
+package com.alphalaneous.Components;
 
 
 import com.alphalaneous.Components.ThemableJComponents.*;
 import com.alphalaneous.Utilities.GraphicsFunctions;
 import com.alphalaneous.Utilities.Utilities;
+import com.alphalaneous.Window;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,0 +1,127 @@
+identifier = English
+
+# General
+
+SAVE = Save
+CANCEL = Cancel
+DELETE = Delete
+SURE = Sure?
+
+# Personalization Settings
+
+PERSONALIZATION_TITLE = Personalization
+THEME_TEXT = Theme
+DARK_MODE = Dark
+LIGHT_MODE = Light
+ALWAYS_ON_TOP = Always on top
+ON_TOP_DESCRIPTION = Make the window visible on top of everything
+DISABLE_FOCUS = Disable focus
+DISABLE_FOCUS_DESCRIPTION = Disables the ability to focus into the window
+
+# Audio Settings
+
+AUDIO_TITLE = Audio
+SOUND_VOLUME = Sound Volume
+TTS_VOLUME = Text To Speech Volume
+VOLUME_TEXT = Volume: %d%%
+PLAY_SOUNDS_WHILE_HIDDEN = Play sounds while hidden
+PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION = Allow sounds to be activated while the Loquibot window is not open
+
+# Chat Settings
+
+CHAT_TITLE = Chat
+
+# Accounts Settings
+
+ACCOUNTS_TITLE = Accounts
+
+# Actions Page
+
+EDIT_ACTION = Edit Action
+ADD_ACTION = Add Action
+ACTION_NAME_INPUT = Action:
+ACTION_NAME_DESC = The name of the action to be run.
+
+# Commands Page
+
+COMMANDS_TITLE = Commands
+EDIT_COMMAND = Edit Command
+ADD_COMMAND = Add Command
+COMMAND_NAME_INPUT = Command:
+COMMAND_NAME_DESC = The command name, what must be typed in chat to run.
+
+# Keywords Page
+
+KEYWORDS_TITLE = Keywords
+EDIT_KEYWORD = Edit Keyword
+ADD_KEYWORD = Add Keyword
+KEYWORD_NAME_INPUT = Keyword:
+KEYWORD_NAME_DESC = The keyword, case sensitive (Allows REGEX).
+
+# Timers Page
+
+TIMERS_TITLE = Timers
+EDIT_TIMERS = Edit Timer
+ADD_TIMERS = Add Timer
+TIMERS_NAME_INPUT = Timer Name:
+TIMERS_NAME_DESC = The name of the timer to be run.
+
+# Channel Point Rewards Page
+
+CHANNEL_POINTS_TITLE = Rewards
+EDIT_REWARD = Edit Reward
+REWARD_NAME = Reward:
+REWARD_NAME_DESC = The name of the reward in Twitch.
+
+# Cheers Action Page
+
+CHEERS_TITLE = Cheers
+ADD_CHEER_ACTION = Add Cheer Action
+EDIT_CHEER_ACTION = Edit Cheer Action
+CHEER_ACTION_NAME_INPUT = Cheer Name:
+CHEER_ACTION_NAME_DESC = The name of the cheer action to be run.
+RANGES_INPUT = Ranges:
+RANGES_INPUT_DESC = The range the cheer must be in for this action to run, comma separated. Ex: 1,5-50,75
+
+# Follows Action Page
+
+BASIC_EVENTS_TITLE = Events
+
+# Plugin Marketplace Page
+
+MARKETPLACE_TITLE = Marketplace
+
+# Plugin Installed Page
+
+INSTALLED_TITLE = Installed
+
+# Plugin Updates Page
+
+UPDATES_TITLE = Updates
+
+# Settings Page
+
+SETTINGS_TITLE = Settings
+
+# EditCommandPanel
+
+MESSAGE_INPUT = Message:
+MESSAGE_INPUT_DESC = The response sent in chat when this action runs.
+ALIASES_INPUT = Aliases:
+ALIASES_INPUT_DESC = Other command names that will activate this command (comma separated).
+COMMAND_INPUT = Command:
+COMMAND_INPUT_DESC = A command that will activate when this runs, overrides message.
+USER_LEVEL = User Level:
+INTERVAL_INPUT = Interval:
+INTERVAL_INPUT_DESC = Repeat Interval (Exact per hour, example: 15 minutes is 2:00, 2:15, 2:30, 2:45)
+INTERVAL_COUNTER_S = %s minute
+INTERVAL_COUNTER_P = %s minutes
+MESSAGES_INPUT = Messages:
+MESSAGES_INPUT_DESC = Amount of messages within 5 minutes for a timer to execute.
+MESSAGES_COUNTER_S = %s message
+MESSAGES_COUNTER_P = %s messages
+COOLDOWN_INPUT = Cooldown:
+COOLDOWN_INPUT_DESC = The waiting time before the action can be ran again.
+COOLDOWN_COUNTER_S = %s second
+COOLDOWN_COUNTER_P = %s seconds
+
