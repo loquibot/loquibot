@@ -2,7 +2,7 @@
 
 The loquibot Repo!
 
-A chat bot for Twitch, Kick, and YouTube.
+A chat bot for Twitch and YouTube.
 
 https://loquibot.com
 
