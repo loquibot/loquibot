@@ -11,9 +11,8 @@ public class TestingPage {
 
     static SettingsSubPage page = new SettingsSubPage("Testing");
 
-    @OnLoad(order = 10003)
+    @OnLoad(order = 10003, debug = true)
     public static void init(){
-
 
         page.addButton("Test button", ()-> {});
         page.addInput("Test input", "Test description", 1, "testInputLines1", "default input");

@@ -1,9 +1,8 @@
-package com.alphalaneous.ChatBot;
+package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
-import com.alphalaneous.Services.Twitch.TwitchAPI;
-import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Chat.SelfDestructingMessage;
 import com.alphalaneous.Utilities.Chat.SelfDestructingViewer;

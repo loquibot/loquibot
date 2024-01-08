@@ -1,24 +1,17 @@
-package com.alphalaneous.ChatBot;
+package com.alphalaneous.Services.Twitch;
 
-import com.alphalaneous.Services.Twitch.TwitchAPI;
-import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Servers;
+import com.alphalaneous.Utilities.SettingsHandler;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
-import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.TwitchClientBuilder;
-import com.github.twitch4j.chat.events.ChatConnectionStateEvent;
-import com.github.twitch4j.chat.events.channel.*;
-import com.github.twitch4j.client.websocket.domain.WebsocketConnectionState;
 import com.github.twitch4j.common.util.EventManagerUtils;
-import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public abstract class TwitchEventUtils {
 
-    private final String channel;
+    private String channel;
 
     public TwitchEventUtils(String channel){
         this.channel = channel;
@@ -36,7 +29,6 @@ public abstract class TwitchEventUtils {
                 .withEnableHelix(true)
                 .withEnableChat(true)
                 .withEnablePubSub(true)
-                .withEnableEventSocket(true)
                 .withEventManager(em)
                 .withDefaultAuthToken(credential)
                 .withClientId(TwitchAPI.getClientID())
@@ -50,21 +42,28 @@ public abstract class TwitchEventUtils {
         TwitchAPI.twitchClient.getPubSub().listenForFollowingEvents(credential, TwitchAccount.id);
     }
 
-
     public void sendMessage(String message){
-        if(!message.trim().isEmpty()) {
-            if (TwitchAPI.twitchClient != null) {
+        sendMessage(message, null);
+    }
+    public void sendMessage(String message, String messageID){
+        if(SettingsHandler.getSettings("usingSelfBotAccount").asBoolean()) {
+            if (!message.trim().isEmpty() && TwitchAPI.twitchClient != null) {
                 TwitchAPI.twitchClient.getChat().sendMessage(channel, message);
             }
         }
-    }
-
-    public void disconnect(){
-        if(TwitchAPI.twitchClient != null) {
-            TwitchAPI.twitchClient.getChat().leaveChannel(channel);
-            TwitchAPI.twitchClient.getChat().disconnect();
+        else{
+            Servers.sendTwitchMessage(message, messageID);
         }
     }
+
+    public void reconnect(String newChannel, String oauth){
+        TwitchAPI.twitchClient.getPubSub().disconnect();
+        TwitchAPI.twitchClient.getChat().disconnect();
+
+        this.channel = newChannel;
+        connect(oauth);
+    }
+
     public boolean isClosed(){
         return !TwitchAPI.twitchClient.getChat().isChannelJoined(channel);
     }

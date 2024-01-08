@@ -70,7 +70,7 @@ TIMERS_NAME_DESC = The name of the timer to be run.
 
 CHANNEL_POINTS_TITLE = Rewards
 EDIT_REWARD = Edit Reward
-REWARD_NAME = Reward:
+REWARD_NAME_INPUT = Reward:
 REWARD_NAME_DESC = The name of the reward in Twitch.
 
 # Cheers Action Page

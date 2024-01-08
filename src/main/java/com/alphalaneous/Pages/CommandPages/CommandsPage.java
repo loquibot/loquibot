@@ -43,8 +43,10 @@ public class CommandsPage {
 
         buttonPanel.removeAll();
         for(CommandData commandData : CommandData.getRegisteredCommands()){
+            ConfigCheckbox configCheckbox = new ConfigCheckbox(commandData, () -> showEditMenu(commandData), false);
+            configCheckbox.setUserLevel(commandData.getUserLevel());
 
-            buttonPanel.add(new ConfigCheckbox(commandData, () -> showEditMenu(commandData), false), gbc);
+            buttonPanel.add(configCheckbox, gbc);
             buttonPanel.add(Box.createVerticalStrut(5), gbc);
         }
         buttonPanel.updateUI();

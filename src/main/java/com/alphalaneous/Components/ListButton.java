@@ -8,6 +8,8 @@ import java.awt.*;
 
 public class ListButton extends ThemeableJButton {
 
+    private int arc = 20;
+
     public ListButton(String text) {
 
         setHoverColor("list-hover-normal", "list-hover-selected");
@@ -25,9 +27,13 @@ public class ListButton extends ThemeableJButton {
         setOpaque(false);
     }
 
+    public void setArc(int arc){
+        this.arc = arc;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
-        GraphicsFunctions.roundCorners(g, getBackground(), getSize());
+        GraphicsFunctions.roundCorners(g, getBackground(), getSize(), arc);
         super.paintComponent(g);
     }
 }

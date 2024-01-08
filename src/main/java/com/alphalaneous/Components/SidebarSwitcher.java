@@ -107,6 +107,8 @@ public class SidebarSwitcher {
 
         ListButton button = new ListButton(null);
 
+        button.setArc(17);
+
         IconButton iconButton = new IconButton(button, icon);
 
         page.setVisible(false);

@@ -13,7 +13,7 @@ public class PersonalizationPage {
 
     static SettingsSubPage page = new SettingsSubPage("$PERSONALIZATION_TITLE$");
 
-    @OnLoad(order = 10006)
+    @OnLoad(order = 10007)
     public static void init(){
 
         HashMap<String, String> themes = new HashMap<>();

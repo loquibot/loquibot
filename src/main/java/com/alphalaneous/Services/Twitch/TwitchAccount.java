@@ -44,7 +44,7 @@ public class TwitchAccount {
 		try {
 			profileImage = Assets.downloadAsset(profile_image_url);
 		} catch (IOException e) {
-			Logging.getLogger().error(e.getLocalizedMessage(), e);
+			Logging.getLogger().error(e.getMessage(), e);
 		}
 	}
 }

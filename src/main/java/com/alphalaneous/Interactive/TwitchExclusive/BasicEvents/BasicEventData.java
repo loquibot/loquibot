@@ -15,7 +15,10 @@ public class BasicEventData extends CustomData {
     public enum BasicEvent {
         FOLLOW,
         SUBSCRIBE,
-        RAID
+        RAID,
+        CHEER,
+        REWARD,
+        AD
     }
 
     private static final ArrayList<BasicEventData> registeredBasicEvents = new ArrayList<>();
@@ -23,7 +26,7 @@ public class BasicEventData extends CustomData {
     private String message;
     private final BasicEvent event;
     private long counter = 0;
-    private boolean isEnabled = true;
+    private boolean isEnabled = false;
 
 
     public BasicEventData(BasicEvent event){

@@ -30,7 +30,14 @@ public class UserLevelsMenu {
     public static ContextButton createButton(UserLevel level, Function f){
 
         String levelText = level.toString();
-        if(levelText.equals("Vip")) levelText = "VIP";
+        switch (levelText){
+            case "Vip" :
+                levelText = "VIP (Twitch)";
+                break;
+            case "Subscriber" :
+                levelText = "Subscriber (Twitch)";
+                break;
+        }
 
         return new ContextButton(levelText, f);
 

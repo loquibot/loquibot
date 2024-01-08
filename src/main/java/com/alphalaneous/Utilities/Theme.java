@@ -54,21 +54,17 @@ public class Theme {
 
         for(String line : colors){
 
-            try {
-                String[] kv = line.split("=", 2);
+            String[] kv = line.split("=", 2);
+            if(kv.length == 2) {
+
                 String name = kv[0].trim();
                 String color = kv[1].trim();
 
                 try {
                     ThemeableColor.setColorByName(name, Color.decode(color));
-                }
-                catch (ColorNotFoundException e){
+                } catch (ColorNotFoundException e) {
                     new ThemeableColor(name, Color.decode(color));
                 }
-
-            }
-            catch (Exception e){
-                e.printStackTrace();
             }
         }
     }

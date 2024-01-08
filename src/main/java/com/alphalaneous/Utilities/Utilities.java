@@ -1,5 +1,6 @@
 package com.alphalaneous.Utilities;
 
+import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Interfaces.ObjectHandler;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 
@@ -17,22 +18,33 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Utilities {
 
-	public static final String saveDirectory = System.getenv("APPDATA") + "/LoquibotRewrite/";
+	public static String saveDirectory;
+
 	static {
+
+		String OS = (System.getProperty("os.name")).toUpperCase();
+
+		if (OS.contains("WIN")) {
+			saveDirectory = System.getenv("APPDATA") + "/Alphalaneous/Loquibot/";
+		} else if (OS.contains("MAC")){
+			saveDirectory = System.getProperty("user.home") + "/Library/Application Support/Alphalaneous/Loquibot/";
+		} else if (OS.contains("NUX")){
+			saveDirectory = System.getProperty("user.home") + "/.Alphalaneous/Loquibot/";
+		} else {
+			saveDirectory = System.getProperty("user.dir") + "/Alphalaneous/Loquibot/";
+		}
+
 		Path dir = Path.of(saveDirectory);
 		if (!Files.isDirectory(dir)) {
 			try {
-				Files.createDirectory(dir);
+				Files.createDirectories(dir);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	private static final String os = (System.getProperty("os.name")).toUpperCase();
 
-	public static boolean isMac(){
-		return (os.toLowerCase().contains("mac")) || (os.toLowerCase().contains("darwin"));
-	}
+	private static final String os = (System.getProperty("os.name")).toUpperCase();
 
 	public static boolean isWindows(){
 		return (os.toLowerCase().contains("win"));

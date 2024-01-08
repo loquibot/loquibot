@@ -120,6 +120,8 @@ public class SettingsPage {
         SettingsButton(String text, String icon){
             super("");
 
+            setArc(14);
+
             label = new ThemeableJLabel(text);
             label.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
             if(icon == null) label.setBounds(15, 7, 208, 20);

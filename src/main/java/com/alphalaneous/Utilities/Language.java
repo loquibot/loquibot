@@ -64,7 +64,7 @@ public class Language {
             }
         }
         catch(Exception e){
-            Logging.getLogger().error(e.getLocalizedMessage(), e);
+            Logging.getLogger().error(e.getMessage(), e);
         }
         try {
             GetInternalFiles getInternalFiles = new GetInternalFiles("Languages/");
@@ -81,7 +81,7 @@ public class Language {
                 language.put(line.split("=", 2)[0].trim(), line.split("=", 2)[1].trim());
             }
         } catch (Exception e) {
-            Logging.getLogger().error(e.getLocalizedMessage(), e);
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -120,7 +120,7 @@ public class Language {
                     }
                 }
             } catch (IOException e) {
-                Logging.getLogger().error(e.getLocalizedMessage(), e);
+                Logging.getLogger().error(e.getMessage(), e);
 
             }
         }).start();

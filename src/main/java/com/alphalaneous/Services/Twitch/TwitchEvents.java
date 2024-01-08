@@ -1,5 +1,6 @@
-package com.alphalaneous.ChatBot;
+package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Interactive.TwitchExclusive.BasicEvents.BasicEventHandler;
 import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointHandler;
 import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerHandler;
@@ -23,6 +24,7 @@ public class TwitchEvents {
     @EventSubscriber
     public void parseChannelPointRedeemEvent(RewardRedeemedEvent event){
         ChannelPointHandler.run(event);
+        BasicEventHandler.run(event);
     }
 
     @EventSubscriber
@@ -33,6 +35,7 @@ public class TwitchEvents {
     @EventSubscriber
     public void parseCheerEvent(CheerEvent event){
         CheerHandler.run(event);
+        BasicEventHandler.run(event);
     }
 
     @EventSubscriber

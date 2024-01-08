@@ -3,6 +3,7 @@ package com.alphalaneous.Annotations;
 import com.alphalaneous.Main;
 import com.alphalaneous.PluginHandler;
 import com.alphalaneous.Utilities.Logging;
+import com.alphalaneous.Utilities.SettingsHandler;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -17,31 +18,34 @@ public class AnnotationHandler {
 
         Set<Method> methodsAnnotatedWith = new HashSet<>();
 
-        Package[] pkgs = Package.getPackages();
-        for(Package pkg : pkgs){
+        Package[] packages = Package.getPackages();
+        for(Package pkg : packages){
             Set<Method> methods = new Reflections(pkg.getName(), Scanners.MethodsAnnotated).getMethodsAnnotatedWith(OnLoad.class);
             methodsAnnotatedWith.addAll(methods);
         }
 
         HashMap<Method, Integer> methodsToLoad = new HashMap<>();
 
-        for(Method m : methodsAnnotatedWith){
-            int order = m.getAnnotation(OnLoad.class).order();
-            methodsToLoad.put(m, order);
+        for(Method method : methodsAnnotatedWith){
+            int order = method.getAnnotation(OnLoad.class).order();
+            methodsToLoad.put(method, order);
         }
 
-        Object[] a = methodsToLoad.entrySet().toArray();
-        Arrays.sort(a, Comparator.comparing(o -> ((Map.Entry<Method, Integer>) o).getValue()));
-        for (Object e : a) {
-            Method m = ((Map.Entry<Method, Integer>) e).getKey();
+        Object[] array = methodsToLoad.entrySet().toArray();
+        Arrays.sort(array, Comparator.comparing(o -> ((Map.Entry<Method, Integer>) o).getValue()));
+        for (Object element : array) {
+            Method method = ((Map.Entry<Method, Integer>) element).getKey();
 
             try {
-                if(m.getDeclaringClass().getName().startsWith(Main.class.getPackageName())) {
-                    m.invoke(null);
+                if(method.getDeclaringClass().getName().startsWith(Main.class.getPackageName())) {
+                    boolean debug = method.getAnnotation(OnLoad.class).debug();
+                    if(!debug || SettingsHandler.getSettings("isDebug").asBoolean()) {
+                        method.invoke(null);
+                    }
                 }
             } catch (Error | Exception ex) {
-                Logging.getLogger().error(ex.getLocalizedMessage(), ex);
-                JOptionPane.showMessageDialog(null, "Failed to invoke method " + m.getName(), "Error", JOptionPane.ERROR_MESSAGE);
+                Logging.getLogger().error(ex.getMessage(), ex);
+                JOptionPane.showMessageDialog(null, "Failed to invoke method " + method.getName(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -52,9 +56,12 @@ public class AnnotationHandler {
             for(Method method : methods){
                 if(method.isAnnotationPresent(OnLoad.class)){
                     try {
-                        method.invoke(null);
+                        boolean debug = method.getAnnotation(OnLoad.class).debug();
+                        if(!debug || SettingsHandler.getSettings("isDebug").asBoolean()) {
+                            method.invoke(null);
+                        }
                     } catch (Error | Exception ex) {
-                        Logging.getLogger().error(ex.getLocalizedMessage(), ex);
+                        Logging.getLogger().error(ex.getMessage(), ex);
                         JOptionPane.showMessageDialog(null, "Failed to load Plugin " + v + "\nCouldn't invoke method " + method.getName(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }

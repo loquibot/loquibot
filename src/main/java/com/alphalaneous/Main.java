@@ -2,11 +2,14 @@ package com.alphalaneous;
 
 import com.alphalaneous.Annotations.AnnotationHandler;
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Pages.InteractionPages.ChannelPointsPage;
 import com.alphalaneous.Pages.SettingsSubPages.AccountsPage;
 import com.alphalaneous.Pages.SettingsSubPages.PersonalizationPage;
+import com.alphalaneous.Pages.StreamInteractionsPage;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Services.YouTube.YouTubeAccount;
+import com.alphalaneous.Services.YouTube.YouTubeChatListener;
 import com.alphalaneous.Utilities.*;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
@@ -14,33 +17,34 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
 
     /*
     todo
-      - Clean up accounts panels
-      - Add YouTube support
+      - Chat Settings
       - Use loquibot account unless changed in account settings
       - Settings Categories
-      - Onboarding and account management
+      - Account management
       - Plugins Tab
+      - Add keybindings to actions
+      - Split screen chat
+      - Add a few default commands to add/edit/delete chat commands and view a list
+      - Add default commands section in settings
+      - Add !game and !title default commands
      */
 
-
     static {
-
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
-            Logging.getLogger().error(ex.getLocalizedMessage(), ex);
+                 UnsupportedLookAndFeelException ignored) {
         }
 
         System.setProperty("sun.awt.noerasebackground", "true");
         System.setProperty("com.sun.webkit.useHTTP2Loader", "false");
-        System.setProperty("sun.java2d.noddraw", "true");
 
         AnnotationHandler.loadStartingMethods();
         PluginHandler.loadPlugins();
@@ -52,20 +56,41 @@ public class Main {
         if (!SettingsHandler.getSettings("onboardingCompleted").exists()){
             Onboarding.init();
             Window.setVisible(true);
+            hideStartingWindow();
             Utilities.wait(Onboarding.isCompleted);
         }
 
-        new Thread(() -> {
-            TwitchAccount.setInfo();
-            AccountsPage.setTwitchAccountInfo();
-            TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
-            chatListener.connect(SettingsHandler.getSettings("oauth").asString());
-            ChannelPointsPage.load();
-        }).start();
+        if(SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
+            new Thread(() -> {
+                TwitchAccount.setInfo();
+                AccountsPage.setTwitchAccountInfo();
+                TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
+                chatListener.connect(SettingsHandler.getSettings("oauth").asString());
+                ChannelPointsPage.load();
+                Window.loadTwitchChat(TwitchAccount.login);
 
+            }).start();
 
-        if(SettingsHandler.getSettings("twitchUsername").exists()) {
-            Window.loadChat(SettingsHandler.getSettings("twitchUsername").asString());
+            StreamInteractionsPage.setEnabled(true);
+        }
+
+        if(SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
+            new Thread(() -> {
+                try {
+                    YouTubeAccount.setCredential(false, false);
+                    AccountsPage.setYouTubeAccountInfo();
+                    YouTubeChatListener.startChatListener();
+                    //Window.loadYouTubeChat(YouTubeAccount.ID);
+                }
+                catch (Exception e){
+                    try {
+                        YouTubeAccount.setCredential(true, true);
+                    } catch (IOException ex) {
+                        Logging.getLogger().error(ex.getMessage(), ex);
+                    }
+                }
+
+            }).start();
         }
 
         hideStartingWindow();

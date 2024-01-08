@@ -91,7 +91,9 @@ public class KeywordsPage {
         buttonPanel.removeAll();
         for(KeywordData keywordData : KeywordData.getRegisteredKeywords()){
 
-            buttonPanel.add(new ConfigCheckbox(keywordData, () -> showEditMenu(keywordData), false), gbc);
+            ConfigCheckbox configCheckbox = new ConfigCheckbox(keywordData, () -> showEditMenu(keywordData), false);
+            configCheckbox.setUserLevel(keywordData.getUserLevel());
+            buttonPanel.add(configCheckbox, gbc);
             buttonPanel.add(Box.createVerticalStrut(5), gbc);
         }
         buttonPanel.updateUI();

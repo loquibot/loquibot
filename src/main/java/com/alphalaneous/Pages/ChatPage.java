@@ -66,6 +66,8 @@ public class ChatPage {
 
         RoundedButton button = new RoundedButton(title);
 
+        button.setArc(16);
+
         commandPage.setVisible(false);
 
         button.addActionListener(e -> {

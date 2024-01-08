@@ -324,14 +324,29 @@ public class EditCommandPanel extends ThemeableJPanel {
         values.put("userLevel", String.valueOf(value.value));
 
         String levelText = value.toString();
-        if(levelText.equals("Vip")) levelText = "VIP";
+
+        switch (levelText){
+            case "Vip" :
+                levelText = "VIP (Twitch)";
+                break;
+            case "Subscriber" :
+                levelText = "Subscriber (Twitch)";
+                break;
+        }
 
         RoundedButton ulButton = new RoundedButton(levelText);
 
         ulButton.addActionListener(e -> UserLevelsMenu.show(Utilities.getRectInFrame(ulButton, Window.getFrame()), c -> {
 
             String levelText2 = c.toString();
-            if (levelText2.equals("Vip")) levelText2 = "VIP";
+            switch (levelText2){
+                case "Vip" :
+                    levelText2 = "VIP (Twitch)";
+                    break;
+                case "Subscriber" :
+                    levelText2 = "Subscriber (Twitch)";
+                    break;
+            }
 
             ulButton.setText(levelText2);
             values.put("userlevel", String.valueOf(c.value));

@@ -1,7 +1,7 @@
 package com.alphalaneous.Interactive.TwitchExclusive.Cheers;
 
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.github.twitch4j.chat.events.channel.CheerEvent;
 

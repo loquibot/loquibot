@@ -18,6 +18,23 @@ public class LoadBasicEvents {
     public static BasicEventData followData = new BasicEventData(BasicEventData.BasicEvent.FOLLOW);
     public static BasicEventData subscribeData = new BasicEventData(BasicEventData.BasicEvent.SUBSCRIBE);
     public static BasicEventData raidData = new BasicEventData(BasicEventData.BasicEvent.RAID);
+    public static BasicEventData cheerData = new BasicEventData(BasicEventData.BasicEvent.CHEER);
+    public static BasicEventData rewardData = new BasicEventData(BasicEventData.BasicEvent.REWARD);
+
+    //public static BasicEventData adData = new BasicEventData(BasicEventData.BasicEvent.AD);
+
+    static {
+
+        followData.setMessage("$(user) has followed!");
+        subscribeData.setMessage("$(user) has subscribed!");
+        raidData.setMessage("$(user) raided you with $(raid_viewers) viewers!");
+        cheerData.setMessage("$(user) cheered $(cheer_amount) bits!");
+        rewardData.setMessage("$(user) redeemed $(reward_title) for $(reward_cost) points!");
+        //adData.setMessage("$(if[$(ad_soon)] Ads are starting in $(ad_duration_until).) \n" +
+        //                  "$(if[$(ad_started)] Ads have started for $(ad_duration).) \n" +
+        //                  "$(if[$(ad_ended)] Ads have ended.)");
+    }
+
 
     public static void createPathIfDoesntExist(Path path){
         try {
@@ -75,6 +92,12 @@ public class LoadBasicEvents {
                         break;
                     case SUBSCRIBE:
                         data = subscribeData;
+                        break;
+                    case CHEER:
+                        data = cheerData;
+                        break;
+                    case REWARD:
+                        data = rewardData;
                         break;
                 }
 

@@ -58,8 +58,9 @@ public class StreamInteractionsPage {
         pagePanel.setOpaque(false);
 
         page.getContentPane().add(pagePanel);
-
         SidebarSwitcher.addPage(Assets.getImage("stream-interaction-button"), page, () -> {});
+
+        setEnabled(false);
 
     }
 
@@ -88,6 +89,8 @@ public class StreamInteractionsPage {
     public static void addPage(String title, ChatPageComponent commandPage, Function loadFunction, Function addFunction){
 
         RoundedButton button = new RoundedButton(title);
+
+        button.setArc(16);
 
         commandPage.setVisible(false);
 

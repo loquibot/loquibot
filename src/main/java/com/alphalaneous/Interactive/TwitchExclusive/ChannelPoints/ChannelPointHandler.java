@@ -1,7 +1,7 @@
 package com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints;
 
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.github.twitch4j.pubsub.domain.ChannelPointsRedemption;
 import com.github.twitch4j.pubsub.domain.ChannelPointsReward;

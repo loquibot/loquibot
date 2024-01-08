@@ -420,7 +420,9 @@ public class SettingsSubPage extends ThemeableJPanel {
                 slider.setValue(value);
                 sliderValue.setText(String.format(Language.setLocale(amountText), value));
             }
-
+            else{
+                sliderValue.setText(String.format(Language.setLocale(amountText), defaultValue));
+            }
             slider.addChangeListener(e -> {
                 if (slider.getValue() == 1) {
                     sliderValue.setText(String.format(Language.setLocale(amountTextSingular), slider.getValue()));

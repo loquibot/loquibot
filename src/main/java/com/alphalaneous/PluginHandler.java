@@ -34,7 +34,7 @@ public class PluginHandler {
             }
         }
         catch (Exception e){
-            Logging.getLogger().error(e.getLocalizedMessage(), e);
+            Logging.getLogger().error(e.getMessage(), e);
         }
 
     }
@@ -107,7 +107,7 @@ public class PluginHandler {
                     classes.put(Class.forName(className, true, loader), pathToJar);
                 }
                 catch (Error | Exception er){
-                    Logging.getLogger().error(er.getLocalizedMessage(), er);
+                    Logging.getLogger().error(er.getMessage(), er);
                     JOptionPane.showMessageDialog(null, generateErrorMessage(er, pathToJar), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

@@ -76,7 +76,7 @@ public class ChannelPointsPage {
                     buttonPanel.add(notAvailable);
                 }
             } catch (Exception e) {
-                Logging.getLogger().error(e.getLocalizedMessage(), e);
+                Logging.getLogger().error(e.getMessage(), e);
             }
             buttonPanel.updateUI();
         }

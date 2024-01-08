@@ -130,7 +130,7 @@ public class Window {
         frame.setVisible(visible);
     }
 
-    public static void loadChat(String username){
+    public static void loadTwitchChat(String username){
 
         chatPanel.loadChat(username);
 

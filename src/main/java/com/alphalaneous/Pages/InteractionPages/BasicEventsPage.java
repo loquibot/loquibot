@@ -74,7 +74,10 @@ public class BasicEventsPage {
         buttonPanel.add(Box.createVerticalStrut(5), gbc);
         buttonPanel.add(new ConfigCheckbox(LoadBasicEvents.raidData, () -> showEditMenu(LoadBasicEvents.raidData), false), gbc);
         buttonPanel.add(Box.createVerticalStrut(5), gbc);
-
+        buttonPanel.add(new ConfigCheckbox(LoadBasicEvents.cheerData, () -> showEditMenu(LoadBasicEvents.cheerData), false), gbc);
+        buttonPanel.add(Box.createVerticalStrut(5), gbc);
+        buttonPanel.add(new ConfigCheckbox(LoadBasicEvents.rewardData, () -> showEditMenu(LoadBasicEvents.rewardData), false), gbc);
+        buttonPanel.add(Box.createVerticalStrut(5), gbc);
         buttonPanel.updateUI();
     }
 

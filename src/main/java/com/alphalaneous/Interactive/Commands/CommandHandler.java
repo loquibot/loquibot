@@ -3,7 +3,8 @@ package com.alphalaneous.Interactive.Commands;
 import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Interactive.PersistentVariables;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Enums.SoundType;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
@@ -32,10 +33,7 @@ import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class CommandHandler {
 
@@ -74,7 +72,7 @@ public class CommandHandler {
             }
 
             if (!reply.trim().equalsIgnoreCase("")) {
-                TwitchChatListener.getCurrentListener().sendMessage(reply);
+                TwitchChatListener.getCurrentListener().sendMessage(reply, message.getTag("id"));
             }
         }).start();
 
@@ -146,12 +144,13 @@ public class CommandHandler {
 
     private static boolean compare(String value){
 
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("JavaScript");
-
         try {
-            return (boolean) engine.eval(value);
-        } catch (ScriptException e) {
+            V8 v8 = V8.createV8Runtime();
+            boolean b = (boolean) v8.executeScript(value);
+            v8.getLocker().release();
+            return b;
+
+        } catch (Exception e) {
             return false;
         }
     }
@@ -164,7 +163,7 @@ public class CommandHandler {
 
         String data;
         String[] dataArr = value.split(" ", 2);
-        if (dataArr.length > 1) data = value.split(" ", 2)[1];
+        if (dataArr.length > 1) data = value.split(" ", 2)[1].trim().strip().replaceAll("\\s+", " ");
         else {
             data = "";
         }
@@ -400,19 +399,25 @@ public class CommandHandler {
                 break;
             }
             case "reward_time": {
-                if(customData instanceof ChannelPointData){
+                if(customData instanceof ChannelPointData
+                        || (customData instanceof BasicEventData
+                        && ((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.REWARD)){
                     replacement = extraData.get("rewardTime");
                 }
                 break;
             }
             case "reward_cost": {
-                if(customData instanceof ChannelPointData){
+                if(customData instanceof ChannelPointData
+                        || (customData instanceof BasicEventData
+                        && ((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.REWARD)){
                     replacement = extraData.get("rewardCost");
                 }
                 break;
             }
             case "reward_title": {
-                if(customData instanceof ChannelPointData){
+                if(customData instanceof ChannelPointData
+                        || (customData instanceof BasicEventData
+                        && ((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.REWARD)){
                     replacement = extraData.get("rewardTitle");
                 }
                 break;
@@ -421,10 +426,15 @@ public class CommandHandler {
                 if(customData instanceof ChannelPointData){
                     replacement = ((ChannelPointData) customData).getId();
                 }
+                if(customData instanceof BasicEventData && ((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.REWARD){
+                    replacement = extraData.get("rewardId");
+                }
                 break;
             }
             case "cheer_amount": {
-                if(customData instanceof CheerData){
+                if(customData instanceof CheerData
+                        || (customData instanceof BasicEventData
+                        && ((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.CHEER)){
                     replacement = extraData.get("cheerAmount");
                 }
                 break;
@@ -533,6 +543,75 @@ public class CommandHandler {
                 }
                 break;
             }
+            case "set_var": {
+                String[] args = data.split(" ");
+
+                if(args.length == 2) {
+
+                    String varName = args[0].trim();
+                    String variable = args[1].trim();
+
+                    PersistentVariables.set(varName, variable);
+                }
+                else{
+                    replacement = "Invalid Arguments";
+                }
+                break;
+            }
+            case "get_var": {
+                String[] args = data.split(" ");
+
+                if(args.length == 1) {
+
+                    String varName = args[0].trim();
+
+                    replacement = PersistentVariables.get(varName);
+                }
+                else{
+                    replacement = "Invalid Arguments";
+                }
+                break;
+            }
+            /*case "ad_soon": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.AD) {
+                        replacement = extraData.get("adSoon");
+                    }
+                }
+                break;
+            }
+            case "ad_started": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.AD) {
+                        replacement = extraData.get("adStarted");
+                    }
+                }
+                break;
+            }
+            case "ad_ended": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.AD) {
+                        replacement = extraData.get("adEnded");
+                    }
+                }
+                break;
+            }
+            case "ad_duration_until": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.AD) {
+                        replacement = extraData.get("adDurationUntil");
+                    }
+                }
+                break;
+            }
+            case "ad_duration": {
+                if(customData instanceof BasicEventData){
+                    if(((BasicEventData) customData).getEvent() == BasicEventData.BasicEvent.AD) {
+                        replacement = extraData.get("adDuration");
+                    }
+                }
+                break;
+            }*/
             case "emptymessage":
             case "empty_message": {
                 String command = message.getMessage().split(" ")[0].trim();

@@ -7,7 +7,7 @@ public class AudioPage {
 
     static SettingsSubPage page = new SettingsSubPage("$AUDIO_TITLE$");
 
-    @OnLoad(order = 10007)
+    @OnLoad(order = 10008)
     public static void init(){
 
         SettingsPage.addPage("$AUDIO_TITLE$", "\uF0E2", page, null);

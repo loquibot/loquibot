@@ -34,7 +34,8 @@ public class Assets {
         loadAsset("loquibot-medium-icon", "Images/loqui.png", 32, Scalr.Method.QUALITY);
         loadAsset("loquibot-small-icon", "Images/loqui.png", 16, Scalr.Method.QUALITY);
         loadAsset("loquibot-icon", "Images/loqui.png", 200, Scalr.Method.QUALITY);
-        loadAsset("twitch-logo", "Images/Twitch.png", 40, Scalr.Method.BALANCED);
+        loadAsset("twitch-logo", "Images/Twitch.png", 40, Scalr.Method.QUALITY);
+        loadAsset("youtube-logo", "Images/YouTube.png", 40, Scalr.Method.QUALITY);
         loadAsset("run-button", "Images/run.png", 30, Scalr.Method.QUALITY);
         loadAsset("chat-button", "Images/chat.png", 30, Scalr.Method.QUALITY);
         loadAsset("stream-interaction-button", "Images/trigger.png", 30, Scalr.Method.QUALITY);

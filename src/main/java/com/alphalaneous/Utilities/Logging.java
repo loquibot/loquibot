@@ -31,7 +31,7 @@ public class Logging {
 
         try {
             if(!Files.isDirectory(path)){
-                Files.createDirectory(path);
+                Files.createDirectories(path);
             }
         } catch (IOException e) {
             Logging.getLogger().info("Failed to create log file directories");

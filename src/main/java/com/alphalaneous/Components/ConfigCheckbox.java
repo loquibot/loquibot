@@ -1,7 +1,8 @@
 package com.alphalaneous.Components;
 
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Enums.UserLevel;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableColor;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
@@ -18,17 +19,52 @@ import java.awt.*;
 public class ConfigCheckbox extends ThemeableJPanel {
 
     private final CustomData customData;
+    private final ThemeableJPanel contentPanel = new ThemeableJPanel();
+
+    private Color userLevelColor = null;
+
+    private final ThemeableJPanel colorPanel = new ThemeableJPanel() {
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+
+            g2.setComposite(AlphaComposite.Clear);
+
+            g.fillRect(0,0, getWidth(), getHeight());
+
+            g2.setComposite(AlphaComposite.SrcOver);
+
+            if(userLevelColor == null) {
+                g.setColor(getBackground());
+            }
+            else{
+                g.setColor(userLevelColor);
+            }
+
+            RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2.setRenderingHints(qualityHints);
+            g2.fillRoundRect(0, 0, 50, getSize().height, 20, 20);
+            g2.fillRect(10, 0, getSize().width, getSize().height);
+
+        }
+    };
 
     public ConfigCheckbox(CustomData data, Function function, boolean isAction){
 
         this.customData = data;
+
+        colorPanel.setBackground("list-background-selected");
+        colorPanel.setOpaque(false);
+
+        colorPanel.setPreferredSize(new Dimension(5, 70));
 
         setPreferredSize(new Dimension(100,70));
 
         setBackground("list-background-normal");
 
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(0,0));
 
         setOpaque(false);
 
@@ -76,7 +112,6 @@ public class ConfigCheckbox extends ThemeableJPanel {
         if(isAction) buttonPanel.add(runButton);
         buttonPanel.add(settingButton);
 
-        ThemeableJPanel contentPanel = new ThemeableJPanel();
 
         ThemeableJLabel titleLabel = new ThemeableJLabel(data.getName());
         ThemeableJLabel descLabel = new ThemeableJLabel(data.getMessage());
@@ -113,6 +148,9 @@ public class ConfigCheckbox extends ThemeableJPanel {
             customData.save();
         });
 
+        contentPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        contentPanel.add(colorPanel, 0);
+
         checkbox.setChecked(customData.isEnabled());
 
         checkBoxPanel.add(checkbox);
@@ -124,6 +162,29 @@ public class ConfigCheckbox extends ThemeableJPanel {
         add(contentPanel, BorderLayout.WEST);
 
     }
+
+
+    public void setUserLevel(UserLevel level){
+
+
+        userLevelColor = null;
+
+        if(level == UserLevel.OWNER){
+            userLevelColor = new Color(231, 25, 23);
+        }
+        if(level == UserLevel.MODERATOR){
+            userLevelColor = new Color(8, 175, 12);
+        }
+        if(level == UserLevel.VIP){
+            userLevelColor = new Color(223, 1, 186);
+        }
+        if(level == UserLevel.SUBSCRIBER){
+            userLevelColor = new Color(129, 5, 180);
+        }
+
+        colorPanel.revalidate();
+    }
+
     @Override
     public void paintComponent(Graphics g) {
 

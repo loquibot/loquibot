@@ -10,8 +10,9 @@ import java.awt.*;
 public class RoundedButton extends ThemeableJButton {
 
     ImageIcon icon;
-
+    int arc;
     public RoundedButton(String text){
+        arc = 20;
         setHoverColor("list-hover-normal", "list-hover-selected");
         setClicked("list-clicked-normal", "list-clicked-selected");
         setBackground("list-background-normal", "list-background-selected");
@@ -30,9 +31,13 @@ public class RoundedButton extends ThemeableJButton {
         setIcon(icon);
     }
 
+    public void setArc(int arc){
+        this.arc = arc;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
-        GraphicsFunctions.roundCorners(g, getBackground(), getSize());
+        GraphicsFunctions.roundCorners(g, getBackground(), getSize(), arc);
         super.paintComponent(g);
     }
 

@@ -1,17 +1,24 @@
 package com.alphalaneous.Interactive.TwitchExclusive.BasicEvents;
 
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.ChatBot.TwitchChatListener;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
+import com.github.twitch4j.chat.events.channel.CheerEvent;
 import com.github.twitch4j.chat.events.channel.FollowEvent;
 import com.github.twitch4j.chat.events.channel.RaidEvent;
 import com.github.twitch4j.chat.events.channel.SubscriptionEvent;
+import com.github.twitch4j.pubsub.domain.ChannelPointsRedemption;
+import com.github.twitch4j.pubsub.domain.ChannelPointsReward;
+import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 
 import java.util.HashMap;
 
 public class BasicEventHandler {
 
     public static void run(FollowEvent event){
+
+        if(!LoadBasicEvents.followData.isEnabled()) return;
+
         new Thread(() -> {
 
             BasicEventData data = LoadBasicEvents.followData;
@@ -34,6 +41,9 @@ public class BasicEventHandler {
     }
 
     public static void run(RaidEvent event){
+
+        if(!LoadBasicEvents.raidData.isEnabled()) return;
+
         new Thread(() -> {
 
             BasicEventData data = LoadBasicEvents.raidData;
@@ -57,6 +67,9 @@ public class BasicEventHandler {
     }
 
     public static void run(SubscriptionEvent event){
+
+        if(!LoadBasicEvents.subscribeData.isEnabled()) return;
+
         new Thread(() -> {
 
             BasicEventData data = LoadBasicEvents.subscribeData;
@@ -87,5 +100,62 @@ public class BasicEventHandler {
             }
         }).start();
     }
+    public static void run(RewardRedeemedEvent event){
+
+        if(!LoadBasicEvents.rewardData.isEnabled()) return;
+
+        new Thread(() -> {
+
+            BasicEventData data = LoadBasicEvents.rewardData;
+
+            ChannelPointsRedemption redemption = event.getRedemption();
+            ChannelPointsReward reward = redemption.getReward();
+
+            String response = data.getMessage();
+
+            ChatMessage message = new ChatMessage(new String[0], event.getRedemption().getUser().getLogin(), event.getRedemption().getUser().getDisplayName(), "", new String[0], true, true, true, false, false);
+
+            HashMap<String, String> extraData = new HashMap<>();
+
+            extraData.put("rewardTime", redemption.getRedeemedAt());
+            extraData.put("rewardCost", String.valueOf(reward.getCost()));
+            extraData.put("rewardTitle", reward.getTitle());
+            extraData.put("rewardId", reward.getId());
+
+            String reply = CommandHandler.replaceBetweenParentheses(message, response, data, extraData);
+
+            if (!reply.equalsIgnoreCase("")) {
+                TwitchChatListener.getCurrentListener().sendMessage(reply);
+            }
+
+        }).start();
+    }
+
+    public static void run(CheerEvent event){
+
+        if(!LoadBasicEvents.cheerData.isEnabled()) return;
+
+        new Thread(() -> {
+
+            BasicEventData data = LoadBasicEvents.cheerData;
+
+            String response = data.getMessage();
+
+            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), "", new String[0], true, true, true, false, false);
+
+            HashMap<String, String> extraData = new HashMap<>();
+
+            extraData.put("cheerAmount", String.valueOf(event.getBits()));
+
+            String reply = CommandHandler.replaceBetweenParentheses(message, response, data, extraData);
+
+            if (!reply.equalsIgnoreCase("")) {
+                TwitchChatListener.getCurrentListener().sendMessage(reply);
+            }
+
+        }).start();
+    }
+
+
 
 }
