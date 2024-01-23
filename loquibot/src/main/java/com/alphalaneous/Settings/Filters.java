@@ -110,6 +110,7 @@ public class Filters {
     private static final ThemedIconCheckbox longIcon = createLengthButton("Long");
     private static final ThemedIconCheckbox XLIcon = createLengthButton("XL");
 
+    private static final ThemedIconCheckbox platIcon = createLengthButton("Plat");
 
     public static JPanel createPanel() {
         SettingsPage settingsPage = new SettingsPage("$FILTERS_SETTINGS$");
@@ -214,6 +215,7 @@ public class Filters {
         lengthPanel.add(mediumIcon);
         lengthPanel.add(longIcon);
         lengthPanel.add(XLIcon);
+        lengthPanel.add(platIcon);
 
 
         lengthPanelWithScroll.setPreferredSize(new Dimension(500,80));
@@ -327,13 +329,13 @@ public class Filters {
         String excludedReqDifficultiesString = SettingsHandler.getSettings("reqDifficultyFilter").asString();
         String excludedDifficultiesString = SettingsHandler.getSettings("difficultyFilter").asString();
         String excludedLengthsString = SettingsHandler.getSettings("lengthFilter").asString();
-        if(excludedDifficultiesString.length() != 0) {
+        if(!excludedDifficultiesString.isEmpty()) {
             excludedDifficulties = new ArrayList<>(Arrays.asList(excludedDifficultiesString.substring(1, excludedDifficultiesString.length() - 1).split(", ")));
         }
-        if(excludedReqDifficultiesString.length() != 0) {
+        if(!excludedReqDifficultiesString.isEmpty()) {
             excludedRequestedDifficulties = new ArrayList<>(Arrays.asList(excludedReqDifficultiesString.substring(1, excludedReqDifficultiesString.length() - 1).split(", ")));
         }
-        if(excludedLengthsString.length() != 0) {
+        if(!excludedLengthsString.isEmpty()) {
             excludedLengths = new ArrayList<>(Arrays.asList(excludedLengthsString.substring(1, excludedLengthsString.length() - 1).split(", ")));
         }
         if (excludedLengths.contains("tiny")) {
@@ -350,6 +352,9 @@ public class Filters {
         }
         if (excludedLengths.contains("xl")) {
             XLIcon.setChecked(true);
+        }
+        if (excludedLengths.contains("plat")) {
+            platIcon.setChecked(true);
         }
         if (excludedDifficulties.contains("na")) {
             naIcon.setChecked(true);

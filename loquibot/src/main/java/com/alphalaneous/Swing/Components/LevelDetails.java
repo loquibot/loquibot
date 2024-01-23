@@ -82,7 +82,12 @@ public class LevelDetails extends JPanel {
         String starCount = "";
         if(data.getGDLevel().getLevel().stars() > 0) starCount = data.getGDLevel().getLevel().stars() + " stars • ";
 
-        infoLabel = new JLabel(starCount + data.getGDLevel().getLevel().length() + " • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().downloads()) + " downloads • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().likes()) + " likes • (" + data.getGDLevel().getLevel().id() + ")");
+        if(data.getGDLevel().getLength() == 5){
+            infoLabel = new JLabel(starCount + "Platformer" + " • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().downloads()) + " downloads • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().likes()) + " likes • (" + data.getGDLevel().getLevel().id() + ")");
+        }
+        else{
+            infoLabel = new JLabel(starCount + data.getGDLevel().getLevel().length() + " • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().downloads()) + " downloads • " + NumberFormat.getInstance().format(data.getGDLevel().getLevel().likes()) + " likes • (" + data.getGDLevel().getLevel().id() + ")");
+        }
 
 
         titleLabel.setFont(Defaults.MAIN_FONT.deriveFont(24f));
@@ -449,7 +454,18 @@ public class LevelDetails extends JPanel {
 
                         JSONObject object = new JSONObject();
                         object.put("type", "youtube");
+
+                        data.setVideoID(videoUsed.getVideoID());
+                        data.setVideoTitle(videoUsed.getTitle());
+                        data.setVideoCreator(videoUsed.getUsername());
+                        data.setVideoViews(videoUsed.getViewCount() + " views");
+
                         Main.sendMessageConnectedService(object.toString());
+                        JSONObject ytModObject = new JSONObject();
+                        ytModObject.put("type", "has_youtube");
+                        ytModObject.put("id", data.getGDLevel().getLevel().id());
+
+                        Main.sendMessageConnectedService(ytModObject.toString());
                         next.setBounds(470, commentScrollPane.getY()-40, 30, 30);
                         prev.setBounds(435, commentScrollPane.getY()-40, 30, 30);
                         topComments.setBounds(135, commentScrollPane.getY()-40, 30, 30);

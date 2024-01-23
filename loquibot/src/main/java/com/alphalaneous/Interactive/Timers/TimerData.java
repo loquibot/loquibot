@@ -91,7 +91,6 @@ public class TimerData {
                 ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, 0, false, false);
                 Main.sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null));
                 Main.sendYTMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null), null);
-                Main.sendKickMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, message.split(" "), null), null);
             }
         }
     }

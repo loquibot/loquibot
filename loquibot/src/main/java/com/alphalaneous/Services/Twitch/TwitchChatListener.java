@@ -52,7 +52,6 @@ public class TwitchChatListener extends NewChatBot {
 			} else {
 				waitOnMessage(chatMessage);
 			}
-			Moderation.checkMessage(chatMessage);
 
 		}
 	}

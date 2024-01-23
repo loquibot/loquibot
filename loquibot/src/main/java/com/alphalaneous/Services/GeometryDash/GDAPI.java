@@ -6,31 +6,20 @@ import com.alphalaneous.Utils.AlreadyInQueueException;
 import com.alphalaneous.Utils.NoLevelException;
 import com.alphalaneous.Utils.Utilities;
 import jdash.client.GDClient;
-import jdash.client.exception.ActionFailedException;
 import jdash.client.exception.GDClientException;
 import jdash.client.request.GDRequest;
-import jdash.client.request.GDRequests;
 import jdash.client.request.GDRouter;
 import jdash.client.response.GDResponse;
-import jdash.client.response.GDResponseDeserializers;
-import jdash.client.response.impl.GDCachedObjectResponse;
-import jdash.client.response.impl.GDSerializedSourceResponse;
 import jdash.common.*;
 import jdash.common.entity.*;
 import jdash.graphics.SpriteFactory;
 import org.imgscalr.Scalr;
 import org.json.JSONObject;
 import reactor.core.publisher.Flux;
-import reactor.util.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.Duration;
 import java.util.*;
 import java.util.List;
@@ -145,7 +134,7 @@ public class GDAPI {
 
             while(true){
 
-                if(batchQueue.size() != 0){
+                if(!batchQueue.isEmpty()){
                     justBatched.clear();
                     Main.logger.info("Adding batch: " + Arrays.toString(batchQueue.toArray()));
 
@@ -183,7 +172,7 @@ public class GDAPI {
 
 
     static int wait = 0;
-    public static GDLevelExtra browseLevels(LevelBrowseMode mode, @Nullable String query, @Nullable LevelSearchFilter filter,
+    public static GDLevelExtra browseLevels(LevelBrowseMode mode, String query, LevelSearchFilter filter,
                                             int page) {
 
         if(SettingsHandler.getSettings("waitForRequests").asBoolean()){
@@ -192,7 +181,6 @@ public class GDAPI {
             wait -= 1000;
         }
 
-        Objects.requireNonNull(mode);
         var request = GDRequest.of(GET_GJ_LEVELS_21)
                 .addParameters(commonParams())
                 .addParameters(Objects.requireNonNullElse(filter, LevelSearchFilter.create()).toMap())
@@ -207,30 +195,113 @@ public class GDAPI {
         GDResponse searchResponse = request.execute(client.getCache(), client.getRouter());
         String searchString = searchResponse.deserialize(e -> e).block();
         GDLevel level = Objects.requireNonNull(searchResponse.deserialize(levelSearchResponse()).flatMapMany(Flux::fromIterable).collectList().block()).get(0);
-        String accountsString;
 
         long accountID = 0;
+        int length = 0;
 
         if(searchString != null){
-            accountsString = searchString.split("#")[1];
-            String[] accounts = accountsString.split("\\|");
 
-            for(String str : accounts){
-                if(str.equalsIgnoreCase("")){
-                    accountID = -1;
+
+            String infoString = searchString.split("#")[0];
+
+            String[] splitByColon = infoString.split(":");
+
+            for(int i = 0; i < splitByColon.length; i+=2){
+
+                if ((i + 1) >= splitByColon.length) {
+                    break;
                 }
-                else {
-                    long userID = Long.parseLong(str.split(":")[0]);
-                    if (userID == level.creatorPlayerId()) {
-                        accountID = Long.parseLong(str.split(":")[2]);
-                        break;
-                    }
+
+                String partA = splitByColon[i];
+                String partB = splitByColon[i+1];
+
+                if(partA.equals("15")){
+                    length = Integer.parseInt(partB);
+                }
+            }
+
+            accountID = getAccountID(searchString, level, accountID);
+        }
+
+        return new GDLevelExtra(level, accountID, length);
+    }
+
+    private static long getAccountID(String searchString, GDLevel level, long accountID) {
+        String accountsString;
+        accountsString = searchString.split("#")[1];
+        String[] accounts = accountsString.split("\\|");
+
+        for(String str : accounts){
+            if(str.equalsIgnoreCase("")){
+                accountID = -1;
+            }
+            else {
+                long userID = Long.parseLong(str.split(":")[0]);
+                if (userID == level.creatorPlayerId()) {
+                    accountID = Long.parseLong(str.split(":")[2]);
+                    break;
                 }
             }
         }
-
-        return new GDLevelExtra(level, accountID);
+        return accountID;
     }
+
+    public static ArrayList<GDLevelExtra> browseLevelsByUser(long playerId, int page) {
+
+        var request = GDRequest.of(GET_GJ_LEVELS_21)
+                .addParameters(commonParams())
+                .addParameter("page", page)
+                .addParameter("type", LevelBrowseMode.BY_USER.getType())
+                .addParameter("str", "" + playerId);
+
+        GDResponse searchResponse = request.execute(client.getCache(), client.getRouter());
+        String searchString = searchResponse.deserialize(e -> e).block();
+        List<GDLevel> levels = searchResponse.deserialize(levelSearchResponse()).flatMapMany(Flux::fromIterable).collectList().block();
+
+        ArrayList<GDLevelExtra> returnedLevels = new ArrayList<>();
+
+        if(levels != null) {
+            for (GDLevel level : levels) {
+
+                long accountID = 0;
+                int length = -1;
+
+                if (searchString != null) {
+
+                    String infoString = searchString.split("#")[0];
+
+                    String[] levelsString = infoString.split("\\|");
+
+                    out: for(String levelString : levelsString) {
+
+                        String[] splitByColon = levelString.split(":");
+
+                        for (int i = 0; i < splitByColon.length; i += 2) {
+
+                            if ((i + 1) >= splitByColon.length) {
+                                break;
+                            }
+
+                            String partA = splitByColon[i];
+                            String partB = splitByColon[i + 1];
+
+                            if(partA.equals("1") && !partB.equals("" + level.id())){
+                                continue out;
+                            }
+                            if (partA.equals("15")) {
+                                length = Integer.parseInt(partB);
+                            }
+                        }
+                    }
+
+                    accountID = getAccountID(searchString, level, accountID);
+                }
+                returnedLevels.add(new GDLevelExtra(level, accountID, length));
+            }
+        }
+        return returnedLevels;
+    }
+
 
     public static ArrayList<GDLevelExtra> getLevels(HashSet<Long> IDs) {
 
@@ -253,11 +324,10 @@ public class GDAPI {
             theLevels = searchResponse.deserialize(levelSearchResponse()).flatMapMany(Flux::fromIterable).collectList().block();
         }
         catch (Exception e){
-            e.printStackTrace();
+            Main.logger.error(e.getMessage(), e);
             return returnedLevels;
         }
 
-        String accountsString;
 
         if(theLevels != null) {
 
@@ -266,7 +336,41 @@ public class GDAPI {
             }
 
             if (searchString != null) {
-                accountsString = searchString.split("#")[1];
+
+                int length = 0;
+
+                int id = 0;
+
+                String infoString = searchString.split("#")[0];
+
+                String[] splitByColon = infoString.split(":");
+
+                for(int i = 0; i < splitByColon.length; i+=2){
+
+                    if ((i + 1) >= splitByColon.length) {
+                        break;
+                    }
+
+                    String partA = splitByColon[i];
+                    String partB = splitByColon[i+1];
+
+                    if(partA.equals("1")){
+                        id = Integer.parseInt(partB);
+                    }
+
+                    if(partA.equals("15")){
+                        length = Integer.parseInt(partB);
+                    }
+
+                }
+
+                for (GDLevelExtra level : returnedLevels) {
+                    if (level.getLevel().id() == id) {
+                        level.setLength(length);
+                    }
+                }
+
+                String accountsString = searchString.split("#")[1];
                 String[] accounts = accountsString.split("\\|");
 
                 for (String str : accounts) {
@@ -282,7 +386,6 @@ public class GDAPI {
                 }
             }
         }
-
         return returnedLevels;
     }
 
@@ -317,17 +420,18 @@ public class GDAPI {
             return com.alphalaneous.Utils.Utilities.jsonToGDLevelExtra(levelData);
         }
         else {
-            GDLevel level;
+            GDLevelExtra level;
             for(int j = 0; j < 10; j++) {
                 GDUserStats stats = getGDUserStats(username);
-                List<GDLevel> levels = client.browseLevelsByUser(stats.playerId(), j).collectList().block();
+                ArrayList<GDLevelExtra> levels = browseLevelsByUser(stats.playerId(), j);
                 try {
                     for (int i = 0; i < 10; i++) {
                         level = Objects.requireNonNull(levels).get(i);
-                        if (isEqual && level.name().equalsIgnoreCase(name)) {
-                            return new GDLevelExtra(level, stats.accountId());
-                        } else if (!isEqual && level.name().toLowerCase().startsWith(name.toLowerCase())) {
-                            return new GDLevelExtra(level, stats.accountId());
+
+                        if (isEqual && level.getLevel().name().equalsIgnoreCase(name)) {
+                            return level;
+                        } else if (!isEqual && level.getLevel().name().toLowerCase().startsWith(name.toLowerCase())) {
+                            return level;
                         }
                     }
                 }

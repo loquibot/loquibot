@@ -52,7 +52,6 @@ public class KeywordHandler {
         }
         if (!reply.equalsIgnoreCase("")) {
             if(message.isYouTube()) Main.sendYTMessage(reply, null);
-            else if(message.isKick()) Main.sendKickMessage(reply, null);
             else {
                 Main.sendMessage(reply, message.getTag("id"));
             }

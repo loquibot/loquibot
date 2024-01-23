@@ -10,6 +10,7 @@ import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Utils.TwitchHTTPServer;
 import com.alphalaneous.Utils.Utilities;
 import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.helix.domain.ChannelInformation;
 import com.github.twitch4j.helix.domain.Chatter;
 import com.github.twitch4j.helix.domain.ChattersList;
 import com.github.twitch4j.util.PaginationUtil;
@@ -279,7 +280,7 @@ public class TwitchAPI {
 			HttpPatch updateRequest = new HttpPatch(URL);
 			updateRequest.setHeader("Authorization", "Bearer " + SettingsHandler.getSettings("oauth").asString());
 			updateRequest.setHeader("Client-ID", clientID);
-			updateRequest.setHeader("Content-Type", "application/json");
+			updateRequest.setHeader("Content-Type", "application/json;charset=UTF-8");
 			updateRequest.setEntity(new StringEntity(data));
 			HttpResponse response = http.execute(updateRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -491,9 +492,15 @@ public class TwitchAPI {
 	}
 
 	public static String setTitle(String title){
-		JSONObject newChannelInfo = new JSONObject();
-		newChannelInfo.put("title", title);
-		return sendTwitchRequest("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id, newChannelInfo.toString());
+
+		try {
+			TwitchAPI.twitchClient.getHelix().updateChannelInformation(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.id, new ChannelInformation().withTitle(title)).execute();
+		}
+		catch (Exception e){
+			Main.logger.error(e.getLocalizedMessage(), e);
+			return "Please refresh your Twitch account in Settings > Accounts to use this.";
+		}
+		return null;
 	}
 	public static String setGame(String game){
 		JSONObject newChannelInfo = new JSONObject();

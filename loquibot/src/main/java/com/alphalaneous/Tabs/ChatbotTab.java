@@ -30,7 +30,7 @@ public class ChatbotTab {
 	private static final JPanel timersPage = TimerSettings.createPanel();
 
 	private static final JPanel pointsPage = ChannelPoints.createPanel();
-	private static final JPanel spamProtectionPage = SpamProtection.createPanel();
+	//private static final JPanel spamProtectionPage = SpamProtection.createPanel();
 	private static final JPanel customKeywordsPage = CustomKeywords.createPanel();
 	private static final JPanel customCheerActionsPage = CustomCheerActions.createPanel();
 
@@ -60,9 +60,9 @@ public class ChatbotTab {
 		TimerSettings.loadTimers();
 		timersPage.setVisible(true);
 	});
-	private static final FunctionButton spamProtectionButton = createButton("$SPAM_PROTECTION_SETTINGS$", "\uF02D", () -> {
-		spamProtectionPage.setVisible(true);
-	});
+	//private static final FunctionButton spamProtectionButton = createButton("$SPAM_PROTECTION_SETTINGS$", "\uF02D", () -> {
+	//	spamProtectionPage.setVisible(true);
+	//});
 	private static final FunctionButton customKeywordsButton = createButton("$CUSTOM_KEYWORDS_SETTINGS$", "\uF0B3", () -> {
 		CustomKeywords.loadKeywords();
 		customKeywordsPage.setVisible(true);
@@ -122,7 +122,7 @@ public class ChatbotTab {
 		buttons.add(timersButton);
 		buttons.add(customCheerActionsButton);
 		buttons.add(channelPointsButton);
-		buttons.add(spamProtectionButton);
+		//buttons.add(spamProtectionButton);
 		//buttons.add(blockedKeywordsButton);
 
 		content.add(generalBotPage);
@@ -130,7 +130,7 @@ public class ChatbotTab {
 		content.add(defaultCommandsPage);
 		content.add(timersPage);
 		content.add(pointsPage);
-		content.add(spamProtectionPage);
+		//content.add(spamProtectionPage);
 		content.add(blockedKeywordsPage);
 		content.add(customKeywordsPage);
 		content.add(customCheerActionsPage);

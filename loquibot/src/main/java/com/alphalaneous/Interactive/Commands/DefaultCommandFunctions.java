@@ -344,19 +344,42 @@ public class DefaultCommandFunctions {
         }
         return RequestsUtils.remove(message.getSenderElseDisplay(), message.isMod(), intArg);
     }
-    public static String runRequest(ChatMessage message){
-        return "Using the !request command is disabled, send an ID in chat without a command.";
-        /*if(message.getArgs().length == 1){
-            return Utilities.format("$SPECIFY_ID_MESSAGE$");
-        }
-        String userID = message.getTag("user-id");
-        long lUserID = 0;
-        if(userID != null){
-            lUserID = Long.parseLong(userID);
-        }
 
-        Requests.request(message.getSenderElseDisplay(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), lUserID, message);
-        return "";*/
+    private static boolean isRequestOnCooldown = false;
+    private static int remainingRequestCooldown = 0;
+
+    public static String runRequest(ChatMessage message){
+        //return "Using the !request command is disabled, send an ID in chat without a command.";
+
+        if(!isRequestOnCooldown){
+            isRequestOnCooldown = true;
+            remainingRequestCooldown = 2000;
+
+            new Thread(() -> {
+                while(true){
+                    Utilities.sleep(1000);
+                    if(remainingRequestCooldown < 0){
+                        isRequestOnCooldown = false;
+                    }
+                    remainingRequestCooldown -= 1000;
+                }
+            }).start();
+
+            if(message.getArgs().length == 1){
+                return Utilities.format("$SPECIFY_ID_MESSAGE$");
+            }
+            String userID = message.getTag("user-id");
+            long lUserID = 0;
+            if(userID != null){
+                lUserID = Long.parseLong(userID);
+            }
+
+            Requests.request(message.getSenderElseDisplay(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), lUserID, message);
+        }
+        else{
+            return "The !request command is on cooldown, " + remainingRequestCooldown/1000 + " seconds remaining.";
+        }
+        return "";
     }
     public static String runSong(ChatMessage message){
         if(!SettingsHandler.getSettings("basicMode").asBoolean()) {
@@ -651,7 +674,6 @@ public class DefaultCommandFunctions {
 
         for(String line : fileText){
             if(message.isYouTube()) Main.sendYTMessage(line, null);
-            else if(message.isKick()) Main.sendKickMessage(line, null);
             else Main.sendMessage(line);
         }
 

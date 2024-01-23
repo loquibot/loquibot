@@ -33,8 +33,46 @@ public class LevelData {
 	private boolean isYouTube;
 	private boolean isKick;
 
+
+
+	private String videoID;
+	private String videoTitle;
+	private String videoCreator;
+	private String videoViews;
+
 	private String displayName;
 
+	public String getVideoID() {
+		return videoID;
+	}
+
+	public void setVideoID(String videoID) {
+		this.videoID = videoID;
+	}
+
+	public String getVideoTitle() {
+		return videoTitle;
+	}
+
+	public void setVideoTitle(String videoTitle) {
+		this.videoTitle = videoTitle;
+	}
+
+	public String getVideoCreator() {
+		return videoCreator;
+	}
+
+	public void setVideoCreator(String videoCreator) {
+		this.videoCreator = videoCreator;
+	}
+
+	public String getVideoViews() {
+		return videoViews;
+	}
+
+	public void setVideoViews(String videoViews) {
+		this.videoViews = videoViews;
+	}
 	public long getPlayerID() {
 		return playerID;
 	}

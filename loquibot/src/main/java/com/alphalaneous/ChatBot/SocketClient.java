@@ -2,7 +2,6 @@ package com.alphalaneous.ChatBot;
 
 import com.alphalaneous.Main;
 import com.alphalaneous.Services.GeometryDash.Requests;
-import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
@@ -45,14 +44,6 @@ public class SocketClient extends WebSocketClient {
             authObj.put("request_type", "connect");
             authObj.put("oauth", SettingsHandler.getSettings("oauth").asString());
             send(authObj.toString());
-        }
-        if(SettingsHandler.getSettings("kickEnabled").asBoolean()){
-            JSONObject connectObj = new JSONObject();
-            connectObj.put("request_type", "kick_connect");
-            connectObj.put("chatroomID", KickAccount.chatroomID);
-            connectObj.put("username", KickAccount.username);
-
-            send(connectObj.toString());
         }
         Main.logger.info("ServerBot Started");
 
@@ -110,8 +101,6 @@ public class SocketClient extends WebSocketClient {
                                     Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE$"));
                                 }
                                 Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE_MOD_VIP$"), null);
-                                Main.sendKickMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE_MOD_VIP$"), null);
-
                                 sentStartupMessage = true;
                             }
                         }).start();
@@ -162,8 +151,6 @@ public class SocketClient extends WebSocketClient {
                         String message = object.getString("message");
                         Main.sendMessage("\uD83D\uDCE2 | " + message);
                         Main.sendYTMessage("\uD83D\uDCE2 | " + message, null);
-                        Main.sendKickMessage("\uD83D\uDCE2 | " + message, null);
-
                         break;
                     }
 

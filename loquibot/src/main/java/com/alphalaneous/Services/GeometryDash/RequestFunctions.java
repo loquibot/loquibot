@@ -93,10 +93,6 @@ public class RequestFunctions {
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(0).getLevelData().getDisplayName()), null);
-                        Main.sendKickMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
-                                RequestsTab.getRequest(0).getLevelData().getDisplayName()), null);
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id(),
@@ -116,7 +112,7 @@ public class RequestFunctions {
     }
 
     public static void undoFunction() {
-        if (undoQueue.size() != 0) {
+        if (!undoQueue.isEmpty()) {
             didUndo = true;
             int selectPosition = LevelButton.selectedID;
             LevelButton levelButton = (LevelButton) undoQueue.keySet().toArray()[undoQueue.size() - 1];
@@ -202,10 +198,6 @@ public class RequestFunctions {
 
                     if (!SettingsHandler.getSettings("disableNP").asBoolean() && !SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
-                                RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
-                                RequestsTab.getRequest(num).getLevelData().getDisplayName()), null);
-                        Main.sendKickMessage(Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(num).getLevelData().getGDLevel().getLevel().id(),
                                 RequestsTab.getRequest(num).getLevelData().getDisplayName()), null);
@@ -325,6 +317,7 @@ public class RequestFunctions {
                     level.put("is_youtube", RequestsTab.getRequest(i).getLevelData().isYouTube());
                     level.put("display_name", RequestsTab.getRequest(i).getLevelData().getDisplayName());
                     level.put("account_id", RequestsTab.getRequest(i).getLevelData().getGDLevel().getAccountID());
+                    level.put("is_platformer", RequestsTab.getRequest(i).getLevelData().getGDLevel().getLength() == 5);
 
                     levelsArray.put(level);
                 }

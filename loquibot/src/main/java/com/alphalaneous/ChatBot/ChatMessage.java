@@ -5,7 +5,6 @@
 
 package com.alphalaneous.ChatBot;
 
-import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
@@ -99,9 +98,6 @@ public class ChatMessage {
 
         if(isYouTube){
             if (YouTubeAccount.ID.equals(sender)) return "owner";
-        }
-        else if(isKick){
-            if (KickAccount.username.toLowerCase().equalsIgnoreCase(sender)) return "owner";
         }
         else {
             if (TwitchAccount.login.toLowerCase().equalsIgnoreCase(sender)) {

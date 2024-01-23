@@ -47,7 +47,7 @@ public class SettingsTab {
 	private static final JPanel warrantyPage = Warranty.createPanel();
 	private static final JPanel termsPage = Terms.createPanel();
 
-	private static final JPanel languagePage = Languages.createPanel();
+	//private static final JPanel languagePage = Languages.createPanel();
 	private static final LangLabel title = new LangLabel("$SETTINGS_TITLE$");
 	private static final JPanel settingsPanel = new JPanel(null);
 
@@ -79,7 +79,6 @@ public class SettingsTab {
 	private static final SettingsButton accounts = createButton("$ACCOUNTS_SETTINGS$", "\uF133", () -> {
 		accountsPage.setVisible(true);
 	});
-
 	private static final SettingsButton filters = createButton("$FILTERS_SETTINGS$", "\uF309", () -> {
 		requestsPage.setVisible(true);
 	});
@@ -125,9 +124,9 @@ public class SettingsTab {
 	private static final SettingsButton terms = createButton("$TERMS_SETTINGS$", null, () -> {
 		termsPage.setVisible(true);
 	});
-	private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uF4F3", () -> {
-		languagePage.setVisible(true);
-	});
+	//private static final SettingsButton language = createButton("$LANGUAGE_SETTINGS$", "\uF4F3", () -> {
+	//	languagePage.setVisible(true);
+	//});
 	private static final GridBagConstraints gbc = new GridBagConstraints();
 
 	public static void createPanel() {
@@ -192,7 +191,7 @@ public class SettingsTab {
 		content.add(loggedIDsPage);
 		content.add(devPage);
 		content.add(reportedIDsPage);
-		content.add(languagePage);
+		//content.add(languagePage);
 		//content.add(legalPage);
 		content.add(privacyPage);
 		content.add(warrantyPage);
@@ -215,7 +214,7 @@ public class SettingsTab {
 		devPage.setVisible(false);
 		reportedIDsPage.setVisible(false);
 		//legalPage.setVisible(false);
-		languagePage.setVisible(false);
+		//languagePage.setVisible(false);
 		privacyPage.setVisible(false);
 		warrantyPage.setVisible(false);
 		termsPage.setVisible(false);
@@ -231,11 +230,11 @@ public class SettingsTab {
 		buttons.add(userSection, gbc);
 		buttons.add(accounts, gbc);
 		buttons.add(personalization, gbc);
-		buttons.add(language, gbc);
+		//buttons.add(language, gbc);
 		buttons.add(createSeparator(), gbc);
 		buttons.add(GDSection, gbc);
 		buttons.add(requests, gbc);
-		if(!Defaults.isMac()) buttons.add(mods, gbc);
+		//if(!Defaults.isMac()) buttons.add(mods, gbc);
 		//buttons.add(messages, gbc);
 		buttons.add(filters, gbc);
 		buttons.add(outputs, gbc);

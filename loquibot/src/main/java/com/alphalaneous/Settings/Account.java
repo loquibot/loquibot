@@ -1,12 +1,10 @@
 package com.alphalaneous.Settings;
 
 import com.alphalaneous.*;
-import com.alphalaneous.ChatBot.KickBot;
 import com.alphalaneous.Services.GeometryDash.GDAPI;
 import com.alphalaneous.Services.GeometryDash.LoadGD;
 import com.alphalaneous.Images.Assets;
 import com.alphalaneous.Interfaces.Function;
-import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Swing.Components.*;
 import com.alphalaneous.Swing.Components.ContextButton;
@@ -16,16 +14,12 @@ import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Theming.ThemedColor;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Windows.DialogBox;
-import com.alphalaneous.Windows.KickLoginWindow;
 import com.alphalaneous.Windows.Window;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
 
 import static com.alphalaneous.Utils.Defaults.settingsButtonUI;
@@ -39,8 +33,6 @@ public class Account {
     private static AccountPanel youTubePanel = new AccountPanel(
             () -> Window.addContextMenu(createYouTubeContextMenu()));;
 
-    private static AccountPanel kickPanel = new AccountPanel(
-            () -> Window.addContextMenu(createKickContextMenu()));;
     private static final CurvedButton loginButton = new CurvedButton("$LOGIN$");
     private static final CurvedButton cancelButton = new CurvedButton("$CANCEL$");
     private static final LangLabel usernameLabel = new LangLabel("$USERNAME$");
@@ -132,8 +124,6 @@ public class Account {
         twitchPanel.setIcon(Assets.Twitch);
         youTubePanel.setLargeIcon(Assets.YouTubeLarge, "YouTube");
         twitchPanel.setLargeIcon(Assets.TwitchLarge, "Twitch");
-        kickPanel.setIcon(Assets.Kick);
-        kickPanel.setLargeIcon(Assets.KickLarge, "Kick");
 
         firstLoginButton.setBounds(10, 10, 300, 80);
         firstLoginButton.setFont(Defaults.MAIN_FONT.deriveFont(20f));
@@ -152,13 +142,11 @@ public class Account {
             try {
                 refreshTwitch(TwitchAccount.display_name);
                 refreshYouTube(YouTubeAccount.name);
-                refreshKick(KickAccount.username, false);
             }
             catch (Exception e){
                 Main.logger.error(e.getLocalizedMessage(), e);
 
             }
-
         }
 
         SettingsComponent geometryDashComponent = new SettingsComponent(geometryDashPanel, new Dimension(475, 100)) {
@@ -197,22 +185,9 @@ public class Account {
             }
         };
 
-        SettingsComponent kickComponent = new SettingsComponent(kickPanel, new Dimension(475, 100)) {
-            @Override
-            protected void refreshUI() {
-                kickPanel.refresh();
-            }
-
-            @Override
-            protected void resizeComponent(Dimension dimension) {
-                kickPanel.resizeComponent(dimension.width);
-            }
-        };
-
         settingsPage.addComponent(geometryDashComponent);
         settingsPage.addComponent(twitchComponent);
         settingsPage.addComponent(youTubeComponent);
-        settingsPage.addComponent(kickComponent);
 
         return settingsPage;
     }
@@ -291,46 +266,6 @@ public class Account {
         return youTubeContextMenu;
     }
 
-    public static ContextMenu createKickContextMenu() {
-        ContextMenu kickContextMenu = new ContextMenu();
-        kickContextMenu.addButton(new ContextButton("Refresh Login", () -> {
-            new Thread(() -> {
-                SettingsHandler.writeSettings("kickEnabled", "true");
-
-                while(true) {
-                    String newUsername = KickLoginWindow.createLoginWindow();
-
-                    if(newUsername == null){
-                        break;
-                    }
-                    else {
-                        newUsername = newUsername.replace("_", "-");
-                        SettingsHandler.writeSettings("kickUsername", newUsername);
-
-                        KickBot bot = KickBot.getCurrentState();
-                        if (bot != null) bot.disconnect();
-
-                        new KickBot(newUsername).connect();
-
-                        if (KickBot.getCurrentState().didConnectionSucceed()) {
-                            refreshKick(KickAccount.username, false);
-                            break;
-                        }
-                    }
-                }
-
-            }).start();
-        }));
-        kickContextMenu.addButton(new ContextButton("Logout", () -> {
-            SettingsHandler.writeSettings("kickEnabled","false");
-            SettingsHandler.writeSettings("kickUsername","");
-
-            kickPanel.logout();
-        }));
-
-        return kickContextMenu;
-    }
-
     public static void refreshTwitch(String channel){
         refreshTwitch(channel, false);
     }
@@ -357,24 +292,6 @@ public class Account {
             }
             else {
                 youTubePanel.refreshInfo(channel, "YouTube", new ImageIcon(Assets.loquibotLarge.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-            }
-        }
-    }
-
-    public static void refreshKick(String channel, boolean skipCheck) {
-        if (SettingsHandler.getSettings("kickEnabled").asBoolean() || skipCheck) {
-            if (KickAccount.profilePicURL != null && !KickAccount.profilePicURL.equalsIgnoreCase("")) {
-                BufferedImage image;
-                try {
-                    image = ImageIO.read(new URL(KickAccount.profilePicURL));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                kickPanel.refreshInfo(channel, "Kick", new ImageIcon(makeRoundedCorner(image).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-            }
-            else {
-                kickPanel.refreshInfo(channel, "Kick", new ImageIcon(Assets.loquibotLarge.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
             }
         }
     }

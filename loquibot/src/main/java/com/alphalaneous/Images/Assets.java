@@ -152,7 +152,7 @@ public class Assets {
 				loadAsset(difficulty, "DifficultyIcons/Epic/" + difficulty + ".png", difficultyIconsEpic, difficultyIconsEpicLarge);
 			}
 		}
-		String[] lengths = {"Tiny", "Short", "Medium", "Long", "XL"};
+		String[] lengths = {"Tiny", "Short", "Medium", "Long", "XL", "Plat"};
 
 		for(String length : lengths){
 			loadAsset(length, "LengthIcons/" + length + ".png", lengthIcons);

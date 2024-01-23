@@ -2,7 +2,6 @@ package com.alphalaneous.Services.GeometryDash;
 
 import com.alphalaneous.*;
 import com.alphalaneous.Moderation.Moderation;
-import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Swing.Components.LevelButton;
 import com.alphalaneous.Settings.Outputs;
@@ -63,6 +62,10 @@ public class Requests {
                         long newTime = System.currentTimeMillis();
                         long timeElapsed = newTime - requestCooldown.time;
 
+                        if(requestCooldown.cooldown - timeElapsed <= 0){
+                            requestCooldowns.remove(requestCooldown);
+                        }
+
                         return requestCooldown.cooldown - timeElapsed;
                     }
                 }
@@ -120,7 +123,7 @@ public class Requests {
             return;
         }
         if (globallyBlockedIDs.containsKey(IDa)) {
-            sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", globallyBlockedIDs.get(IDa)), messageID, chatMessage.isYouTube(), chatMessage.isKick(), chatMessage.getSenderElseDisplay());
+            sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", globallyBlockedIDs.get(IDa)), messageID, chatMessage.isYouTube(), chatMessage.getSenderElseDisplay());
             return;
         }
         if(chatMessage.isYouTube() || chatMessage.isKick()){
@@ -145,7 +148,7 @@ public class Requests {
                     return;
                 }
                 if (!requestsEnabled && pos == -1) {
-                    sendUnallowed(Utilities.format("$REQUESTS_OFF_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                    sendUnallowed(Utilities.format("$REQUESTS_OFF_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                     return;
                 }
 
@@ -189,22 +192,22 @@ public class Requests {
                                     usernameS = argumentsS[1].trim().replace("\"", "");
                                 }
                             } else {
-                                sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$LEVEL_COMMAND_FORMAT_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                                 return;
                             }
 
                             level = GDAPI.getLevelByNameByUser(levelNameS, usernameS, inQuotes);
 
                             if (level == null) {
-                                sendUnallowed(Utilities.format("$LEVEL_USER_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$LEVEL_USER_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                                 return;
                             }
                         } else {
-                            level = getID(message, finalChatMessage.isYouTube(), finalChatMessage.isKick(), messageID, finalChatMessage.getSenderElseDisplay());
+                            level = getID(message, finalChatMessage.isYouTube(), messageID, finalChatMessage.getSenderElseDisplay());
                             if (level == null) return;
                         }
                     } else {
-                        level = getID(message, finalChatMessage.isYouTube(), finalChatMessage.isKick(), messageID, finalChatMessage.getSenderElseDisplay());
+                        level = getID(message, finalChatMessage.isYouTube(), messageID, finalChatMessage.getSenderElseDisplay());
                         if (level == null) return;
                     }
                 } else {
@@ -222,9 +225,9 @@ public class Requests {
                         }
                         if(!SettingsHandler.getSettings("disableInQueueMessage").asBoolean()) {
                             if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", j), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", j), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             } else {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             }
                         }
                         return;
@@ -240,13 +243,13 @@ public class Requests {
                 }
                 if (!bypass) {
                     if (checkList(level.getLevel().id(), "\\loquibot\\blocked.txt")) {
-                        sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
 
                     if(level.getLevel().song().isPresent()){
                         if (checkList(level.getLevel().song().get().id(), "\\loquibot\\blockedSongIDs.txt")) {
-                            sendUnallowed(Utilities.format("$BLOCKED_SONG_ID_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$BLOCKED_SONG_ID_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                     }
@@ -256,7 +259,7 @@ public class Requests {
                         while (sc.hasNextLine()) {
                             if (String.valueOf(level.getLevel().id()).equals(sc.nextLine().split(",")[0])) {
                                 sc.close();
-                                sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                                 return;
                             }
                         }
@@ -264,13 +267,13 @@ public class Requests {
                     }
 
                     if (globallyBlockedIDs.containsKey(level.getLevel().id())) {
-                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", globallyBlockedIDs.get(level.getLevel().id())), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$GLOBALLY_BLOCKED_LEVEL_MESSAGE$", globallyBlockedIDs.get(level.getLevel().id())), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (SettingsHandler.getSettings("subscribers").asBoolean()) {
                         if(!finalChatMessage.isYouTube() && !finalChatMessage.isKick()) {
                             if (!(isSub || isMod)) {
-                                sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$REQUESTS_SUBSCRIBE_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                                 return;
                             }
                         }
@@ -284,22 +287,22 @@ public class Requests {
                         }
                     }*/
                     if (level.getLevel().id() < SettingsHandler.getSettings("minID").asInteger() && SettingsHandler.getSettings("minIDOption").asBoolean()) {
-                        sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", SettingsHandler.getSettings("minID").asInteger()), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$MIN_ID_MESSAGE$", SettingsHandler.getSettings("minID").asInteger()), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (level.getLevel().id() > SettingsHandler.getSettings("maxID").asInteger() && SettingsHandler.getSettings("maxIDOption").asBoolean()) {
-                        sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", SettingsHandler.getSettings("maxID").asInteger()), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$MAX_ID_MESSAGE$", SettingsHandler.getSettings("maxID").asInteger()), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (SettingsHandler.getSettings("queueLimitEnabled").asBoolean() && (RequestsTab.getQueueSize() >= SettingsHandler.getSettings("queueLimit").asInteger())) {
                         if (!SettingsHandler.getSettings("disableQF").asBoolean()) {
-                            sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$QUEUE_FULL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         }
                         return;
                     }
                     if (SettingsHandler.getSettings("levelLimitEnabled").asBoolean() && (totalLevelsSent >= SettingsHandler.getSettings("levelLimit").asInteger())) {
 
-                        sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_TOTAL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_TOTAL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
 
@@ -317,7 +320,7 @@ public class Requests {
                         int limit = SettingsHandler.getSettings("sequentialLevelLimit").asInteger();
 
                         if(levelCount >= limit){
-                            sendUnallowed(Utilities.format("$SEQUENTIAL_LIMIT_MESSAGE$", levelCount), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$SEQUENTIAL_LIMIT_MESSAGE$", levelCount), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                     }
@@ -327,31 +330,33 @@ public class Requests {
                         if(RequestCooldown.contains(finalChatMessage.getSender())){
                             long remainingTime = RequestCooldown.getTimeRemaining(finalChatMessage.getSender());
 
-                            long millis = remainingTime % 1000;
-                            long second = (remainingTime / 1000) % 60;
-                            long minute = (remainingTime / (1000 * 60)) % 60;
-                            long hour = (remainingTime / (1000 * 60 * 60)) % 24;
+                            if(!(remainingTime <= 0)) {
 
-                            String formatString = "";
-                            String time = "";
 
-                            if(hour > 0){
-                                formatString = "%02d:%02d:%02d";
-                                time = String.format(formatString, hour, minute, second);
-                            }
-                            else{
-                                if(minute > 0) {
-                                    formatString = "%02d:%02d";
-                                    time = String.format(formatString, minute, second);
+                                long millis = remainingTime % 1000;
+                                long second = (remainingTime / 1000) % 60;
+                                long minute = (remainingTime / (1000 * 60)) % 60;
+                                long hour = (remainingTime / (1000 * 60 * 60)) % 24;
 
+                                String formatString = "";
+                                String time = "";
+
+                                if (hour > 0) {
+                                    formatString = "%02d:%02d:%02d";
+                                    time = String.format(formatString, hour, minute, second);
+                                } else {
+                                    if (minute > 0) {
+                                        formatString = "%02d:%02d";
+                                        time = String.format(formatString, minute, second);
+
+                                    } else {
+                                        formatString = "%02d seconds";
+                                        time = String.format(formatString, second);
+                                    }
                                 }
-                                else{
-                                    formatString = "%02d seconds";
-                                    time = String.format(formatString, second);
-                                }
+                                sendUnallowed(Utilities.format("$REQUEST_COOLDOWN_MESSAGE$", time), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
+                                return;
                             }
-                            sendUnallowed(Utilities.format("$REQUEST_COOLDOWN_MESSAGE$", time), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
-                            return;
                         }
                         new Thread(() -> {
                             new RequestCooldown(finalChatMessage.getSender());
@@ -366,20 +371,20 @@ public class Requests {
                             }
                         }
                         if (size >= SettingsHandler.getSettings("userLimit").asInteger()) {
-                            sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                     }
                     if (SettingsHandler.getSettings("userLimitStreamEnabled").asBoolean()) {
                         if (userStreamLimitMap.containsKey(finalChatMessage.getSender())) {
                             if (userStreamLimitMap.get(finalChatMessage.getSender()) >= SettingsHandler.getSettings("userLimitStream").asInteger()) {
-                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_STREAM_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$MAXIMUM_LEVELS_STREAM_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                                 return;
                             }
                         }
                     }
                     if (addedLevels.containsKey(level.getLevel().id()) && (SettingsHandler.getSettings("repeatedRequests").asBoolean() && !SettingsHandler.getSettings("updatedRepeated").asBoolean())) {
-                        sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                 }
@@ -394,7 +399,7 @@ public class Requests {
                 if (!bypass) {
                     if(level.getLevel().creatorName().isPresent()) {
                         if (checkList(level.getLevel().creatorName().get(), "\\loquibot\\blockedGDUsers.txt")) {
-                            sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$BLOCKED_CREATOR_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                     }
@@ -403,28 +408,28 @@ public class Requests {
                         return;
                     }*/
                     if (SettingsHandler.getSettings("rated").asBoolean() && !(level.getLevel().stars() > 0)) {
-                        sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$STAR_RATED_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (SettingsHandler.getSettings("unrated").asBoolean() && level.getLevel().stars() > 0) {
-                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$UNRATED_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (SettingsHandler.getSettings("minObjectsOption").asBoolean() && level.getLevel().objectCount() < SettingsHandler.getSettings("minObjects").asInteger()) {
-                        sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$FEW_OBJECTS_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (SettingsHandler.getSettings("maxObjectsOption").asBoolean() && level.getLevel().objectCount() > SettingsHandler.getSettings("maxObjects").asInteger()) {
-                        sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$MANY_OBJECTS_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (level.getLevel().objectCount() != 0) {
                         if (SettingsHandler.getSettings("minLikesOption").asBoolean() && level.getLevel().objectCount() < SettingsHandler.getSettings("minLikes").asInteger()) {
-                            sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$FEW_LIKES_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                         if (SettingsHandler.getSettings("maxObjectsOption").asBoolean() && level.getLevel().objectCount() > SettingsHandler.getSettings("maxLikes").asInteger()) {
-                            sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$MANY_LIKES_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                     }
@@ -464,7 +469,7 @@ public class Requests {
                                 }
                                 if (version >= levelData.getGDLevel().getLevel().levelVersion()) {
                                     sc.close();
-                                    sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                    sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                                     return;
                                 }
                             }
@@ -473,21 +478,30 @@ public class Requests {
                     }
                     if (addedLevels.containsKey(level.getLevel().id()) && (SettingsHandler.getSettings("updatedRepeated").asBoolean())) {
                         if (addedLevels.get(level.getLevel().id()) >= levelData.getGDLevel().getLevel().levelVersion()) {
-                            sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                            sendUnallowed(Utilities.format("$REQUESTED_BEFORE_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             return;
                         }
                     }
                     if (Filters.excludedDifficulties.contains(levelData.getSimpleDifficulty().toLowerCase()) && SettingsHandler.getSettings("disableDifficulties").asBoolean()) {
-                        sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$DIFFICULTY_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
                     if (Filters.excludedRequestedDifficulties.contains(starToDifficulty(levelData.getGDLevel().getLevel().requestedStars())) && SettingsHandler.getSettings("disableReqDifficulties").asBoolean()) {
-                        sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                        sendUnallowed(Utilities.format("$REQ_DIFFICULTY_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
                     }
-                    if (Filters.excludedLengths.contains(level.getLevel().length().name().toLowerCase()) && SettingsHandler.getSettings("disableLengths").asBoolean()) {
-                        sendUnallowed(Utilities.format("$LENGTH_MESSAGE$"), messageID,levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
-                        return;
+
+                    if(level.getLength() == 5){
+                        if (Filters.excludedLengths.contains("plat") && SettingsHandler.getSettings("disableLengths").asBoolean()) {
+                            sendUnallowed(Utilities.format("$LENGTH_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
+                            return;
+                        }
+                    }
+                    else {
+                        if (Filters.excludedLengths.contains(level.getLevel().length().name().toLowerCase()) && SettingsHandler.getSettings("disableLengths").asBoolean()) {
+                            sendUnallowed(Utilities.format("$LENGTH_MESSAGE$"), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
+                            return;
+                        }
                     }
                 }
 
@@ -563,18 +577,18 @@ public class Requests {
                             sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
                                     level.getLevel().name(),
                                     level.getLevel().id(),
-                                    RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                    RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         } else {
                             sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
                                     level.getLevel().name(),
-                                    level.getLevel().id()), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                    level.getLevel().id()), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         }
                     }
                     else{
                         sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_INSTANT$",
                                 level.getLevel().name(),
                                 level.getLevel().id(),
-                                RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
 
                     }
                 }
@@ -587,9 +601,6 @@ public class Requests {
                         Main.sendMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()), SettingsHandler.getSettings("announceNP").asBoolean());
-                        Main.sendKickMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
-                                RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()), RequestsTab.getRequest(0).getLevelData().getDisplayName());
                         Main.sendYTMessage(Utilities.format("🎮 | $NOW_PLAYING_TOP_MESSAGE$",
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().name(),
                                 RequestsTab.getRequest(0).getLevelData().getGDLevel().getLevel().id()), RequestsTab.getRequest(0).getLevelData().getDisplayName());
@@ -600,18 +611,18 @@ public class Requests {
                                 sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE$",
                                         level.getLevel().name(),
                                         level.getLevel().id(),
-                                        RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                        RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             } else {
                                 sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_ALT$",
                                         level.getLevel().name(),
-                                        level.getLevel().id()), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                        level.getLevel().id()), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             }
                         }
                         else {
                             sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_INSTANT$",
                                     level.getLevel().name(),
                                     level.getLevel().id(),
-                                    RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                    RequestsTab.getQueueSize()), messageID, levelData.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         }
                     }
 
@@ -619,18 +630,18 @@ public class Requests {
 
             } catch (GDClientException e) {
                 if (Utilities.isCausedBy(e, ActionFailedException.class)) {
-                    sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                    sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                 } else if (Utilities.isCausedBy(e, HttpResponseException.class)) {
-                    sendError(Utilities.format("$SEARCH_FAILED$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                    sendError(Utilities.format("$SEARCH_FAILED$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                 } else if (Utilities.isCausedBy(e, ResponseDeserializationException.class)) {
-                    sendError(Utilities.format("$REQUEST_FAILED$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                    sendError(Utilities.format("$REQUEST_FAILED$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                 } else {
-                    sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                    sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                     Main.logger.error("Failed to add request: " + IDa + " with message: " + message);
                     Main.logger.error(e.getLocalizedMessage(), e);
                 }
             } catch (NoLevelException e){
-                sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
             } catch (AlreadyInQueueException e){
 
                 for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
@@ -642,9 +653,9 @@ public class Requests {
                         }
                         if(!SettingsHandler.getSettings("disableInQueueMessage").asBoolean()) {
                             if (!SettingsHandler.getSettings("disableShowPosition").asBoolean()) {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", j), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE$", j), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             } else {
-                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                                sendUnallowed(Utilities.format("$ALREADY_IN_QUEUE_MESSAGE_ALT$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                             }
                         }
                         return;
@@ -654,7 +665,7 @@ public class Requests {
 
             catch (Exception e) {
                 Main.logger.error(e.getLocalizedMessage(), e);
-                sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.isKick(), finalChatMessage.getSenderElseDisplay());
+                sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
             }
         }).start();
     }
@@ -762,23 +773,24 @@ public class Requests {
                     level.getBoolean("has_verified_coins"),
                     level.optBoolean("is_youtube", false),
                     level.optString("display_name", ""),
-                    level.optLong("account_id", 0)
+                    level.optLong("account_id", 0),
+                    level.optBoolean("is_platformer", false)
 
             );
         }
     }
 
-    private static GDLevelExtra getID(String message, boolean isYT, boolean isKick, String messageID, String username) {
+    private static GDLevelExtra getID(String message, boolean isYT, String messageID, String username) {
         String messageS = message.split(" ", 2)[1].replace("\"", "");
         GDLevelExtra level;
         if(EmojiManager.containsEmoji(messageS)){
-            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, isYT, isKick, username);
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, isYT, username);
             return null;
         }
         level = GDAPI.getTopLevelByName(messageS);
 
         if (level == null) {
-            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, isYT, isKick, username);
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, isYT, username);
             return null;
         }
         return level;
@@ -792,19 +804,16 @@ public class Requests {
         level = GDAPI.getLevel(ID);
         return level;
     }
-    private static void sendError(String message, String messageID, boolean isYT, boolean isKick, String username) {
+    private static void sendError(String message, String messageID, boolean isYT, String username) {
         if(isYT) Main.sendYTMessage("🔴 | " + message, username);
-        else if(isKick) Main.sendKickMessage("🔴 | " + message, username);
         else Main.sendMessage("🔴 | " + message, messageID);
     }
-    private static void sendUnallowed(String message, String messageID, boolean isYT, boolean isKick, String username) {
+    private static void sendUnallowed(String message, String messageID, boolean isYT, String username) {
         if(isYT) Main.sendYTMessage("🟡 | " + message, username);
-        else if(isKick) Main.sendKickMessage("🟡 | " + message, username);
         else Main.sendMessage("🟡 | " + message, messageID);
     }
-    public static void sendSuccess(String message, String messageID, boolean isYT, boolean isKick, String username) {
+    public static void sendSuccess(String message, String messageID, boolean isYT, String username) {
         if(isYT) Main.sendYTMessage("🟢 | " + message, username);
-        else if(isKick) Main.sendKickMessage("🟢 | " + message, username);
         else Main.sendMessage("🟢 | " + message, messageID);
     }
 

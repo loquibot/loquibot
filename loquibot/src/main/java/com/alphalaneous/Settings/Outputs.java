@@ -21,15 +21,14 @@ public class Outputs {
     }
 
     public static void setOutputStringFile(String text) {
-        Path file = Paths.get(SettingsHandler.getSettings("outputFileLocation").asString() + "\\output.txt");
         try {
+            Path file = Paths.get(SettingsHandler.getSettings("outputFileLocation").asString() + "\\output.txt");
             if (!Files.exists(file)) {
                 Files.createFile(file);
             }
             Files.write(file, text.getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Main.logger.error(e.getLocalizedMessage(), e);
-
         }
     }
 }

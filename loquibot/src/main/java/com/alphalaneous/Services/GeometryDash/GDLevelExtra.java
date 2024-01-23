@@ -11,9 +11,10 @@ public class GDLevelExtra {
 
     }
 
-
-    private GDLevel level;
+    private final GDLevel level;
     private long accountID = -1;
+
+    private int length = -1;
 
     public GDLevel getLevel() {
         return level;
@@ -23,10 +24,19 @@ public class GDLevelExtra {
         return accountID;
     }
 
+    public int getLength(){
+        return length;
+    }
 
     public GDLevelExtra(GDLevel level, long accountID) {
         this.level = level;
         this.accountID = accountID;
+    }
+
+    public GDLevelExtra(GDLevel level, long accountID, int length) {
+        this.level = level;
+        this.accountID = accountID;
+        this.length = length;
     }
 
     public GDLevelExtra(GDLevel level) {
@@ -35,6 +45,10 @@ public class GDLevelExtra {
 
     public void setAccountID(long accountID){
         this.accountID = accountID;
+    }
+
+    public void setLength(int length){
+        this.length = length;
     }
 
 }

@@ -13,6 +13,7 @@ import com.alphalaneous.Windows.AprilFools;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.OfficerWindow;
 import com.alphalaneous.Windows.Window;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -346,12 +347,10 @@ public class RequestsTab {
                 Requests.requestsEnabled = false;
                 Main.sendMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), doAnnounce);
                 Main.sendYTMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), null);
-                Main.sendKickMessage(Utilities.format("🟥 | $REQUESTS_OFF_TOGGLE_MESSAGE$"), null);
             } else {
                 Requests.requestsEnabled = true;
                 Main.sendMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), doAnnounce);
                 Main.sendYTMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), null);
-                Main.sendKickMessage(Utilities.format("🟩 | $REQUESTS_ON_TOGGLE_MESSAGE$"), null);
             }
         }
         if (Requests.requestsEnabled) {
@@ -359,6 +358,12 @@ public class RequestsTab {
         } else {
             toggleRequests.setText("\uF184");
         }
+
+        JSONObject toggledObject = new JSONObject();
+        toggledObject.put("type", "update_toggle");
+        toggledObject.put("levels_enabled", Requests.requestsEnabled);
+
+        Main.sendMessageConnectedService(toggledObject.toString());
     }
 
     public static void addRequest(LevelButton button){

@@ -77,7 +77,7 @@ public class Language {
             default: lang = "en_us";
                 return;
         }
-        lang = language;
+        lang = "en_us";
         loadLanguage();
         reloadLocale();
         SettingsTab.refreshSettingsButtons();

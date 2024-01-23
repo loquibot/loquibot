@@ -1,6 +1,5 @@
 package com.alphalaneous;
 
-import com.alphalaneous.ChatBot.KickBot;
 import com.alphalaneous.ChatBot.ServerBot;
 import com.alphalaneous.Interactive.CheerActions.LoadCheerActions;
 import com.alphalaneous.Services.GeometryDash.*;
@@ -10,9 +9,6 @@ import com.alphalaneous.Interactive.Commands.LoadCommands;
 import com.alphalaneous.Interactive.Keywords.LoadKeywords;
 import com.alphalaneous.Interactive.Timers.LoadTimers;
 import com.alphalaneous.Interactive.Timers.TimerHandler;
-import com.alphalaneous.Running.CheckIfRunning;
-import com.alphalaneous.Running.LoquibotSocket;
-import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Settings.Account;
 import com.alphalaneous.Settings.ChannelPoints;
@@ -40,8 +36,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.io.IoBuilder;
 import org.json.JSONObject;
-import org.jutils.jhardware.HardwareInfo;
-import org.jutils.jhardware.model.ProcessorInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,26 +105,6 @@ public class Main {
     private static final JFrame starting = new JFrame("loquibot");
     private static ConnectorSocket streamDeckSocket;
 
-    public static void logSystemInfo(){
-
-
-
-        ProcessorInfo info = HardwareInfo.getProcessorInfo();
-
-        logger.info("CPU: " + info.getModelName());
-        logger.info("Core Count: " + info.getNumCores());
-        logger.info("Max Clock Speed: " + info.getMhz() + "Mhz");
-
-
-        Runtime runtime = Runtime.getRuntime();
-        long allocatedMemory = runtime.totalMemory() - runtime.freeMemory();
-        long presumableFreeMemory = runtime.maxMemory() - allocatedMemory;
-
-
-        logger.info("Total Free Memory: " + presumableFreeMemory/1000000 + " MB");
-
-    }
-
     public static void main(String[] args) throws IOException, InterruptedException {
 
         long time = System.currentTimeMillis();
@@ -180,21 +154,18 @@ public class Main {
                 Main.close();
             }
         });
+        starting.setVisible(true);
 
+        //if(!SettingsHandler.getSettings("runAtStartup").asBoolean() || reopen) starting.setVisible(true);
 
-        if(!SettingsHandler.getSettings("runAtStartup").asBoolean() || reopen) starting.setVisible(true);
-
-        new NamedThread("SystemInfo", Main::logSystemInfo).start();
-
-        new LoquibotSocket();
+        /*new LoquibotSocket();
         try {
             URI originalURI = new URI("ws://127.0.0.1:18562");
             CheckIfRunning checkIfRunning = new CheckIfRunning(originalURI);
             checkIfRunning.connectBlocking();
         } catch (Exception e) {
             Main.logger.error(e.getLocalizedMessage(), e);
-
-        }
+        }*/
 
         if(Defaults.isMac()) {
             Taskbar taskbar = Taskbar.getTaskbar();
@@ -209,7 +180,6 @@ public class Main {
         //Initialize JavaFX Graphics Toolkit (Hacky Solution)
         if(!Defaults.isMac()) new Thread(JFXPanel::new).start();
 
-
         setUI();
 
         logger.info("UI Set");
@@ -221,32 +191,13 @@ public class Main {
             }
         }).start();
 
-
-
-
-
         if(SettingsHandler.getSettings("channel").exists() && !SettingsHandler.getSettings("twitchEnabled").exists()){
             SettingsHandler.writeSettings("twitchEnabled", "true");
-        }
-
-
-        if(!Defaults.isMac()) {
-            new Thread(() -> {
-                Find.setup();
-                Find.findPath();
-            }).start();
         }
 
         Defaults.setSystem(false);
 
         logger.info("System Theme Set");
-
-        //java.util.logging.Logger logger =  java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
-        //logger.setLevel(Level.OFF);
-        //logger.setUseParentHandlers(false);
-
-        logger.info("Logger Settings Set");
-
 
         new Thread(Main::runKeyboardHook).start();
 
@@ -278,21 +229,8 @@ public class Main {
                 if (SettingsHandler.getSettings("twitchEnabled").asBoolean()) TwitchAPI.setOauth();
             }
 
-
             if (SettingsHandler.getSettings("youtubeEnabled").asBoolean()) {
                 YouTubeAccount.setCredential(false);
-            }
-
-            try {
-                if (SettingsHandler.getSettings("kickEnabled").asBoolean())
-                    if (SettingsHandler.getSettings("kickUsername").exists() &&
-                            !SettingsHandler.getSettings("kickUsername").asString().trim().equals("")) {
-                        new KickBot(SettingsHandler.getSettings("kickUsername").asString()).connect();
-                }
-            }
-            catch (Exception e){
-                Main.logger.error(e.getLocalizedMessage(), e);
-                SettingsHandler.writeSettings("kickEnabled", "false");
             }
         }
 
@@ -300,7 +238,6 @@ public class Main {
         ChannelPoints.refresh();
         YouTubeAccount.setInfo();
         Account.refreshYouTube(YouTubeAccount.name);
-        Account.refreshKick(KickAccount.username, false);
 
         logger.info("Twitch Loaded");
         try {
@@ -403,6 +340,7 @@ public class Main {
             logger.info("Command Variables Loaded");
 
             ServerBot.connect();
+            System.out.println( System.currentTimeMillis() - time);
 
 
             if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()){
@@ -434,7 +372,6 @@ public class Main {
             }
             catch (Exception e){
                 SettingsHandler.writeSettings("outputFileLocation", Paths.get(Defaults.saveDirectory + "\\loquibot").toString());
-                //OutputSettings.setOutputStringFile(RequestsUtils.parseInfoString(Settings.getSettings("outputString").asString(), 0));
             }
 
             Path file = Paths.get(Defaults.saveDirectory + "\\loquibot\\saved.json");
@@ -451,7 +388,6 @@ public class Main {
             allowRequests = true;
             RequestFunctions.saveFunction();
             RequestsTab.getLevelsPanel().setSelect(0);
-            //new Thread(TwitchAPI::checkViewers).start();
 
             sendMessages = true;
             if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
@@ -460,53 +396,6 @@ public class Main {
             }
             programLoaded = true;
 
-            /*if(!Defaults.isMac()) {
-                Global.onEnterLevel(() -> {
-                    if (SettingsHandler.getSettings("inGameNowPlaying").asBoolean()) {
-                        if (MemoryHelper.isInFocus()) {
-                            String levelName = Level.getLevelName();
-                            long levelID = Level.getID();
-
-                            if (lastID == levelID) {
-                                return;
-                            }
-
-                            lastID = levelID;
-
-                            String username = null;
-                            int pos = Requests.getPosFromID(levelID);
-                            if (pos != -1) {
-                                username = RequestsTab.getRequest(pos).getLevelData().getDisplayName();
-                            }
-
-                            if (username != null) {
-                                Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                        levelName,
-                                        levelID,
-                                        username), null);
-                                Main.sendKickMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                        levelName,
-                                        levelID,
-                                        username), null);
-                                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE$",
-                                        levelName,
-                                        levelID,
-                                        username), SettingsHandler.getSettings("announceNP").asBoolean());
-                            } else {
-                                Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
-                                        levelName,
-                                        levelID), null);
-                                Main.sendKickMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
-                                        levelName,
-                                        levelID), null);
-                                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🎮 | $NOW_PLAYING_MESSAGE_NO_USER$",
-                                        levelName,
-                                        levelID), SettingsHandler.getSettings("announceNP").asBoolean());
-                            }
-                        }
-                    }
-                });
-            }*/
             Window.setVisible(true);
 
         } catch (Exception e) {
@@ -515,9 +404,6 @@ public class Main {
             close();
         }
     }
-
-    static long lastID = 0;
-
 
     public static void sendMessageConnectedService(String message){
         if(streamDeckSocket != null) {
@@ -612,43 +498,6 @@ public class Main {
                         messageObj.put("message", pingStart + message);
 
                         if(YouTubeAccount.liveChatId != null) {
-                            try {
-                                ServerBot.sendMessage(messageObj.toString());
-                            } catch (Exception e) {
-                                Main.logger.error(e.getLocalizedMessage(), e);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static void sendKickMessage(String messageA, String username){
-        if(SettingsHandler.getSettings("kickEnabled").asBoolean()){
-            String[] messages = messageA.split("¦");
-            for(String message : messages) {
-
-                if (!SettingsHandler.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
-                    if (!message.equalsIgnoreCase("") && SettingsHandler.getSettings("kick_chat_token").exists()) {
-
-                        JSONObject messageObj = new JSONObject();
-                        messageObj.put("request_type", "kick_send_message");
-                        messageObj.put("token", SettingsHandler.getSettings("kick_chat_token").asString());
-
-                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
-                            message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
-                        }
-
-                        String pingStart = "";
-
-                        if(username != null && !username.equalsIgnoreCase("")){
-                            pingStart = com.alphalaneous.Utils.Utilities.format("@%s, ", username);
-                        }
-
-                        messageObj.put("message", pingStart + message);
-
-                        if(KickAccount.chatroomID != 0) {
                             try {
                                 ServerBot.sendMessage(messageObj.toString());
                             } catch (Exception e) {

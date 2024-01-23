@@ -1,8 +1,5 @@
 package com.alphalaneous.Moderation;
 
-import com.alphalaneous.GibberishDetector.GibberishDetector;
-import com.alphalaneous.GibberishDetector.GibberishDetectorExtended;
-import com.alphalaneous.GibberishDetector.GibberishDetectorFactory;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.ChatBot.ChatMessage;
@@ -22,99 +19,6 @@ public class Moderation {
 
 
 	private static final HashMap<String, Warning> warningHashMap = new HashMap<>();
-
-
-
-	public static void checkMessage(ChatMessage chatMessage) {
-
-		if(chatMessage.isMod()) return;
-
-		String emotes = chatMessage.getTag("emotes");
-		String messageEmoteless = removeEmotes(emotes, chatMessage.getMessage());
-		double emotePercent = checkEmotePercent(emotes, chatMessage.getMessage());
-		double capsPercent = checkCapPercent(messageEmoteless);
-		double symPercent = checkSymbolPercent(messageEmoteless);
-		int emoteCount = getEmoteCount(emotes);
-		long capCount = getCapCount(messageEmoteless);
-		int symCount = getSymbolCount(messageEmoteless);
-
-		//System.out.println(emoteCount + " : " + emotePercent);
-		//System.out.println(capCount + " :: " + capsPercent);
-		//System.out.println(symCount + " ::: " + symPercent);
-
-		boolean emoteEnabled = SettingsHandler.getSettings("emoteFilterEnabled").asBoolean();
-		boolean capitalEnabled = SettingsHandler.getSettings("capitalFilterEnabled").asBoolean();
-		boolean symbolEnabled = SettingsHandler.getSettings("symbolFilterEnabled").asBoolean();
-		boolean linkDetectionEnabled = SettingsHandler.getSettings("linkFilterEnabled").asBoolean();
-		boolean gibberishDetectionEnabled = SettingsHandler.getSettings("gibberishFilterEnabled").asBoolean();
-
-		float setEmotePercent;
-		float setCapsPercent;
-		float setSymbolPercent;
-
-		int setEmoteCount;
-		int setCapsCount;
-		int setSymbolCount;
-
-		if(!SettingsHandler.getSettings("emotePercent").exists()) setEmotePercent = 0.5f;
-		else setEmotePercent = SettingsHandler.getSettings("emotePercent").asFloat();
-
-		if(!SettingsHandler.getSettings("capitalPercent").exists()) setCapsPercent = 0.5f;
-		else setCapsPercent = SettingsHandler.getSettings("capitalPercent").asFloat();
-
-		if(!SettingsHandler.getSettings("symbolPercent").exists()) setSymbolPercent = 0.5f;
-		else setSymbolPercent = SettingsHandler.getSettings("symbolPercent").asFloat();
-
-		if(!SettingsHandler.getSettings("emoteCount").exists()) setEmoteCount = 5;
-		else setEmoteCount = SettingsHandler.getSettings("emoteCount").asInteger();
-
-		if(!SettingsHandler.getSettings("capitalCount").exists()) setCapsCount = 5;
-		else setCapsCount = SettingsHandler.getSettings("capitalCount").asInteger();
-
-		if(!SettingsHandler.getSettings("symbolCount").exists()) setSymbolCount = 5;
-		else setSymbolCount = SettingsHandler.getSettings("symbolCount").asInteger();
-
-		if(checkIfLink(messageEmoteless) && linkDetectionEnabled && !LinkPermit.checkPermit(chatMessage.getSender())){
-			Main.sendMessage("@" + chatMessage.getSender() + ", links are not allowed here!");
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-			addWarning(chatMessage.getSender(), "linkFilter");
-			return;
-		}
-		if((emotePercent > setEmotePercent && emoteCount > setEmoteCount) && emoteEnabled){
-			Main.sendMessage("@" + chatMessage.getSender() + ", please don't spam emotes!");
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-			addWarning(chatMessage.getSender(), "emote");
-			return;
-		}
-		if((capsPercent > setCapsPercent && capCount > setCapsCount) && capitalEnabled){
-			Main.sendMessage("@" + chatMessage.getSender() + ", please don't spam capital letters!");
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-			addWarning(chatMessage.getSender(), "capital");
-			return;
-		}
-		if((symPercent > setSymbolPercent && symCount > setSymbolCount) && symbolEnabled){
-			Main.sendMessage("@" + chatMessage.getSender() + ", please don't spam symbols!");
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-			addWarning(chatMessage.getSender(), "symbol");
-			return;
-		}
-		//if contains no space and is smaller than 16 but greater than 8
-		if((((!messageEmoteless.contains(" ") && messageEmoteless.length() <= 16 && messageEmoteless.length() >= 8)
-				|| messageEmoteless.length() > 16))
-				&& gibberishDetectionEnabled){
-			Main.sendMessage("@" + chatMessage.getSender() + ", please don't send gibberish!");
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-			addWarning(chatMessage.getSender(), "gibberishFilter");
-			return;
-		}
-		if(SettingsHandler.getSettings("autoDeleteGDLevelIDs").asBoolean() && checkIfLevelID(messageEmoteless)){
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-			return;
-		}
-		if(isFollowerBot(chatMessage) && SettingsHandler.getSettings("autoDeleteBigFollows").asBoolean()){
-			Main.sendMessageWithoutCooldown("/delete " + chatMessage.getTag("id"));
-		}
-	}
 
 	public static void addWarning(String username, String type){
 		if(warningHashMap.containsKey(username)) warningHashMap.get(username).addWarning(type);

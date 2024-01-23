@@ -46,6 +46,7 @@ public class RequestsUtils {
 		JSONObject object = new JSONObject();
 		if(forGD){
 			object.put("service", "gd");
+			object.put("version", 2);
 		}
 		else{
 			object.put("service", "StreamDeck");
@@ -83,7 +84,13 @@ public class RequestsUtils {
 			object.put("likes", data.getGDLevel().getLevel().likes());
 			object.put("downloads", data.getGDLevel().getLevel().downloads());
 			object.put("length", data.getGDLevel().getLevel().length());
-			object.put("lengthValue", data.getGDLevel().getLevel().length().ordinal());
+
+			if(data.getGDLevel().getLength() == -1){
+				object.put("lengthValue", data.getGDLevel().getLevel().length().ordinal());
+			}
+			else {
+				object.put("lengthValue", data.getGDLevel().getLength());
+			}
 			object.put("isDemon", data.getGDLevel().getLevel().isDemon());
 			object.put("isAuto", data.getGDLevel().getLevel().isAuto());
 			object.put("isEpic", data.getGDLevel().getLevel().isEpic());
@@ -99,6 +106,9 @@ public class RequestsUtils {
 	}
 	public static JSONObject getNextInfoObject(LevelData data){
 		JSONObject object = new JSONObject();
+		object.put("version", 2);
+		object.put("service", "gd");
+
 		if(data != null) {
 			object.put("type", "nextlevel");
 			object.put("difficulty", data.getSimpleDifficulty());
@@ -132,6 +142,9 @@ public class RequestsUtils {
 	}
 	public static JSONObject getCurrentInfoObject(LevelData data){
 		JSONObject object = new JSONObject();
+		object.put("version", 2);
+		object.put("service", "gd");
+
 		if(data != null) {
 			object.put("type", "currentlevel");
 			object.put("difficulty", data.getSimpleDifficulty());
@@ -163,7 +176,7 @@ public class RequestsUtils {
 		return object;
 	}
 
-	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean verifiedCoins, boolean isYouTube, String displayName, long accountID) {
+	public static void forceAdd(String name, String author, long levelID, String difficulty, String demonDifficulty, boolean isDemon, boolean isAuto, boolean epic, int featuredScore, int stars, int requestedStars, String requester, int gameVersion, int coins, String description, int likes, int downloads, String length, int levelVersion, long songID, String songName, String songAuthor, int objects, long original, boolean verifiedCoins, boolean isYouTube, String displayName, long accountID, boolean isPlatformer) {
 
 		GDLevel level = new GDLevel() {
 			@Override
@@ -320,7 +333,13 @@ public class RequestsUtils {
 			}
 		};
 		LevelData levelData = new LevelData();
-		levelData.setLevelData(new GDLevelExtra(level, accountID));
+
+		int len = -1;
+		if(isPlatformer){
+			len = 5;
+		}
+
+		levelData.setLevelData(new GDLevelExtra(level, accountID, len));
 		levelData.setEpic(epic);
 		if (featuredScore > 0) {
 			levelData.setFeatured();

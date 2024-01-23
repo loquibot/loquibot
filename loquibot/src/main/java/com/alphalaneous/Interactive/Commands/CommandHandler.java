@@ -8,7 +8,6 @@ import com.alphalaneous.Services.GeometryDash.LevelData;
 import com.alphalaneous.Services.GeometryDash.Requests;
 import com.alphalaneous.Services.GeometryDash.RequestsUtils;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
-import com.alphalaneous.Services.Kick.KickAccount;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Settings.SettingsHandler;
@@ -22,11 +21,6 @@ import com.eclipsesource.v8.V8;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -140,7 +134,6 @@ public class CommandHandler {
             }
 
             if(message.isYouTube()) Main.sendYTMessage(reply, username);
-            else if(message.isKick()) Main.sendKickMessage(reply, username);
             else Main.sendMessage(reply, message.getTag("id"));
         }
     }
@@ -329,7 +322,7 @@ public class CommandHandler {
                                     Requests.sendSuccess(Utilities.format("$CONFIRMATION_MESSAGE_INSTANT_IN_QUEUE$",
                                             levelData.getGDLevel().getLevel().name(),
                                             levelData.getGDLevel().getLevel().id(),
-                                            RequestsTab.getQueueSize()), message.getTag("id"), levelData.isYouTube(), message.isKick(), levelData.getDisplayName());
+                                            RequestsTab.getQueueSize()), message.getTag("id"), levelData.isYouTube(), levelData.getDisplayName());
                                 }
                             }
                         }
@@ -503,14 +496,12 @@ public class CommandHandler {
             case "channel":
             case "broadcaster": {
                 if(message.isYouTube()) replacement = YouTubeAccount.name;
-                else if(message.isKick()) replacement = KickAccount.username;
                 else replacement = TwitchAccount.login;
                 break;
             }
             case "channelid":
             case "channel_id": {
                 if(message.isYouTube()) replacement = YouTubeAccount.ID;
-                if(message.isKick()) replacement = String.valueOf(KickAccount.chatroomID);
                 else replacement = TwitchAccount.id;
                 break;
             }

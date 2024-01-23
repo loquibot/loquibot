@@ -129,6 +129,8 @@ public class ThemedCheckbox extends JPanel {
 		}
 	}
 
+
+
 	public void refresh() {
 		if (!isChecked) {
 			check.setForeground(Defaults.FOREGROUND_B);

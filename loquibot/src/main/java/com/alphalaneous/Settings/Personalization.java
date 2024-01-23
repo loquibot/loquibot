@@ -30,13 +30,13 @@ public class Personalization {
 
 
     public static JPanel createPanel() {
-        settingsPage.addRadioOption("$THEME_TEXT$", "", new String[]{"$LIGHT_MODE$", "$DARK_MODE$", "$CUSTOM_MODE$" ,"$SYSTEM_MODE$"}, "theme", "SYSTEM_MODE", Personalization::setTheme);
+        settingsPage.addRadioOption("$THEME_TEXT$", "", new String[]{"$LIGHT_MODE$", "$DARK_MODE$" ,"$SYSTEM_MODE$"}, "theme", "SYSTEM_MODE", Personalization::setTheme);
 
         settingsPage.addCheckbox("$ALWAYS_ON_TOP$", "$ON_TOP_DESCRIPTION$", "onTop", Personalization::setOnTop);
         settingsPage.addCheckbox("$DISABLE_FOCUS$", "$DISABLE_FOCUS_DESCRIPTION$", "disableFocus", Personalization::setFocusable);
         settingsPage.addCheckbox("$ALWAYS_CENTER$", "$ALWAYS_CENTER_DESCRIPTION$","alwaysCenter");
 
-        if(!Defaults.isMac()) {
+        /*if(!Defaults.isMac()) {
             settingsPage.addCheckbox("$RUN_AT_STARTUP$", "$RUN_AT_STARTUP_DESCRIPTION$", "runAtStartup", () -> {
                 if (SettingsHandler.getSettings("installPath").exists()) {
                     Paths.get(SettingsHandler.getSettings("installPath").asString());
@@ -68,8 +68,8 @@ public class Personalization {
                 }
             });
             settingsPage.addCheckbox("$PLAY_SOUNDS_WHILE_HIDDEN$", "$PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION$", "playSoundsWhileHidden");
-        }
-        settingsPage.addCheckbox("$DISABLE_NOTIFICATIONS$", "$DISABLE_NOTIFICATIONS_DESCRIPTION$","disableNotifications");
+        }*/
+        //settingsPage.addCheckbox("$DISABLE_NOTIFICATIONS$", "$DISABLE_NOTIFICATIONS_DESCRIPTION$","disableNotifications");
         return settingsPage;
     }
     public static void setTheme(){
@@ -79,8 +79,7 @@ public class Personalization {
         if (theme.equalsIgnoreCase("DARK_MODE"))Defaults.setDark();
         else if (theme.equalsIgnoreCase("LIGHT_MODE")) Defaults.setLight();
         else if (theme.equalsIgnoreCase("CUSTOM_MODE")) {
-            Defaults.setCustom();
-            showCustomizeButton();
+            Defaults.setDark();
         }
         else Defaults.setSystem();
     }
