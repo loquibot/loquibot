@@ -123,7 +123,7 @@ public class CheerData extends CustomData {
             }
             jsonObject.put("cheers", jsonArray);
             try {
-                Files.write(Paths.get(Utilities.saveDirectory + "customCheers.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
+                Files.write(Paths.get(Utilities.saveDirectory + "/customCheers.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
             }
             catch (Exception e){
                 e.printStackTrace();

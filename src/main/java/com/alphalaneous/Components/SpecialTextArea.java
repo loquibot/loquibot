@@ -19,6 +19,7 @@ import java.awt.geom.Rectangle2D;
 
 public class SpecialTextArea extends ThemeableJPanel {
 
+	private static boolean textAreaFocused = false;
 	private final UndoManager undoManager = new UndoManager();
 
 	private final ThemeableTextArea textArea = new ThemeableTextArea(){
@@ -48,7 +49,11 @@ public class SpecialTextArea extends ThemeableJPanel {
 	}
 
 	public SpecialTextArea(boolean intFilter, boolean allowNegative, boolean allowDecimal) {
-		createArea(intFilter, allowNegative, allowDecimal, -1);
+		createArea(intFilter, allowNegative, allowDecimal, -1, true);
+	}
+
+	public SpecialTextArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, boolean hasUndo) {
+		createArea(intFilter, allowNegative, allowDecimal, -1, hasUndo);
 	}
 
 	public SpecialTextArea(boolean intFilter, boolean allowNegative) {
@@ -56,6 +61,10 @@ public class SpecialTextArea extends ThemeableJPanel {
 	}
 
 	private void createArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, int numLimit){
+		createArea(intFilter, allowNegative, allowDecimal, numLimit, true);
+	}
+
+	private void createArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, int numLimit, boolean hasUndo){
 
 		setBackground(ThemeableColor.getColorByName("list-background-normal"));
 		setOpaque(false);
@@ -94,12 +103,14 @@ public class SpecialTextArea extends ThemeableJPanel {
 				else {
 					borderColor = ThemeableColor.getColorByName("accent");
 				}
+				textAreaFocused = true;
 				repaint();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 				borderColor = ThemeableColor.getColorByName("foreground-darker");
+				textAreaFocused = false;
 				repaint();
 			}
 		});
@@ -139,12 +150,14 @@ public class SpecialTextArea extends ThemeableJPanel {
 		});
 
 		// Create keyboard accelerators for undo/redo actions (Ctrl+Z/Ctrl+Y)
-		textArea.getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "Undo");
-		textArea.getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "Redo");
-		textArea.getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "Redo");
+		if(hasUndo) {
+			textArea.getInputMap().put(
+					KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "Undo");
+			textArea.getInputMap().put(
+					KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "Redo");
+			textArea.getInputMap().put(
+					KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "Redo");
+		}
 		setLayout(null);
 		add(smoothScrollPane);
 	}
@@ -489,5 +502,8 @@ public class SpecialTextArea extends ThemeableJPanel {
 				}
 			}
 		}
+	}
+	public static boolean isTextAreaFocused(){
+		return textAreaFocused;
 	}
 }

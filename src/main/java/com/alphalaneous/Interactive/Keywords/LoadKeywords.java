@@ -38,7 +38,7 @@ public class LoadKeywords {
     @OnLoad
     public static void loadKeywords(){
         try {
-            Path customCommandPath = Paths.get(Utilities.saveDirectory + "customKeywords.json");
+            Path customCommandPath = Paths.get(Utilities.saveDirectory + "/customKeywords.json");
             createPathIfDoesntExist(customCommandPath);
             customKeywords = loadJsonToKeywordDataArrayList(Files.readString(customCommandPath, StandardCharsets.UTF_8));
 

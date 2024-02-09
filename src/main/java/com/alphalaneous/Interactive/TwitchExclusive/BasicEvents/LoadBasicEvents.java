@@ -56,7 +56,7 @@ public class LoadBasicEvents {
     @OnLoad
     public static void loadBasicEvents(){
         try {
-            Path customFollowsPath = Paths.get(Utilities.saveDirectory + "customBasicEvents.json");
+            Path customFollowsPath = Paths.get(Utilities.saveDirectory + "/customBasicEvents.json");
             createPathIfDoesntExist(customFollowsPath);
             loadJsonToEventArrayList(Files.readString(customFollowsPath, StandardCharsets.UTF_8));
         }

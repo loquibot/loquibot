@@ -76,13 +76,18 @@ public class ActionsPage {
 
             Utilities.ifNotNull(kv.get("message"), o -> data.setMessage((String)o));
             data.setName(kv.get("name"));
+            data.setKeyBind(Integer.parseInt(kv.get("keybind")));
+            data.setUsesCtrl(Boolean.parseBoolean(kv.get("keybindCtrl")));
+            data.setUsesAlt(Boolean.parseBoolean(kv.get("keybindAlt")));
+            data.setUsesShift(Boolean.parseBoolean(kv.get("keybindShift")));
 
             data.save(true);
             e.close();
         });
         editCommandPanel.addNameInput("$ACTION_NAME_INPUT$", "$ACTION_NAME_DESC$");
         editCommandPanel.addMessageInput();
-        editCommandPanel.setBounds(0,0,800,370);
+        editCommandPanel.addKeybindInput();
+        editCommandPanel.setBounds(0,0,800,450);
 
         editCommandPanel.showMenu();
     }

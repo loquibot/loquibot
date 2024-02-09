@@ -37,7 +37,7 @@ public class LoadCheers {
     @OnLoad
     public static void loadCheers(){
         try {
-            Path customCheerPath = Paths.get(Utilities.saveDirectory + "customCheers.json");
+            Path customCheerPath = Paths.get(Utilities.saveDirectory + "/customCheers.json");
             createPathIfDoesntExist(customCheerPath);
             customCheers = loadJsonToCheerDataArrayList(Files.readString(customCheerPath, StandardCharsets.UTF_8));
 

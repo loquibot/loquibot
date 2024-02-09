@@ -23,7 +23,7 @@ import java.util.List;
 public class _CookieStore implements CookieStore {
 
     private List<CookieData> cookies = new ArrayList<>();
-    private final String fileName = Utilities.saveDirectory + "cookies.json";
+    private final String fileName = Utilities.saveDirectory + "/cookies.json";
     @Override
     public void add(URI uri, HttpCookie cookie) {
 

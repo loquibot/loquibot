@@ -40,12 +40,7 @@ public class TwitchChatListener extends TwitchEventUtils {
 
 		new SelfDestructingMessage(chatMessage);
 		new SelfDestructingViewer(chatMessage.getSender());
-
-		if (SettingsHandler.getSettings("multiMode").asBoolean()) {
-			new Thread(() -> waitOnMessage(chatMessage)).start();
-		} else {
-			waitOnMessage(chatMessage);
-		}
+		new Thread(() -> waitOnMessage(chatMessage)).start();
 	}
 
 	private void waitOnMessage(ChatMessage chatMessage) {

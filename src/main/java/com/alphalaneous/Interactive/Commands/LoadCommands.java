@@ -40,7 +40,7 @@ public class LoadCommands {
     @OnLoad
     public static void loadCommands(){
         try {
-            Path customCommandPath = Paths.get(Utilities.saveDirectory + "customCommands.json");
+            Path customCommandPath = Paths.get(Utilities.saveDirectory + "/customCommands.json");
             createPathIfDoesntExist(customCommandPath);
             customCommands = loadJsonToCommandDataArrayList(Files.readString(customCommandPath, StandardCharsets.UTF_8));
 

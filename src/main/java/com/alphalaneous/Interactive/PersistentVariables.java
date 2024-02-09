@@ -20,7 +20,7 @@ public class PersistentVariables {
 
     @OnLoad
     public static void load(){
-        Path varPath = Paths.get(Utilities.saveDirectory + "persistentVariables.json");
+        Path varPath = Paths.get(Utilities.saveDirectory + "/persistentVariables.json");
 
         if(Files.exists(varPath)){
             try {
@@ -52,7 +52,7 @@ public class PersistentVariables {
     }
 
     public static void save(){
-        Path varPath = Paths.get(Utilities.saveDirectory + "persistentVariables.json");
+        Path varPath = Paths.get(Utilities.saveDirectory + "/persistentVariables.json");
 
         if(Files.exists(varPath)){
             JSONObject object = new JSONObject();

@@ -54,6 +54,36 @@ public class GetLiveChatID {
         return null;
     }
 
+    public static String getVideoID(YouTube youtube) throws IOException {
+        try {
+            YouTube.LiveBroadcasts.List broadcastList = youtube
+                    .liveBroadcasts()
+                    .list(Collections.singletonList("id"))
+                    .setFields("items/id")
+                    .setBroadcastType("all")
+                    .setBroadcastStatus("active");
+
+            return (String) broadcastList.execute().getItems().get(0).get("id");
+        }
+        catch (GoogleJsonResponseException e) {
+            e.printStackTrace();
+            if (Window.getFrame().isVisible() && !shownError) {
+                new Thread(() -> {
+                    String option = DialogBox.showDialogBox("Cannot connect to YouTube Chat!", "Your account isn't enabled for livestreaming! :(", "Your account needs to be verified.", new String[]{"Okay", "Help"});
+                    if(option.equalsIgnoreCase("help")){
+                        try {
+                            Utilities.openURL(new URI("https://support.google.com/youtube/answer/171664?hl=en"));
+                        } catch (URISyntaxException ex) {
+                            Logging.getLogger().error(ex.getMessage(), ex);
+                        }
+                    }
+                }).start();
+                shownError = true;
+            }
+        }
+        return null;
+    }
+
     public static String getLiveChatId(YouTube youtube, String videoId) throws IOException {
         // Get liveChatId from the video
         YouTube.Videos.List videoList = youtube.videos()

@@ -36,7 +36,7 @@ public class YouTubeAuth {
     public static Credential authorize(List<String> scopes, String credentialDatastore, boolean refresh) throws IOException {
 
         String credentials = credentialDatastore;
-        Path credentialDir = Path.of(Utilities.saveDirectory + credentialDatastore);
+        Path credentialDir = Path.of(Utilities.saveDirectory + "/" + credentialDatastore);
         if (refresh) {
             credentials = credentialDatastore + "_temp";
 
@@ -53,7 +53,7 @@ public class YouTubeAuth {
         Reader clientSecretReader = new InputStreamReader(Objects.requireNonNull(YouTubeAuth.class.getResourceAsStream("/client_secrets.json")));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
 
-        File correctDirectory = new File(Utilities.saveDirectory);
+        File correctDirectory = Utilities.saveDirectory.toFile();
 
         FileDataStoreFactory fileDataStoreFactory = null;
         try {
@@ -78,7 +78,7 @@ public class YouTubeAuth {
         Credential credential = app.authorize("user");
 
         if(refresh) {
-            Path tempPath = Paths.get(Utilities.saveDirectory + credentialDatastore + "_temp");
+            Path tempPath = Paths.get(Utilities.saveDirectory + "/" + credentialDatastore + "_temp");
             Files.move(tempPath, credentialDir, StandardCopyOption.REPLACE_EXISTING);
         }
 

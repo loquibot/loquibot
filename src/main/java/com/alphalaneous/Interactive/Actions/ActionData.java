@@ -2,6 +2,7 @@ package com.alphalaneous.Interactive.Actions;
 
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.ActionsPage;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +17,44 @@ public class ActionData extends CustomData {
 
     private String name;
     private String message;
+    private int keyBind = -1;
+    private boolean usesCtrl = false;
+    private boolean usesAlt = false;
+
+    public int getKeyBind() {
+        return keyBind;
+    }
+
+    public void setKeyBind(int keyBind) {
+        this.keyBind = keyBind;
+    }
+
+    public boolean isUsesCtrl() {
+        return usesCtrl;
+    }
+
+    public void setUsesCtrl(boolean usesCtrl) {
+        this.usesCtrl = usesCtrl;
+    }
+
+    public boolean isUsesAlt() {
+        return usesAlt;
+    }
+
+    public void setUsesAlt(boolean usesAlt) {
+        this.usesAlt = usesAlt;
+    }
+
+    public boolean isUsesShift() {
+        return usesShift;
+    }
+
+    public void setUsesShift(boolean usesShift) {
+        this.usesShift = usesShift;
+    }
+
+    private boolean usesShift = false;
+
     private long counter = 0;
 
     public ActionData(String command){
@@ -96,15 +135,20 @@ public class ActionData extends CustomData {
             actionObject.putOpt("name", data.getName());
             actionObject.putOpt("message", data.getMessage());
             actionObject.putOpt("counter", data.getCounter());
+            actionObject.putOpt("keybind", data.getKeyBind());
+            actionObject.putOpt("keybindCtrl", data.isUsesCtrl());
+            actionObject.putOpt("keybindAlt", data.isUsesAlt());
+            actionObject.putOpt("keybindShift", data.isUsesShift());
+
             jsonArray.put(actionObject);
         }
         jsonObject.put("actions", jsonArray);
 
         try {
-            Files.write(Paths.get(Utilities.saveDirectory + "customActions.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
+            Files.write(Paths.get(Utilities.saveDirectory + "/customActions.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
         if(reload) ActionsPage.load();
     }

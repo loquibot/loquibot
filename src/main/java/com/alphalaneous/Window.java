@@ -4,7 +4,7 @@ import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Components.ContextMenu;
 import com.alphalaneous.Components.SidebarSwitcher;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Components.TwitchChat;
+import com.alphalaneous.Components.ChatPanel;
 import com.alphalaneous.Pages.CommandPages.ChatPageComponent;
 import com.alphalaneous.Pages.ChatPage;
 import com.alphalaneous.Pages.Page;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class Window {
 
-    private static final TwitchChat chatPanel = new TwitchChat();
+    private static final ChatPanel chatPanel = new ChatPanel();
     private static final ThemeableJPanel contentPane = new ThemeableJPanel();
     private static final JFrame frame = new JFrame("Loquibot");
     private static final JPanel componentLayer = new JPanel();
@@ -132,10 +132,14 @@ public class Window {
 
     public static void loadTwitchChat(String username){
 
-        chatPanel.loadChat(username);
+        chatPanel.loadTwitchChat(username);
 
     }
+    public static void loadYouTubeChat(String streamID){
 
+        chatPanel.loadYouTubeChat(streamID);
+
+    }
     public static void onResize(int width, int height){
         setCorrectedBounds(contentPane, width, height);
         setCorrectedBounds(componentLayer, width, height);

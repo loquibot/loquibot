@@ -22,7 +22,7 @@ public class PluginHandler {
 
     public static void loadPlugins() {
         try {
-            Path plugins = Paths.get(Utilities.saveDirectory + "Plugins/").toAbsolutePath();
+            Path plugins = Paths.get(Utilities.saveDirectory + "/Plugins/").toAbsolutePath();
             if(!Files.isDirectory(plugins)) Files.createDirectory(plugins);
 
             List<Path> files = Files.list(plugins).collect(Collectors.toList());

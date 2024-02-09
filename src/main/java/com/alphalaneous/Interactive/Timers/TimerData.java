@@ -151,7 +151,7 @@ public class TimerData extends CustomData {
         jsonObject.put("timers", jsonArray);
 
         try {
-            Files.write(Paths.get(Utilities.saveDirectory + "customTimers.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
+            Files.write(Paths.get(Utilities.saveDirectory + "/customTimers.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
         }
         catch (Exception e){
             e.printStackTrace();

@@ -37,7 +37,7 @@ public class LoadChannelPoints {
     @OnLoad
     public static void loadChannelPoints(){
         try {
-            Path customChannelPointsPath = Paths.get(Utilities.saveDirectory + "customChannelPoints.json");
+            Path customChannelPointsPath = Paths.get(Utilities.saveDirectory + "/customChannelPoints.json");
             createPathIfDoesntExist(customChannelPointsPath);
             customChannelPoints = loadJsonToChannelPointDataArrayList(Files.readString(customChannelPointsPath, StandardCharsets.UTF_8));
 

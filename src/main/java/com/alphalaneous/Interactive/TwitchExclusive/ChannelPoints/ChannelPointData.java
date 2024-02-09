@@ -104,7 +104,7 @@ public class ChannelPointData extends CustomData {
             }
             jsonObject.put("channelPoints", jsonArray);
             try {
-                Files.write(Paths.get(Utilities.saveDirectory + "customChannelPoints.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
+                Files.write(Paths.get(Utilities.saveDirectory + "/customChannelPoints.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
             }
             catch (Exception e){
                 e.printStackTrace();

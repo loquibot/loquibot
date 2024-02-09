@@ -38,10 +38,9 @@ public class LoadActions {
     }
 
     @OnLoad
-
     public static void loadActions(){
         try {
-            Path customActionPath = Paths.get(Utilities.saveDirectory + "customActions.json");
+            Path customActionPath = Paths.get(Utilities.saveDirectory + "/customActions.json");
             createPathIfDoesntExist(customActionPath);
             customActions = loadJsonToActionDataArrayList(Files.readString(customActionPath, StandardCharsets.UTF_8));
 
@@ -71,6 +70,11 @@ public class LoadActions {
                 actionData.setCounter(actionDataJson.optLong("counter"));
 
                 actionData.setMessage(actionDataJson.optString("message"));
+                actionData.setKeyBind(actionDataJson.optInt("keybind"));
+                actionData.setUsesCtrl(actionDataJson.optBoolean("keybindCtrl"));
+                actionData.setUsesAlt(actionDataJson.optBoolean("keybindAlt"));
+                actionData.setUsesShift(actionDataJson.optBoolean("keybindShift"));
+
                 actionDataArrayList.add(actionData);
             }
             catch (JSONException e){

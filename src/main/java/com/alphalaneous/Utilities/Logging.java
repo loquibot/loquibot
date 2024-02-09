@@ -27,7 +27,7 @@ public class Logging {
         Date now = new Date();
         SimpleDateFormat format =
                 new SimpleDateFormat ("yyyy.MM.dd-HH.mm.ss.SSSS");
-        Path path = Paths.get(Utilities.saveDirectory + "logs/");
+        Path path = Paths.get(Utilities.saveDirectory + "/logs/");
 
         try {
             if(!Files.isDirectory(path)){

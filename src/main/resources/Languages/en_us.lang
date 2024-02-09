@@ -30,6 +30,7 @@ PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION = Allow sounds to be activated while the Lo
 # Chat Settings
 
 CHAT_TITLE = Chat
+DEFAULT_COMMANDS = Default Commands
 
 # Accounts Settings
 
@@ -41,6 +42,8 @@ EDIT_ACTION = Edit Action
 ADD_ACTION = Add Action
 ACTION_NAME_INPUT = Action:
 ACTION_NAME_DESC = The name of the action to be run.
+KEYBIND_INPUT = Keybind:
+KEYBIND_INPUT_DESC = An optional key combination to run this action.
 
 # Commands Page
 

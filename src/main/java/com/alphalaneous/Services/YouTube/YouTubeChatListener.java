@@ -5,13 +5,13 @@ import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
+import com.alphalaneous.Window;
 import com.google.api.services.youtube.model.LiveChatMessage;
 import com.google.api.services.youtube.model.LiveChatMessageListResponse;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class YouTubeChatListener {
 
@@ -37,7 +37,8 @@ public class YouTubeChatListener {
                         }
                         liveChatID = newLiveChatID;
                         YouTubeAccount.liveChatId = liveChatID;
-                        listChatMessages(null, 0);
+                        Window.loadYouTubeChat(GetLiveChatID.getVideoID(YouTubeAccount.getYouTube()));
+                        listChatMessages(null);
                     }
                 } catch (Exception e) {
                     Logging.getLogger().error(e.getMessage(), e);
@@ -47,58 +48,45 @@ public class YouTubeChatListener {
         }).start();
     }
 
-    private static void listChatMessages(final String nextPageToken, long delayMs) {
+    private static void listChatMessages(String nextPageToken) {
 
-        if(nextPageToken == null) Logging.getLogger().info("Restarted listChatMessages");
+        new Thread(() -> {
+            if(nextPageToken == null) Logging.getLogger().info("Restarted listChatMessages");
 
-        try {
-            currentTimerTask = new Timer();
+            try {
+                currentTimerTask = new Timer();
 
-            currentTimerTask.schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            LiveChatMessageListResponse response = YouTubeAccount.getYouTube()
-                                    .liveChatMessages()
-                                    .list(liveChatID, Arrays.asList("snippet", "authorDetails"))
-                                    .setPageToken(nextPageToken)
-                                    .setFields(LIVE_CHAT_FIELDS)
-                                    .execute();
+                currentTimerTask.schedule(Utilities.createTimerTask(() -> {
+                    try {
+                        LiveChatMessageListResponse response = YouTubeAccount.getYouTube()
+                                .liveChatMessages()
+                                .list(liveChatID, Arrays.asList("snippet", "authorDetails"))
+                                .setPageToken(nextPageToken)
+                                .setFields(LIVE_CHAT_FIELDS)
+                                .execute();
 
-                            List<LiveChatMessage> messages = response.getItems();
-                            for (LiveChatMessage message : messages) {
-                                ChatMessage message1 = buildChatMessage(message);
-                                if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg")) {
-                                    if (!isFirstMessage) {
-                                        waitOnMessage(message1);
-                                    }
-                                }
+                        List<LiveChatMessage> messages = response.getItems();
+                        messages.forEach((message) -> {
+                            ChatMessage message1 = buildChatMessage(message);
+                            if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg") && !isFirstMessage) {
+                                new Thread(() -> waitOnMessage(message1));
                             }
-                            isFirstMessage = false;
+                        });
 
-                            listChatMessages(
-                                    response.getNextPageToken(),
-                                    5000);
-                            Utilities.sleep(1);
+                        isFirstMessage = false;
+                        listChatMessages(response.getNextPageToken());
 
-                        } catch (Exception e) {
-                            listChatMessages(
-                                    null,
-                                    5000);
-                            Utilities.sleep(1);
-
-                            Logging.getLogger().error(e.getMessage(), e);
-                        }
+                    } catch (Exception e) {
+                        listChatMessages(null);
                     }
-                }, delayMs);
-        }
-        catch (Exception e){
-            listChatMessages(
-                    null,
-                    5000);
-            Utilities.sleep(1);
-        }
+                }), 5000);
+            }
+            catch (Exception e){
+                Logging.getLogger().error(e.getMessage(), e);
+                listChatMessages(null);
+            }
+        }).start();
+
     }
 
     private static ChatMessage buildChatMessage(LiveChatMessage message){

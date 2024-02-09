@@ -1,6 +1,5 @@
 package com.alphalaneous.Utilities;
 
-import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Interfaces.ObjectHandler;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 
@@ -8,36 +7,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Utilities {
 
-	public static String saveDirectory;
+	public static Path saveDirectory;
 
 	static {
 
 		String OS = (System.getProperty("os.name")).toUpperCase();
+		String directory;
 
 		if (OS.contains("WIN")) {
-			saveDirectory = System.getenv("APPDATA") + "/Alphalaneous/Loquibot/";
+			directory = System.getenv("APPDATA") + "/Alphalaneous/Loquibot/";
 		} else if (OS.contains("MAC")){
-			saveDirectory = System.getProperty("user.home") + "/Library/Application Support/Alphalaneous/Loquibot/";
+			directory = System.getProperty("user.home") + "/Library/Application Support/Alphalaneous/Loquibot/";
 		} else if (OS.contains("NUX")){
-			saveDirectory = System.getProperty("user.home") + "/.Alphalaneous/Loquibot/";
+			directory = System.getProperty("user.home") + "/.Alphalaneous/Loquibot/";
 		} else {
-			saveDirectory = System.getProperty("user.dir") + "/Alphalaneous/Loquibot/";
+			directory = System.getProperty("user.dir") + "/Alphalaneous/Loquibot/";
 		}
 
-		Path dir = Path.of(saveDirectory);
-		if (!Files.isDirectory(dir)) {
+		saveDirectory = Path.of(directory);
+
+		if (!Files.isDirectory(saveDirectory)) {
 			try {
-				Files.createDirectories(dir);
+				Files.createDirectories(saveDirectory);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -106,7 +105,7 @@ public class Utilities {
 
 	public static void load(String file, HashMap<String, String> location) throws IOException {
 
-		Path path = Paths.get(saveDirectory + file);
+		Path path = Paths.get(saveDirectory + "/" + file);
 		if(Files.exists(path)) {
 			String text = new String(Files.readAllBytes(path));
 			String[] textSplit = text.split("\n");
@@ -119,14 +118,14 @@ public class Utilities {
 	}
 
 	public static void save(String file, HashMap<String, String> values){
-		Path fileA = Paths.get(saveDirectory + file).toAbsolutePath();
+		Path fileA = Paths.get(saveDirectory + "/" + file).toAbsolutePath();
 
 		try {
 
 			if (!Files.exists(fileA, LinkOption.NOFOLLOW_LINKS)) {
 				Files.createFile(fileA);
 			}
-			Files.createDirectories(Paths.get(saveDirectory));
+			Files.createDirectories(saveDirectory);
 			Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
 			StringBuilder pairs = new StringBuilder();
 			while (it.hasNext()) {
@@ -156,5 +155,13 @@ public class Utilities {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	public static TimerTask createTimerTask(Runnable r) {
+		return new TimerTask() {
+			@Override
+			public void run() {
+				r.run();
+			}
+		};
 	}
 }

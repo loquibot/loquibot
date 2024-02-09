@@ -11,6 +11,8 @@ import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Services.YouTube.YouTubeChatListener;
 import com.alphalaneous.Utilities.*;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 import javax.swing.*;
@@ -19,6 +21,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
@@ -29,11 +32,12 @@ public class Main {
       - Settings Categories
       - Account management
       - Plugins Tab
-      - Add keybindings to actions
-      - Split screen chat
       - Add a few default commands to add/edit/delete chat commands and view a list
       - Add default commands section in settings
       - Add !game and !title default commands
+      - When Java WebView library is done, migrate to that
+      - Refactor CommandHandler
+      - Ability to sort tabs and tab scrolling
      */
 
     static {
@@ -80,7 +84,6 @@ public class Main {
                     YouTubeAccount.setCredential(false, false);
                     AccountsPage.setYouTubeAccountInfo();
                     YouTubeChatListener.startChatListener();
-                    //Window.loadYouTubeChat(YouTubeAccount.ID);
                 }
                 catch (Exception e){
                     try {
@@ -94,6 +97,7 @@ public class Main {
         }
 
         hideStartingWindow();
+        new Thread(Main::runKeyboardHook).start();
 
         PersonalizationPage.setTheme();
         Window.setVisible(true);
@@ -156,6 +160,47 @@ public class Main {
             JUnique.sendMessage(appId, "setVisible");
             System.exit(0);
         }
+    }
+
+    public static Thread keyboardHookThread;
+    private static boolean failedKeyboardHook = false;
+    private static void runKeyboardHook() {
+        //if (!Defaults.isMac()) {
+        AtomicBoolean runHook = new AtomicBoolean(true);
+
+        if (keyboardHookThread != null) {
+            if (keyboardHookThread.isAlive()) {
+                runHook.set(false);
+            }
+        }
+        try {
+            if (GlobalScreen.isNativeHookRegistered()) {
+                GlobalScreen.unregisterNativeHook();
+            }
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(new KeyListener());
+            while (GlobalScreen.isNativeHookRegistered()) {
+                Utilities.sleep(100);
+            }
+        } catch(Exception e){
+            try {
+                GlobalScreen.unregisterNativeHook();
+            } catch (NativeHookException e1) {
+                Logging.getLogger().error(e1.getMessage(), e1);
+            }
+            failedKeyboardHook = true;
+        }
+
+        keyboardHookThread = new Thread(() -> {
+            while (runHook.get()) {
+                if (failedKeyboardHook) {
+                    runKeyboardHook();
+                }
+                Utilities.sleep(100);
+            }
+        });
+        keyboardHookThread.start();
+
     }
 
     public static void onExit(){

@@ -35,7 +35,7 @@ public class LoadTimers {
     @OnLoad
     public static void loadTimers(){
         try {
-            Path customTimerPath = Paths.get(Utilities.saveDirectory + "customTimers.json");
+            Path customTimerPath = Paths.get(Utilities.saveDirectory + "/customTimers.json");
             createPathIfDoesntExist(customTimerPath);
             String text = Files.readString(customTimerPath, StandardCharsets.UTF_8);
             customTimers = loadJsonToTimerDataArrayList(text);

@@ -2,6 +2,7 @@ package com.alphalaneous.Components;
 
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
+import com.alphalaneous.Interactive.Actions.ActionData;
 import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerData;
 import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interactive.Commands.CommandData;
@@ -179,6 +180,11 @@ public class EditCommandPanel extends ThemeableJPanel {
         gbc.gridy++;
     }
 
+    public void addKeybindInput(){
+        ThemeableJPanel keybindInput = createSettingKeybindInput("$KEYBIND_INPUT$", "keybind", "$KEYBIND_INPUT_DESC$", ((ActionData)data).getKeyBind(), ((ActionData)data).isUsesCtrl(), ((ActionData)data).isUsesAlt(), ((ActionData)data).isUsesShift());
+        innerPanel.add(keybindInput, gbc);
+        gbc.gridy++;
+    }
     public void addAliasesInput(){
         ThemeableJPanel messageInput = createSettingTextInput("$ALIASES_INPUT$", "aliases", "$ALIASES_INPUT_DESC$", String.join(",", ((CommandData)data).getAliases()),1, true);
         innerPanel.add(messageInput, gbc);
@@ -226,6 +232,8 @@ public class EditCommandPanel extends ThemeableJPanel {
         innerPanel.add(sliderInput, gbc);
         gbc.gridy++;
     }
+
+
 
     public void addIntervalInput(){
 
@@ -290,6 +298,143 @@ public class EditCommandPanel extends ThemeableJPanel {
         gbc.weightx = 0.9;
         gbc.gridx = 2;
         gbc.ipady = 5 + (25 * lineCount);
+
+        panel.add(textArea, gbc);
+
+        gbc.gridy = 1;
+        gbc.ipady = 30;
+
+        panel.setBorder(new EmptyBorder(2,0,6,0));
+        panel.add(descLabel, gbc);
+
+        return panel;
+    }
+
+    public ThemeableJPanel createSettingKeybindInput(String text, String identifier, String description, int keyValue, boolean isCtrlPressed, boolean isAltPressed, boolean isShiftPressed){
+
+        ThemeableJPanel panel = new ThemeableJPanel();
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        panel.setOpaque(false);
+
+        panel.setLayout(new GridBagLayout());
+
+        SpecialTextArea textArea = new SpecialTextArea(false, false, false, false);
+
+        if(keyValue != -1) {
+            values.put(identifier, String.valueOf(keyValue));
+            values.put(identifier + "Ctrl", String.valueOf(isCtrlPressed));
+            values.put(identifier + "Alt", String.valueOf(isAltPressed));
+            values.put(identifier + "Shift", String.valueOf(isShiftPressed));
+
+            String keybindText = "";
+
+            if(isCtrlPressed) keybindText += "Ctrl ";
+            if(isAltPressed) keybindText += "Alt ";
+            if(isShiftPressed) keybindText += "Shift ";
+            keybindText += KeyEvent.getKeyText(keyValue);
+
+            textArea.setText(keybindText);
+        }
+
+        textArea.clearUndo();
+        textArea.setEditable(false);
+
+
+        final boolean[] isCtrlPressedHere = {false};
+        final boolean[] isAltPressedHere = {false};
+        final boolean[] isShiftPressedHere = {false};
+
+        textArea.getTextInput().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+
+                boolean hasModifier = isCtrlPressedHere[0] || isAltPressedHere[0] || isShiftPressedHere[0];
+
+                boolean cleared = false;
+
+                if((e.getKeyCode() == 8 || e.getKeyCode() == 127) && !hasModifier) {
+                    values.put(identifier, "-1");
+                    values.put(identifier + "Ctrl", "false");
+                    values.put(identifier + "Alt", "false");
+                    values.put(identifier + "Shift", "false");
+
+                    textArea.clearUndo();
+                    textArea.setText("");
+                    cleared = true;
+                }
+
+                if(e.getKeyCode() == 17) {
+                    isCtrlPressedHere[0] = false;
+                }
+                if(e.getKeyCode() == 18) {
+                    isAltPressedHere[0] = false;
+                }
+                if(e.getKeyCode() == 16) {
+                    isShiftPressedHere[0] = false;
+                }
+
+                if(!cleared) {
+                    if (!(e.getKeyCode() == 17 || e.getKeyCode() == 18 || e.getKeyCode() == 16)) {
+
+                        values.put(identifier, String.valueOf(e.getKeyCode()));
+                        values.put(identifier + "Ctrl", String.valueOf(isCtrlPressedHere[0]));
+                        values.put(identifier + "Alt", String.valueOf(isAltPressedHere[0]));
+                        values.put(identifier + "Shift", String.valueOf(isShiftPressedHere[0]));
+                        textArea.clearUndo();
+
+                        String keybindText = "";
+
+                        if (isCtrlPressedHere[0]) keybindText += "Ctrl ";
+                        if (isAltPressedHere[0]) keybindText += "Alt ";
+                        if (isShiftPressedHere[0]) keybindText += "Shift ";
+
+                        keybindText += KeyEvent.getKeyText(e.getKeyCode());
+
+                        textArea.setText(keybindText);
+                    }
+                }
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyReleased(e);
+
+                if(e.getKeyCode() == 17) {
+                    isCtrlPressedHere[0] = true;
+                }
+                if(e.getKeyCode() == 18) {
+                    isAltPressedHere[0] = true;
+                }
+                if(e.getKeyCode() == 16) {
+                    isShiftPressedHere[0] = true;
+                }
+            }
+        });
+
+        ThemeableJLabel textLabel = new ThemeableJLabel(text);
+        textLabel.setPreferredSize(new Dimension(100, 0));
+        textLabel.setForeground("foreground");
+        textLabel.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
+        titleLabels.add(textLabel);
+
+        ThemeableJLabel descLabel = new ThemeableJLabel(description);
+        descLabel.setPreferredSize(new Dimension(100, 5));
+        descLabel.setForeground("foreground-darker");
+        descLabel.setFont(Fonts.getFont("Poppins-Regular").deriveFont(12f));
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.ipady = 30;
+
+        panel.add(textLabel, gbc);
+
+        gbc.weightx = 0.9;
+        gbc.gridx = 2;
+        gbc.ipady = 30;
 
         panel.add(textArea, gbc);
 

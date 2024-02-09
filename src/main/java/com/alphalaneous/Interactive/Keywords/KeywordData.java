@@ -131,7 +131,7 @@ public class KeywordData extends CustomData {
         jsonObject.put("keywords", jsonArray);
 
         try {
-            Files.write(Paths.get(Utilities.saveDirectory + "customKeywords.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
+            Files.write(Paths.get(Utilities.saveDirectory + "/customKeywords.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
         }
         catch (Exception e){
             e.printStackTrace();
