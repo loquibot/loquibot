@@ -90,7 +90,14 @@ public class ChatPanel extends ThemeableJPanel{
     public void loadYouTubeChat(String streamID){
         Platform.runLater(() -> {
             if(streamID != null) {
-                youtubeWebView.getEngine().load("https://www.youtube.com/live_chat?is_popout=1&v=" + streamID + "&dark_theme=1");
+
+                String url = "https://www.youtube.com/live_chat?is_popout=1&v=" + streamID;
+
+                if(SettingsHandler.getSettings("theme").asString().equals("dark")){
+                    url += "&dark_theme=1";
+                }
+
+                youtubeWebView.getEngine().load(url);
                 setupChat(youtubeWebView, youtubeJfxPanel, twitchLoadingPanel);
                 parentPanel.add(youtubeJfxPanel);
             }
@@ -103,7 +110,15 @@ public class ChatPanel extends ThemeableJPanel{
     public void loadTwitchChat(String username){
 
         Platform.runLater(() -> {
-            twitchWebView.getEngine().load("https://www.twitch.tv/popout/" + username + "/chat?parent=icelz.s3.amazonaws.com&darkpopout");
+
+            String url = "https://www.twitch.tv/popout/" + username + "/chat";
+
+            if(SettingsHandler.getSettings("theme").asString().equals("dark")){
+                url += "?parent=icelz.s3.amazonaws.com&darkpopout";
+            }
+
+            twitchWebView.getEngine().load(url);
+
             setupChat(twitchWebView, twitchJfxPanel, twitchLoadingPanel);
         });
 
