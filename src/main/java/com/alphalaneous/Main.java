@@ -36,7 +36,6 @@ public class Main {
       - Add default commands section in settings
       - Add !game and !title default commands
       - When Java WebView library is done, migrate to that
-      - Refactor CommandHandler
       - Ability to sort tabs and tab scrolling
      */
 
