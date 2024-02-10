@@ -61,23 +61,27 @@ public class ChatPanel extends ThemeableJPanel{
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         add(twitchLoadingPanel, gbc);
+        Platform.runLater(() -> {
+            twitchWebView = new WebView();
+            twitchJfxPanel.setScene(new Scene(twitchWebView));
+            youtubeWebView = new WebView();
+            youtubeJfxPanel.setScene(new Scene(youtubeWebView));
+        });
 
         if(SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
             Platform.runLater(() -> {
-                twitchWebView = new WebView();
-                twitchJfxPanel.setScene(new Scene(twitchWebView));
                 twitchJfxPanel.setVisible(false);
-                parentPanel.add(twitchJfxPanel);
             });
         }
 
+
         if(SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
             Platform.runLater(() -> {
-                youtubeWebView = new WebView();
-                youtubeJfxPanel.setScene(new Scene(youtubeWebView));
                 youtubeJfxPanel.setVisible(false);
             });
         }
+
+        parentPanel.add(twitchJfxPanel);
 
         parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
         parentPanel.setBackground("background");

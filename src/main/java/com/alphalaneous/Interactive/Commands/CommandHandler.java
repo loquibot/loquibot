@@ -5,6 +5,7 @@ import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Audio.TTS;
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Interactive.PersistentVariables;
+import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Enums.SoundType;
 import com.alphalaneous.Interactive.CustomData;
@@ -14,6 +15,7 @@ import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointDa
 import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerData;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
+import com.alphalaneous.Services.YouTube.YouTubeChatListener;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import com.eclipsesource.v8.V8;
@@ -74,6 +76,7 @@ public class CommandHandler {
 
             if (!reply.trim().equalsIgnoreCase("")) {
                 TwitchChatListener.getCurrentListener().sendMessage(reply, message.getTag("id"));
+                Servers.sendYouTubeMessage(reply, message.getDisplayName());
             }
         }).start();
 

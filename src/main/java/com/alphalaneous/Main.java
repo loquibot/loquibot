@@ -30,13 +30,13 @@ public class Main {
       - Chat Settings
       - Use loquibot account unless changed in account settings
       - Settings Categories
-      - Account management
       - Plugins Tab
       - Add a few default commands to add/edit/delete chat commands and view a list
       - Add default commands section in settings
       - Add !game and !title default commands
       - When Java WebView library is done, migrate to that
       - Ability to sort tabs and tab scrolling
+      - Fix channel points when not enabled
      */
 
     static {
@@ -46,6 +46,7 @@ public class Main {
                  UnsupportedLookAndFeelException ignored) {
         }
 
+        System.setProperty("sun.java2d.noddraw", "true");
         System.setProperty("sun.awt.noerasebackground", "true");
         System.setProperty("com.sun.webkit.useHTTP2Loader", "false");
 
@@ -62,37 +63,32 @@ public class Main {
             hideStartingWindow();
             Utilities.wait(Onboarding.isCompleted);
         }
+        else {
+            if (SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
+                new Thread(() -> {
+                    TwitchAccount.setInfo();
+                    AccountsPage.setTwitchAccountInfo();
+                    TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
+                    chatListener.connect(SettingsHandler.getSettings("oauth").asString());
+                    ChannelPointsPage.load();
+                    Window.loadTwitchChat(TwitchAccount.login);
 
-        if(SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
-            new Thread(() -> {
-                TwitchAccount.setInfo();
-                AccountsPage.setTwitchAccountInfo();
-                TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
-                chatListener.connect(SettingsHandler.getSettings("oauth").asString());
-                ChannelPointsPage.load();
-                Window.loadTwitchChat(TwitchAccount.login);
+                }).start();
 
-            }).start();
+                StreamInteractionsPage.setEnabled(true);
+            }
 
-            StreamInteractionsPage.setEnabled(true);
-        }
-
-        if(SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
-            new Thread(() -> {
-                try {
-                    YouTubeAccount.setCredential(false, false);
-                    AccountsPage.setYouTubeAccountInfo();
-                    YouTubeChatListener.startChatListener();
-                }
-                catch (Exception e){
+            if (SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
+                new Thread(() -> {
                     try {
+                        YouTubeAccount.setCredential(false, false);
+                        AccountsPage.setYouTubeAccountInfo();
+                    } catch (Exception e) {
                         YouTubeAccount.setCredential(true, true);
-                    } catch (IOException ex) {
-                        Logging.getLogger().error(ex.getMessage(), ex);
                     }
-                }
 
-            }).start();
+                }).start();
+            }
         }
 
         hideStartingWindow();

@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.Pages.StreamInteractionsPage;
 import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
@@ -46,5 +47,12 @@ public class TwitchAccount {
 		} catch (IOException e) {
 			Logging.getLogger().error(e.getMessage(), e);
 		}
+	}
+
+	public static void logout(){
+		SettingsHandler.writeSettings("isTwitchLoggedIn", "false");
+		SettingsHandler.writeSettings("twitchUsername", "");
+		SettingsHandler.writeSettings("oauth", "");
+		StreamInteractionsPage.setEnabled(false);
 	}
 }

@@ -4,6 +4,7 @@ import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
 import com.alphalaneous.Utilities.Logging;
+import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Utilities;
 import com.alphalaneous.Window;
 import com.google.api.services.youtube.model.LiveChatMessage;
@@ -25,8 +26,16 @@ public class YouTubeChatListener {
 
     private static String liveChatID = null;
 
+    private static Thread listenerThread;
+
+
     public static void startChatListener() {
-        new Thread(() -> {
+
+        if(listenerThread != null && listenerThread.isAlive()){
+            listenerThread.stop();
+        }
+
+        listenerThread = new Thread(() -> {
             while (true) {
                 try {
                     String newLiveChatID = GetLiveChatID.getLiveChatId(YouTubeAccount.getYouTube());
@@ -45,45 +54,55 @@ public class YouTubeChatListener {
                 }
                 Utilities.sleep(15000);
             }
-        }).start();
+        });
+        listenerThread.start();
+    }
+
+    public static void stopChatListener(){
+        if(listenerThread != null && listenerThread.isAlive()){
+            listenerThread.stop();
+        }
     }
 
     private static void listChatMessages(String nextPageToken) {
 
         new Thread(() -> {
-            if(nextPageToken == null) Logging.getLogger().info("Restarted listChatMessages");
 
-            try {
-                currentTimerTask = new Timer();
+            if(SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
 
-                currentTimerTask.schedule(Utilities.createTimerTask(() -> {
-                    try {
-                        LiveChatMessageListResponse response = YouTubeAccount.getYouTube()
-                                .liveChatMessages()
-                                .list(liveChatID, Arrays.asList("snippet", "authorDetails"))
-                                .setPageToken(nextPageToken)
-                                .setFields(LIVE_CHAT_FIELDS)
-                                .execute();
+                if (nextPageToken == null) Logging.getLogger().info("Restarted listChatMessages");
 
-                        List<LiveChatMessage> messages = response.getItems();
-                        messages.forEach((message) -> {
-                            ChatMessage message1 = buildChatMessage(message);
-                            if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg") && !isFirstMessage) {
-                                new Thread(() -> waitOnMessage(message1));
-                            }
-                        });
+                try {
+                    currentTimerTask = new Timer();
 
-                        isFirstMessage = false;
-                        listChatMessages(response.getNextPageToken());
+                    currentTimerTask.schedule(Utilities.createTimerTask(() -> {
+                        try {
+                            LiveChatMessageListResponse response = YouTubeAccount.getYouTube()
+                                    .liveChatMessages()
+                                    .list(liveChatID, Arrays.asList("snippet", "authorDetails"))
+                                    .setPageToken(nextPageToken)
+                                    .setFields(LIVE_CHAT_FIELDS)
+                                    .execute();
 
-                    } catch (Exception e) {
-                        listChatMessages(null);
-                    }
-                }), 5000);
-            }
-            catch (Exception e){
-                Logging.getLogger().error(e.getMessage(), e);
-                listChatMessages(null);
+                            List<LiveChatMessage> messages = response.getItems();
+                            messages.forEach((message) -> {
+                                ChatMessage message1 = buildChatMessage(message);
+                                if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg") && !isFirstMessage) {
+                                    new Thread(() -> waitOnMessage(message1));
+                                }
+                            });
+
+                            isFirstMessage = false;
+                            listChatMessages(response.getNextPageToken());
+
+                        } catch (Exception e) {
+                            listChatMessages(null);
+                        }
+                    }), 5000);
+                } catch (Exception e) {
+                    Logging.getLogger().error(e.getMessage(), e);
+                    listChatMessages(null);
+                }
             }
         }).start();
 

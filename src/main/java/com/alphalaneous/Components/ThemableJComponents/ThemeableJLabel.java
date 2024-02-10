@@ -21,6 +21,10 @@ public class ThemeableJLabel extends JXLabel {
 
     }
 
+    public ThemeableJLabel(ImageIcon icon){
+        super(icon);
+    }
+
     public ThemeableJLabel(){
     }
 

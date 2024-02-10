@@ -1,7 +1,11 @@
 package com.alphalaneous.Interactive.Actions;
 
+import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.ActionsPage;
+import com.alphalaneous.Servers;
+import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
@@ -152,4 +156,17 @@ public class ActionData extends CustomData {
         }
         if(reload) ActionsPage.load();
     }
+
+    public void runAction(){
+        new Thread(() -> {
+            ChatMessage chatMessage = new ChatMessage(new String[0], "ActionHandler", "ActionHandler", "", new String[0], true, true, true, false, false);
+
+            String reply = CommandHandler.replaceBetweenParentheses(chatMessage, getMessage(), this, null);
+
+            TwitchChatListener.getCurrentListener().sendMessage(reply);
+            Servers.sendYouTubeMessage(reply, null);
+
+        }).start();
+    }
+
 }

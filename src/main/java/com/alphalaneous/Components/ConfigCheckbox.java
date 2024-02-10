@@ -2,6 +2,8 @@ package com.alphalaneous.Components;
 
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Enums.UserLevel;
+import com.alphalaneous.Interactive.Actions.ActionData;
+import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableColor;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
@@ -193,10 +195,6 @@ public class ConfigCheckbox extends ThemeableJPanel {
     }
 
     public void runAction(){
-        new Thread(() -> {
-            ChatMessage chatMessage = new ChatMessage(new String[0], "ActionHandler", "ActionHandler", "", new String[0], true, true, true, false, false);
-
-            TwitchChatListener.getCurrentListener().sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, customData.getMessage(), customData, null));
-        }).start();
+        ((ActionData)customData).runAction();
     }
 }

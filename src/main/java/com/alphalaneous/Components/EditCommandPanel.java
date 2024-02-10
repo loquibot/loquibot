@@ -146,7 +146,7 @@ public class EditCommandPanel extends ThemeableJPanel {
             close();
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 

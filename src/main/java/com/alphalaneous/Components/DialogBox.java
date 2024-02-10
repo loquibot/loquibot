@@ -31,8 +31,8 @@ public class DialogBox {
         panel = new ThemeableJPanel() {
             @Override
             public void paintComponent(Graphics g) {
-                super.paintComponent(g);
                 GraphicsFunctions.dialog(g, getBackground(), getSize());
+                super.paintComponent(g);
             }
         };
         panel.addMouseListener(new MouseAdapter() {});
@@ -40,12 +40,11 @@ public class DialogBox {
         panel.setLayout(null);
         panel.setBackground("background");
         component.setBounds(10,10,component.getWidth(), component.getHeight());
-        component.setOpaque(false);
         component.setBackground(ThemeableColor.getColorByName("background"));
         panel.setBounds(0,0,component.getWidth() + 20, component.getHeight()+20);
         panel.add(component);
         com.alphalaneous.Window.showDialog(panel, disableClickThrough);
-        panel.updateUI();
+
     }
 
     public static String showDialogBox(String title, String info, String subInfo, String[] options, Object[] args) {

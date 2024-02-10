@@ -23,7 +23,13 @@ public class Window {
     private static final ThemeableJPanel contentPane = new ThemeableJPanel();
     private static final JFrame frame = new JFrame("Loquibot");
     private static final JPanel componentLayer = new JPanel();
-    private static final JPanel backgroundColor = new JPanel();
+    private static final JPanel backgroundColor = new JPanel(){
+        protected void paintComponent(Graphics g) {
+            g.setColor(new Color(0,0,0,125));
+            g.fillRect(0, 0, getWidth(), getHeight());
+            super.paintComponent(g);
+        }
+    };
     private static JComponent dialogComponent;
     private static final JPanel dialogBackgroundPanel = new JPanel();
 
@@ -104,6 +110,7 @@ public class Window {
 
         layeredContentPanel.setBounds(0, 0, winSizeWidth, winSizeHeight);
         layeredContentPanel.setBackground(new Color(0,0,0,0));
+        layeredContentPanel.setOpaque(false);
 
         layeredContentPanel.setLayer(contentPane, 0);
         layeredContentPanel.setLayer(dialogBackgroundPanel, 1);
@@ -209,13 +216,14 @@ public class Window {
             }
         });
         dialogBackgroundPanel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        backgroundColor.setBackground(Color.MAGENTA);
 
-        backgroundColor.setBackground(new Color(0, 0, 0, 125));
         backgroundColor.setLayout(null);
+        backgroundColor.setOpaque(false);
+
         componentLayer.setOpaque(false);
         componentLayer.setLayout(null);
         componentLayer.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+
 
         dialogBackgroundPanel.add(backgroundColor);
         backgroundColor.add(componentLayer);
@@ -276,7 +284,6 @@ public class Window {
         dialogComponent = component;
         component.setBounds(frame.getWidth() / 2 - component.getWidth() / 2-8, frame.getHeight() / 2 - component.getHeight() / 2 - 20, component.getWidth(), component.getHeight());
         componentLayer.add(component);
-        component.setOpaque(false);
 
         dialogBackgroundPanel.setVisible(true);
     }

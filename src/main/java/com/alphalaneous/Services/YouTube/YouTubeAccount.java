@@ -31,19 +31,29 @@ public class YouTubeAccount {
         return youtube;
     }
 
-    public static void setCredential(boolean refresh, boolean prompt) throws IOException {
+    public static void setCredential(boolean refresh, boolean prompt) {
 
         if(prompt){
             //todo show pop up asking for login
         }
+        boolean failed = false;
 
-        credential = YouTubeAuth.authorize(scopes, "YouTubeCredentials", refresh);
-        if(credential != null) {
-            SettingsHandler.writeSettings("isYouTubeLoggedIn", String.valueOf(true));
-            setInfo();
-            AccountsPage.setYouTubeAccountInfo();
+        try {
+            credential = YouTubeAuth.authorize(scopes, "YouTubeCredentials", refresh);
+            if (credential != null) {
+                SettingsHandler.writeSettings("isYouTubeLoggedIn", String.valueOf(true));
+                setInfo();
+                AccountsPage.setYouTubeAccountInfo();
+                YouTubeChatListener.startChatListener();
+            } else {
+                failed = true;
+            }
         }
-        else{
+        catch (Exception e){
+            failed = true;
+        }
+
+        if(failed){
             System.out.println("failed");
             //todo prompt that the login failed
         }
@@ -82,5 +92,10 @@ public class YouTubeAccount {
             Logging.getLogger().error(e.getMessage(), e);
 
         }
+    }
+
+    public static void logout(){
+        SettingsHandler.writeSettings("isYouTubeLoggedIn", String.valueOf(false));
+        YouTubeChatListener.stopChatListener();
     }
 }

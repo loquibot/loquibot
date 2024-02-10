@@ -1,6 +1,7 @@
 package com.alphalaneous.Interactive.Keywords;
 
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Utilities.Utilities;
@@ -52,7 +53,8 @@ public class KeywordHandler {
                 startCooldown(foundKeyword);
             }
             if (!reply.equalsIgnoreCase("")) {
-               TwitchChatListener.getCurrentListener().sendMessage(reply, message.getTag("id"));
+                TwitchChatListener.getCurrentListener().sendMessage(reply, message.getTag("id"));
+                Servers.sendYouTubeMessage(reply, message.getDisplayName());
             }
         }).start();
     }

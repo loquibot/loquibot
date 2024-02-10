@@ -4,6 +4,7 @@ import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Components.SpecialTextArea;
 import com.alphalaneous.Interactive.Actions.ActionData;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
+import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.github.kwhat.jnativehook.keyboard.SwingKeyAdapter;
 
@@ -40,11 +41,7 @@ public class KeyListener extends SwingKeyAdapter {
 					}
 
 					if ((e.getKeyCode() == data.getKeyBind()) && ctrl && alt && shift) {
-
-						new Thread(() -> {
-							ChatMessage chatMessage = new ChatMessage(new String[0], "ActionHandler", "ActionHandler", "", new String[0], true, true, true, false, false);
-							TwitchChatListener.getCurrentListener().sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, data.getMessage(), data, null));
-						}).start();
+						data.runAction();
 					}
 				}
 			}

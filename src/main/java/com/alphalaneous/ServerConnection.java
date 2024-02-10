@@ -25,10 +25,9 @@ public class ServerConnection extends WebSocketClient {
     public void onOpen(ServerHandshake serverHandshake) {
         Logging.getLogger().info("Connected to Loquibot Servers");
 
-        JSONObject authObj = new JSONObject();
-        authObj.put("request_type", "connect");
-        authObj.put("oauth", SettingsHandler.getSettings("oauth").asString());
-        send(authObj.toString());
+        if(SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()){
+            connectTwitch();
+        }
 
         new Thread(() -> {
             while(true){
@@ -43,6 +42,13 @@ public class ServerConnection extends WebSocketClient {
             }
         }).start();
 
+    }
+
+    public void connectTwitch(){
+        JSONObject authObj = new JSONObject();
+        authObj.put("request_type", "connect");
+        authObj.put("oauth", SettingsHandler.getSettings("oauth").asString());
+        send(authObj.toString());
     }
 
     @Override

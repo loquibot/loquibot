@@ -40,6 +40,9 @@ public class Servers {
         }
     }
 
+    public static void connectTwitch(){
+        connection.connectTwitch();
+    }
 
     public static void sendTwitchMessage(String message, String messageID){
 

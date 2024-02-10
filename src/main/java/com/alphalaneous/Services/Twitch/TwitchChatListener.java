@@ -20,6 +20,7 @@ public class TwitchChatListener extends TwitchEventUtils {
 	}
 
 	public static TwitchChatListener getCurrentListener(){
+
 		return currentListener;
 	}
 

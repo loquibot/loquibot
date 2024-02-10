@@ -82,7 +82,7 @@ public class SidebarSwitcher {
                 k.button.setVisible(toggle);
                 Component[] components = k.button.getParent().getComponents();
                 for(int i = 0; i < components.length; i++){
-                    if(components[i].equals(k)){
+                    if(components[i].equals(k.button)){
                         components[i+1].setVisible(toggle);
                     }
                 }

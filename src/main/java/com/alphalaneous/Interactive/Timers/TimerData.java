@@ -1,6 +1,7 @@
 package com.alphalaneous.Interactive.Timers;
 
 import com.alphalaneous.ChatBot.ChatMessage;
+import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.CustomData;
@@ -129,7 +130,9 @@ public class TimerData extends CustomData {
                     CommandHandler.run(message);
                 } else {
                     ChatMessage chatMessage = new ChatMessage(new String[0], "TimerHandler", "TimerHandler", message, new String[0], true, true, true, false, false);
-                    TwitchChatListener.getCurrentListener().sendMessage(CommandHandler.replaceBetweenParentheses(chatMessage, message, this, null));
+                    String response = CommandHandler.replaceBetweenParentheses(chatMessage, message, this, null);
+                    TwitchChatListener.getCurrentListener().sendMessage(response);
+                    Servers.sendYouTubeMessage(response, null);
                 }
             }
         }).start();

@@ -86,6 +86,12 @@ CHEER_ACTION_NAME_DESC = The name of the cheer action to be run.
 RANGES_INPUT = Ranges:
 RANGES_INPUT_DESC = The range the cheer must be in for this action to run, comma separated. Ex: 1,5-50,75
 
+# Event Actions Page
+
+EDIT_EVENT_ACTION = Edit Event Action
+EVENT_ACTION_NAME_INPUT = Event:
+EVENT_ACTION_NAME_DESC = The event type that runs this action.
+
 # Follows Action Page
 
 BASIC_EVENTS_TITLE = Events
@@ -128,3 +134,8 @@ COOLDOWN_INPUT_DESC = The waiting time before the action can be ran again.
 COOLDOWN_COUNTER_S = %s second
 COOLDOWN_COUNTER_P = %s seconds
 
+# Account Management
+
+REFRESH_LOGIN = Refresh Login
+LOGOUT = Logout
+ACCOUNT_MANAGEMENT = Account Management
