@@ -2,6 +2,7 @@ package com.alphalaneous;
 
 import com.alphalaneous.Annotations.AnnotationHandler;
 import com.alphalaneous.Annotations.OnLoad;
+import com.alphalaneous.Pages.SettingsPage;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Pages.InteractionPages.ChannelPointsPage;
 import com.alphalaneous.Pages.SettingsSubPages.AccountsPage;
@@ -27,10 +28,9 @@ public class Main {
 
     /*
     todo
-      - Chat Settings
       - Use loquibot account unless changed in account settings
-      - Settings Categories
       - Plugins Tab
+      - Chat Settings
       - Add a few default commands to add/edit/delete chat commands and view a list
       - Add default commands section in settings
       - Add !game and !title default commands
@@ -96,6 +96,9 @@ public class Main {
 
         PersonalizationPage.setTheme();
         Window.setVisible(true);
+
+
+
     }
 
     private static JFrame starting;

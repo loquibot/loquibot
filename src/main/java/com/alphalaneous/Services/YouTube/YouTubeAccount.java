@@ -1,8 +1,10 @@
 package com.alphalaneous.Services.YouTube;
 
+import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Pages.SettingsSubPages.AccountsPage;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
+import com.alphalaneous.Utilities.Utilities;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
@@ -14,6 +16,8 @@ import org.json.JSONObject;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
@@ -34,7 +38,13 @@ public class YouTubeAccount {
     public static void setCredential(boolean refresh, boolean prompt) {
 
         if(prompt){
-            //todo show pop up asking for login
+            new Thread(() -> {
+                String option = DialogBox.showDialogBox("Failed to connect to YouTube!", "Would you like to try to log in again?", "", new String[]{"Yes", "Cancel"});
+                if(option.equalsIgnoreCase("Yes")){
+                    setCredential(refresh, false);
+                }
+            }).start();
+            return;
         }
         boolean failed = false;
 
@@ -54,8 +64,8 @@ public class YouTubeAccount {
         }
 
         if(failed){
-            System.out.println("failed");
-            //todo prompt that the login failed
+
+            setCredential(true, true);
         }
     }
 

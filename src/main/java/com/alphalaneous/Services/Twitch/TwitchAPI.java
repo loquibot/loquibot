@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointReward;
 import com.alphalaneous.Utilities.*;
 import com.github.twitch4j.TwitchClient;
@@ -246,7 +247,6 @@ public class TwitchAPI {
 				}
 			}
 
-			//todo prompt to re-log in, do not automatically open the browser
 			setOauth(true);
 			return null;
 		}
@@ -360,7 +360,13 @@ public class TwitchAPI {
 		if(!oauthOpen) {
 
 			if(prompt){
-				//todo show prompt window to log-in again
+				new Thread(() -> {
+					String option = DialogBox.showDialogBox("Failed to connect to Twitch!", "Would you like to try to log in again?", "", new String[]{"Yes", "Cancel"});
+					if(option.equalsIgnoreCase("Yes")){
+						setOauth(false);
+					}
+				}).start();
+				return;
 			}
 
 			oauthOpen = true;
@@ -369,6 +375,7 @@ public class TwitchAPI {
 				String token = authorize(true, "user_read",
 						"chat:edit",
 						"chat:read",
+						"bits:read",
 						"channel:moderate",
 						"channel:read:redemptions",
 						"channel:read:subscriptions",

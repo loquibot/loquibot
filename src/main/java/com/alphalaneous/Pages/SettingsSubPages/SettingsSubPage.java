@@ -121,6 +121,11 @@ public class SettingsSubPage extends ThemeableJPanel {
         addCheckedInput(text, description, lines, false, true, true, checkSetting, inputSetting, false, "");
     }
 
+    public void addShortInput(String text, String description, String setting, String defaultInput){
+        settingsPane.add(new ShortTextInput(text, description, setting, defaultInput), gbc);
+    }
+
+
     public void removeButton(String text){
         for(Component component : settingsPane.getComponents()){
             if(component instanceof Button){
@@ -341,6 +346,61 @@ public class SettingsSubPage extends ThemeableJPanel {
         }
     }
 
+    private static class ShortTextInput extends ThemeableJPanel {
+
+        ShortTextInput(String text, String description, String setting, String defaultInput) {
+
+            setLayout(new MigLayout("flowy, insets 0"));
+
+            setOpaque(false);
+
+            ThemeableJLabel titleText = new ThemeableJLabel("");
+            titleText.setText(text);
+            titleText.setForeground("foreground");
+            titleText.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
+
+            ThemeableJLabel descriptionText = new ThemeableJLabel("");
+            descriptionText.setText(description);
+            descriptionText.setForeground("foreground-darker");
+            descriptionText.setFont(Fonts.getFont("Poppins-Regular").deriveFont(13f));
+            descriptionText.setLineWrap(true);
+
+            SpecialTextArea textArea = createTextArea(false, true, true, setting, true);
+
+            textArea.setOpaque(false);
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+
+            if (setting != null) {
+                if (SettingsHandler.getSettings(setting).exists())
+                    textArea.setText(SettingsHandler.getSettings(setting).asString());
+                else {
+                    textArea.setText(defaultInput);
+                    SettingsHandler.writeSettings(setting, defaultInput);
+                }
+            } else textArea.setText(defaultInput);
+
+            textArea.clearUndo();
+            textArea.setMinimumSize(new Dimension(10, 32));
+            setBorder(new EmptyBorder(0,0,5,0));
+
+            ThemeableJPanel inputArea = new ThemeableJPanel();
+            inputArea.setLayout(new BorderLayout());
+            inputArea.add(titleText, BorderLayout.WEST);
+            inputArea.add(textArea, BorderLayout.EAST);
+            inputArea.setOpaque(false);
+
+
+            textArea.setPreferredSize(new Dimension(150, 32));
+
+            add(inputArea, "width 100%");
+
+            //add(titleText, "width 80%");
+            //add(textArea, "width 20%, height 32px");
+            add(descriptionText, "width 100%");
+        }
+    }
+
     public static class SettingsCheckBox extends JPanel {
 
         private final TitledCheckbox checkbox;
@@ -399,8 +459,6 @@ public class SettingsSubPage extends ThemeableJPanel {
             descriptionText.setForeground("foreground-darker");
             descriptionText.setFont(Fonts.getFont("Poppins-Regular").deriveFont(13f));
             descriptionText.setLineWrap(true);
-
-            //todo add slider
 
             JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, defaultValue);
             ThemeableJLabel sliderValue = new ThemeableJLabel("");

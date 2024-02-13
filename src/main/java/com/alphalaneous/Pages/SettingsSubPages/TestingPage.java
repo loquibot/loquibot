@@ -17,6 +17,7 @@ public class TestingPage {
         page.addButton("Test button", ()-> {});
         page.addInput("Test input", "Test description", 1, "testInputLines1", "default input");
         page.addInput("Test input 2", "Test description\nMultiline", 2, "testInputLines2", "default input 2");
+        page.addShortInput("Test short input", "Test short description", "testShortInputLines", "test");
         page.addCheckbox("Test Checkbox", "Test checkbox description", "testCheckboxButton");
         page.addCheckbox("Test Checkbox 2", "Test checkbox\ndescription multiline", "testCheckboxButton2");
         page.addCheckedInput("Test Checked Input", "Test Checked Input Description", 1, "testCheckedInputEnabled", "testCheckedInput");

@@ -48,7 +48,7 @@ public class Servers {
 
         if(message.trim().isEmpty()) return;
 
-        if(SettingsHandler.getSettings("disableChat").asBoolean()) return;
+        if(SettingsHandler.getSettings("disableMessages").asBoolean()) return;
 
         if(SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
 
@@ -64,7 +64,7 @@ public class Servers {
 
     public static void sendYouTubeMessage(String message, String username){
 
-        if(SettingsHandler.getSettings("disableChat").asBoolean()) return;
+        if(SettingsHandler.getSettings("disableMessages").asBoolean()) return;
 
         if(SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
 

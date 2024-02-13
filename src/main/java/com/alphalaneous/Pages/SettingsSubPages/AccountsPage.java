@@ -14,19 +14,20 @@ import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
-import com.alphalaneous.Utilities.Assets;
+import com.alphalaneous.Utilities.*;
 import com.alphalaneous.Components.AccountPanel;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.Twitch.TwitchBotAccount;
-import com.alphalaneous.Utilities.Fonts;
-import com.alphalaneous.Utilities.Logging;
-import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Window;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class AccountsPage {
 
@@ -42,6 +43,20 @@ public class AccountsPage {
 
     @OnLoad(order = 10004)
     public static void init(){
+
+        String version = "Undefined";
+
+        if(Files.exists(Path.of(Utilities.saveDirectory + "/update.json"))){
+            try {
+                JSONObject updateInfo = new JSONObject(Files.readString(Path.of(Utilities.saveDirectory + "/update.json")));
+                version = updateInfo.getString("version");
+
+            } catch (IOException e) {
+                Logging.getLogger().error(e.getMessage(), e);
+            }
+        }
+
+        SettingsPage.addSeparator("LOQUIBOT v" + version, false);
 
         youTubeAccount = new AccountPanel("YouTube Account", () -> showAccountManagement(youTubeAccount, () -> {
             YouTubeAccount.setCredential(true, false);

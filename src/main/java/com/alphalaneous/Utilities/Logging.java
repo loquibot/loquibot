@@ -43,7 +43,7 @@ public class Logging {
 
         ThreadContext.put("filePath", logFile);
 
-        System.setErr(IoBuilder.forLogger(LogManager.getRootLogger()).setLevel(org.apache.logging.log4j.Level.ERROR).buildPrintStream());
+        System.setErr(IoBuilder.forLogger(LogManager.getRootLogger()).setLevel(Level.INFO).buildPrintStream());
     }
 
 
@@ -52,7 +52,6 @@ public class Logging {
             return LogManager.getLogger(Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()));
         }
         catch (Exception e){
-            e.printStackTrace();
             return LogManager.getLogger(Main.class);
         }
     }

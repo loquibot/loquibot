@@ -1,6 +1,7 @@
 package com.alphalaneous.Pages;
 
 import com.alphalaneous.Annotations.OnLoad;
+import com.alphalaneous.Components.SettingsSeparator;
 import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Components.RoundedButton;
 import com.alphalaneous.Components.SmoothScrollPane;
@@ -13,6 +14,7 @@ import com.alphalaneous.Components.SidebarSwitcher;
 import com.alphalaneous.Utilities.GraphicsFunctions;
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.HashMap;
@@ -46,17 +48,18 @@ public class SettingsPage {
         contentPanel.setLayout(new MigLayout());
 
         buttonsPanel.setOpaque(false);
-        buttonsPanel.setLayout(new GridLayout(0,1,0,5));
-
+        buttonsPanel.setLayout(new GridLayout(0,1,0,4));
+        buttonsPanel.setBorder(new EmptyBorder(0,2,0,2));
 
         buttonsScroll.setOpaque(false);
         buttonsScroll.getViewport().setOpaque(false);
 
         buttonsScrollContainer.setBackground("background");
+        buttonsScrollContainer.setLayout(new GridLayout(1,1));
 
         buttonsScrollContainer.add(buttonsScroll);
         buttonsScrollContainer.setOpaque(false);
-        buttonsScrollContainer.setBorder(new EmptyBorder(2,7,0,0));
+        buttonsScrollContainer.setBorder(new EmptyBorder(9,7,9,0));
 
         pagePanel.setOpaque(false);
         pagePanel.setLayout(new MigLayout("insets 0"));
@@ -70,6 +73,16 @@ public class SettingsPage {
         page.getContentPane().add(contentPanel);
 
         SidebarSwitcher.addPage(Assets.getImage("settings-button"), page, () -> {});
+    }
+    public static void addSeparator(String text){
+        addSeparator(text, true);
+    }
+    public static void addSeparator(String text, boolean capitalize){
+
+        SettingsSeparator separator = new SettingsSeparator(text, capitalize);
+        buttonsPanel.add(separator);
+        System.out.println(buttonsPanel.getPreferredSize().height);
+
     }
 
     public static void addPage(String title, String icon, SettingsSubPage settingsSubPage, Function clickFunction){
