@@ -25,6 +25,7 @@ public class YouTubeChatListener {
     private static Timer currentTimerTask = null;
 
     private static String liveChatID = null;
+    private static final ArrayList<LiveChatMessage> messageObjects = new ArrayList<>();
 
     public static void startChatListener() {
         if(SettingsHandler.getSettings("youtubeEnabled").asBoolean()) {
@@ -72,30 +73,28 @@ public class YouTubeChatListener {
 
                             List<LiveChatMessage> messages = response.getItems();
                             for (LiveChatMessage message : messages) {
-                                ChatMessage message1 = buildChatMessage(message);
-                                if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg")) {
-                                    new SelfDestructingMessage();
-                                    if (!isFirstMessage) {
-                                        if (SettingsHandler.getSettings("multiMode").asBoolean()) {
+                                System.out.println(messageObjects.contains(message));
+                                if(!isSameMessage(message)) {
+                                    ChatMessage message1 = buildChatMessage(message);
+                                    if (!message1.getSender().equals("UCvTnC1Unw4Cy7m59WK65ufg")) {
+                                        messageObjects.add(message);
+                                        new SelfDestructingMessage();
+                                        if (!isFirstMessage) {
                                             new Thread(() -> waitOnMessage(message1)).start();
-                                        } else {
-                                            waitOnMessage(message1);
                                         }
                                     }
                                 }
                             }
                             isFirstMessage = false;
 
-                            listChatMessages(
+                            new Thread(() -> listChatMessages(
                                     response.getNextPageToken(),
-                                    5000);
-                            Utilities.sleep(1);
+                                    5000)).start();
 
                         } catch (Exception e) {
-                            listChatMessages(
+                            new Thread(() -> listChatMessages(
                                     null,
-                                    5000);
-                            Utilities.sleep(1);
+                                    5000)).start();
 
                             Main.logger.error(e.getLocalizedMessage(), e);
                         }
@@ -103,11 +102,25 @@ public class YouTubeChatListener {
                 }, delayMs);
         }
         catch (Exception e){
+            Main.logger.error(e.getMessage(), e);
             listChatMessages(
                     null,
                     5000);
             Utilities.sleep(1);
         }
+    }
+
+    public static boolean isSameMessage(LiveChatMessage message){
+        for(LiveChatMessage message1 : messageObjects){
+            boolean sameAccountID = message1.getAuthorDetails().getChannelId().equals(message.getAuthorDetails().getChannelId());
+            boolean sameTime = message1.getSnippet().getPublishedAt().equals(message.getSnippet().getPublishedAt());
+            boolean sameMessage = message1.getSnippet().getDisplayMessage().equals(message.getSnippet().getDisplayMessage());
+
+            if(sameTime && sameAccountID && sameMessage){
+                return true;
+            }
+        }
+        return false;
     }
 
     private static ChatMessage buildChatMessage(LiveChatMessage message){

@@ -23,7 +23,7 @@ public class YouTubeAccount {
     public static BufferedImage profileImage;
     public static YouTube youtube;
     public static Credential credential;
-    private static final List<String> scopes = Lists.newArrayList(YouTubeScopes.YOUTUBE, YouTubeScopes.YOUTUBE_READONLY, YouTubeScopes.YOUTUBE_FORCE_SSL);
+    private static final List<String> scopes = Lists.newArrayList(YouTubeScopes.YOUTUBE_READONLY);
     public static String liveChatId;
 
     public static YouTube getYouTube(){
@@ -32,7 +32,9 @@ public class YouTubeAccount {
 
     public static void setCredential(boolean refresh) throws IOException {
         credential = Auth.authorize(scopes, "YouTubeCredentials", refresh);
-        setInfo(true);
+        if(credential != null) {
+            setInfo(true);
+        }
     }
 
     public static void setInfo(){

@@ -46,13 +46,7 @@ public class TwitchChatListener extends NewChatBot {
 		if (!chatMessage.getSender().equalsIgnoreCase("loquibot")) {
 			new SelfDestructingMessage();
 			new SelfDestructingViewer(chatMessage.getSender());
-
-			if (SettingsHandler.getSettings("multiMode").asBoolean()) {
-				new Thread(() -> waitOnMessage(chatMessage)).start();
-			} else {
-				waitOnMessage(chatMessage);
-			}
-
+			new Thread(() -> waitOnMessage(chatMessage)).start();
 		}
 	}
 

@@ -63,6 +63,11 @@ public class DefaultCommandFunctions {
 
         String query = message.getMessage().split(" ", 2)[1];
 
+        if(query.length() > 20){
+            query = query.substring(0, 20);
+            return Utilities.format("$WHERE_NOT_FOUND_MESSAGE$", query);
+        }
+
         boolean isInteger = message.getArgs()[1].matches("^\\d+$");
 
         String name;

@@ -6,6 +6,7 @@ import com.alphalaneous.Swing.Components.SettingsComponent;
 import com.alphalaneous.Swing.Components.SettingsPage;
 import com.alphalaneous.Utils.MemoryHelper;
 import com.alphalaneous.Utils.RegQuery;
+import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.DialogBox;
 import org.apache.commons.io.FileUtils;
 
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.Objects;
@@ -21,27 +23,25 @@ public class Modifications {
 
     public static JPanel createPanel() {
 
-        //loadMods();
+
 
         SettingsPage settingsPage = new SettingsPage("$MODS_SETTINGS$");
 
-        /*settingsPage.addCheckbox("$IN_GAME_NOW_PLAYING$", "$IN_GAME_NOW_PLAYING_DESC$", "inGameNowPlaying");
-        settingsPage.addCheckbox("$PRACTICE_MUSIC_HACK$", "$PRACTICE_MUSIC_HACK_DESC$", "practiceMusicHack",
-                () -> Hacks.setPracticeMusicHack(SettingsHandler.getSettings("practiceMusicHack").asBoolean()));
-        settingsPage.addCheckbox("$SAFE_NOCLIP_HACK$", "$SAFE_NOCLIP_HACK_DESC$", "safeNoclipHack",
-                () -> {
-            setSafeMode();
-            Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
-                });
-        settingsPage.addComponent(createKeybindComponent(new KeybindButton("$SAFE_NOCLIP_SHORTCUT$", "safeNoclipKeybind")));
-        */
-        settingsPage.addButton("Install loquibot GD Mod", Modifications::installLoquiMod);
+
+
+
+        settingsPage.addButton("Get Integrated Loquibot on Geode", Modifications::getGeode);
 
 
         return settingsPage;
     }
     static Thread inLevel;
     static Thread onDeath;
+
+
+    public static void getGeode(){
+        Utilities.openURL(URI.create("https://geode-sdk.org"));
+    }
     public static void setSafeMode(){
         /*boolean isSafe = getSafeMode();
 

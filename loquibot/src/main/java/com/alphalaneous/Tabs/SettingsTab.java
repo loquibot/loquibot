@@ -234,7 +234,7 @@ public class SettingsTab {
 		buttons.add(createSeparator(), gbc);
 		buttons.add(GDSection, gbc);
 		buttons.add(requests, gbc);
-		//if(!Defaults.isMac()) buttons.add(mods, gbc);
+		buttons.add(mods, gbc);
 		//buttons.add(messages, gbc);
 		buttons.add(filters, gbc);
 		buttons.add(outputs, gbc);

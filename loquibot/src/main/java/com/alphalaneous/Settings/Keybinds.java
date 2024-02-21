@@ -20,6 +20,7 @@ public class Keybinds {
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$COPY_SHORTCUT$", "copyKeybind")));
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$BLOCK_SHORTCUT$", "blockKeybind")));
         settingsPage.addComponent(createKeybindComponent(new KeybindButton("$CLEAR_SHORTCUT$", "clearKeybind")));
+        settingsPage.addComponent(createKeybindComponent(new KeybindButton("Stop All Sounds", "stopSoundsKeybind")));
 
         return settingsPage;
     }

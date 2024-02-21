@@ -658,7 +658,32 @@ public class CommandHandler {
             case "empty_message": {
                 String command = message.getMessage().split(" ")[0].trim();
                 String query = message.getMessage().substring(command.length()).trim();
-                replacement = String.valueOf(query.trim().equals(""));
+                replacement = String.valueOf(query.trim().isEmpty());
+                break;
+            }
+            case "session_count": {
+                replacement = String.valueOf(Requests.getTotalLevelsSent());
+                break;
+            }
+            case "remove": {
+
+                replacement = "Level doesn't exist.";
+
+                String[] argumentsA = data.split(" ");
+                if (argumentsA.length != 1) {
+                    break;
+                }
+                int pos;
+                try {
+                    pos = Integer.parseInt(argumentsA[0].trim());
+                    if (pos < RequestsUtils.getSize()) {
+                        replacement = "Removed " + RequestsUtils.getLevel(pos, "name") + " (" + RequestsUtils.getLevel(pos, "id") + ").";
+                        RequestsTab.removeRequest(pos);
+                    }
+                } catch (NumberFormatException e) {
+                    replacement = "Invalid Position.";
+                }
+
                 break;
             }
             default: {

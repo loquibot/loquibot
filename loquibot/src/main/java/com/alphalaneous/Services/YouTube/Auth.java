@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class Auth {
 
@@ -32,62 +33,42 @@ public class Auth {
 
     public static Credential authorize(List<String> scopes, String credentialDatastore, boolean refresh) throws IOException {
 
-        String credentials = credentialDatastore;
-        if (refresh) {
-            credentials = credentialDatastore + "_temp";
-
+        if(refresh){
             try {
                 if (Files.exists(Path.of(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore))) {
                     Files.delete(Path.of(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore));
                 }
             } catch (Exception e) {
                 Main.logger.error(e.getLocalizedMessage(), e);
-
             }
         }
 
         Reader clientSecretReader = new InputStreamReader(Objects.requireNonNull(Auth.class.getResourceAsStream("/client_secrets.json")));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
 
-        File file = FileUtils.getUserDirectory();
+        File correctDirectory = new File(Defaults.saveDirectory + "\\loquibot");
 
-        String newDirectory = file + "\\.loquibot";
-
-        File correctDirectory;
-
-        if(SettingsHandler.getSettings("useSeparateYouTubeDir").asBoolean()){
-            correctDirectory = new File(newDirectory);
-        }
-        else{
-            correctDirectory = new File(Defaults.saveDirectory + "\\loquibot");
-        }
-
-        FileDataStoreFactory fileDataStoreFactory;
+        FileDataStoreFactory fileDataStoreFactory = null;
         try {
             fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
         }
         catch (Exception e){
-            SettingsHandler.writeSettings("useSeparateYouTubeDir", "true");
-            correctDirectory = new File(newDirectory);
-            fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
+            Main.logger.error(e.getMessage(), e);
         }
 
-        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentials);
+        if(fileDataStoreFactory != null) {
 
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
-                .build();
+            DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentialDatastore);
 
-        LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
+            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                    HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
+                    .build();
 
-        Credential credential = new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
 
-        if(refresh) {
-            Path originalPath = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore);
-            Path tempPath = Paths.get(Defaults.saveDirectory + "\\loquibot\\" + credentialDatastore + "_temp");
-            Files.move(tempPath, originalPath, StandardCopyOption.REPLACE_EXISTING);
+            LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
+
+            return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
         }
-
-        return credential;
+        return null;
     }
 }

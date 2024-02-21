@@ -16,15 +16,15 @@ import java.util.Base64;
 public class LoadGD {
 
     public static String username = "";
-    public static volatile boolean isAuth = false;
+    //public static volatile boolean isAuth = false;
     static boolean loaded = false;
-    private static String password = "";
+   // private static String password = "";
     private static NamedThread loadThread;
     private static Thread waitThread;
 
     public static void load() {
         loadThread = new NamedThread("LoadGD", () -> {
-            if (SettingsHandler.getSettings("GDLogon").asBoolean()) {
+            /*if (SettingsHandler.getSettings("GDLogon").asBoolean()) {
                 try {
                     username = SettingsHandler.getSettings("GDUsername").asString();
                     password = xor(new String(Base64.getDecoder().decode(SettingsHandler.getSettings("p").asString().getBytes())));
@@ -37,17 +37,17 @@ public class LoadGD {
                     SettingsHandler.writeSettings("GDLogon", "false");
                     isAuth = false;
                 }
-            } else {
+            } else {*/
                 try {
                     GDAPI.getLevel(128); //"Warms up" the connection, so it doesn't hang longer than it should, rather have longer start time than not working when open.
                 }
                 catch (Exception e) {
                     Main.logger.error("Failed to load initial GD connection", e);
                 }
-                Account.refreshGD(null);
-                SettingsHandler.writeSettings("GDLogon", "false");
-                isAuth = false;
-            }
+                //Account.refreshGD(null);
+                //SettingsHandler.writeSettings("GDLogon", "false");
+                //isAuth = false;
+            //}
             waitThread.stop();
             loaded = true;
             Main.logger.info("LoadGD Loaded");
@@ -56,8 +56,8 @@ public class LoadGD {
         waitThread = new Thread(() -> {
             Utilities.sleep(60000);
             loadThread.stop();
-            SettingsHandler.writeSettings("GDLogon", "false");
-            isAuth = false;
+            //SettingsHandler.writeSettings("GDLogon", "false");
+            //isAuth = false;
             JOptionPane.showMessageDialog(null, "Could not connect to GD, this could be for many reasons. The servers may be down, if not,\n - Try whitelisting board.exe in your Antivirus\n - Checking if your network is blocking http requests\n - Resetting the program by going to %appdata% > loquibot and deleting config.properties.", "Error Connecting to GD", JOptionPane.ERROR_MESSAGE);
             loaded = true;
         });

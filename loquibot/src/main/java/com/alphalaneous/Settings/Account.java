@@ -87,7 +87,7 @@ public class Account {
             try {
                 boolean successfulLogin = GDAPI.login(usernameTextArea.getText(), String.valueOf(passwordTextArea.getPassword()));
                 if (successfulLogin) {
-                    LoadGD.isAuth = true;
+                    //LoadGD.isAuth = true;
                     refreshGD(usernameTextArea.getText());
                     SettingsHandler.writeSettings("p", new String(Base64.getEncoder().encode(xor(new String(passwordTextArea.getPassword())).getBytes())));
                     SettingsHandler.writeSettings("GDUsername", usernameTextArea.getText());
@@ -97,7 +97,7 @@ public class Account {
                     usernameLabel.setForeground(red);
                     passwordLabel.setForeground(red);
                     SettingsHandler.writeSettings("GDLogon", "false");
-                    LoadGD.isAuth = false;
+                    //LoadGD.isAuth = false;
                 }
             } catch (Exception f) {
                 Main.logger.error(f.getLocalizedMessage(), f);
@@ -185,7 +185,7 @@ public class Account {
             }
         };
 
-        settingsPage.addComponent(geometryDashComponent);
+        //settingsPage.addComponent(geometryDashComponent);
         settingsPage.addComponent(twitchComponent);
         settingsPage.addComponent(youTubeComponent);
 
@@ -297,16 +297,16 @@ public class Account {
     }
 
     public static void refreshGD(String username) {
-        if (LoadGD.isAuth && username != null) {
+        //if (LoadGD.isAuth && username != null) {
             ImageIcon icon = GDAPI.getIcon(GDAPI.getGDUserProfile(username), 120);
             geometryDashPanel.refreshInfo(username, "Geometry Dash", icon, -30, 0);
             firstLoginButton.setVisible(false);
             geometryDashPanel.showRefreshButton();
-        }
-        else{
+        //}
+        //else{
             firstLoginButton.setVisible(true);
             geometryDashPanel.hideRefreshButton();
-        }
+        //}
     }
     public static BufferedImage makeRoundedCorner(BufferedImage image) {
         int w = image.getWidth();

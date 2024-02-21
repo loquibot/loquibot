@@ -1,5 +1,6 @@
 package com.alphalaneous.Utils;
 
+import com.alphalaneous.Audio.Sounds;
 import com.alphalaneous.Services.GeometryDash.RequestFunctions;
 import com.alphalaneous.Main;
 import com.alphalaneous.Settings.Modifications;
@@ -70,6 +71,9 @@ public class KeyListener extends SwingKeyAdapter {
 				}
 				if (key == SettingsHandler.getSettings("clearKeybind").asInteger()) {
 					RequestFunctions.clearFunction();
+				}
+				if (key == SettingsHandler.getSettings("stopSoundsKeybind").asInteger()) {
+					Sounds.stopAllSounds();
 				}
 				if(!Defaults.isMac()) {
 					/*if (key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()) {

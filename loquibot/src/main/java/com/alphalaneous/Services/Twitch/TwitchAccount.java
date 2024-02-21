@@ -37,7 +37,7 @@ public class TwitchAccount {
 			JSONObject data = TwitchAPI.getInfo();
 
 			if(data == null){
-				setInfo();
+				TwitchAPI.setOauth();
 				return;
 			}
 
