@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Pages.StreamInteractionsPage;
 import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Utilities.Logging;
@@ -26,11 +27,16 @@ public class TwitchAccount {
 	public static long view_count;
 
 
-	public static void setInfo() {
+	public static void setInfo(Function onFinish) {
 
 		TwitchAPI.setUser(SettingsHandler.getSettings("twitchUsername").asString());
 
 		JSONObject data = TwitchAPI.getInfo();
+
+		if(data == null){
+			TwitchAPI.setOauth(true, () -> TwitchAccount.setInfo(onFinish));
+			return;
+		}
 
 		broadcaster_type = data.getString("broadcaster_type");
 		offline_image_url = data.getString("offline_image_url");
@@ -47,6 +53,7 @@ public class TwitchAccount {
 		} catch (IOException e) {
 			Logging.getLogger().error(e.getMessage(), e);
 		}
+		onFinish.run();
 	}
 
 	public static void logout(){

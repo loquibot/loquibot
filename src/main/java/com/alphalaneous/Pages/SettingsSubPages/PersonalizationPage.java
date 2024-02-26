@@ -45,8 +45,8 @@ public class PersonalizationPage {
         Window.getFrame().setAlwaysOnTop(SettingsHandler.getSettings("onTop").asBoolean());
     }
     public static void setFocusable(){
+        Window.getFrame().setFocusableWindowState(!SettingsHandler.getSettings("disableFocus").asBoolean());
         Window.getFrame().setFocusable(!SettingsHandler.getSettings("disableFocus").asBoolean());
+
     }
-
-
 }

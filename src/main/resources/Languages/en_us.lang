@@ -30,7 +30,7 @@ PLAY_SOUNDS_WHILE_HIDDEN_DESCRIPTION = Allow sounds to be activated while the Lo
 # Chat Settings
 
 CHAT_TITLE = Chat
-DEFAULT_COMMANDS = Default Commands
+DEFAULT_COMMANDS = Default Commands:
 DISABLE_MESSAGES = Disable Messages
 DISABLE_MESSAGES_DESCRIPTION = Prevent the bot from sending any messages in chat.
 DEFAULT_COMMAND_PREFIX = Default Command Prefix:

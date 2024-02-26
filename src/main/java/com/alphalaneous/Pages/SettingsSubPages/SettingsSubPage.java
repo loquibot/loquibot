@@ -21,6 +21,9 @@ public class SettingsSubPage extends ThemeableJPanel {
     private final JPanel settingsPane = new JPanel();
     private final GridBagConstraints gbc = new GridBagConstraints();
     public SettingsSubPage(String title){
+        this(title, false);
+    }
+    public SettingsSubPage(String title, boolean disableScroll){
 
         settingsPane.setLayout(new GridBagLayout());
         setLayout(new GridLayout());
@@ -32,11 +35,18 @@ public class SettingsSubPage extends ThemeableJPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         ThemeableJPanel borderPanel = new ThemeableJPanel(new BorderLayout());
-        SmoothScrollPane scrollPane = new SmoothScrollPane(borderPanel);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setHorizontalScrollEnabled(true);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setOpaque(false);
+        if(!disableScroll) {
+            SmoothScrollPane scrollPane = new SmoothScrollPane(borderPanel);
+            scrollPane.getViewport().setOpaque(false);
+            scrollPane.setHorizontalScrollEnabled(true);
+            scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPane.setOpaque(false);
+            add(scrollPane);
+        }
+        else{
+            borderPanel.setBorder(new EmptyBorder(0,0,0,8));
+            add(borderPanel);
+        }
 
         SettingsTitle settingsTitle = new SettingsTitle(title);
         settingsTitle.setOpaque(false);
@@ -56,7 +66,6 @@ public class SettingsSubPage extends ThemeableJPanel {
 
         gbc.insets = new Insets(0, 24, 8, 0);
 
-        add(scrollPane);
     }
 
     public void addComponent(ThemeableJPanel component){
@@ -124,7 +133,16 @@ public class SettingsSubPage extends ThemeableJPanel {
     public void addShortInput(String text, String description, String setting, String defaultInput){
         settingsPane.add(new ShortTextInput(text, description, setting, defaultInput), gbc);
     }
+    public void addTitle(String text, float size){
 
+        JPanel panel = new JPanel();
+        panel.setLayout(new MigLayout("flowy, insets 0"));
+        panel.setOpaque(false);
+        panel.add(new SettingsTitle(text){{
+            setFontSize(size);
+        }});
+        settingsPane.add(panel, gbc);
+    }
 
     public void removeButton(String text){
         for(Component component : settingsPane.getComponents()){

@@ -2,6 +2,7 @@ package com.alphalaneous.Services.Twitch;
 
 import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointReward;
+import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Utilities.*;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.helix.domain.InboundFollowers;
@@ -247,7 +248,7 @@ public class TwitchAPI {
 				}
 			}
 
-			setOauth(true);
+			setOauth(true, () -> {});
 			return null;
 		}
 	}
@@ -264,14 +265,13 @@ public class TwitchAPI {
 				userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + SettingsHandler.getSettings("twitchUsername").asString());
 			}
 			if(userID == null){
-				setOauth(true);
-				return getInfo();
+				return null;
 			}
 
 			return userID.getJSONArray("data").getJSONObject(0);
 		}
 		catch (Exception e){
-			setOauth(true);
+			Logging.getLogger().error(e.getMessage(), e);
 		}
 		return getInfo();
 	}
@@ -355,7 +355,7 @@ public class TwitchAPI {
 		return TwitchHTTPServer.getAccessToken();
 	}
 
-	public static void setOauth(boolean prompt) {
+	public static void setOauth(boolean prompt, Function onFinish) {
 
 		if(!oauthOpen) {
 
@@ -363,7 +363,7 @@ public class TwitchAPI {
 				new Thread(() -> {
 					String option = DialogBox.showDialogBox("Failed to connect to Twitch!", "Would you like to try to log in again?", "", new String[]{"Yes", "Cancel"});
 					if(option.equalsIgnoreCase("Yes")){
-						setOauth(false);
+						setOauth(false, onFinish);
 					}
 				}).start();
 				return;
@@ -393,7 +393,7 @@ public class TwitchAPI {
 					SettingsHandler.writeSettings("twitchUsername", Objects.requireNonNull(getChannel()));
 					SettingsHandler.writeSettings("isTwitchLoggedIn", String.valueOf(true));
 
-					TwitchAccount.setInfo();
+					TwitchAccount.setInfo(() -> {});
 				} else {
 					Logging.getLogger().info("Failed to get token");
 				}
@@ -401,6 +401,7 @@ public class TwitchAPI {
 			catch (Exception e){
 				Logging.getLogger().error(e.getMessage(), e);
 			}
+			onFinish.run();
 
 			oauthOpen = false;
 		}

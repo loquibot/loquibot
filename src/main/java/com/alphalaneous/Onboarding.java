@@ -59,10 +59,11 @@ public class Onboarding {
 
 		twitchAccount.setLoginButton(AccountsPage.createLoginButton("Log in with Twitch", Assets.getImage("twitch-logo"), () -> {
 			new Thread(() -> {
-				TwitchAPI.setOauth(false);
-				twitchAccount.login(TwitchAccount.display_name, new ImageIcon(Assets.makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-				twitchLoggedIn.set(true);
-				setNextButtonVisible();
+				TwitchAPI.setOauth(false, () -> {
+					twitchAccount.login(TwitchAccount.display_name, new ImageIcon(Assets.makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+					twitchLoggedIn.set(true);
+					setNextButtonVisible();
+				});
 			}).start();
 		}));
 

@@ -8,6 +8,7 @@ import com.alphalaneous.Components.ChatPanel;
 import com.alphalaneous.Pages.CommandPages.ChatPageComponent;
 import com.alphalaneous.Pages.ChatPage;
 import com.alphalaneous.Pages.Page;
+import com.alphalaneous.Pages.SettingsSubPages.ChatSettingsPage;
 import com.alphalaneous.Pages.StreamInteractionsPage;
 import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Utilities.SettingsHandler;
@@ -152,6 +153,8 @@ public class Window {
         setCorrectedBounds(componentLayer, width, height);
         setCorrectedBounds(dialogBackgroundPanel, width, height);
         setCorrectedBounds(backgroundColor, width, height);
+        ChatSettingsPage.getScrollPane().setPreferredSize(new Dimension(width - 492, height-380));
+        setCorrectedBounds(ChatSettingsPage.getCommandsPanel(), width - 492, height-380);
 
         if(dialogComponent != null) {
             dialogComponent.setBounds(frame.getWidth() / 2 - dialogComponent.getWidth() / 2 - 8, frame.getHeight() / 2 - dialogComponent.getHeight() / 2 - 20, dialogComponent.getWidth(), dialogComponent.getHeight());

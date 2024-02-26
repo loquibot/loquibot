@@ -1,6 +1,8 @@
 package com.alphalaneous.Services.YouTube;
 
+import com.alphalaneous.Main;
 import com.alphalaneous.Utilities.Logging;
+import com.alphalaneous.Utilities.SimpleFileDataStoreFactory;
 import com.alphalaneous.Utilities.Utilities;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -35,54 +37,41 @@ public class YouTubeAuth {
 
     public static Credential authorize(List<String> scopes, String credentialDatastore, boolean refresh) throws IOException {
 
-        String credentials = credentialDatastore;
-        Path credentialDir = Path.of(Utilities.saveDirectory + "/" + credentialDatastore);
-        if (refresh) {
-            credentials = credentialDatastore + "_temp";
-
+        if(refresh){
             try {
-                if (Files.exists(credentialDir)) {
-                    Files.delete(credentialDir);
+                if (Files.exists(Path.of(Utilities.saveDirectory + "/" + credentialDatastore))) {
+                    Files.delete(Path.of(Utilities.saveDirectory + "/" + credentialDatastore));
                 }
             } catch (Exception e) {
-                Logging.getLogger().error(e.getMessage(), e);
-
+                Logging.getLogger().error(e.getLocalizedMessage(), e);
             }
         }
 
         Reader clientSecretReader = new InputStreamReader(Objects.requireNonNull(YouTubeAuth.class.getResourceAsStream("/client_secrets.json")));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
 
-        File correctDirectory = Utilities.saveDirectory.toFile();
+        File correctDirectory = new File(Utilities.saveDirectory + "/");
 
-        FileDataStoreFactory fileDataStoreFactory = null;
+        SimpleFileDataStoreFactory fileDataStoreFactory = null;
         try {
-            fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
+            fileDataStoreFactory = new SimpleFileDataStoreFactory(correctDirectory);
         }
         catch (Exception e){
             Logging.getLogger().error(e.getMessage(), e);
         }
 
-        if(fileDataStoreFactory == null) return null;
+        if(fileDataStoreFactory != null) {
 
-        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentials);
+            DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentialDatastore);
 
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
-                .build();
+            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                    HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
+                    .build();
 
-        LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
+            LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
 
-        app = new AuthorizationCodeInstalledApp(flow, localReceiver);
-
-        Credential credential = app.authorize("user");
-
-        if(refresh) {
-            Path tempPath = Paths.get(Utilities.saveDirectory + "/" + credentialDatastore + "_temp");
-            Files.move(tempPath, credentialDir, StandardCopyOption.REPLACE_EXISTING);
+            return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
         }
-
-        return credential;
+        return null;
     }
-
 }

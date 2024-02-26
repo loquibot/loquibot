@@ -51,7 +51,7 @@ public class YouTubeAccount {
         try {
             credential = YouTubeAuth.authorize(scopes, "YouTubeCredentials", refresh);
             if (credential != null) {
-                SettingsHandler.writeSettings("isYouTubeLoggedIn", String.valueOf(true));
+                SettingsHandler.writeSettings("isYouTubeLoggedIn", "true");
                 setInfo();
                 AccountsPage.setYouTubeAccountInfo();
                 YouTubeChatListener.startChatListener();
@@ -64,7 +64,6 @@ public class YouTubeAccount {
         }
 
         if(failed){
-
             setCredential(true, true);
         }
     }

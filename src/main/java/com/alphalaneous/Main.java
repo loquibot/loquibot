@@ -65,15 +65,13 @@ public class Main {
         }
         else {
             if (SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
-                new Thread(() -> {
-                    TwitchAccount.setInfo();
+                new Thread(() -> TwitchAccount.setInfo(() -> {
                     AccountsPage.setTwitchAccountInfo();
                     TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
                     chatListener.connect(SettingsHandler.getSettings("oauth").asString());
                     ChannelPointsPage.load();
                     Window.loadTwitchChat(TwitchAccount.login);
-
-                }).start();
+                })).start();
 
                 StreamInteractionsPage.setEnabled(true);
             }
@@ -96,9 +94,6 @@ public class Main {
 
         PersonalizationPage.setTheme();
         Window.setVisible(true);
-
-
-
     }
 
     private static JFrame starting;

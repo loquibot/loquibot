@@ -81,7 +81,6 @@ public class SettingsPage {
 
         SettingsSeparator separator = new SettingsSeparator(text, capitalize);
         buttonsPanel.add(separator);
-        System.out.println(buttonsPanel.getPreferredSize().height);
 
     }
 
