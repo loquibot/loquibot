@@ -1,8 +1,8 @@
 package com.alphalaneous.Services.YouTube;
 
 import com.alphalaneous.Main;
-import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.Defaults;
+import com.alphalaneous.Utils.SimpleFileDataStoreFactory;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -14,8 +14,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.DataStore;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +22,6 @@ import java.io.Reader;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public class Auth {
 
@@ -48,9 +45,9 @@ public class Auth {
 
         File correctDirectory = new File(Defaults.saveDirectory + "\\loquibot");
 
-        FileDataStoreFactory fileDataStoreFactory = null;
+        SimpleFileDataStoreFactory fileDataStoreFactory = null;
         try {
-            fileDataStoreFactory = new FileDataStoreFactory(correctDirectory);
+            fileDataStoreFactory = new SimpleFileDataStoreFactory(correctDirectory);
         }
         catch (Exception e){
             Main.logger.error(e.getMessage(), e);

@@ -81,8 +81,7 @@ public class Main {
 
     static {
         System.setProperty("sun.java2d.noddraw", "true");
-        //System.setProperty("io.netty.tryReflectionSetAccessible", "true");
-        BackwardsCompatibilityLayer.setNewLocation();
+        System.setProperty("io.netty.tryReflectionSetAccessible", "true");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
