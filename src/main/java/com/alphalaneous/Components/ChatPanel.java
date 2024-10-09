@@ -117,9 +117,9 @@ public class ChatPanel extends ThemeableJPanel{
 
             String url = "https://www.twitch.tv/popout/" + username + "/chat";
 
-            if(SettingsHandler.getSettings("theme").asString().equals("dark")){
-                url += "?parent=icelz.s3.amazonaws.com&darkpopout";
-            }
+            //if(SettingsHandler.getSettings("theme").asString().equals("dark")){
+           //     url += "?parent=icelz.s3.amazonaws.com&darkpopout";
+            //}
 
             twitchWebView.getEngine().load(url);
 

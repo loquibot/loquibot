@@ -43,7 +43,7 @@ public class PluginsPage {
 
         page.getContentPane().add(pagePanel);
 
-        SidebarSwitcher.addPage(Assets.getImage("plugins-button"), page, () -> {});
+        //SidebarSwitcher.addPage(Assets.getImage("plugins-button"), page, () -> {});
     }
 
     public static void addPage(String title, ChatPageComponent commandPage, Function editFunction, Function addFunction){

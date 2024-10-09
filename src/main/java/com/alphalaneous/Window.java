@@ -73,7 +73,7 @@ public class Window {
 
         contentPane.setLayout(new BorderLayout(5,5));
         contentPane.add(SidebarSwitcher.getPanel());
-        contentPane.add(chatPanel, BorderLayout.EAST);
+        //contentPane.add(chatPanel, BorderLayout.EAST);
         contentPane.setBackground("background-lighter");
 
         initDialogComponents();
@@ -140,12 +140,12 @@ public class Window {
 
     public static void loadTwitchChat(String username){
 
-        chatPanel.loadTwitchChat(username);
+        //chatPanel.loadTwitchChat(username);
 
     }
     public static void loadYouTubeChat(String streamID){
 
-        chatPanel.loadYouTubeChat(streamID);
+        //chatPanel.loadYouTubeChat(streamID);
 
     }
     public static void onResize(int width, int height){
@@ -160,20 +160,15 @@ public class Window {
             dialogComponent.setBounds(frame.getWidth() / 2 - dialogComponent.getWidth() / 2 - 8, frame.getHeight() / 2 - dialogComponent.getHeight() / 2 - 20, dialogComponent.getWidth(), dialogComponent.getHeight());
         }
         for(Page page : SidebarSwitcher.getPages()){
-            if(page.showsChat()) {
-                setCorrectedBounds(page, 10, 0,width - 492, height);
-            }
-            else {
-                setCorrectedBounds(page, 10, 0,width - 92, height);
-            }
+            setCorrectedBounds(page, 10, 0,width - 92, height);
         }
 
         for(ChatPageComponent page : ChatPage.getPages()){
-            setCorrectedBounds(page, 0, 0,width - 492, height-71);
+            setCorrectedBounds(page, 0, 0,width - 92, height-71);
         }
 
         for(ChatPageComponent page : StreamInteractionsPage.getPages()){
-            setCorrectedBounds(page, 0, 0,width - 492, height-71);
+            setCorrectedBounds(page, 0, 0,width - 92, height-71);
         }
 
         if(frame.getExtendedState() != Frame.MAXIMIZED_BOTH && frame.getState() != Frame.MAXIMIZED_VERT && frame.getState() != Frame.MAXIMIZED_HORIZ) {
@@ -263,14 +258,14 @@ public class Window {
 
     public static void setChatVisible(boolean visible){
 
-        if(visible){
-            chatPanel.setVisible(true);
-            chatPanel.setPreferredSize(new Dimension(400,600));
-        }
-        else {
+        //if(visible){
+        //    chatPanel.setVisible(true);
+        //    chatPanel.setPreferredSize(new Dimension(400,600));
+        //}
+        //else {
             chatPanel.setVisible(false);
             chatPanel.setPreferredSize(new Dimension(0,0));
-        }
+        //}
     }
 
 

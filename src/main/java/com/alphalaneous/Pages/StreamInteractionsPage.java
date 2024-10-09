@@ -30,6 +30,7 @@ public class StreamInteractionsPage {
     public static void init() {
 
         page.setBackground("background");
+        page.setShowChat(false);
 
         buttonsPanel.setLayout(new GridLayout(1,3,5,5));
         buttonsPanel.setBorder(new EmptyBorder(5,5,5,5));

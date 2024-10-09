@@ -27,6 +27,7 @@ public class ActionsPage {
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
+        page.setShowChat(false);
 
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new GridBagLayout());

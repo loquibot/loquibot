@@ -23,6 +23,7 @@ public class TwitchEvents {
 
     @EventSubscriber
     public void parseChannelPointRedeemEvent(RewardRedeemedEvent event){
+
         ChannelPointHandler.run(event);
         BasicEventHandler.run(event);
     }

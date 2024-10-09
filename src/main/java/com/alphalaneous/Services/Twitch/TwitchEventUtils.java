@@ -35,6 +35,7 @@ public abstract class TwitchEventUtils {
                 .withChatAccount(credential)
                 .build();
 
+
         TwitchAPI.twitchClient.getPubSub().listenForChannelPointsRedemptionEvents(credential, TwitchAccount.id);
         TwitchAPI.twitchClient.getPubSub().listenForRaidEvents(credential, TwitchAccount.id);
         TwitchAPI.twitchClient.getPubSub().listenForCheerEvents(credential, TwitchAccount.id);
