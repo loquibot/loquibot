@@ -23,10 +23,19 @@ public class CommandHandler {
 
             CommandData foundCommand = null;
 
-            for (CommandData command : CommandData.getRegisteredCommands()) {
+            for (DefaultCommandData command : DefaultCommandData.getRegisteredDefaultCommands()) {
                 if ((message.getMessage() + " ").toLowerCase().startsWith(command.getName().toLowerCase() + " ")) {
                     foundCommand = command;
                     break;
+                }
+            }
+
+            if (foundCommand == null) {
+                for (CommandData command : CommandData.getRegisteredCommands()) {
+                    if ((message.getMessage() + " ").toLowerCase().startsWith(command.getName().toLowerCase() + " ")) {
+                        foundCommand = command;
+                        break;
+                    }
                 }
             }
 
@@ -65,7 +74,7 @@ public class CommandHandler {
     private static String evaluateIfStatements(String value, ChatMessage message, CustomData commandData, HashMap<String, String> extraData){
 
         String identifier = value.split(" ")[0];
-        String replacement = "";
+        String replacement;
 
         if(identifier.toLowerCase().startsWith("if")){
 
@@ -208,7 +217,7 @@ public class CommandHandler {
                     String strEnd = newResult.substring(parenthesisSubstrings1.getEndIndex() + 1);
                     String value = newResult.substring(parenthesisSubstrings1.getStartIndex() + 1, parenthesisSubstrings1.getEndIndex());
 
-                    String replacement = "";
+                    String replacement;
                     if (ifPass) {
                         replacement = evaluateIfStatements(value, message, customData, extraData);
                     } else {

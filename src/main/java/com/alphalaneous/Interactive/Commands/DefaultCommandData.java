@@ -1,6 +1,8 @@
 package com.alphalaneous.Interactive.Commands;
 
 import com.alphalaneous.Interactive.CustomData;
+import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Interfaces.InternalFunction;
 import com.alphalaneous.Pages.CommandPages.CommandsPage;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
@@ -11,11 +13,9 @@ import org.json.JSONObject;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
-public class DefaultCommandData extends CustomData {
+public class DefaultCommandData extends CommandData {
 
     private static final ArrayList<DefaultCommandData> registeredCommands = new ArrayList<>();
 
@@ -24,9 +24,14 @@ public class DefaultCommandData extends CustomData {
     private UserLevel userLevel;
     private boolean isEnabled = true;
     private int cooldown = 0;
+    private InternalFunction function;
 
-    public DefaultCommandData(String command){
+    public DefaultCommandData(String command, InternalFunction function, UserLevel userLevel) {
+        super(command);
         this.command = command;
+        this.function = function;
+        this.message = "$(internal-function)";
+        this.userLevel = userLevel;
     }
 
     @Override
@@ -65,7 +70,6 @@ public class DefaultCommandData extends CustomData {
 
     @Override
     public void setCounter(long counter) {
-
     }
 
     @Override
@@ -76,6 +80,14 @@ public class DefaultCommandData extends CustomData {
     @Override
     public long getCounter() {
         return 0;
+    }
+
+    public InternalFunction getFunction() {
+        return function;
+    }
+
+    public void setFunction(InternalFunction function) {
+        this.function = function;
     }
 
     @Override
@@ -106,15 +118,15 @@ public class DefaultCommandData extends CustomData {
         return cooldown;
     }
 
-    public static ArrayList<DefaultCommandData> getRegisteredCommands(){
+    public static ArrayList<DefaultCommandData> getRegisteredDefaultCommands(){
         return registeredCommands;
     }
 
     public static void saveCustomCommands(boolean reload) {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        if (getRegisteredCommands() != null) {
-            for (DefaultCommandData data : getRegisteredCommands()) {
+        if (getRegisteredDefaultCommands() != null) {
+            for (DefaultCommandData data : getRegisteredDefaultCommands()) {
                 JSONObject commandObject = new JSONObject();
                 commandObject.putOpt("name", data.getName());
                 commandObject.putOpt("enabled", data.isEnabled());

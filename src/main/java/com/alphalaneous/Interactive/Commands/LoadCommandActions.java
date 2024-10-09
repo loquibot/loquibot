@@ -34,6 +34,19 @@ public class LoadCommandActions {
     private static final HashMap<String, CommandAction> commandActionHashMap = new HashMap<>();
 
     @OnLoad
+    public static void internalFunction(){
+
+        CommandAction action = data -> {
+            if (data.getCustomData() instanceof DefaultCommandData) {
+                return ((DefaultCommandData) data.getCustomData()).getFunction().run(data);
+            }
+            return "";
+        };
+
+        commandActionHashMap.put("internal-function", action);
+    }
+
+    @OnLoad
     public static void suppressAction(){
         CommandAction action = data -> "";
 

@@ -13,10 +13,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoadDefaultCommands {
 
     public static ArrayList<DefaultCommandData> defaultCommands = new ArrayList<>();
+
+    static {
+        //todo methods
+        DefaultCommandData setTitleCommand = new DefaultCommandData("title", data -> "", UserLevel.EVERYONE);
+        DefaultCommandData setGameCommand = new DefaultCommandData("game", data -> "", UserLevel.EVERYONE);
+        DefaultCommandData addCommand = new DefaultCommandData("addcommand", data -> "", UserLevel.MODERATOR);
+        DefaultCommandData editCommand = new DefaultCommandData("editcommand", data -> "", UserLevel.MODERATOR);
+        DefaultCommandData deleteCommand = new DefaultCommandData("deletecommand", data -> "", UserLevel.MODERATOR);
+        DefaultCommandData getCommands = new DefaultCommandData("commands", data -> "", UserLevel.EVERYONE);
+        DefaultCommandData getHelp = new DefaultCommandData("help", data -> "", UserLevel.EVERYONE);
+
+
+        defaultCommands.addAll(List.of(setTitleCommand, setGameCommand, addCommand, editCommand, deleteCommand, getCommands, getHelp));
+    }
 
     public static void createPathIfDoesntExist(Path path){
         try {
@@ -64,14 +79,16 @@ public class LoadDefaultCommands {
         for(int i = 0; i < commandsArray.length(); i++){
             try {
                 JSONObject commandDataJson = commandsArray.getJSONObject(i);
-                DefaultCommandData commandData = new DefaultCommandData(commandDataJson.getString("name"));
-                commandData.setEnabled(commandDataJson.optBoolean("enabled", true));
-                commandData.setMessage(commandDataJson.optString("message"));
-                commandData.setCooldown(commandDataJson.optInt("cooldown"));
-                int level = commandDataJson.optInt("level", 0);
-                commandData.setUserLevel(UserLevel.parse(level));
-
-                commandDataArrayList.add(commandData);
+                for (DefaultCommandData data : defaultCommands) {
+                    if (data.getName().equals(commandDataJson.getString("name"))) {
+                        data.setEnabled(commandDataJson.optBoolean("enabled", true));
+                        data.setMessage(commandDataJson.optString("message"));
+                        data.setCooldown(commandDataJson.optInt("cooldown"));
+                        int level = commandDataJson.optInt("level", 0);
+                        data.setUserLevel(UserLevel.parse(level));
+                        break;
+                    }
+                }
             }
             catch (JSONException e){
                 Logging.getLogger().error(e.getMessage(), e);
