@@ -47,9 +47,7 @@ public class StreamInteractionsPage {
         addButtonPanel.setPreferredSize(new Dimension(50,50));
 
         addButton.setFont(Fonts.getFont("Glyphs").deriveFont(14f));
-        addButton.addActionListener(e -> {
-            currentFunction.run();
-        });
+        addButton.addActionListener(e -> currentFunction.run());
 
         addButtonPanel.add(addButton);
 

@@ -3,7 +3,6 @@ package com.alphalaneous.Services.Twitch;
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.Keywords.KeywordHandler;
-import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Chat.SelfDestructingMessage;
 import com.alphalaneous.Utilities.Chat.SelfDestructingViewer;
 import com.alphalaneous.Utilities.Logging;

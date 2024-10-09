@@ -13,12 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-public class LoadCommands {
+public class LoadDefaultCommands {
 
-    public static ArrayList<CommandData> customCommands = new ArrayList<>();
+    public static ArrayList<DefaultCommandData> defaultCommands = new ArrayList<>();
 
     public static void createPathIfDoesntExist(Path path){
         try {
@@ -40,18 +38,18 @@ public class LoadCommands {
     @OnLoad
     public static void loadCommands(){
         try {
-            Path customCommandPath = Paths.get(Utilities.saveDirectory + "/customCommands.json");
+            Path customCommandPath = Paths.get(Utilities.saveDirectory + "/defaultCommands.json");
             createPathIfDoesntExist(customCommandPath);
-            customCommands = loadJsonToCommandDataArrayList(Files.readString(customCommandPath, StandardCharsets.UTF_8));
+            defaultCommands = loadJsonToCommandDataArrayList(Files.readString(customCommandPath, StandardCharsets.UTF_8));
 
-            for(CommandData data : customCommands) data.register();
+            for(DefaultCommandData data : defaultCommands) data.register();
         }
         catch (Exception e){
             Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
-    private static ArrayList<CommandData> loadJsonToCommandDataArrayList(String jsonData){
+    private static ArrayList<DefaultCommandData> loadJsonToCommandDataArrayList(String jsonData){
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(jsonData);
@@ -62,24 +60,17 @@ public class LoadCommands {
         }
 
         JSONArray commandsArray = jsonObject.getJSONArray("commands");
-        ArrayList<CommandData> commandDataArrayList = new ArrayList<>();
+        ArrayList<DefaultCommandData> commandDataArrayList = new ArrayList<>();
         for(int i = 0; i < commandsArray.length(); i++){
             try {
                 JSONObject commandDataJson = commandsArray.getJSONObject(i);
-                CommandData commandData = new CommandData(commandDataJson.getString("name"));
-                commandData.setCounter(commandDataJson.optLong("counter"));
-
+                DefaultCommandData commandData = new DefaultCommandData(commandDataJson.getString("name"));
                 commandData.setEnabled(commandDataJson.optBoolean("enabled", true));
-
                 commandData.setMessage(commandDataJson.optString("message"));
                 commandData.setCooldown(commandDataJson.optInt("cooldown"));
                 int level = commandDataJson.optInt("level", 0);
                 commandData.setUserLevel(UserLevel.parse(level));
-                JSONArray array = commandDataJson.optJSONArray("aliases");
-                if(array != null){
-                    commandData.setAliases(array.toList().stream()
-                            .map(objectA -> Objects.toString(objectA, null)).collect(Collectors.toList()));
-                }
+
                 commandDataArrayList.add(commandData);
             }
             catch (JSONException e){

@@ -66,9 +66,7 @@ public class Window {
 
         frame.setIconImages(iconImages);
 
-        frame.addWindowStateListener(e -> {
-            SettingsHandler.writeSettings("windowState", String.valueOf(e.getNewState()));
-        });
+        frame.addWindowStateListener(e -> SettingsHandler.writeSettings("windowState", String.valueOf(e.getNewState())));
         startEventListener();
 
         contentPane.setLayout(new BorderLayout(5,5));

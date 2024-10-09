@@ -9,7 +9,7 @@ public class ThemeableColor {
 
     public static ArrayList<ThemeableColor> registeredColors = new ArrayList<>();
 
-    private String name;
+    private final String name;
     private Color color;
 
     public ThemeableColor(String name, Color color){

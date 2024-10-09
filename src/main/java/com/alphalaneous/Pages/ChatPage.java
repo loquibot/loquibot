@@ -47,9 +47,7 @@ public class ChatPage {
 
         RoundedButton addButton = new RoundedButton("+");
         addButton.setFont(Fonts.getFont("Glyphs").deriveFont(14f));
-        addButton.addActionListener(e -> {
-            currentFunction.run();
-        });
+        addButton.addActionListener(e -> currentFunction.run());
 
         addButtonPanel.add(addButton);
 

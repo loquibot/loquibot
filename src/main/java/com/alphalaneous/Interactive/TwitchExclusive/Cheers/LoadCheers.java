@@ -1,12 +1,12 @@
 package com.alphalaneous.Interactive.TwitchExclusive.Cheers;
 
 import com.alphalaneous.Annotations.OnLoad;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ public class LoadCheers {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -44,7 +44,7 @@ public class LoadCheers {
             for(CheerData data : customCheers) data.register();
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -72,7 +72,7 @@ public class LoadCheers {
                 cheerDataArrayList.add(cheerData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         return cheerDataArrayList;

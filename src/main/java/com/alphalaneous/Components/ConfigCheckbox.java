@@ -1,18 +1,15 @@
 package com.alphalaneous.Components;
 
-import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Enums.UserLevel;
 import com.alphalaneous.Interactive.Actions.ActionData;
-import com.alphalaneous.Servers;
-import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableColor;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Utilities.Fonts;
-import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Utilities.GraphicsFunctions;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +18,6 @@ import java.awt.*;
 public class ConfigCheckbox extends ThemeableJPanel {
 
     private final CustomData customData;
-    private final ThemeableJPanel contentPanel = new ThemeableJPanel();
 
     private Color userLevelColor = null;
 
@@ -70,30 +66,7 @@ public class ConfigCheckbox extends ThemeableJPanel {
 
         setOpaque(false);
 
-        ThemeableJPanel buttonPanel = new ThemeableJPanel(){
-            @Override
-            public void paintComponent(Graphics g) {
-
-                Graphics2D g2d = (Graphics2D) g;
-                Color endColor = ThemeableColor.getColorByName("list-background-normal");
-                int startX = 0, startY = 0, endX = 40, endY = 0;
-
-                GradientPaint gradient = new GradientPaint(startX, startY, new Color(0,0,0,0), endX, endY, endColor);
-                g2d.setPaint(gradient);
-
-                g2d.fillRect(0,0,40, getHeight());
-
-                g2d.setColor(ThemeableColor.getColorByName("list-background-normal"));
-                g2d.fillRect(40,0,getWidth()-60, getHeight());
-
-                g2d.fillRoundRect(getWidth()-40, 0, 40, getHeight(), 20,  20);
-                super.paintComponent(g);
-            }
-        };
-        buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new GridBagLayout());
-        buttonPanel.setBackground("empty");
-        buttonPanel.setBorder(new EmptyBorder(0,40,0,10));
+        ThemeableJPanel buttonPanel = getPanel();
 
         RoundedButton settingButton = new RoundedButton("\uF309");
         settingButton.setFont(Fonts.getFont("Glyphs").deriveFont(16f));
@@ -125,6 +98,7 @@ public class ConfigCheckbox extends ThemeableJPanel {
         titleLabel.setForeground("foreground");
         descLabel.setForeground("foreground-darker");
 
+        ThemeableJPanel contentPanel = new ThemeableJPanel();
         contentPanel.setOpaque(false);
 
         ThemeableJPanel leftPanel = new ThemeableJPanel();
@@ -163,6 +137,34 @@ public class ConfigCheckbox extends ThemeableJPanel {
         add(buttonPanel, BorderLayout.EAST);
         add(contentPanel, BorderLayout.WEST);
 
+    }
+
+    private @NotNull ThemeableJPanel getPanel() {
+        ThemeableJPanel buttonPanel = new ThemeableJPanel(){
+            @Override
+            public void paintComponent(Graphics g) {
+
+                Graphics2D g2d = (Graphics2D) g;
+                Color endColor = ThemeableColor.getColorByName("list-background-normal");
+                int startX = 0, startY = 0, endX = 40, endY = 0;
+
+                GradientPaint gradient = new GradientPaint(startX, startY, new Color(0,0,0,0), endX, endY, endColor);
+                g2d.setPaint(gradient);
+
+                g2d.fillRect(0,0,40, getHeight());
+
+                g2d.setColor(ThemeableColor.getColorByName("list-background-normal"));
+                g2d.fillRect(40,0,getWidth()-60, getHeight());
+
+                g2d.fillRoundRect(getWidth()-40, 0, 40, getHeight(), 20,  20);
+                super.paintComponent(g);
+            }
+        };
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new GridBagLayout());
+        buttonPanel.setBackground("empty");
+        buttonPanel.setBorder(new EmptyBorder(0,40,0,10));
+        return buttonPanel;
     }
 
 

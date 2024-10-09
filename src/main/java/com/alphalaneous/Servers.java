@@ -1,7 +1,6 @@
 package com.alphalaneous;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
 import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Utilities;

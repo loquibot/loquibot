@@ -9,8 +9,6 @@ import java.awt.*;
 
 public class UserLevelsMenu {
 
-
-
     public static void show(Rectangle bounds, UserLevelChoice choice){
 
         new Thread(() -> {

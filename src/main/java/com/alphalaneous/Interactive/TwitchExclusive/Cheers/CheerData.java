@@ -3,6 +3,7 @@ package com.alphalaneous.Interactive.TwitchExclusive.Cheers;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.CommandPages.CommandsPage;
 import com.alphalaneous.Pages.InteractionPages.CheersPage;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -126,7 +127,7 @@ public class CheerData extends CustomData {
                 Files.write(Paths.get(Utilities.saveDirectory + "/customCheers.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
             }
             catch (Exception e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         if(reload) CheersPage.load();

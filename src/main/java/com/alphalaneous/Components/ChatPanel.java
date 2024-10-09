@@ -3,7 +3,6 @@ package com.alphalaneous.Components;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJFXPanel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
-import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
@@ -69,16 +68,12 @@ public class ChatPanel extends ThemeableJPanel{
         });
 
         if(SettingsHandler.getSettings("isTwitchLoggedIn").asBoolean()) {
-            Platform.runLater(() -> {
-                twitchJfxPanel.setVisible(false);
-            });
+            Platform.runLater(() -> twitchJfxPanel.setVisible(false));
         }
 
 
         if(SettingsHandler.getSettings("isYouTubeLoggedIn").asBoolean()) {
-            Platform.runLater(() -> {
-                youtubeJfxPanel.setVisible(false);
-            });
+            Platform.runLater(() -> youtubeJfxPanel.setVisible(false));
         }
 
         parentPanel.add(twitchJfxPanel);

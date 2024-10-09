@@ -98,9 +98,7 @@ public class ActionsPage {
         buttonPanel.removeAll();
         for(ActionData actionData : ActionData.getRegisteredActions()){
 
-            buttonPanel.add(new ConfigCheckbox(actionData, () -> {
-                showEditMenu(actionData);
-            }, true), gbc);
+            buttonPanel.add(new ConfigCheckbox(actionData, () -> showEditMenu(actionData), true), gbc);
             buttonPanel.add(Box.createVerticalStrut(5), gbc);
         }
         buttonPanel.updateUI();

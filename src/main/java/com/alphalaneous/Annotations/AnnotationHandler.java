@@ -8,7 +8,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 

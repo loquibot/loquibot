@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import com.sun.net.httpserver.HttpServer;
 
@@ -22,8 +23,8 @@ public class TwitchHTTPServer {
             httpServer.start();
 
 
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception e) {
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 

@@ -15,20 +15,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class CommandData extends CustomData {
+public class DefaultCommandData extends CustomData {
 
-    private static final HashMap<String, CommandData> registeredAliases = new HashMap<>();
-    private static final ArrayList<CommandData> registeredCommands = new ArrayList<>();
+    private static final ArrayList<DefaultCommandData> registeredCommands = new ArrayList<>();
 
     private String command;
     private String message;
     private UserLevel userLevel;
     private boolean isEnabled = true;
-    private List<String> aliases;
     private int cooldown = 0;
-    private long counter = 0;
 
-    public CommandData(String command){
+    public DefaultCommandData(String command){
         this.command = command;
     }
 
@@ -40,11 +37,6 @@ public class CommandData extends CustomData {
     @Override
     public void deregister() {
         registeredCommands.remove(this);
-        if(aliases != null) {
-            for (String alias : aliases) {
-                registeredAliases.remove(alias.toLowerCase(), this);
-            }
-        }
         saveCustomCommands(true);
     }
 
@@ -73,14 +65,7 @@ public class CommandData extends CustomData {
 
     @Override
     public void setCounter(long counter) {
-        this.counter = counter;
-    }
 
-    public void setAliases(List<String> aliases) {
-        this.aliases = aliases;
-        for(String alias : aliases){
-            registeredAliases.put(alias.toLowerCase().trim(), this);
-        }
     }
 
     @Override
@@ -90,7 +75,7 @@ public class CommandData extends CustomData {
 
     @Override
     public long getCounter() {
-        return counter;
+        return 0;
     }
 
     @Override
@@ -112,10 +97,6 @@ public class CommandData extends CustomData {
         return Objects.requireNonNullElse(userLevel, UserLevel.EVERYONE);
     }
 
-    public List<String> getAliases(){
-        return Objects.requireNonNullElseGet(aliases, ArrayList::new);
-    }
-
     @Override
     public boolean isEnabled(){
         return isEnabled;
@@ -125,11 +106,7 @@ public class CommandData extends CustomData {
         return cooldown;
     }
 
-    public static HashMap<String, CommandData> getRegisteredAliases(){
-        return registeredAliases;
-    }
-
-    public static ArrayList<CommandData> getRegisteredCommands(){
+    public static ArrayList<DefaultCommandData> getRegisteredCommands(){
         return registeredCommands;
     }
 
@@ -137,20 +114,17 @@ public class CommandData extends CustomData {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         if (getRegisteredCommands() != null) {
-            for (CommandData data : getRegisteredCommands()) {
+            for (DefaultCommandData data : getRegisteredCommands()) {
                 JSONObject commandObject = new JSONObject();
                 commandObject.putOpt("name", data.getName());
                 commandObject.putOpt("enabled", data.isEnabled());
                 commandObject.putOpt("level", data.getUserLevel().value);
-                commandObject.putOpt("aliases", data.getAliases());
-                commandObject.putOpt("message", data.getMessage());
                 commandObject.putOpt("cooldown", data.getCooldown());
-                commandObject.putOpt("counter", data.getCounter());
                 jsonArray.put(commandObject);
             }
             jsonObject.put("commands", jsonArray);
             try {
-                Files.write(Paths.get(Utilities.saveDirectory + "/customCommands.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
+                Files.write(Paths.get(Utilities.saveDirectory + "/defaultCommands.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
             }
             catch (Exception e){
                 Logging.getLogger().error(e.getMessage(), e);

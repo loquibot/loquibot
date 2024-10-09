@@ -2,6 +2,7 @@ package com.alphalaneous.Interactive.TwitchExclusive.BasicEvents;
 
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.InteractionPages.BasicEventsPage;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -120,7 +121,7 @@ public class BasicEventData extends CustomData {
                 Files.write(Paths.get(Utilities.saveDirectory + "/customBasicEvents.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
             }
             catch (Exception e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         if(reload) BasicEventsPage.load();

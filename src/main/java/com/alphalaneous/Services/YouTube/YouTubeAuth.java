@@ -1,6 +1,5 @@
 package com.alphalaneous.Services.YouTube;
 
-import com.alphalaneous.Main;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SimpleFileDataStoreFactory;
 import com.alphalaneous.Utilities.Utilities;
@@ -15,7 +14,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.DataStore;
-import com.google.api.client.util.store.FileDataStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +21,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,8 +28,6 @@ public class YouTubeAuth {
 
     public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     public static final JsonFactory JSON_FACTORY = new GsonFactory();
-
-    public static AuthorizationCodeInstalledApp app;
 
     public static Credential authorize(List<String> scopes, String credentialDatastore, boolean refresh) throws IOException {
 

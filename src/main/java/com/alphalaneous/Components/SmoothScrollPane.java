@@ -13,6 +13,7 @@ public class SmoothScrollPane extends JScrollPane {
 
     boolean verticalScrollEnabled = true;
     boolean horizontalScrollEnabled = false;
+
     public SmoothScrollPane(JComponent component){
         super(component);
         setBorder(BorderFactory.createEmptyBorder());

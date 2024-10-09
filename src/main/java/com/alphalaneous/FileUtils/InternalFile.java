@@ -1,6 +1,7 @@
 package com.alphalaneous.FileUtils;
 
 import com.alphalaneous.Main;
+import com.alphalaneous.Utilities.Logging;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -51,7 +52,7 @@ public class InternalFile {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
             return null;
         }
     }
@@ -68,7 +69,7 @@ public class InternalFile {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
             return null;
         }
 

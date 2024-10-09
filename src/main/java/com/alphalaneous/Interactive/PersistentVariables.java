@@ -3,15 +3,12 @@ package com.alphalaneous.Interactive;
 import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
-import org.apache.commons.logging.Log;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class PersistentVariables {
 
@@ -72,5 +69,4 @@ public class PersistentVariables {
             }
         }
     }
-
 }

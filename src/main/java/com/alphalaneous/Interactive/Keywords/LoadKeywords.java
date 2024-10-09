@@ -2,6 +2,7 @@ package com.alphalaneous.Interactive.Keywords;
 
 import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Enums.UserLevel;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class LoadKeywords {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -46,7 +47,7 @@ public class LoadKeywords {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -75,7 +76,7 @@ public class LoadKeywords {
                 commandDataArrayList.add(keywordData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         return commandDataArrayList;

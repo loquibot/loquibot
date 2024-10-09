@@ -1,12 +1,10 @@
 package com.alphalaneous.Pages;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Components.RoundedButton;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Pages.CommandPages.ChatPageComponent;
-import com.alphalaneous.Components.SidebarSwitcher;
 
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

@@ -14,6 +14,7 @@ import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import com.alphalaneous.Window;
 import com.alphalaneous.Enums.UserLevel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -210,7 +211,7 @@ public class EditCommandPanel extends ThemeableJPanel {
             innerPanel.add(userLevelInput, gbc);
             gbc.gridy++;
         } catch (Exception e) {
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -222,7 +223,7 @@ public class EditCommandPanel extends ThemeableJPanel {
             gbc.gridy++;
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -479,25 +480,7 @@ public class EditCommandPanel extends ThemeableJPanel {
                 break;
         }
 
-        RoundedButton ulButton = new RoundedButton(levelText);
-
-        ulButton.addActionListener(e -> UserLevelsMenu.show(Utilities.getRectInFrame(ulButton, Window.getFrame()), c -> {
-
-            String levelText2 = c.toString();
-            switch (levelText2){
-                case "Vip" :
-                    levelText2 = "VIP (Twitch)";
-                    break;
-                case "Subscriber" :
-                    levelText2 = "Subscriber (Twitch)";
-                    break;
-            }
-
-            ulButton.setText(levelText2);
-            values.put("userlevel", String.valueOf(c.value));
-
-        }));
-
+        RoundedButton ulButton = getButton(levelText);
 
         ThemeableJLabel textLabel = new ThemeableJLabel("$USER_LEVEL$");
         textLabel.setPreferredSize(new Dimension(100, 0));
@@ -523,6 +506,28 @@ public class EditCommandPanel extends ThemeableJPanel {
 
         return panel;
 
+    }
+
+    private @NotNull RoundedButton getButton(String levelText) {
+        RoundedButton ulButton = new RoundedButton(levelText);
+
+        ulButton.addActionListener(e -> UserLevelsMenu.show(Utilities.getRectInFrame(ulButton, Window.getFrame()), c -> {
+
+            String levelText2 = c.toString();
+            switch (levelText2){
+                case "Vip" :
+                    levelText2 = "VIP (Twitch)";
+                    break;
+                case "Subscriber" :
+                    levelText2 = "Subscriber (Twitch)";
+                    break;
+            }
+
+            ulButton.setText(levelText2);
+            values.put("userlevel", String.valueOf(c.value));
+
+        }));
+        return ulButton;
     }
 
     public ThemeableJPanel createSettingSliderInput(String name, String description, String identifier, String formattedCounter, String formattedCounterPlural, int min, int max, int value){

@@ -1,10 +1,8 @@
 package com.alphalaneous.Pages.SettingsSubPages;
 
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Pages.SettingsPage;
 
-import java.awt.*;
 import java.util.HashMap;
 
 public class TestingPage {
@@ -29,9 +27,7 @@ public class TestingPage {
 
         page.addRadioOption("Test Radio Input", "Test Radio Input Description", options, "testRadioInput", "Test1");
 
-        page.addSlider("Test Slider", "Test Slider Desc", "testSliderSetting", "%d amounts", "%d amount", 0, 120, 100, () -> {
-            System.out.println("Action ran");
-        });
+        page.addSlider("Test Slider", "Test Slider Desc", "testSliderSetting", "%d amounts", "%d amount", 0, 120, 100, () -> System.out.println("Action ran"));
 
         SettingsPage.addPage("Testing", "\uF161", page, null);
 

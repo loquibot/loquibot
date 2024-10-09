@@ -158,8 +158,8 @@ public class Sounds {
 							Logging.getLogger().info("Sound doesn't exist");
 						}
 					}
-				} catch (Exception f) {
-					f.printStackTrace();
+				} catch (Exception e) {
+					Logging.getLogger().error(e.getMessage(), e);
 				}
 			}).start();
 		}

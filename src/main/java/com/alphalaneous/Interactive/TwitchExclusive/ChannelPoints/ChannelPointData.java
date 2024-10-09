@@ -2,6 +2,7 @@ package com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints;
 
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.CommandPages.CommandsPage;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -107,7 +108,7 @@ public class ChannelPointData extends CustomData {
                 Files.write(Paths.get(Utilities.saveDirectory + "/customChannelPoints.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
             }
             catch (Exception e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         if(reload) CommandsPage.load();

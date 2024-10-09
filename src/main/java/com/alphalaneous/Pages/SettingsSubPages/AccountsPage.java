@@ -3,7 +3,6 @@ package com.alphalaneous.Pages.SettingsSubPages;
 import com.alphalaneous.Annotations.OnLoad;
 import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Components.RoundedButton;
-import com.alphalaneous.Components.ThemableJComponents.ThemeableJButton;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Interfaces.Function;
@@ -64,18 +63,15 @@ public class AccountsPage {
             DialogBox.closeDialogBox();
         }, YouTubeAccount::logout, YouTubeAccount.name, YouTubeAccount.profileImage, "YouTube"));
 
-        twitchAccount = new AccountPanel("Twitch Account", () -> showAccountManagement(twitchAccount, () -> {
-            TwitchAPI.setOauth(false, () -> {
-                setTwitchAccountInfo();
-                ChannelPointsPage.load();
-                Window.loadTwitchChat(TwitchAccount.login);
-                TwitchChatListener.getCurrentListener().reconnect(TwitchAccount.login, SettingsHandler.getSettings("oauth").asString());
-                DialogBox.closeDialogBox();
-                Servers.connectTwitch();
-                StreamInteractionsPage.setEnabled(true);
-            });
-
-        }, TwitchAccount::logout, TwitchAccount.display_name, TwitchAccount.profileImage, "Twitch"));
+        twitchAccount = new AccountPanel("Twitch Account", () -> showAccountManagement(twitchAccount, () -> TwitchAPI.setOauth(false, () -> {
+            setTwitchAccountInfo();
+            ChannelPointsPage.load();
+            Window.loadTwitchChat(TwitchAccount.login);
+            TwitchChatListener.getCurrentListener().reconnect(TwitchAccount.login, SettingsHandler.getSettings("oauth").asString());
+            DialogBox.closeDialogBox();
+            Servers.connectTwitch();
+            StreamInteractionsPage.setEnabled(true);
+        }), TwitchAccount::logout, TwitchAccount.display_name, TwitchAccount.profileImage, "Twitch"));
 
         youTubeAccount.setLoginButton(createLoginButton("Log in with YouTube", Assets.getImage("youtube-logo"), () -> new Thread(() -> {
             try {
@@ -87,17 +83,15 @@ public class AccountsPage {
             }
         }).start()));
 
-        twitchAccount.setLoginButton(createLoginButton("Log in with Twitch", Assets.getImage("twitch-logo"), () -> new Thread(() -> {
-            TwitchAPI.setOauth(false, () -> {
-                setTwitchAccountInfo();
-                ChannelPointsPage.load();
-                TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
-                chatListener.connect(SettingsHandler.getSettings("oauth").asString());
-                StreamInteractionsPage.setEnabled(true);
-                Servers.connectTwitch();
-                Window.loadTwitchChat(TwitchAccount.login);
-            });
-        }).start()));
+        twitchAccount.setLoginButton(createLoginButton("Log in with Twitch", Assets.getImage("twitch-logo"), () -> new Thread(() -> TwitchAPI.setOauth(false, () -> {
+            setTwitchAccountInfo();
+            ChannelPointsPage.load();
+            TwitchChatListener chatListener = new TwitchChatListener(TwitchAccount.login);
+            chatListener.connect(SettingsHandler.getSettings("oauth").asString());
+            StreamInteractionsPage.setEnabled(true);
+            Servers.connectTwitch();
+            Window.loadTwitchChat(TwitchAccount.login);
+        })).start()));
 
         page.addComponent(twitchAccount);
         page.addComponent(youTubeAccount);

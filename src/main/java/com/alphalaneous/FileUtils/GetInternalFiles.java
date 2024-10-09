@@ -1,6 +1,7 @@
 package com.alphalaneous.FileUtils;
 
 import com.alphalaneous.Main;
+import com.alphalaneous.Utilities.Logging;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,7 +47,7 @@ public class GetInternalFiles {
 
                 return list;
             } catch (Exception e) {
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
                 return null;
             }
         }
@@ -59,7 +60,7 @@ public class GetInternalFiles {
                 }
                 return list;
             } catch (IOException e) {
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
                 return null;
             }
         }

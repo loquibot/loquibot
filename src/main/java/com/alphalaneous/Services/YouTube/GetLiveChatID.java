@@ -66,7 +66,7 @@ public class GetLiveChatID {
             return (String) broadcastList.execute().getItems().get(0).get("id");
         }
         catch (GoogleJsonResponseException e) {
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
             if (Window.getFrame().isVisible() && !shownError) {
                 new Thread(() -> {
                     String option = DialogBox.showDialogBox("Cannot connect to YouTube Chat!", "Your account isn't enabled for livestreaming! :(", "Your account needs to be verified.", new String[]{"Okay", "Help"});

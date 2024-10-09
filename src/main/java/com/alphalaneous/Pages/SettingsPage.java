@@ -165,6 +165,5 @@ public class SettingsPage {
             label.setFont(label.getFont().deriveFont(size));
         }
 
-
     }
 }

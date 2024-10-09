@@ -2,6 +2,7 @@ package com.alphalaneous.Interactive.Keywords;
 
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.CommandPages.KeywordsPage;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -134,7 +135,7 @@ public class KeywordData extends CustomData {
             Files.write(Paths.get(Utilities.saveDirectory + "/customKeywords.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
 
         if (reload) KeywordsPage.load();

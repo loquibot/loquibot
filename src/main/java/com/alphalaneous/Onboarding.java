@@ -13,7 +13,6 @@ import com.alphalaneous.Utilities.Assets;
 import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -42,30 +41,23 @@ public class Onboarding {
 		AtomicBoolean twitchLoggedIn = new AtomicBoolean(false);
 		AtomicBoolean youtubeLoggedIn = new AtomicBoolean(false);
 
-		youTubeAccount.setLoginButton(AccountsPage.createLoginButton("Log in with YouTube", Assets.getImage("youtube-logo"), () -> {
-			new Thread(() -> {
-				try {
-					YouTubeAccount.setCredential(true, false);
-					youTubeAccount.login(YouTubeAccount.name, new ImageIcon(Assets.makeRoundedCorner(YouTubeAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-					youtubeLoggedIn.set(true);
-					setNextButtonVisible();
-				}
-				catch (Exception e){
-					Logging.getLogger().error(e.getMessage(), e);
-				}
-			}).start();
+		youTubeAccount.setLoginButton(AccountsPage.createLoginButton("Log in with YouTube", Assets.getImage("youtube-logo"), () -> new Thread(() -> {
+            try {
+                YouTubeAccount.setCredential(true, false);
+                youTubeAccount.login(YouTubeAccount.name, new ImageIcon(Assets.makeRoundedCorner(YouTubeAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+                youtubeLoggedIn.set(true);
+                setNextButtonVisible();
+            }
+            catch (Exception e){
+                Logging.getLogger().error(e.getMessage(), e);
+            }
+        }).start()));
 
-		}));
-
-		twitchAccount.setLoginButton(AccountsPage.createLoginButton("Log in with Twitch", Assets.getImage("twitch-logo"), () -> {
-			new Thread(() -> {
-				TwitchAPI.setOauth(false, () -> {
-					twitchAccount.login(TwitchAccount.display_name, new ImageIcon(Assets.makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-					twitchLoggedIn.set(true);
-					setNextButtonVisible();
-				});
-			}).start();
-		}));
+		twitchAccount.setLoginButton(AccountsPage.createLoginButton("Log in with Twitch", Assets.getImage("twitch-logo"), () -> new Thread(() -> TwitchAPI.setOauth(false, () -> {
+            twitchAccount.login(TwitchAccount.display_name, new ImageIcon(Assets.makeRoundedCorner(TwitchAccount.profileImage).getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+            twitchLoggedIn.set(true);
+            setNextButtonVisible();
+        })).start()));
 
 		ThemeableJPanel infoPanel = new ThemeableJPanel();
 		infoPanel.setOpaque(false);

@@ -3,9 +3,7 @@ package com.alphalaneous.Layouts;
 import javax.swing.*;
 import java.awt.*;
 
-public class WrapLayout extends FlowLayout
-{
-
+public class WrapLayout extends FlowLayout {
 
 	public WrapLayout()
 	{

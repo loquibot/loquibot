@@ -1,22 +1,9 @@
 package com.alphalaneous.Interactive.Commands;
 
-import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Audio.Sounds;
-import com.alphalaneous.Audio.TTS;
 import com.alphalaneous.ChatBot.ChatMessage;
-import com.alphalaneous.Interactive.PersistentVariables;
 import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
-import com.alphalaneous.Enums.SoundType;
 import com.alphalaneous.Interactive.CustomData;
-import com.alphalaneous.Interactive.Keywords.KeywordData;
-import com.alphalaneous.Interactive.TwitchExclusive.BasicEvents.BasicEventData;
-import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointData;
-import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerData;
-import com.alphalaneous.Services.Twitch.TwitchAPI;
-import com.alphalaneous.Services.Twitch.TwitchAccount;
-import com.alphalaneous.Services.YouTube.YouTubeChatListener;
-import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import com.eclipsesource.v8.V8;
 import org.apache.commons.lang3.StringUtils;
@@ -24,23 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import com.alphalaneous.Enums.UserLevel;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class CommandHandler {
-
-    private static final Random random = new Random();
 
     public static void run(ChatMessage message) {
         new Thread(() -> {
@@ -193,7 +166,6 @@ public class CommandHandler {
         int pValue = 0;
         int sIndex = 0;
         int eIndex = 0;
-
 
         if(text == null) {
             text = "";
@@ -510,7 +482,7 @@ public class CommandHandler {
     }
 
 
-    private static class ParenthesisSubstrings {
+    public static class ParenthesisSubstrings {
 
         private int startIndex;
         private int endIndex;

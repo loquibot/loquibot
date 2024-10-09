@@ -4,7 +4,6 @@ import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Utilities.Fonts;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class TitleSeparator extends ThemeableJPanel {

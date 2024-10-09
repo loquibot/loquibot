@@ -4,7 +4,6 @@ import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Pages.SettingsSubPages.AccountsPage;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
-import com.alphalaneous.Utilities.Utilities;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
@@ -15,9 +14,6 @@ import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 

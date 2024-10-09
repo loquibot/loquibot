@@ -2,7 +2,6 @@ package com.alphalaneous;
 
 import com.alphalaneous.Annotations.AnnotationHandler;
 import com.alphalaneous.Annotations.OnLoad;
-import com.alphalaneous.Pages.SettingsPage;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Pages.InteractionPages.ChannelPointsPage;
 import com.alphalaneous.Pages.SettingsSubPages.AccountsPage;
@@ -10,7 +9,6 @@ import com.alphalaneous.Pages.SettingsSubPages.PersonalizationPage;
 import com.alphalaneous.Pages.StreamInteractionsPage;
 import com.alphalaneous.Services.Twitch.TwitchAccount;
 import com.alphalaneous.Services.YouTube.YouTubeAccount;
-import com.alphalaneous.Services.YouTube.YouTubeChatListener;
 import com.alphalaneous.Utilities.*;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
@@ -20,7 +18,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 

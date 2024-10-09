@@ -1,5 +1,6 @@
 package com.alphalaneous.Services.Twitch;
 
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ public class TwitchBotAccount {
 		try {
 			profileImage = ImageIO.read(new URL(profile_image_url));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.getLogger().error(e.getMessage(), e);
 		}
 	}
 }

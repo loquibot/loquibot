@@ -1,6 +1,7 @@
 package com.alphalaneous.Interactive.Timers;
 
 import com.alphalaneous.Annotations.OnLoad;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +29,7 @@ public class LoadTimers {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -46,7 +47,7 @@ public class LoadTimers {
 
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
     private static ArrayList<TimerData> loadJsonToTimerDataArrayList(String jsonData){
@@ -74,7 +75,7 @@ public class LoadTimers {
                 timerDataArrayList.add(timerData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         return timerDataArrayList;

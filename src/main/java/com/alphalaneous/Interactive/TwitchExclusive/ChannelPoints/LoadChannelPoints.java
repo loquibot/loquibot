@@ -1,12 +1,12 @@
 package com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints;
 
 import com.alphalaneous.Annotations.OnLoad;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ public class LoadChannelPoints {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -44,7 +44,7 @@ public class LoadChannelPoints {
             for(ChannelPointData data : customChannelPoints) data.register();
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -70,7 +70,7 @@ public class LoadChannelPoints {
                 channelPointDataArrayList.add(channelPointData);
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         return channelPointDataArrayList;

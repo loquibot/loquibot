@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Utilities.Logging;
 
 import javax.sound.sampled.*;
 class SoundEngine{
@@ -52,7 +53,7 @@ class SoundEngine{
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 

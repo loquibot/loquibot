@@ -1,6 +1,7 @@
 package com.alphalaneous.Interactive.TwitchExclusive.BasicEvents;
 
 import com.alphalaneous.Annotations.OnLoad;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +50,7 @@ public class LoadBasicEvents {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -61,7 +62,7 @@ public class LoadBasicEvents {
             loadJsonToEventArrayList(Files.readString(customFollowsPath, StandardCharsets.UTF_8));
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -108,7 +109,7 @@ public class LoadBasicEvents {
 
             }
             catch (JSONException e){
-                e.printStackTrace();
+                Logging.getLogger().error(e.getMessage(), e);
             }
         }
         return eventDataArrayList;

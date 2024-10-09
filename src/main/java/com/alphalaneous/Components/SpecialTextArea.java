@@ -5,6 +5,7 @@ import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableTextArea;
 import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Utilities.GraphicsFunctions;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Window;
 
 import javax.swing.*;
@@ -133,7 +134,7 @@ public class SpecialTextArea extends ThemeableJPanel {
 						undoManager.undo();
 					}
 				} catch (CannotUndoException e) {
-					e.printStackTrace();
+					Logging.getLogger().error(e.getMessage(), e);
 				}
 			}
 		});
@@ -144,7 +145,7 @@ public class SpecialTextArea extends ThemeableJPanel {
 						undoManager.redo();
 					}
 				} catch (CannotRedoException e) {
-					e.printStackTrace();
+					Logging.getLogger().error(e.getMessage(), e);
 				}
 			}
 		});
@@ -362,7 +363,7 @@ public class SpecialTextArea extends ThemeableJPanel {
 			sb.append(doc.getText(0, doc.getLength()));
 			sb.delete(offset, offset + length);
 
-			if (sb.toString().length() == 0) {
+			if (sb.toString().isEmpty()) {
 				super.replace(fb, offset, length, "", null);
 			} else {
 				if (test(sb.toString())) {

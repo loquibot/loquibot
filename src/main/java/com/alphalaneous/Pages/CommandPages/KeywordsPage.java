@@ -5,7 +5,6 @@ import com.alphalaneous.Components.ConfigCheckbox;
 import com.alphalaneous.Components.EditCommandPanel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Enums.UserLevel;
-import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.Keywords.KeywordData;
 import com.alphalaneous.Pages.ChatPage;
 import com.alphalaneous.Utilities.Utilities;

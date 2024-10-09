@@ -7,6 +7,7 @@ import com.alphalaneous.Interactive.Commands.CommandHandler;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Pages.CommandPages.TimersPage;
 import com.alphalaneous.Utilities.Chat.SelfDestructingMessage;
+import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -157,7 +158,7 @@ public class TimerData extends CustomData {
             Files.write(Paths.get(Utilities.saveDirectory + "/customTimers.json").toAbsolutePath(), jsonObject.toString(4).getBytes());
         }
         catch (Exception e){
-            e.printStackTrace();
+            Logging.getLogger().error(e.getMessage(), e);
         }
 
         if(reload) TimersPage.load();

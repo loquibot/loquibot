@@ -1,6 +1,5 @@
 package com.alphalaneous;
 
-import com.alphalaneous.Services.Twitch.TwitchEventUtils;
 import com.alphalaneous.Utilities.Logging;
 import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Utilities;
@@ -10,11 +9,9 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.swing.*;
 import java.net.URI;
 
 public class ServerConnection extends WebSocketClient {
-
 
     public ServerConnection(URI uri){
         super(uri);
