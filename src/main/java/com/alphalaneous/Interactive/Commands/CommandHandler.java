@@ -4,6 +4,7 @@ import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Servers;
 import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Interactive.CustomData;
+import com.alphalaneous.Utilities.SettingsHandler;
 import com.alphalaneous.Utilities.Utilities;
 import com.eclipsesource.v8.V8;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,8 @@ public class CommandHandler {
             CommandData foundCommand = null;
 
             for (DefaultCommandData command : DefaultCommandData.getRegisteredDefaultCommands()) {
-                if ((message.getMessage() + " ").toLowerCase().startsWith(command.getName().toLowerCase() + " ")) {
+                String prefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+                if ((message.getMessage() + " ").toLowerCase().startsWith(prefix + command.getName().toLowerCase() + " ")) {
                     foundCommand = command;
                     break;
                 }

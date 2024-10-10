@@ -118,7 +118,8 @@ public class YouTubeChatListener {
                 message.getAuthorDetails().getIsChatSponsor(),
                 false,
                 false,
-                false);
+                false,
+                true);
     }
 
     private static void waitOnMessage(ChatMessage chatMessage) {

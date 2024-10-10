@@ -3,8 +3,12 @@ package com.alphalaneous.Services.Twitch;
 import com.alphalaneous.Components.DialogBox;
 import com.alphalaneous.Interactive.TwitchExclusive.ChannelPoints.ChannelPointReward;
 import com.alphalaneous.Interfaces.Function;
+import com.alphalaneous.Main;
 import com.alphalaneous.Utilities.*;
 import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.helix.domain.ChannelInformation;
+import com.github.twitch4j.helix.domain.Game;
+import com.github.twitch4j.helix.domain.GameList;
 import com.github.twitch4j.helix.domain.InboundFollowers;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPatch;
@@ -21,9 +25,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.List;
 
 public class TwitchAPI {
 
@@ -324,6 +330,37 @@ public class TwitchAPI {
 			Logging.getLogger().error(e.getMessage(), e);
 			return "";
 		}
+	}
+
+	public static String setTitle(String title){
+
+		try {
+			twitchClient.getHelix().updateChannelInformation(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.id, new ChannelInformation().withTitle(title)).execute();
+		}
+		catch (Exception e){
+			Logging.getLogger().error(e.getMessage(), e);
+			return "Please refresh your Twitch account in Settings > Accounts to use this.";
+		}
+		return null;
+	}
+
+	public static String setGame(String gameTitle){
+
+		try {
+			GameList gameList = twitchClient.getHelix().getGames(SettingsHandler.getSettings("oauth").asString(), null, List.of(gameTitle), null).execute();
+			if (!gameList.getGames().isEmpty()) {
+				Game game = gameList.getGames().get(0);
+				twitchClient.getHelix().updateChannelInformation(SettingsHandler.getSettings("oauth").asString(), TwitchAccount.id, new ChannelInformation().withGameName(game.getName()).withGameId(game.getId())).execute();
+			}
+			else {
+				return "no_game";
+			}
+		}
+		catch (Exception e){
+			Logging.getLogger().error(e.getMessage(), e);
+			return "Please refresh your Twitch account in Settings > Accounts to use this.";
+		}
+		return null;
 	}
 
 	public static boolean oauthOpen = false;

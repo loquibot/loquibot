@@ -20,9 +20,10 @@ public class ChatMessage {
     private boolean isVIP;
     private final boolean isFirstMessage;
     private final boolean isCustomReward;
+    private final boolean isYouTube;
 
 
-    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, boolean isFirstMessage, boolean isCustomReward) {
+    public ChatMessage(String[] tags, String sender, String displayName, String message, String[] badges, boolean isMod, boolean isSub, boolean isVIP, boolean isFirstMessage, boolean isCustomReward, boolean isYouTube) {
         this.tags = tags;
         this.sender = sender;
         this.displayName = displayName;
@@ -31,6 +32,7 @@ public class ChatMessage {
         this.isMod = isMod;
         this.isSub = isSub;
         this.isVIP = isVIP;
+        this.isYouTube = isYouTube;
         this.isFirstMessage = isFirstMessage;
         this.isCustomReward = isCustomReward;
         this.args = message.split(" ");
@@ -58,9 +60,13 @@ public class ChatMessage {
         return isFirstMessage;
     }
 
+    public boolean isYouTube() {
+        return isYouTube;
+    }
+
     public UserLevel getUserLevel(){
 
-        if (TwitchAccount.login != null && TwitchAccount.login.toLowerCase().equalsIgnoreCase(sender)) {
+        if (TwitchAccount.login != null && TwitchAccount.login.equalsIgnoreCase(sender)) {
             return UserLevel.OWNER;
         }
 
@@ -71,6 +77,11 @@ public class ChatMessage {
     }
 
     public boolean isMod() {
+
+        if (TwitchAccount.login != null && TwitchAccount.login.equalsIgnoreCase(sender)) {
+            return true;
+        }
+
         return this.isMod;
     }
 

@@ -159,7 +159,7 @@ public class ActionData extends CustomData {
 
     public void runAction(){
         new Thread(() -> {
-            ChatMessage chatMessage = new ChatMessage(new String[0], "ActionHandler", "ActionHandler", "", new String[0], true, true, true, false, false);
+            ChatMessage chatMessage = new ChatMessage(new String[0], "ActionHandler", "ActionHandler", "", new String[0], true, true, true, false, false, false);
 
             String reply = CommandHandler.replaceBetweenParentheses(chatMessage, getMessage(), this, null);
 

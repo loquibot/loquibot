@@ -20,18 +20,19 @@ public class DefaultCommandData extends CommandData {
     private static final ArrayList<DefaultCommandData> registeredCommands = new ArrayList<>();
 
     private String command;
-    private String message;
     private UserLevel userLevel;
     private boolean isEnabled = true;
     private int cooldown = 0;
     private InternalFunction function;
+    private String id;
 
-    public DefaultCommandData(String command, InternalFunction function, UserLevel userLevel) {
+    public DefaultCommandData(String command, InternalFunction function, UserLevel userLevel, String id) {
         super(command);
         this.command = command;
         this.function = function;
-        this.message = "$(internal-function)";
+        this.id = id;
         this.userLevel = userLevel;
+        register();
     }
 
     @Override
@@ -52,11 +53,18 @@ public class DefaultCommandData extends CommandData {
 
     @Override
     public void setMessage(String message) {
-        this.message = message;
     }
 
     public void setUserLevel(UserLevel userLevel){
         this.userLevel = userLevel;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setCooldown(int cooldown) {
@@ -92,7 +100,7 @@ public class DefaultCommandData extends CommandData {
 
     @Override
     public String getMessage() {
-        return message;
+        return "$(internal-function)";
     }
 
     @Override

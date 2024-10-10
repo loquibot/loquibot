@@ -143,3 +143,11 @@ COOLDOWN_COUNTER_P = %s seconds
 REFRESH_LOGIN = Refresh Login
 LOGOUT = Logout
 ACCOUNT_MANAGEMENT = Account Management
+
+# Default Commands
+
+STREAM_GAME_CHANGE_MESSAGE = Successfully updated the game to %s
+GAME_NOT_FOUND_MESSAGE = Could not find game: %s
+STREAM_GAME_COMMAND_MESSAGE = The current game is %s
+STREAM_TITLE_CHANGE_MESSAGE = Successfully updated the title to %s
+STREAM_TITLE_COMMAND_MESSAGE = The current stream title is %s

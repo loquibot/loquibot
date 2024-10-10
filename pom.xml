@@ -92,12 +92,12 @@
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j-common</artifactId>
-            <version>1.15.0</version>
+            <version>1.22.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j-helix</artifactId>
-            <version>1.15.0</version>
+            <version>1.22.0</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -149,12 +149,12 @@
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j-chat</artifactId>
-            <version>1.15.0</version>
+            <version>1.22.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j</artifactId>
-            <version>1.15.0</version>
+            <version>1.22.0</version>
         </dependency>
         <dependency>
             <groupId>javazoom</groupId>

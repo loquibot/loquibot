@@ -25,7 +25,7 @@ public class BasicEventHandler {
 
             String response = data.getMessage();
 
-            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), "", new String[0], true, true, true, false, false);
+            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), "", new String[0], true, true, true, false, false, false);
 
             HashMap<String, String> extraData = new HashMap<>();
 
@@ -50,7 +50,7 @@ public class BasicEventHandler {
 
             String response = data.getMessage();
 
-            ChatMessage message = new ChatMessage(new String[0], event.getRaider().getName(), event.getRaider().getName(), "", new String[0], true, true, true, false, false);
+            ChatMessage message = new ChatMessage(new String[0], event.getRaider().getName(), event.getRaider().getName(), "", new String[0], true, true, true, false, false, false);
 
             HashMap<String, String> extraData = new HashMap<>();
 
@@ -78,7 +78,7 @@ public class BasicEventHandler {
 
             String response = data.getMessage();
 
-            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), messageText, new String[0], true, true, true, false, false);
+            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), messageText, new String[0], true, true, true, false, false, false);
 
             HashMap<String, String> extraData = new HashMap<>();
 
@@ -113,7 +113,7 @@ public class BasicEventHandler {
 
             String response = data.getMessage();
 
-            ChatMessage message = new ChatMessage(new String[0], event.getRedemption().getUser().getLogin(), event.getRedemption().getUser().getDisplayName(), "", new String[0], true, true, true, false, false);
+            ChatMessage message = new ChatMessage(new String[0], event.getRedemption().getUser().getLogin(), event.getRedemption().getUser().getDisplayName(), "", new String[0], true, true, true, false, false, false);
 
             HashMap<String, String> extraData = new HashMap<>();
 
@@ -141,7 +141,7 @@ public class BasicEventHandler {
 
             String response = data.getMessage();
 
-            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), "", new String[0], true, true, true, false, false);
+            ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), "", new String[0], true, true, true, false, false, false);
 
             HashMap<String, String> extraData = new HashMap<>();
 

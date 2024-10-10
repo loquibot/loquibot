@@ -21,14 +21,13 @@ public class LoadDefaultCommands {
 
     static {
         //todo methods
-        DefaultCommandData setTitleCommand = new DefaultCommandData("title", data -> "", UserLevel.EVERYONE);
-        DefaultCommandData setGameCommand = new DefaultCommandData("game", data -> "", UserLevel.EVERYONE);
-        DefaultCommandData addCommand = new DefaultCommandData("addcommand", data -> "", UserLevel.MODERATOR);
-        DefaultCommandData editCommand = new DefaultCommandData("editcommand", data -> "", UserLevel.MODERATOR);
-        DefaultCommandData deleteCommand = new DefaultCommandData("deletecommand", data -> "", UserLevel.MODERATOR);
-        DefaultCommandData getCommands = new DefaultCommandData("commands", data -> "", UserLevel.EVERYONE);
-        DefaultCommandData getHelp = new DefaultCommandData("help", data -> "", UserLevel.EVERYONE);
-
+        DefaultCommandData setTitleCommand = new DefaultCommandData("title", DefaultCommandActions::runTitle, UserLevel.EVERYONE, "TITLE_COMMAND");
+        DefaultCommandData setGameCommand = new DefaultCommandData("game", DefaultCommandActions::runGame, UserLevel.EVERYONE, "GAME_COMMAND");
+        DefaultCommandData addCommand = new DefaultCommandData("addcommand", DefaultCommandActions::runAddCommand, UserLevel.MODERATOR, "ADD_COMMAND");
+        DefaultCommandData editCommand = new DefaultCommandData("editcommand", DefaultCommandActions::runEditCommand, UserLevel.MODERATOR, "EDIT_COMMAND");
+        DefaultCommandData deleteCommand = new DefaultCommandData("deletecommand", DefaultCommandActions::runDeleteCommand, UserLevel.MODERATOR, "DELETE_COMMAND");
+        DefaultCommandData getCommands = new DefaultCommandData("commands", DefaultCommandActions::runGetCommands, UserLevel.EVERYONE, "GET_COMMAND");
+        DefaultCommandData getHelp = new DefaultCommandData("help", DefaultCommandActions::runHelp, UserLevel.EVERYONE, "HELP_COMMAND");
 
         defaultCommands.addAll(List.of(setTitleCommand, setGameCommand, addCommand, editCommand, deleteCommand, getCommands, getHelp));
     }

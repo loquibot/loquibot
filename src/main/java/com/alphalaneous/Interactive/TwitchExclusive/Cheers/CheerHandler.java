@@ -24,7 +24,7 @@ public class CheerHandler {
 
                         String response = data.getMessage();
 
-                        ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), messageText, new String[0], true, true, true, false, false);
+                        ChatMessage message = new ChatMessage(new String[0], event.getUser().getName(), event.getUser().getName(), messageText, new String[0], true, true, true, false, false, false);
 
                         HashMap<String, String> extraData = new HashMap<>();
 

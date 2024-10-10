@@ -31,7 +31,6 @@ public class Main {
       - Add a few default commands to add/edit/delete chat commands and view a list
       - Add default commands section in settings
       - Add !game and !title default commands
-      - When Java WebView library is done, migrate to that
       - Ability to sort tabs and tab scrolling
       - Fix channel points when not enabled
      */

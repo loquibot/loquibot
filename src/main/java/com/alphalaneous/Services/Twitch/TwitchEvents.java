@@ -139,7 +139,8 @@ public class TwitchEvents {
                 isSub,
                 isVIP,
                 isFirstMessage,
-                isCustomReward);
+                isCustomReward,
+                false);
 
         if(event.getMessage().isPresent() && event.getUserName() != null && event.getCommandType().equalsIgnoreCase("PRIVMSG")){
             twitchEventUtils.onMessage(message);

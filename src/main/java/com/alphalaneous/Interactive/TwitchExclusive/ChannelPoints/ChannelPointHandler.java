@@ -36,7 +36,7 @@ public class ChannelPointHandler {
 
                 String response = data.getMessage();
 
-                ChatMessage message = new ChatMessage(new String[0], redemption.getUser().getLogin(), redemption.getUser().getDisplayName(), messageText, new String[0], true, true, true, false, false);
+                ChatMessage message = new ChatMessage(new String[0], redemption.getUser().getLogin(), redemption.getUser().getDisplayName(), messageText, new String[0], true, true, true, false, false, false);
 
                 HashMap<String, String> extraData = new HashMap<>();
 
