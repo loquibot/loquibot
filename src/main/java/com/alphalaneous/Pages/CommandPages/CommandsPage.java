@@ -42,7 +42,7 @@ public class CommandsPage {
     public static void load(){
 
         buttonPanel.removeAll();
-        for(CommandData commandData : CommandData.getRegisteredCommands()){
+        for (CommandData commandData : CommandData.getRegisteredCommands()) {
             ConfigCheckbox configCheckbox = new ConfigCheckbox(commandData, () -> showEditMenu(commandData), false);
             configCheckbox.setUserLevel(commandData.getUserLevel());
 
@@ -56,11 +56,11 @@ public class CommandsPage {
         showEditMenu(new CommandData(null));
     }
 
-    public static void showEditMenu(CommandData dataParam){
+    public static void showEditMenu(CommandData dataParam) {
 
         String title = "$EDIT_COMMAND$";
 
-        if(dataParam.getName() == null) title = "$ADD_COMMAND$";
+        if (dataParam.getName() == null) title = "$ADD_COMMAND$";
 
         EditCommandPanel editCommandPanel = new EditCommandPanel(title, dataParam, (kv, d, e) -> {
 

@@ -157,7 +157,7 @@ public class ActionData extends CustomData {
         if(reload) ActionsPage.load();
     }
 
-    public void runAction(){
+    public void runAction() {
         new Thread(() -> {
             ChatMessage chatMessage = new ChatMessage(new String[0], "ActionHandler", "ActionHandler", "", new String[0], true, true, true, false, false, false);
 

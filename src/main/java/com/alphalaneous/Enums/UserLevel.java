@@ -30,4 +30,29 @@ public enum UserLevel {
     public static boolean checkLevel(UserLevel customLevel, UserLevel messageLevel){
         return messageLevel.value >= customLevel.value;
     }
+
+    public static UserLevel forString(String userLevel) {
+        switch (userLevel){
+            case "everyone":
+                return EVERYONE;
+            case "sub":
+            case "subs":
+            case "subscriber":
+            case "subscribers":
+                return SUBSCRIBER;
+            case "twitch_vip":
+            case "vip":
+            case "vips":
+                return VIP;
+            case "mod":
+            case "mods":
+            case "moderator":
+            case "moderators":
+                return MODERATOR;
+            case "owner":
+            case "broadcaster":
+                return OWNER;
+        }
+        return EVERYONE;
+    }
 }

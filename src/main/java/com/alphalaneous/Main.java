@@ -28,9 +28,8 @@ public class Main {
       - Use loquibot account unless changed in account settings
       - Plugins Tab
       - Chat Settings
-      - Add a few default commands to add/edit/delete chat commands and view a list
+      - Add viewing a list of commands
       - Add default commands section in settings
-      - Add !game and !title default commands
       - Ability to sort tabs and tab scrolling
       - Fix channel points when not enabled
      */
@@ -154,7 +153,7 @@ public class Main {
     public static Thread keyboardHookThread;
     private static boolean failedKeyboardHook = false;
     private static void runKeyboardHook() {
-        //if (!Defaults.isMac()) {
+
         AtomicBoolean runHook = new AtomicBoolean(true);
 
         if (keyboardHookThread != null) {
