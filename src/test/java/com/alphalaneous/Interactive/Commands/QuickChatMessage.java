@@ -6,7 +6,7 @@ import com.alphalaneous.Enums.UserLevel;
 public class QuickChatMessage extends ChatMessage {
     public QuickChatMessage(String message, UserLevel level, int cheerCount) {
 
-        super(null, "username1", "UserName1", message, null, false, false, false, false, false);
+        super(null, "username1", "UserName1", message, null, false, false, false, false, false, false);
 
         boolean isMod = false;
         boolean isSub = false;

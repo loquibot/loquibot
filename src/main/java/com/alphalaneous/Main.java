@@ -25,13 +25,10 @@ public class Main {
 
     /*
     todo
-      - Use loquibot account unless changed in account settings
-      - Plugins Tab
-      - Chat Settings
-      - Add viewing a list of commands
+      - Add strings for command descriptions
       - Add default commands section in settings
-      - Ability to sort tabs and tab scrolling
       - Fix channel points when not enabled
+      - GD Level Requests
      */
 
     static {
@@ -170,7 +167,8 @@ public class Main {
             while (GlobalScreen.isNativeHookRegistered()) {
                 Utilities.sleep(100);
             }
-        } catch(Exception e){
+        } catch (Exception e){
+            Logging.getLogger().error(e.getMessage(), e);
             try {
                 GlobalScreen.unregisterNativeHook();
             } catch (NativeHookException e1) {

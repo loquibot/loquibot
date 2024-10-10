@@ -95,7 +95,7 @@ public class AccountsPage {
 
         page.addComponent(twitchAccount);
         page.addComponent(youTubeAccount);
-        page.addComponent(botAccount);
+        //page.addComponent(botAccount);
 
         if(!SettingsHandler.getSettings("differentBotAccount.use").asBoolean()){
             botAccount.login("Loquibot", Assets.getImage("loquibot-account-icon"));

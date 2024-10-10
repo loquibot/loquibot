@@ -2,14 +2,21 @@ package com.alphalaneous.Interactive.Commands;
 
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Enums.UserLevel;
+import com.alphalaneous.Main;
 import com.alphalaneous.Pages.CommandPages.CommandsPage;
 import com.alphalaneous.Services.Twitch.TwitchAPI;
 import com.alphalaneous.Utilities.Language;
+import com.alphalaneous.Utilities.SettingsHandler;
+import com.alphalaneous.Utilities.Utilities;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 public class DefaultCommandActions {
 
@@ -99,26 +106,27 @@ public class DefaultCommandActions {
                     return Language.setLocale("$ADD_COMMAND_INVALID_ARGS_MESSAGE$");
                 }
             }
-            else{
+            else {
                 endOfArgsPos = i;
                 break;
             }
         }
-        if(message.getArgs().length >= 3) {
+        if (message.getArgs().length >= 2) {
             CommandData newCommand = new CommandData(message.getArgs()[1]);
-
+            System.out.println(endOfArgsPos);
             int size = 0;
+
             for(int i = 0; i < endOfArgsPos; i++){
-                size+= message.getArgs()[i].length()+1;
+                size += message.getArgs()[i].length() + 1;
+            }
+
+            if (size == 0) {
+                return Language.setLocale("$ADD_COMMAND_NO_MESSAGE_MESSAGE$");
             }
 
             String text = message.getMessage().substring(size-1).trim();
-            if(text.equalsIgnoreCase("")) {
-                return Language.setLocale("$ADD_COMMAND_NO_MESSAGE_MESSAGE$");
-            }
-            else{
-                newCommand.setMessage(text);
-            }
+            newCommand.setMessage(text);
+
             if(userLevel == null) return Language.setLocale("$ADD_COMMAND_INVALID_USERLEVEL_MESSAGE$");
             newCommand.setUserLevel(userLevel);
 
@@ -236,11 +244,122 @@ public class DefaultCommandActions {
     }
 
     public static String runGetCommands(CommandActionData data) {
-        return "";
+        ChatMessage message = data.getMessage();
+
+        int page = 1;
+        boolean isPage = true;
+        try {
+            if(message.getArgs().length > 1) page = Integer.parseInt(message.getArgs()[1]);
+        }
+        catch (NumberFormatException ignored){
+            isPage = false;
+        }
+        if(isPage || !message.isMod()) {
+            ArrayList<String> existingCommands = new ArrayList<>();
+
+            StringBuilder response = new StringBuilder();
+
+            String defaultCommandPrefix = "!";
+            String geometryDashCommandPrefix = "!";
+            //String mediaShareCommandPrefix = "!";
+
+            if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+            if(SettingsHandler.getSettings("geometryDashCommandPrefix").exists()) geometryDashCommandPrefix = SettingsHandler.getSettings("geometryDashCommandPrefix").asString();
+            //if(SettingsHandler.getSettings("mediaShareCommandPrefix").exists()) mediaShareCommandPrefix = SettingsHandler.getSettings("mediaShareCommandPrefix").asString();
+
+
+            for (DefaultCommandData commandData : DefaultCommandData.getRegisteredDefaultCommands()) {
+                if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getName())) {
+                    if (message.isYouTube()) {
+                        if (commandData.getName().equalsIgnoreCase("game")
+                                || commandData.getName().equalsIgnoreCase("title")) {
+                            continue;
+                        }
+                    }
+                    existingCommands.add(defaultCommandPrefix + commandData.getName());
+                }
+            }
+
+            for (CommandData commandData : CommandData.getRegisteredCommands()) {
+                if (CommandHandler.checkUserLevel(commandData, message) && commandData.isEnabled() && !existingCommands.contains(commandData.getName())) {
+                    existingCommands.add(commandData.getName());
+                }
+            }
+
+            existingCommands.sort(String.CASE_INSENSITIVE_ORDER);
+
+            int pages = ((existingCommands.size() - 1) / 20) + 1;
+
+            if (page > pages) return "No commands on page " + page;
+            if (page < 1) page = 1;
+            response.append(String.format("Command List Page %s of %s | Type !help <command> for command help.", page, pages)).append(" | ");
+
+            for (int i = (page - 1) * 20; i < page * 20; i++) {
+                if (i < existingCommands.size()) {
+                    if (i % 20 != 0) {
+                        response.append(" | ");
+                    }
+                    response.append(existingCommands.get(i));
+                }
+            }
+            return response.toString();
+        }
+        else {
+            String action = null;
+            if(message.getArgs().length > 1) action = message.getArgs()[1];
+
+            String newMessage = message.getMessage().substring(data.afterIdentifier().length()).trim();
+
+            String[] newArgs = Arrays.copyOfRange(message.getArgs(), 1, message.getArgs().length);
+
+            message.setArgs(newArgs);
+            message.setMessage(message.getMessage().substring(message.getMessage().split(" ")[0].length()+1));
+
+            String afterIdentifier = "";
+            String[] dataArr = newMessage.split(" ", 2);
+            if (dataArr.length > 1) {
+                afterIdentifier = newMessage.split(" ", 2)[1].trim().strip().replaceAll("\\s+", " ");
+            }
+
+            String[] messageParts = newMessage.split(" ");
+
+            CommandActionData commandActionData = new CommandActionData(afterIdentifier, messageParts, data.getCustomData(), message, data.getExtraData());
+
+            if (action != null) {
+                switch (action.trim()){
+                    case "add":
+                        return DefaultCommandActions.runAddCommand(commandActionData);
+                    case "edit":
+                        return DefaultCommandActions.runEditCommand(commandActionData);
+                    case "delete" :
+                        return DefaultCommandActions.runDeleteCommand(commandActionData);
+                    default :
+                        return Language.setLocale("$INVALID_ACTION_MESSAGE$");
+                }
+            }
+            return "";
+        }
     }
 
     public static String runHelp(CommandActionData data) {
-        return "";
-    }
+        ChatMessage message = data.getMessage();
 
+        String command = null;
+        if(message.getArgs().length > 1){
+            command = message.getArgs()[1];
+        }
+        String defaultCommandPrefix = "!";
+
+        if(SettingsHandler.getSettings("defaultCommandPrefix").exists()) defaultCommandPrefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+
+        if(command != null) {
+            for (DefaultCommandData commandData : DefaultCommandData.getRegisteredDefaultCommands()) {
+                if ((defaultCommandPrefix + commandData.getName()).equalsIgnoreCase(command)) {
+                    return Language.setLocale("$" + commandData.getId() + "_DESCRIPTION$").replace("%p", defaultCommandPrefix);
+                }
+            }
+            return Language.setLocale("$HELP_NO_INFO$");
+        }
+        return Language.setLocale("$HELP_NO_COMMAND$");
+    }
 }
