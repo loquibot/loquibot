@@ -13,7 +13,12 @@ import java.util.*;
 
 public class AnnotationHandler {
 
-    public static void loadStartingMethods(){
+
+    public static void loadStartingMethods() {
+        loadStartingMethods(false);
+    }
+
+    public static void loadStartingMethods(boolean tests){
 
         Set<Method> methodsAnnotatedWith = new HashSet<>();
 
@@ -38,7 +43,13 @@ public class AnnotationHandler {
             try {
                 if(method.getDeclaringClass().getName().startsWith(Main.class.getPackageName())) {
                     boolean debug = method.getAnnotation(OnLoad.class).debug();
-                    if(!debug || SettingsHandler.getSettings("isDebug").asBoolean()) {
+                    boolean forTests = method.getAnnotation(OnLoad.class).test();
+                    if (tests) {
+                        if (forTests) {
+                            method.invoke(null);
+                        }
+                    }
+                    else if(!debug || SettingsHandler.getSettings("isDebug").asBoolean()) {
                         method.invoke(null);
                     }
                 }

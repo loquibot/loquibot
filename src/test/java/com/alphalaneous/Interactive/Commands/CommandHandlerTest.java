@@ -1,5 +1,6 @@
 package com.alphalaneous.Interactive.Commands;
 
+import com.alphalaneous.Annotations.AnnotationHandler;
 import com.alphalaneous.ChatBot.ChatMessage;
 import com.alphalaneous.Enums.UserLevel;
 import com.alphalaneous.Interactive.CustomData;
@@ -42,6 +43,8 @@ class CommandHandlerTest {
 
     @Test
     void testCounter() {
+
+        AnnotationHandler.loadStartingMethods(true);
 
         CommandData data = new CommandData("test");
         data.setMessage("$(count)");
@@ -123,6 +126,9 @@ class CommandHandlerTest {
     }
 
     public static Stream<Arguments> provideChatData(){
+
+        AnnotationHandler.loadStartingMethods(true);
+
         return Stream.of(
             Arguments.of(null, null, null, ""),
             createActionArgument(new QuickChatMessage("This is a",

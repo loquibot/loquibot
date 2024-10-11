@@ -22,7 +22,7 @@ public class CommandData extends CustomData {
 
     private String command;
     private String message;
-    private UserLevel userLevel;
+    private UserLevel userLevel = UserLevel.EVERYONE;
     private boolean isEnabled = true;
     private List<String> aliases;
     private int cooldown = 0;

@@ -33,7 +33,7 @@ public class LoadCommandActions {
 
     private static final HashMap<String, CommandAction> commandActionHashMap = new HashMap<>();
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void internalFunction(){
 
         CommandAction action = data -> {
@@ -46,7 +46,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("internal-function", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void suppressAction(){
         CommandAction action = data -> "";
 
@@ -55,14 +55,14 @@ public class LoadCommandActions {
         commandActionHashMap.put("suppressmessage", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void user(){
         CommandAction action = data -> data.getMessage().getSenderElseDisplay();
 
         commandActionHashMap.put("user", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void toUser(){
         CommandAction action = data -> {
 
@@ -78,7 +78,7 @@ public class LoadCommandActions {
 
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void arg(){
         CommandAction action = data -> {
 
@@ -98,7 +98,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("arg", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void eval(){
         CommandAction action = data -> {
 
@@ -116,7 +116,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("eval", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void displayName(){
         CommandAction action = data -> data.getMessage().getDisplayName();
 
@@ -124,7 +124,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("display_name", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void userId(){
         CommandAction action = data -> data.getMessage().getTag("user-id");
 
@@ -132,7 +132,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("user_id", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void userLevel(){
         CommandAction action = data -> String.valueOf(data.getMessage().getUserLevel());
 
@@ -140,7 +140,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("user_level", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void messageId(){
         CommandAction action = data -> data.getMessage().getTag("id");
 
@@ -150,7 +150,7 @@ public class LoadCommandActions {
 
     private static final Random random = new Random();
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void randomLine(){
         CommandAction action = data -> {
 
@@ -183,7 +183,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("random_line", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void playSound(){
         CommandAction action = data -> {
 
@@ -201,7 +201,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("sound", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void channel(){
         CommandAction action = data -> TwitchAccount.login;
 
@@ -209,7 +209,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("broadcaster", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void channelId(){
         CommandAction action = data -> TwitchAccount.id;
 
@@ -217,7 +217,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("channel_id", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void tts(){
         CommandAction action = data -> {
             TTS.runTTS(data.afterIdentifier(), false);
@@ -227,7 +227,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("tts", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void ttsOverlap(){
         CommandAction action = data -> {
             TTS.runTTS(data.afterIdentifier(), true);
@@ -240,7 +240,7 @@ public class LoadCommandActions {
 
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void count(){
         CommandAction action = data -> {
             long count = 0;
@@ -262,14 +262,14 @@ public class LoadCommandActions {
         commandActionHashMap.put("count", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void message(){
         CommandAction action = data -> data.getMessage().getMessage();
 
         commandActionHashMap.put("message", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void query(){
         CommandAction action = data -> {
             String command = data.getMessage().getMessage().split(" ")[0].trim();
@@ -279,7 +279,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("query", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void queryString(){
         CommandAction action = data -> {
             String command = data.getMessage().getMessage().split(" ")[0].trim();
@@ -291,7 +291,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("query_string", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void time(){
         CommandAction action = data -> {
             String timezone = data.afterIdentifier().split(" ")[0].trim();
@@ -317,7 +317,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("time", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void urlFetch(){
         CommandAction action = data -> {
             try {
@@ -332,7 +332,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("url_fetch", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void messageBreak(){
         CommandAction action = data -> "¦";
 
@@ -344,21 +344,21 @@ public class LoadCommandActions {
         commandActionHashMap.put("new_line", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void followAge(){
         CommandAction action = data -> TwitchAPI.getFollowerAge(data.afterIdentifier().split(" ")[0].trim());
 
         commandActionHashMap.put("followage", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void followTime(){
         CommandAction action = data -> TwitchAPI.getFollowerAgeTime(data.afterIdentifier().split(" ")[0].trim());
 
         commandActionHashMap.put("followage_time", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void weather(){
         CommandAction action = data -> {
 
@@ -376,7 +376,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("weather", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void foundWord(){
         CommandAction action = data -> {
 
@@ -389,7 +389,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("foundword", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void rewardTime(){
         CommandAction action = data -> {
 
@@ -404,7 +404,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("reward_time", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void rewardCost(){
         CommandAction action = data -> {
 
@@ -419,7 +419,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("reward_cost", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void rewardTitle(){
         CommandAction action = data -> {
 
@@ -434,7 +434,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("reward_title", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void rewardId(){
         CommandAction action = data -> {
 
@@ -450,7 +450,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("reward_id", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void cheerAmount(){
         CommandAction action = data -> {
 
@@ -465,7 +465,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("cheer_amount", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void raidTime(){
         CommandAction action = data -> {
 
@@ -480,7 +480,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("raid_time", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void raidViewers(){
         CommandAction action = data -> {
 
@@ -495,7 +495,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("raid_viewers", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void followEventTime(){
         CommandAction action = data -> {
 
@@ -510,7 +510,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("follow_time", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionTime(){
         CommandAction action = data -> {
 
@@ -525,7 +525,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_time", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionGifted(){
         CommandAction action = data -> {
 
@@ -540,7 +540,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_gifted", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionGiftedBy(){
         CommandAction action = data -> {
 
@@ -555,7 +555,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_gifted_by", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionGiftedMonths(){
         CommandAction action = data -> {
 
@@ -570,7 +570,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_gifted_months", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionPlan(){
         CommandAction action = data -> {
 
@@ -585,7 +585,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_plan", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionStreak(){
         CommandAction action = data -> {
 
@@ -600,7 +600,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_streak", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionMultiMonthDuration(){
         CommandAction action = data -> {
 
@@ -615,7 +615,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_multi_month_duration", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionMultiMonthTenure(){
         CommandAction action = data -> {
 
@@ -630,7 +630,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_multi_month_tenure", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionMonths(){
         CommandAction action = data -> {
 
@@ -645,7 +645,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_months", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void subscriptionLength(){
         CommandAction action = data -> {
 
@@ -660,7 +660,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("subscription_length", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void setVar(){
         CommandAction action = data -> {
 
@@ -682,7 +682,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("set_var", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void getVar(){
         CommandAction action = data -> {
 
@@ -702,7 +702,7 @@ public class LoadCommandActions {
         commandActionHashMap.put("get_var", action);
     }
 
-    @OnLoad
+    @OnLoad(test = true)
     public static void emptyMessage(){
         CommandAction action = data -> {
             String command = data.getMessage().getMessage().split(" ")[0].trim();

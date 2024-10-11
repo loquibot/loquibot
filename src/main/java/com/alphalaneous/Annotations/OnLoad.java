@@ -11,5 +11,5 @@ public @interface OnLoad {
 
     int order() default Integer.MIN_VALUE;
     boolean debug() default false;
-
+    boolean test() default false;
 }
