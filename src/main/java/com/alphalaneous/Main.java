@@ -25,7 +25,6 @@ public class Main {
 
     /*
     todo
-      - Add default commands section in settings
       - GD Level Requests
      */
 

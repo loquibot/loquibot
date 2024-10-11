@@ -56,6 +56,9 @@ EDIT_COMMAND = Edit Command
 ADD_COMMAND = Add Command
 COMMAND_NAME_INPUT = Command:
 COMMAND_NAME_DESC = The command name, what must be typed in chat to run.
+DEFAULT_COMMAND_NAME = Command:
+DEFAULT_COMMAND_DESCRIPTION = Info:
+EDIT_DEFAULT_COMMAND = Edit Default Command
 
 # Keywords Page
 

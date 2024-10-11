@@ -3,15 +3,13 @@ package com.alphalaneous.Components;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
 import com.alphalaneous.Interactive.Actions.ActionData;
+import com.alphalaneous.Interactive.Commands.DefaultCommandData;
 import com.alphalaneous.Interactive.TwitchExclusive.Cheers.CheerData;
-import com.alphalaneous.Utilities.Fonts;
+import com.alphalaneous.Utilities.*;
 import com.alphalaneous.Interactive.Commands.CommandData;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Interactive.Timers.TimerData;
 import com.alphalaneous.Interfaces.SaveAdapter;
-import com.alphalaneous.Utilities.Language;
-import com.alphalaneous.Utilities.Logging;
-import com.alphalaneous.Utilities.Utilities;
 import com.alphalaneous.Window;
 import com.alphalaneous.Enums.UserLevel;
 import org.jetbrains.annotations.NotNull;
@@ -39,8 +37,11 @@ public class EditCommandPanel extends ThemeableJPanel {
 
     private final RoundedButton deleteButton;
 
-
     public EditCommandPanel(String titleText, CustomData data, SaveAdapter saveAdapter) {
+        this(titleText, data, saveAdapter, false);
+    }
+
+    public EditCommandPanel(String titleText, CustomData data, SaveAdapter saveAdapter, boolean isDefault) {
 
         this.data = data;
         innerPanel.setOpaque(false);
@@ -84,14 +85,12 @@ public class EditCommandPanel extends ThemeableJPanel {
 
         RoundedButton saveButton = new RoundedButton("$SAVE$");
         saveButton.addActionListener(e -> {
-
-            if(values.get("name") == null || values.get("name").isBlank()){
+            if (!isDefault && (values.get("name") == null || values.get("name").isBlank())) {
                 titleLabels.get(0).setForeground("error-red");
             }
-            else{
+            else {
                 titleLabels.get(0).setForeground("foreground");
                 saveAdapter.save(values, data, this);
-
             }
         });
         saveButton.setPreferredSize(new Dimension(100,40));
@@ -166,6 +165,21 @@ public class EditCommandPanel extends ThemeableJPanel {
     public void addDisabledNameInput(String name, String desc){
         ThemeableJPanel cmdInput = createSettingTextInput(name, "name", desc, data.getName(),1, false);
         innerPanel.add(cmdInput, gbc);
+        gbc.gridy++;
+    }
+
+    public void addDefaultCommandNameInput(){
+        String prefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+        ThemeableJPanel cmdInput = createSettingLabel("$DEFAULT_COMMAND_NAME$", prefix + data.getName());
+        innerPanel.add(cmdInput, gbc);
+        gbc.gridy++;
+    }
+
+    public void addDefaultCommandDescription(){
+        String prefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
+        String desc = Language.setLocale("$" + ((DefaultCommandData)data).getId() + "_DESCRIPTION$").replace("%p", prefix);
+        ThemeableJPanel messageInput = createSettingLabel("$DEFAULT_COMMAND_DESCRIPTION$", desc);
+        innerPanel.add(messageInput, gbc);
         gbc.gridy++;
     }
 
@@ -273,7 +287,7 @@ public class EditCommandPanel extends ThemeableJPanel {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                values.put(identifier, textArea.getText());
+                if (identifier != null) values.put(identifier, textArea.getText());
             }
         });
 
@@ -307,6 +321,47 @@ public class EditCommandPanel extends ThemeableJPanel {
 
         panel.setBorder(new EmptyBorder(2,0,6,0));
         panel.add(descLabel, gbc);
+
+        return panel;
+    }
+
+    public ThemeableJPanel createSettingLabel(String text, String value){
+
+        ThemeableJPanel panel = new ThemeableJPanel();
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        panel.setOpaque(false);
+
+        panel.setLayout(new GridBagLayout());
+
+        ThemeableJLabel label = new ThemeableJLabel(value);
+        label.setPreferredSize(new Dimension(100, 0));
+        label.setForeground("foreground");
+        label.setFont(Fonts.getFont("Poppins-Regular").deriveFont(16f));
+
+        ThemeableJLabel textLabel = new ThemeableJLabel(text);
+        textLabel.setPreferredSize(new Dimension(100, 0));
+        textLabel.setForeground("foreground");
+        textLabel.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
+        titleLabels.add(textLabel);
+
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.ipady = 30;
+
+        panel.add(textLabel, gbc);
+
+        gbc.weightx = 0.9;
+        gbc.gridx = 2;
+        gbc.ipady = 30;
+
+        panel.add(label, gbc);
+
+        panel.setBorder(new EmptyBorder(2,0,6,0));
 
         return panel;
     }

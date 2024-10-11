@@ -5,10 +5,13 @@ import com.alphalaneous.Interactive.Actions.ActionData;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableColor;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJLabel;
 import com.alphalaneous.Components.ThemableJComponents.ThemeableJPanel;
+import com.alphalaneous.Interactive.Commands.DefaultCommandData;
 import com.alphalaneous.Utilities.Fonts;
 import com.alphalaneous.Interactive.CustomData;
 import com.alphalaneous.Interfaces.Function;
 import com.alphalaneous.Utilities.GraphicsFunctions;
+import com.alphalaneous.Utilities.Language;
+import com.alphalaneous.Utilities.SettingsHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -48,7 +51,11 @@ public class ConfigCheckbox extends ThemeableJPanel {
         }
     };
 
-    public ConfigCheckbox(CustomData data, Function function, boolean isAction){
+    public ConfigCheckbox(CustomData data, Function function, boolean isAction) {
+        this(data, function, isAction, false);
+    }
+
+    public ConfigCheckbox(CustomData data, Function function, boolean isAction, boolean isDefault){
 
         this.customData = data;
 
@@ -60,7 +67,6 @@ public class ConfigCheckbox extends ThemeableJPanel {
         setPreferredSize(new Dimension(100,70));
 
         setBackground("list-background-normal");
-
 
         setLayout(new BorderLayout(0,0));
 
@@ -87,9 +93,15 @@ public class ConfigCheckbox extends ThemeableJPanel {
         if(isAction) buttonPanel.add(runButton);
         buttonPanel.add(settingButton);
 
+        String prefix = "";
+        if (isDefault) prefix = SettingsHandler.getSettings("defaultCommandPrefix").asString();
 
-        ThemeableJLabel titleLabel = new ThemeableJLabel(data.getName());
-        ThemeableJLabel descLabel = new ThemeableJLabel(data.getMessage());
+        String desc = data.getMessage();
+        if (isDefault) desc = Language.setLocale("$" + ((DefaultCommandData)data).getId() + "_DESCRIPTION$").replace("%p", prefix);
+
+
+        ThemeableJLabel titleLabel = new ThemeableJLabel(prefix + data.getName());
+        ThemeableJLabel descLabel = new ThemeableJLabel(desc);
 
         titleLabel.setFont(Fonts.getFont("Poppins-Regular").deriveFont(20f));
 
@@ -169,7 +181,6 @@ public class ConfigCheckbox extends ThemeableJPanel {
 
 
     public void setUserLevel(UserLevel level){
-
 
         userLevelColor = null;
 

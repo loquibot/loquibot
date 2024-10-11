@@ -131,7 +131,11 @@ public class SettingsSubPage extends ThemeableJPanel {
     }
 
     public void addShortInput(String text, String description, String setting, String defaultInput){
-        settingsPane.add(new ShortTextInput(text, description, setting, defaultInput), gbc);
+        settingsPane.add(new ShortTextInput(text, description, setting, defaultInput, null), gbc);
+    }
+
+    public void addShortInput(String text, String description, String setting, String defaultInput, Function function){
+        settingsPane.add(new ShortTextInput(text, description, setting, defaultInput, function), gbc);
     }
     public void addTitle(String text, float size){
 
@@ -159,7 +163,7 @@ public class SettingsSubPage extends ThemeableJPanel {
 
     }
 
-    private static SpecialTextArea createTextArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting, boolean noNewLine) {
+    private static SpecialTextArea createTextArea(boolean intFilter, boolean allowNegative, boolean allowDecimal, String setting, boolean noNewLine, Function function) {
         SpecialTextArea textArea = new SpecialTextArea(intFilter, allowNegative, allowDecimal);
 
         textArea.getDocument().addDocumentListener(new DocumentListener() {
@@ -181,6 +185,7 @@ public class SettingsSubPage extends ThemeableJPanel {
                 else{
                     SettingsHandler.writeSettings(setting, textArea.getText());
                 }
+                if (function != null) function.run();
             }
         });
         return textArea;
@@ -288,7 +293,7 @@ public class SettingsSubPage extends ThemeableJPanel {
             descriptionText.setLineWrap(true);
             descriptionText.setText(description);
 
-            textArea = createTextArea(intFilter, allowNegative, allowDecimal, inputSetting, false);
+            textArea = createTextArea(intFilter, allowNegative, allowDecimal, inputSetting, false, null);
 
             checkbox.addCheckListener(b -> {
                 textArea.setFocusable(false);
@@ -339,7 +344,7 @@ public class SettingsSubPage extends ThemeableJPanel {
             descriptionText.setFont(Fonts.getFont("Poppins-Regular").deriveFont(13f));
             descriptionText.setLineWrap(true);
 
-            SpecialTextArea textArea = createTextArea(intFilter, allowNegative, allowDecimal, setting, noNewLine);
+            SpecialTextArea textArea = createTextArea(intFilter, allowNegative, allowDecimal, setting, noNewLine, null);
 
             textArea.setOpaque(false);
             textArea.setLineWrap(true);
@@ -366,7 +371,7 @@ public class SettingsSubPage extends ThemeableJPanel {
 
     private static class ShortTextInput extends ThemeableJPanel {
 
-        ShortTextInput(String text, String description, String setting, String defaultInput) {
+        ShortTextInput(String text, String description, String setting, String defaultInput, Function function) {
 
             setLayout(new MigLayout("flowy, insets 0"));
 
@@ -383,7 +388,7 @@ public class SettingsSubPage extends ThemeableJPanel {
             descriptionText.setFont(Fonts.getFont("Poppins-Regular").deriveFont(13f));
             descriptionText.setLineWrap(true);
 
-            SpecialTextArea textArea = createTextArea(false, true, true, setting, true);
+            SpecialTextArea textArea = createTextArea(false, true, true, setting, true, function);
 
             textArea.setOpaque(false);
             textArea.setLineWrap(true);
