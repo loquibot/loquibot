@@ -79,6 +79,7 @@ CHANNEL_POINTS_TITLE = Rewards
 EDIT_REWARD = Edit Reward
 REWARD_NAME_INPUT = Reward:
 REWARD_NAME_DESC = The name of the reward in Twitch.
+CHANNEL_POINTS_UNAVAILABLE = Channel Points are not enabled for your channel.
 
 # Cheers Action Page
 
@@ -166,3 +167,13 @@ EDIT_COMMAND_INVALID_COOLDOWN_MESSAGE = Failed to edit command, invalid cooldown
 EDIT_COMMAND_INVALID_ARGS_MESSAGE = Failed to edit command, invalid parameters.
 EDIT_COMMAND_INVALID_USERLEVEL_MESSAGE = Failed to edit command, invalid userlevel.
 EDIT_COMMAND_SUCCESS_MESSAGE = Successfully edited command: %s
+
+# Default Command Descriptions
+
+TITLE_COMMAND_DESCRIPTION = View the title, change the title if mod | Usage: "%ptitle" | "%ptitle <New Title>"
+GAME_COMMAND_DESCRIPTION = View the game, change the game if mod | Usage: "%pgame" | "%pgame <New Game>"
+ADD_COMMAND_DESCRIPTION = Adds a command | Usage: "%paddcommand <Command Name> <Response>"
+EDIT_COMMAND_DESCRIPTION = Edits a command | Usage: "%peditcommand <Command Name> <Response>"
+DELETE_COMMAND_DESCRIPTION = Deletes a command | Usage: "%pdeletecommand <Command Name>"
+GET_COMMAND_DESCRIPTION = Gets Command List | Usage: "%pcommands <Page>" to get commands
+HELP_COMMAND_DESCRIPTION = Gets help | Usage: "%phelp" to get help | "%phelp <Command>" for command help

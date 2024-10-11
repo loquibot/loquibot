@@ -48,11 +48,8 @@ public class ChannelPointsPage {
 
         page.setPreferredSize(new Dimension(500,500));
 
-        JFrame frame = new JFrame();
-        //frame.add(page);
-
-        frame.setSize(500,500);
-        //frame.setVisible(true);
+        notAvailable.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
+        notAvailable.setForeground("foreground");
 
         StreamInteractionsPage.addPage("$CHANNEL_POINTS_TITLE$", page, () -> {
             StreamInteractionsPage.disableRightButton(false);
@@ -61,7 +58,6 @@ public class ChannelPointsPage {
     }
 
     public static void load(){
-
 
         if(TwitchAccount.broadcaster_type != null) {
             try {
@@ -94,8 +90,8 @@ public class ChannelPointsPage {
 
             ThemeableJLabel pointLabel = new ThemeableJLabel(name);
             pointLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            JLabel pointIcon = new JLabel(icon);
             pointLabel.setFont(Fonts.getFont("Poppins-Regular").deriveFont(14f));
+            JLabel pointIcon = new JLabel(icon);
             setOpaque(false);
             setBorder(BorderFactory.createEmptyBorder());
             setBackground(color);
@@ -173,7 +169,6 @@ public class ChannelPointsPage {
         EditCommandPanel editCommandPanel = new EditCommandPanel(title, dataParam, (kv, d, e) -> {
 
             Utilities.ifNotNull(kv.get("message"), o -> dataParam.setMessage((String) o));
-
 
             dataParam.save(true);
             e.close();

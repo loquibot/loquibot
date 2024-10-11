@@ -25,9 +25,7 @@ public class Main {
 
     /*
     todo
-      - Add strings for command descriptions
       - Add default commands section in settings
-      - Fix channel points when not enabled
       - GD Level Requests
      */
 
@@ -93,7 +91,7 @@ public class Main {
     @OnLoad(order = -99999)
     public static void createStartingWindow(){
 
-        starting = new JFrame("loquibot");
+        starting = new JFrame("Loquibot");
         ArrayList<Image> iconImages = new ArrayList<>();
         iconImages.add(Assets.getImage("loquibot-small-icon").getImage());
         iconImages.add(Assets.getImage("loquibot-medium-icon").getImage());
