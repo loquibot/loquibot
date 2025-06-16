@@ -133,8 +133,8 @@ public class Requests {
         if(chatMessage.isYouTube() || chatMessage.isKick()){
             user = chatMessage.getDisplayName();
         }
-        if(IDa != 0) Main.logger.info("Adding Request (ID): "+ IDa);
-        else Main.logger.info("Adding Request (MESSAGE): "+ message);
+        if(IDa != 0) Main.logger.info("Adding Request (ID): {}", IDa);
+        else Main.logger.info("Adding Request (MESSAGE): {}", message);
         ChatMessage finalChatMessage = chatMessage;
         String finalUser = user;
 
@@ -184,6 +184,7 @@ public class Requests {
                     Matcher IDMatcher = Pattern.compile("(\\d+)").matcher(arguments.get(1));
                     if (IDMatcher.matches() && arguments.size() == 2) {
                         long ID = Long.parseLong(IDMatcher.group(1));
+                        if (checkIfInQueue(messageID, finalChatMessage, ID)) return;
                         level = checkLevelIDAndGetLevel(ID);
                         if (level == null) return;
                     } else if (arguments.size() > 2) {
@@ -233,15 +234,10 @@ public class Requests {
                     if (level == null) return;
                 }
 
-                for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
-
-                    if (level.getLevel().id() == RequestsTab.getRequest(k).getLevelData().getGDLevel().getLevel().id()) {
-                        inQueue(messageID, finalChatMessage, k);
-                        return;
-                    }
-                }
-
                 if (!bypass) {
+
+                    if (checkIfInQueue(messageID, finalChatMessage, level.getLevel().id())) return;
+
                     if (checkList(level.getLevel().id(), "\\loquibot\\blocked.txt")) {
                         sendUnallowed(Utilities.format("$BLOCKED_LEVEL_MESSAGE$"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
                         return;
@@ -531,12 +527,6 @@ public class Requests {
 
                 Optional<String> creatorName = levelData.getGDLevel().getLevel().creatorName();
 
-                try {
-                    creatorName.ifPresent(s -> levelData.setPlayerIcon(GDAPI.getIcon(GDAPI.getGDUserProfile(s), 100)));
-                }
-                catch (Exception ignored){
-                    //if green user, don't fail
-                }
                 LevelButton levelButton = new LevelButton(levelData);
 
                 if(pos != -1 && RequestsTab.getQueueSize() != 0) {
@@ -648,6 +638,16 @@ public class Requests {
                 sendError(Utilities.format("$REQUEST_ERROR$", e.getClass(), "(" + e.getStackTrace()[0].getFileName() + ":" + e.getStackTrace()[0].getLineNumber() + ")"), messageID, finalChatMessage.isYouTube(), finalChatMessage.getSenderElseDisplay());
             }
         }).start();
+    }
+
+    public static boolean checkIfInQueue(String messageID, ChatMessage finalChatMessage, long id) {
+        for (int k = 0; k < RequestsTab.getQueueSize(); k++) {
+            if (id == RequestsTab.getRequest(k).getLevelData().getGDLevel().getLevel().id()) {
+                inQueue(messageID, finalChatMessage, k);
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void inQueue(String messageID, ChatMessage finalChatMessage, int k) {
@@ -778,14 +778,18 @@ public class Requests {
     private static GDLevelExtra getID(String message, boolean isYT, String messageID, String username) {
         String messageS = message.split(" ", 2)[1].replace("\"", "");
         GDLevelExtra level;
-        if(EmojiManager.containsEmoji(messageS)){
-            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, isYT, username);
+        if (EmojiManager.containsEmoji(messageS)){
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_COMMAND_MESSAGE$"), messageID, isYT, username);
+            return null;
+        }
+        if (messageS.matches(".*[^a-zA-Z0-9 ].*")) {
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_COMMAND_MESSAGE$"), messageID, isYT, username);
             return null;
         }
         level = GDAPI.getTopLevelByName(messageS);
 
         if (level == null) {
-            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_MESSAGE$"), messageID, isYT, username);
+            sendUnallowed(Utilities.format("$LEVEL_DOESNT_EXIST_COMMAND_MESSAGE$"), messageID, isYT, username);
             return null;
         }
         return level;

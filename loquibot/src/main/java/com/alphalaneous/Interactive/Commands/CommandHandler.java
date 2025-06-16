@@ -306,6 +306,7 @@ public class CommandHandler {
                         if (!mention.contains(m.group(1))) {
                             if (SettingsHandler.getSettings("gdMode").asBoolean() && Window.getWindow().isVisible()) {
                                 long ID = Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", ""));
+
                                 int pos = RequestsUtils.getPosFromID(ID);
                                 if(pos == -1){
                                     long chatIDL = 0;
@@ -369,7 +370,12 @@ public class CommandHandler {
                                 if (chatID != null) {
                                     chatIDL = Long.parseLong(chatID);
                                 }
-                                Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), message.getSender(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), chatIDL, false, message);
+
+                                long ID = Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", ""));
+
+                                if (Requests.checkIfInQueue(message.getTag("id"), message, ID)) return "";
+
+                                Requests.addRequest(ID, message.getSender(), message.isMod(), message.isSub(), message.getMessage(), message.getTag("id"), chatIDL, false, message);
                             }
                         }
 
@@ -1024,6 +1030,9 @@ public class CommandHandler {
         String commandLevel = data.getUserLevel();
         String messageLevel = message.getUserLevel();
 
+        System.out.println(commandLevel);
+        System.out.println(messageLevel);
+
         ArrayList<String> userLevels = new ArrayList<>();
         userLevels.add("everyone");
         userLevels.add("subscriber");
@@ -1033,15 +1042,16 @@ public class CommandHandler {
 
         if(message.getUserLevel().equals("admin")) return true;
 
-        int removeOffset = 0;
         for(int i = 0; i < userLevels.size(); i++){
             String userLevel = userLevels.get(i);
+
+            System.out.println(i + ":" + userLevel);
 
             if(commandLevel.equalsIgnoreCase(userLevel)){
                 break;
             }
-            userLevels.remove(i - removeOffset);
-            removeOffset++;
+            userLevels.remove(i);
+            i--;
         }
 
         return userLevels.contains(messageLevel);

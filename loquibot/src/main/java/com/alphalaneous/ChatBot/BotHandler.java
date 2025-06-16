@@ -69,6 +69,8 @@ public class BotHandler {
                             }
 
                             if (ID != -1) {
+                                if (Requests.checkIfInQueue(chatMessage.getTag("id"), chatMessage, ID)) return;
+
                                 Requests.addRequest(Long.parseLong(m.group(1).replaceFirst("^0+(?!$)", "")), chatMessage.getSender(), chatMessage.isMod(), chatMessage.isSub(), chatMessage.getMessage(), chatMessage.getTag("id"), chatIDL, false, chatMessage);
                             }
                         }

@@ -42,7 +42,12 @@ public class ChatMessage {
         this.cheerCount = cheerCount;
         this.isFirstMessage = isFirstMessage;
         this.isCustomReward = isCustomReward;
-        this.args = message.split(" ");
+        if(message != null){
+            this.args = message.split(" ");
+        }
+        else{
+            this.args = new String[]{};
+        }
     }
     public boolean isCustomReward() {
         return isCustomReward;

@@ -68,6 +68,7 @@ public class RequestsUtils {
 			else {
 				object.put("requester", data.getDisplayName());
 			}
+			object.put("message", data.getMessage());
 
 			long songID = 0;
 			boolean isCustomSong = false;

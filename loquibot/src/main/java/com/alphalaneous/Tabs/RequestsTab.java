@@ -265,7 +265,7 @@ public class RequestsTab {
             @Override
             public void mousePressed(MouseEvent e) {
                 try {
-                    Utilities.openURL(new URI("https://twitter.com/alphalaneous"));
+                    Utilities.openURL(new URI("https://linktr.ee/Alphalaneous"));
                 } catch (URISyntaxException ex) {
                     Main.logger.error(ex.getLocalizedMessage(), ex);
 

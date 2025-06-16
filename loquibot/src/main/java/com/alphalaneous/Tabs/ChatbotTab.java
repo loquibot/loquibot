@@ -29,7 +29,7 @@ public class ChatbotTab {
 	private static final JPanel defaultCommandsPage = DefaultCommands.createPanel();
 	private static final JPanel timersPage = TimerSettings.createPanel();
 
-	private static final JPanel pointsPage = ChannelPoints.createPanel();
+	//private static final JPanel pointsPage = ChannelPoints.createPanel();
 	//private static final JPanel spamProtectionPage = SpamProtection.createPanel();
 	private static final JPanel customKeywordsPage = CustomKeywords.createPanel();
 	private static final JPanel customCheerActionsPage = CustomCheerActions.createPanel();
@@ -53,9 +53,9 @@ public class ChatbotTab {
 		com.alphalaneous.Tabs.ChatbotPages.DefaultCommands.loadCommands();
 		defaultCommandsPage.setVisible(true);
 	});
-	private static final FunctionButton channelPointsButton = createButton("$CHANNEL_POINTS_SETTINGS$", "\uF52B", () -> {
-		pointsPage.setVisible(true);
-	});
+	//private static final FunctionButton channelPointsButton = createButton("$CHANNEL_POINTS_SETTINGS$", "\uF52B", () -> {
+	//	pointsPage.setVisible(true);
+	//});
 	private static final FunctionButton timersButton = createButton("$TIMERS_SETTINGS$", "\uF210", () -> {
 		TimerSettings.loadTimers();
 		timersPage.setVisible(true);
@@ -95,7 +95,7 @@ public class ChatbotTab {
 
 		content.setBounds(208, 0, 524, height);
 
-		channelPointsButton.setIcon(Assets.channelPoints);
+		//channelPointsButton.setIcon(Assets.channelPoints);
 
 		buttons.setOpaque(false);
 		buttons.setBackground(new Color(0,0,0,0));
@@ -121,7 +121,7 @@ public class ChatbotTab {
 		buttons.add(chatSection);
 		buttons.add(timersButton);
 		buttons.add(customCheerActionsButton);
-		buttons.add(channelPointsButton);
+		//buttons.add(channelPointsButton);
 		//buttons.add(spamProtectionButton);
 		//buttons.add(blockedKeywordsButton);
 
@@ -129,7 +129,7 @@ public class ChatbotTab {
 		content.add(customCommandsPage);
 		content.add(defaultCommandsPage);
 		content.add(timersPage);
-		content.add(pointsPage);
+		//content.add(pointsPage);
 		//content.add(spamProtectionPage);
 		content.add(blockedKeywordsPage);
 		content.add(customKeywordsPage);

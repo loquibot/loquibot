@@ -1,5 +1,6 @@
 package com.alphalaneous.Utils;
 
+import com.alphalaneous.Main;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.store.AbstractDataStoreFactory;
@@ -10,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,10 +36,21 @@ public class SimpleFileDataStoreFactory extends AbstractDataStoreFactory {
 
             this.dataFile = Paths.get(dataDirectory.toString(), id);
 
+            System.out.println(this.dataFile);
+
             if(!Files.exists(dataFile)){
-                Files.createFile(dataFile);
-                this.keyValueMap = Maps.newHashMap();
-                this.save();
+                try {
+                    Files.createFile(dataFile);
+                    this.keyValueMap = Maps.newHashMap();
+                    this.save();
+                }
+                catch (FileAlreadyExistsException e){
+                    Main.logger.error(e.getMessage(), e);
+                    this.keyValueMap = IOUtils.deserialize(new FileInputStream(this.dataFile.toFile()));
+                }
+                catch (IOException e){
+                    Main.logger.error(e.getMessage(), e);
+                }
             }
             else{
                 this.keyValueMap = IOUtils.deserialize(new FileInputStream(this.dataFile.toFile()));

@@ -26,6 +26,7 @@ public class Assets {
 
 	public static ImageIcon verifiedCoin;
 	public static ImageIcon loquibot;
+	public static ImageIcon loquibotBorderless;
 	public static ImageIcon loquibotLarge;
 	public static ImageIcon music;
 	public static ImageIcon unverifiedCoin;
@@ -38,13 +39,10 @@ public class Assets {
 	public static ImageIcon loading;
 	public static ImageIcon YouTube;
 	public static ImageIcon Twitch;
-	public static ImageIcon Kick;
-	public static ImageIcon KickText;
 
 
 	public static ImageIcon YouTubeLarge;
 	public static ImageIcon TwitchLarge;
-	public static ImageIcon KickLarge;
 
 	public static ImageIcon tutorial;
 
@@ -58,6 +56,7 @@ public class Assets {
 		es.execute(new	Thread(() -> verifiedCoin = loadStartAsset("GDAssets/verifiedCoin.png", 15, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> unverifiedCoin = loadStartAsset("GDAssets/unverifiedCoin.png", 15, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> loquibot = loadStartAsset("Icons/windowIcon.png", 40, Scalr.Method.QUALITY)));
+		es.execute(new	Thread(() -> loquibotBorderless = loadStartAsset("Icons/windowIconBorderless.png", 40, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> loquibotLarge = loadStartAsset("Icons/loqui.png", 200, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> music = loadStartAsset("Icons/music.png", 50, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> Alphalaneous = loadStartAsset("Icons/Alphalaneous.png", 80, Scalr.Method.QUALITY)));
@@ -69,12 +68,8 @@ public class Assets {
 		es.execute(new	Thread(() -> loading = loadStartAsset("Icons/loading.gif", 30, Scalr.Method.QUALITY)));
 		es.execute(new	Thread(() -> YouTube = loadStartAsset("Icons/YouTube.png", 16, Scalr.Method.BALANCED)));
 		es.execute(new	Thread(() -> Twitch = loadStartAsset("Icons/Twitch.png", 16, Scalr.Method.BALANCED)));
-		es.execute(new	Thread(() -> Kick = loadStartAsset("Icons/Kick.png", 16, Scalr.Method.BALANCED)));
-		es.execute(new	Thread(() -> KickText = loadStartAsset("Icons/KickText.png", 70, Scalr.Method.BALANCED)));
 		es.execute(new	Thread(() -> YouTubeLarge = loadStartAsset("Icons/YouTube.png", 40, Scalr.Method.BALANCED)));
 		es.execute(new	Thread(() -> TwitchLarge = loadStartAsset("Icons/Twitch.png", 40, Scalr.Method.BALANCED)));
-		es.execute(new	Thread(() -> KickLarge = loadStartAsset("Icons/Kick.png", 40, Scalr.Method.BALANCED)));
-
 		es.execute(new	Thread(() -> tutorial = loadStartAsset("tutorial.png", 450, null)));
 
 		es.shutdown();

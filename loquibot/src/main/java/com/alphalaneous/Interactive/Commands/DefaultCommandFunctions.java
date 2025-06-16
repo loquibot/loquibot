@@ -190,6 +190,9 @@ public class DefaultCommandFunctions {
         if (intArg > RequestsUtils.getSize()) {
             intArg = RequestsUtils.getSelection() + 1;
         }
+        if (intArg < 1) {
+            intArg = 1;
+        }
         if (RequestsUtils.getSize() > 1 && intArg <= RequestsUtils.getSize()) {
 
             return Utilities.format("$INFO_COMMAND_MESSAGE$",
@@ -281,7 +284,7 @@ public class DefaultCommandFunctions {
                 userPosition.add(i);
             }
         }
-        if(userPosition.size() == 0){
+        if(userPosition.isEmpty()){
             return Utilities.format("$POSITION_NONE_MESSAGE$");
         }
         if(intArg > userPosition.size()){
@@ -397,6 +400,9 @@ public class DefaultCommandFunctions {
             }
             if (message.getArgs().length == 1) {
                 intArg = RequestsUtils.getSelection() + 1;
+            }
+            if (intArg < 1) {
+                intArg = 1;
             }
             if (RequestsUtils.getSize() > 0 && intArg <= RequestsUtils.getSize()) {
                 return Utilities.format("$SONG_MESSAGE$",

@@ -75,35 +75,6 @@ public class KeyListener extends SwingKeyAdapter {
 				if (key == SettingsHandler.getSettings("stopSoundsKeybind").asInteger()) {
 					Sounds.stopAllSounds();
 				}
-				if(!Defaults.isMac()) {
-					/*if (key == SettingsHandler.getSettings("safeNoclipKeybind").asInteger()) {
-						boolean isNoclip = SettingsHandler.getSettings("safeNoclipHack").asBoolean();
-
-						SettingsHandler.writeSettings("safeNoclipHack", String.valueOf(!isNoclip));
-						SettingsPage.CheckBox.resetCheckbox("safeNoclipHack");
-						Modifications.setSafeMode();
-						Hacks.setNoclip(SettingsHandler.getSettings("safeNoclipHack").asBoolean());
-					}*/
-				}
-			}
-			if (Files.exists(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt"))) {
-				Scanner sc3 = null;
-				try {
-					sc3 = new Scanner(Paths.get(Defaults.saveDirectory + "/loquibot/actions/keybinds.txt").toFile());
-				} catch (FileNotFoundException e1) {
-					Main.logger.error(e1.getLocalizedMessage(), e1);
-
-				}
-				assert sc3 != null;
-				while (sc3.hasNextLine()) {
-					String line = sc3.nextLine();
-					if (line.split("=")[0].replace(" ", "").equalsIgnoreCase(String.valueOf(e.getKeyCode()))) {
-						Path path = Paths.get(Defaults.saveDirectory + "/loquibot/actions/" + line.split("=")[1] + ".js");
-
-                        break;
-					}
-				}
-				sc3.close();
 			}
 			if(Window.getWindow().isFocused()
 					|| LogWindow.getWindow().isFocused()
@@ -119,9 +90,6 @@ public class KeyListener extends SwingKeyAdapter {
 							Main.logger.error(ex.getLocalizedMessage(), ex);
 						}
 					}
-				}
-				if(ctrlPressed && key == 82){
-					Main.restart();
 				}
 			}
 			keyReleased = false;

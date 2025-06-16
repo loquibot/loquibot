@@ -272,10 +272,10 @@ public class Defaults {
 
 			if (SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("LIGHT_MODE")) setLight();
 			else if (SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("DARK_MODE")) setDark();
-			else if (SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("CUSTOM_MODE")) {
+			/*else if (SettingsHandler.getSettings("theme").asString().equalsIgnoreCase("CUSTOM_MODE")) {
 				setCustom();
 				Personalization.showCustomizeButton();
-			}
+			}*/
 			else {
 				if (os.contains("WIN")) Defaults.setSystem();
 				else Defaults.setDark();

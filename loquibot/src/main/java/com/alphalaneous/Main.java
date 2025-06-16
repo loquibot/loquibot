@@ -55,7 +55,7 @@ public class Main {
 
     public static String logFile = "";
 
-    static{
+    static {
 
         Date now = new Date();
         SimpleDateFormat format =
@@ -96,7 +96,7 @@ public class Main {
     public static boolean allowRequests = false;
     public static Thread keyboardHookThread;
 
-    private static TwitchListener channelPointListener;
+    //private static TwitchListener channelPointListener;
     private static TwitchChatListener chatReader;
     private static boolean failed = false;
     private static final ArrayList<Image> iconImages = new ArrayList<>();
@@ -121,7 +121,7 @@ public class Main {
             Assets.load();
             Assets.loadAssets();
 
-            ImageIcon icon = Assets.loquibot;
+            ImageIcon icon = Assets.loquibotBorderless;
             ImageIcon iconLarge = Assets.loquibotLarge;
             Image newIcon16 = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
             Image newIcon32 = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -347,23 +347,7 @@ public class Main {
                 logger.info("YouTube Chat Listener Started");
             }
 
-            if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
-                new NamedThread("TwitchChatListener", () -> {
-                    chatReader = new TwitchChatListener(TwitchAccount.login);
-                    chatReader.connect(SettingsHandler.getSettings("oauth").asString());
-                    logger.info("Twitch Chat Listener Started");
-                }).start();
-                new NamedThread("TwitchChannelPointListener", () -> {
-                    try {
-                        channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
-                        channelPointListener.connect();
-                        logger.info("Channel Point Listener Started");
-                    } catch (URISyntaxException e) {
-                        Main.logger.error(e.getLocalizedMessage(), e);
-                    }
-                }).start();
-            }
-
+            reconnectTwitch();
 
             Window.setOnTop(SettingsHandler.getSettings("onTop").asBoolean());
             try {
@@ -389,10 +373,6 @@ public class Main {
             RequestsTab.getLevelsPanel().setSelect(0);
 
             sendMessages = true;
-            if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
-                boolean loquiIsMod = TwitchAPI.isLoquiMod();
-                SettingsHandler.writeSettings("isMod", String.valueOf(loquiIsMod));
-            }
             programLoaded = true;
 
             Window.setVisible(true);
@@ -401,6 +381,28 @@ public class Main {
             Main.logger.error(e.getLocalizedMessage(), e);
             DialogBox.showDialogBox("Error!", e + ": " + e.getStackTrace()[0], "Please report to @Alphalaneous on Discord.", new String[]{"Close"});
             close();
+        }
+    }
+
+    public static void reconnectTwitch() {
+        if (SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
+            new NamedThread("TwitchChatListener", () -> {
+                logger.info(TwitchAccount.login);
+                if (chatReader != null && !chatReader.isClosed()) chatReader.disconnect();
+                chatReader = new TwitchChatListener(TwitchAccount.login);
+                chatReader.connect(SettingsHandler.getSettings("oauth").asString());
+                logger.info("Twitch Chat Listener Started");
+            }).start();
+            /*new NamedThread("TwitchChannelPointListener", () -> {
+                try {
+                    if (channelPointListener != null && !channelPointListener.isClosed()) channelPointListener.disconnectBot();
+                    channelPointListener = new TwitchListener(new URI("wss://pubsub-edge.twitch.tv"));
+                    channelPointListener.connect();
+                    logger.info("Channel Point Listener Started");
+                } catch (URISyntaxException e) {
+                    Main.logger.error(e.getLocalizedMessage(), e);
+                }
+            }).start();*/
         }
     }
 
@@ -453,20 +455,17 @@ public class Main {
             String[] messages = messageA.split("¦");
             for (String message : messages) {
 
-                if (!SettingsHandler.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
-                    if (!message.equalsIgnoreCase("")) {
-
-                        JSONObject messageObj = new JSONObject();
-                        messageObj.put("request_type", "send_message");
-                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
-                            message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
-                        }
-                        messageObj.put("message", message);
-                        if(messageID != null && !messageID.trim().equalsIgnoreCase("")){
-                            messageObj.put("reply-id", messageID);
-                        }
-                        ServerBot.sendMessage(messageObj.toString());
+                if ((!SettingsHandler.getSettings("silentMode").asBoolean() || message.startsWith("/")) && !message.isBlank()) {
+                    JSONObject messageObj = new JSONObject();
+                    messageObj.put("request_type", "send_message");
+                    if (SettingsHandler.getSettings("antiDox").asBoolean()) {
+                        message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
                     }
+                    messageObj.put("message", message);
+                    if(messageID != null && !messageID.trim().equalsIgnoreCase("")){
+                        messageObj.put("reply-id", messageID);
+                    }
+                    ServerBot.sendMessage(messageObj.toString());
                 }
             }
         }
@@ -477,31 +476,28 @@ public class Main {
             String[] messages = messageA.split("¦");
             for(String message : messages) {
 
-                if (!SettingsHandler.getSettings("silentMode").asBoolean() || message.equalsIgnoreCase(" ")) {
-                    if (!message.equalsIgnoreCase("")) {
+                if (!SettingsHandler.getSettings("silentMode").asBoolean() && !message.isBlank()) {
+                    JSONObject messageObj = new JSONObject();
+                    messageObj.put("request_type", "send_yt_message");
+                    messageObj.put("liveChatId", YouTubeAccount.liveChatId);
 
-                        JSONObject messageObj = new JSONObject();
-                        messageObj.put("request_type", "send_yt_message");
-                        messageObj.put("liveChatId", YouTubeAccount.liveChatId);
+                    if (SettingsHandler.getSettings("antiDox").asBoolean()) {
+                        message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
+                    }
 
-                        if (SettingsHandler.getSettings("antiDox").asBoolean()) {
-                            message = Language.modify(message.replaceAll(System.getProperty("user.name"), "*****"));
-                        }
+                    String pingStart = "";
 
-                        String pingStart = "";
+                    if(username != null && !username.equalsIgnoreCase("")){
+                        pingStart = com.alphalaneous.Utils.Utilities.format("@%s, ", username);
+                    }
+                    messageObj.put("username", YouTubeAccount.name);
+                    messageObj.put("message", pingStart + message);
 
-                        if(username != null && !username.equalsIgnoreCase("")){
-                            pingStart = com.alphalaneous.Utils.Utilities.format("@%s, ", username);
-                        }
-                        messageObj.put("username", YouTubeAccount.name);
-                        messageObj.put("message", pingStart + message);
-
-                        if(YouTubeAccount.liveChatId != null) {
-                            try {
-                                ServerBot.sendMessage(messageObj.toString());
-                            } catch (Exception e) {
-                                Main.logger.error(e.getLocalizedMessage(), e);
-                            }
+                    if(YouTubeAccount.liveChatId != null) {
+                        try {
+                            ServerBot.sendMessage(messageObj.toString());
+                        } catch (Exception e) {
+                            Main.logger.error(e.getLocalizedMessage(), e);
                         }
                     }
                 }
@@ -514,8 +510,7 @@ public class Main {
     }
     public static void sendMessage(String message, boolean doAnnounce) {
         if(SettingsHandler.getSettings("twitchEnabled").asBoolean()) {
-            SettingsHandler.writeSettings("isMod", String.valueOf(TwitchAPI.isLoquiMod()));
-            if (doAnnounce && SettingsHandler.getSettings("isMod").asBoolean() && !message.startsWith("/")) {
+            if (doAnnounce && !message.startsWith("/")) {
                 sendMessage("/announce " + message);
             }
             else sendMessage(message);

@@ -125,7 +125,8 @@ DEFAULT_MENTION =
 LIST_COMMANDS_START_MESSAGE = List of Commands | Type !help <command> for more help.
 REQUESTS_SUBSCRIBE_MESSAGE =  Please subscribe to request levels.
 LEVEL_USER_DOESNT_EXIST_MESSAGE =  That level or user doesn't exist.
-LEVEL_DOESNT_EXIST_MESSAGE =  That level doesn't exist. (Is it unlisted?)
+LEVEL_DOESNT_EXIST_MESSAGE =  That level doesn't exist. (Use !request <ID> to request unlisted levels)
+LEVEL_DOESNT_EXIST_COMMAND_MESSAGE =  That level doesn't exist.
 LEVEL_COMMAND_FORMAT_MESSAGE =  Incorrectly formatted request, type "!help !request" for how to format it.
 REQUEST_ERROR =  An error occurred: %s %s
 SPECIFY_ID_MESSAGE =  Please specify an ID or level name.
@@ -354,6 +355,9 @@ RATED_LEVELS_ONLY = Rated Levels Only
 UNRATED_LEVELS_ONLY = Unrated Levels Only
 DISABLE_SELECTED_DIFFICULTIES = Disable selected difficulties
 DISABLE_SELECTED_REQUESTED_DIFFICULTIES = Disable selected requested difficulties
+
+STRONG_ANTI_RATE_LIMIT = Strong Anti Rate Limit
+STRONG_ANTI_RATE_LIMIT_DESC = Disables unnecessary requests to the GD servers such as grabbing comments. Increases batch time.
 
 GD_NA = NA
 GD_AUTO = Auto

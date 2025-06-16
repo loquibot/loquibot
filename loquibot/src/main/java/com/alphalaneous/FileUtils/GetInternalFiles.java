@@ -40,14 +40,7 @@ public class GetInternalFiles {
         if(isInJar()) {
             try {
                 URL jar = Main.class.getProtectionDomain().getCodeSource().getLocation();
-                Path jarFile;
-
-                if(Defaults.isMac()){
-                    jarFile = Paths.get(jar.toString().substring(5).replace("%20", " "));
-                }
-                else{
-                    jarFile = Paths.get(jar.toString().substring(8).replace("%20", " "));
-                }
+                Path jarFile = Paths.get(new URI(jar.toString().replace("\\", "/")));
 
                 FileList list = new FileList();
 

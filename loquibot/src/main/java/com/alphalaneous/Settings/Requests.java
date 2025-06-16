@@ -13,6 +13,7 @@ public class Requests {
         SettingsPage settingsPage = new SettingsPage("$REQUESTS_SETTINGS$");
         settingsPage.addCheckbox("$GD_MODE$", "$GD_MODE_DESC$", "gdMode", true, DefaultCommands::loadCommands);
         settingsPage.addCheckbox("$AUTO_DELETE_REPEAT_SEND$", "$AUTO_DELETE_REPEAT_SEND_DESC$", "autoDeleteRepeatSend");
+        settingsPage.addCheckbox("$STRONG_ANTI_RATE_LIMIT$", "$STRONG_ANTI_RATE_LIMIT_DESC$", "strongAntiRateLimit");
         settingsPage.addCheckbox("$WAIT_A_SECOND$", "$WAIT_A_SECOND_DESC$", "waitForRequests");
         //settingsPage.addCheckbox("$FOLLOWERS_ONLY$ (Twitch)", "", "followers");
         settingsPage.addCheckbox("$SUBSCRIBERS_ONLY$ (Twitch)", "", "subscribers");
@@ -20,7 +21,7 @@ public class Requests {
         settingsPage.addCheckbox("$STREAMER_BYPASS$", "$STREAMER_BYPASS_DESC$", "streamerBypass", true, null);
         settingsPage.addCheckbox("$MODS_BYPASS$", "$MODS_BYPASS_DESC$", "modsBypass");
         settingsPage.addCheckbox("$AUTOMATIC_SONG_DOWNLOADS$", "", "autoDL");
-        settingsPage.addCheckbox("$ANNOUNCE_NOW_PLAYING$", "", "announceNP", true, null);
+        settingsPage.addCheckbox("$ANNOUNCE_NOW_PLAYING$", "", "announceNP", false, null);
         settingsPage.addCheckbox("$DISABLE_NOW_PLAYING$", "", "disableNP");
         settingsPage.addCheckbox("$DISABLE_IN_QUEUE$", "", "disableInQueue");
         settingsPage.addCheckbox("$DISABLE_QUEUE_FULL$", "", "disableQF");

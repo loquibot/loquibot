@@ -80,8 +80,13 @@ public class LevelsPanel extends JPanel {
     }
 
     public LevelButton getButton(int i) {
-        if(buttonPanel.getComponents().length > 0) {
-            return ((LevelButton) buttonPanel.getComponent(i));
+        try {
+            if (buttonPanel.getComponents().length > 0) {
+                return ((LevelButton) buttonPanel.getComponent(i));
+            }
+        }
+        catch (Exception e) {
+            return null;
         }
         return null;
     }

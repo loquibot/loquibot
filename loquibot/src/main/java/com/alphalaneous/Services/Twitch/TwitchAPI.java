@@ -257,19 +257,6 @@ public class TwitchAPI {
 
 	}
 
-	public static boolean isMod(String username){
-
-		String id = getIDs(username);
-
-		JSONObject moderators = twitchAPI("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + TwitchAccount.id + "&user_id=" + id);
-		if(moderators == null) return false;
-		return moderators.getJSONArray("data").length() > 0;
-	}
-
-	public static boolean isLoquiMod(){
-		return isMod("loquibot");
-	}
-
 	public static JSONObject getChannelInfo(){
 		return twitchAPI("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id);
 	}
@@ -310,12 +297,12 @@ public class TwitchAPI {
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			return new JSONObject(br.readLine());
 		}
+		catch (SocketException e) {
+			Main.logger.error(e.getLocalizedMessage(), e);
+			return null;
+		}
 		catch (Exception e){
 			setOauth();
-
-			while (TwitchAPI.oauthOpen){
-				Utilities.sleep(10);
-			}
 			Main.logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
@@ -359,8 +346,7 @@ public class TwitchAPI {
 
 	public static void setUser(String username) {
 		JSONObject userID = twitchAPI("https://api.twitch.tv/helix/users?login=" + username.toLowerCase());
-		assert userID != null;
-		user = userID;
+		if (userID != null) user = userID;
 	}
 
 	public static String getIDs(String username) {
@@ -370,13 +356,14 @@ public class TwitchAPI {
 		}
 		else {
 			JSONObject userIDObject = twitchAPI("https://api.twitch.tv/helix/users?login=" + username.toLowerCase());
-			assert userIDObject != null;
+			if (userIDObject != null) {
+				String userID = userIDObject.getJSONArray("data").getJSONObject(0).get("id").toString().replaceAll("\"", "");
 
-			String userID = userIDObject.getJSONArray("data").getJSONObject(0).get("id").toString().replaceAll("\"", "");
+				userIDCache.put(username, userID);
+				return userID;
+			}
 
-			userIDCache.put(username, userID);
-
-			return userID;
+			return null;
 		}
 	}
 
@@ -419,8 +406,6 @@ public class TwitchAPI {
 		Utilities.openURL(new URI(authLink.toString()));
 		TwitchHTTPServer.awaitAccessToken();
 
-		System.out.println("Here lol");
-
 		return TwitchHTTPServer.getAccessToken();
 	}
 
@@ -449,6 +434,7 @@ public class TwitchAPI {
 						Account.refreshTwitch(SettingsHandler.getSettings("channel").asString(), true);
 						success.set(true);
 						ServerBot.disconnect();
+						Main.reconnectTwitch();
 					} else {
 						Main.logger.error("Failed to get Twitch Token");
 					}
@@ -502,16 +488,18 @@ public class TwitchAPI {
 		}
 		return null;
 	}
-	public static String setGame(String game){
+	public static String setGame(String game) {
 		JSONObject newChannelInfo = new JSONObject();
 		JSONObject gameInfo = twitchAPI("https://api.twitch.tv/helix/games?name=" + URLEncoder.encode(game, StandardCharsets.UTF_8));
-		assert gameInfo != null;
-		if(gameInfo.getJSONArray("data").isEmpty()){
-			return "no_game";
-		}
-		String gameID = gameInfo.getJSONArray("data").getJSONObject(0).getString("id");
+		if (gameInfo != null) {
+			if (gameInfo.getJSONArray("data").isEmpty()) {
+				return "no_game";
+			}
+			String gameID = gameInfo.getJSONArray("data").getJSONObject(0).getString("id");
 
-		newChannelInfo.put("game_id", gameID);
-		return sendTwitchRequest("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id, newChannelInfo.toString());
+			newChannelInfo.put("game_id", gameID);
+			return sendTwitchRequest("https://api.twitch.tv/helix/channels?broadcaster_id=" + TwitchAccount.id, newChannelInfo.toString());
+		}
+		return null;
 	}
 }

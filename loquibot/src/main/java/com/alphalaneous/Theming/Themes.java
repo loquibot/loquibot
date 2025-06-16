@@ -108,7 +108,7 @@ public class Themes {
 	}
 
 	public static void saveTheme() {
-		if(themeSettings.size() > 0) {
+		if(!themeSettings.isEmpty()) {
 			Utilities.save("/loquibot/theme.properties", themeSettings);
 		}
 	}

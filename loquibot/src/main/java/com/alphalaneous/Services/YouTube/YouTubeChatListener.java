@@ -9,6 +9,7 @@ import com.alphalaneous.Services.Twitch.TwitchChatListener;
 import com.alphalaneous.Settings.SettingsHandler;
 import com.alphalaneous.Utils.SelfDestructingMessage;
 import com.alphalaneous.Utils.Utilities;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.model.*;
 import java.util.*;
 
@@ -96,7 +97,9 @@ public class YouTubeChatListener {
                                     null,
                                     5000)).start();
 
-                            Main.logger.error(e.getLocalizedMessage(), e);
+                            if(!(e instanceof GoogleJsonResponseException && !((GoogleJsonResponseException) e).getDetails().getErrors().get(0).getReason().equals("liveChatEnded"))) {
+                                Main.logger.error(e.getLocalizedMessage(), e);
+                            }
                         }
                     }
                 }, delayMs);
@@ -114,7 +117,13 @@ public class YouTubeChatListener {
         for(LiveChatMessage message1 : messageObjects){
             boolean sameAccountID = message1.getAuthorDetails().getChannelId().equals(message.getAuthorDetails().getChannelId());
             boolean sameTime = message1.getSnippet().getPublishedAt().equals(message.getSnippet().getPublishedAt());
-            boolean sameMessage = message1.getSnippet().getDisplayMessage().equals(message.getSnippet().getDisplayMessage());
+
+            boolean sameMessage = false;
+
+            if(message1.getSnippet().getDisplayMessage() != null){
+                sameMessage = message1.getSnippet().getDisplayMessage().equals(message.getSnippet().getDisplayMessage());
+            }
+
 
             if(sameTime && sameAccountID && sameMessage){
                 return true;
@@ -124,10 +133,15 @@ public class YouTubeChatListener {
     }
 
     private static ChatMessage buildChatMessage(LiveChatMessage message){
+
+        String messageText = message.getSnippet().getDisplayMessage();
+
+        if(messageText == null) messageText = "";
+
         ChatMessage message1 = new ChatMessage(null,
                 message.getAuthorDetails().getChannelId(),
                 message.getAuthorDetails().getDisplayName(),
-                message.getSnippet().getDisplayMessage(),
+                messageText,
                 null,
                 message.getAuthorDetails().getIsChatModerator(),
                 message.getAuthorDetails().getIsChatSponsor(),
@@ -140,6 +154,9 @@ public class YouTubeChatListener {
     }
 
     private static void waitOnMessage(ChatMessage chatMessage) {
+
+        if(chatMessage.getDisplayName().equalsIgnoreCase("BotRix")) return;
+
         BotHandler.onMessage(chatMessage);
         CommandHandler.run(chatMessage);
         KeywordHandler.run(chatMessage);

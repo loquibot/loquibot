@@ -89,17 +89,11 @@ public class SocketClient extends WebSocketClient {
                             SettingsHandler.writeSettings("channel", channel);
                             Account.refreshTwitch(channel);
                         }
-                        boolean loquiIsMod = TwitchAPI.isLoquiMod();
 
                         new Thread(() -> {
                             Utilities.sleep(1000);
                             if(!sentStartupMessage) {
-                                if(loquiIsMod){
-                                    Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE_MOD_VIP$"));
-                                }
-                                else {
-                                    Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE$"));
-                                }
+                                Main.sendMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE$"));
                                 Main.sendYTMessage(com.alphalaneous.Utils.Utilities.format("🔷 | $STARTUP_MESSAGE_MOD_VIP$"), null);
                                 sentStartupMessage = true;
                             }
@@ -153,47 +147,16 @@ public class SocketClient extends WebSocketClient {
                         Main.sendYTMessage("\uD83D\uDCE2 | " + message, null);
                         break;
                     }
-
-                    case "mod_connect_request" : {
-                        String user = object.getString("username");
-                        if(TwitchAPI.isMod(user)){
-
-                            JSONObject object1 = new JSONObject();
-                            object1.put("type", "mod_connect");
-                            object1.put("success", true);
-                            object1.put("to", user);
-                            object1.put("from", TwitchAccount.login);
-
-                            send(object1.toString());
-                        }
-                        break;
-                    }
-                    case "clients" : {
-                        //JSONArray array = object.getJSONArray("clients");
-                    }
                     case "error" : {
 						String error = object.getString("error");
-						/*switch (error) {
-							case "invalid_blocked_ID" :
-							case "no_id_block_reason_given" :
-							case "id_already_blocked" :
-							case "invalid_unblocked_ID" :
-							case "id_not_blocked" :
-							default : break;
-						}*/
-                        switch (error){
-                            case "client_already_connected" : {
-                                JOptionPane.showMessageDialog(null,
-                                        "Loquibot Instance Already Connected to Servers with your IP!\n" +
-                                                "Try killing any other loquibot instance in task manager (OpenJDK Platform Binary)",
-                                        "Connection Error",
-                                        JOptionPane.ERROR_MESSAGE);
-                                ServerBot.reconnect = false;
-                                Main.close();
-                                break;
-                            }
-                            default:
-                                break;
+                        if (error.equals("client_already_connected")) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Loquibot Instance Already Connected to Servers with your IP!\n" +
+                                            "Try killing any other loquibot instance in task manager (OpenJDK Platform Binary)",
+                                    "Connection Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            ServerBot.reconnect = false;
+                            Main.close();
                         }
                         break;
                     }

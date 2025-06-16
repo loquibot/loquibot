@@ -30,7 +30,7 @@ public class ConnectorSocket extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
-
+        System.out.println("Connector Socket Started");
     }
 
     @Override
@@ -41,7 +41,6 @@ public class ConnectorSocket extends WebSocketServer {
     @Override
     public void onMessage(WebSocket webSocket, String s) {
         Main.logger.info("Connector Socket sent: " + s);
-        Main.logger.info("Double check");
 
         LevelButton levelButton = RequestsTab.getRequest(RequestsUtils.getSelection());
         LevelData data = null;

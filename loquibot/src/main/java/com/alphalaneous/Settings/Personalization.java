@@ -10,7 +10,6 @@ import com.alphalaneous.Theming.Themes;
 import com.alphalaneous.VBSShortcut.ShortcutFactory;
 import com.alphalaneous.Windows.DialogBox;
 import com.alphalaneous.Windows.Window;
-import com.bric.swing.ColorPicker;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -84,10 +83,10 @@ public class Personalization {
         else Defaults.setSystem();
     }
 
-    public static void showCustomizeButton(){
+    /*public static void showCustomizeButton(){
         settingsPage.addButton("Customize", Personalization::showCustomizationMenu);
         settingsPage.moveComponent(5, 2);
-    }
+    }*/
 
     public static void setOnTop(){
         Window.setOnTop(SettingsHandler.getSettings("onTop").asBoolean());
@@ -99,7 +98,7 @@ public class Personalization {
     private static JPanel panel;
     private static final CurvedButton CurvedButton = new CurvedButton("$OKAY$");
 
-    public static void showCustomizationMenu(){
+    /*public static void showCustomizationMenu(){
         panel = new JPanel();
         panel.setBounds(0,0,300,450);
         panel.setLayout(null);
@@ -196,5 +195,5 @@ public class Personalization {
                 component.refreshUI();
             }
         }
-    }
+    }*/
 }

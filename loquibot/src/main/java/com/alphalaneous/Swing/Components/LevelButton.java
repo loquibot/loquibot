@@ -69,10 +69,6 @@ public class LevelButton extends CurvedButton {
 			logo.setIcon(Assets.YouTube);
 			displayRequester = data.getDisplayName();
 		}
-		else if(data.isKick()){
-			logo.setIcon(Assets.Kick);
-			displayRequester = data.getDisplayName();
-		}
 		else {
 			logo.setIcon(Assets.Twitch);
 			displayRequester = data.getRequester();

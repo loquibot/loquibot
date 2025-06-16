@@ -1,12 +1,10 @@
 package com.alphalaneous.Services.GeometryDash;
 
 import com.alphalaneous.*;
-import com.alphalaneous.Settings.SettingsHandler;
+import com.alphalaneous.Settings.*;
 import com.alphalaneous.Settings.Logs.LoggedID;
 import com.alphalaneous.Swing.BrowserWindow;
 import com.alphalaneous.Swing.Components.*;
-import com.alphalaneous.Settings.BlockedIDs;
-import com.alphalaneous.Settings.Outputs;
 import com.alphalaneous.Utils.Defaults;
 import com.alphalaneous.Utils.Utilities;
 import com.alphalaneous.Windows.AprilFools;
@@ -330,6 +328,37 @@ public class RequestFunctions {
 
             } catch (IOException e) {
                 Main.logger.error(e.getLocalizedMessage(), e);
+            }
+        }).start();
+    }
+
+    public static void blockRequester(int pos){
+        new Thread(() -> {
+            LevelButton req = RequestsTab.getRequest(pos);
+
+            String option = DialogBox.showDialogBox("Block Requester: %s", "Blocks the person that sent the level.", "", new String[]{"$YES$", "$NO$"}, new Object[]{req.getRequester()});
+
+            if (option.equalsIgnoreCase("YES")) {
+                BlockedUsers.addBlockedUser(req.getRequester());
+            }
+        }).start();
+
+    }
+
+    public static void blockCreator(int pos){
+        new Thread(() -> {
+
+            LevelButton req = RequestsTab.getRequest(pos);
+
+            Optional<String> creatorName = req.getLevelData().getGDLevel().getLevel().creatorName();
+
+            if (creatorName.isPresent()) {
+                String option = DialogBox.showDialogBox("Block Creator: %s", "Blocks the creator of the level.", "", new String[]{"$YES$", "$NO$"}, new Object[]{creatorName.get()});
+                if (option.equalsIgnoreCase("YES")) {
+                    creatorName.ifPresent(BlockedCreators::addBlockedCreator);
+                }
+            } else {
+                DialogBox.showDialogBox("User doesn't Exist", "This creator does not have an account", "", new String[]{"Okay"}, new Object[]{});
             }
         }).start();
     }

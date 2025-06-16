@@ -81,6 +81,7 @@ public class Utilities {
 		PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
 		MenuItem consoleItem = new MenuItem("Console");
+		MenuItem recenter = new MenuItem("Re-Center");
 		MenuItem exitItem = new MenuItem("Exit");
 		MenuItem forceExitItem = new MenuItem("Force Exit");
 
@@ -88,8 +89,11 @@ public class Utilities {
 		exitItem.addActionListener(e -> Main.close());
 		aboutItem.addActionListener(e -> RequestsTab.showAttributions());
 		consoleItem.addActionListener(e -> LogWindow.toggleLogWindow());
+		recenter.addActionListener(e -> Window.getWindow().setLocationRelativeTo(null));
+
 		popup.add(aboutItem);
 		popup.add(consoleItem);
+		popup.add(recenter);
 		popup.addSeparator();
 		popup.add(exitItem);
 		popup.add(forceExitItem);

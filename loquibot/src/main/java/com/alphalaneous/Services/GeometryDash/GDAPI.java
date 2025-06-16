@@ -129,26 +129,26 @@ public class GDAPI {
 
     static AtomicBoolean notifyBool = new AtomicBoolean(false);
 
-    public static void startBatchListener(){
+    public static void startBatchListener() {
         new Thread(() -> {
 
-            while(true){
+            while (true) {
 
-                if(!batchQueue.isEmpty()){
+                if (!batchQueue.isEmpty()) {
                     justBatched.clear();
-                    Main.logger.info("Adding batch: " + Arrays.toString(batchQueue.toArray()));
+                    Main.logger.info("Adding batch: {}", Arrays.toString(batchQueue.toArray()));
 
                     ArrayList<GDLevelExtra> levelExtras = getLevels(batchQueue);
 
-                    for(GDLevelExtra levelExtra : levelExtras){
+                    for (GDLevelExtra levelExtra : levelExtras) {
                         batchLevels.add(new BatchedLevel(levelExtra.getLevel().id(), true, levelExtra));
                     }
 
                     ArrayList<Long> found = new ArrayList<>();
 
-                    for(long ID : batchQueue){
-                        for(BatchedLevel level : batchLevels){
-                            if(level.getID() == ID){
+                    for (long ID : batchQueue) {
+                        for (BatchedLevel level : batchLevels) {
+                            if (level.getID() == ID) {
                                 found.add(ID);
                             }
                         }
@@ -156,16 +156,24 @@ public class GDAPI {
 
                     found.forEach(batchQueue::remove);
 
-                    for(long ID : batchQueue){
-                        batchLevels.add(new BatchedLevel(ID, false, null));
-                    }
+                    ArrayList<Long> removalQueue = new ArrayList<>();
 
-                    batchQueue.clear();
+                    for (long ID : batchQueue) {
+                        batchLevels.add(new BatchedLevel(ID, false, null));
+                        removalQueue.add(ID);
+                    }
+                    removalQueue.forEach(batchQueue::remove);
+
                     notifyBool.set(true);
                     Utilities.sleep(100);
                     notifyBool.set(false);
                 }
-                Utilities.sleep(10000);
+                if (SettingsHandler.getSettings("strongAntiRateLimit").asBoolean()) {
+                    Utilities.sleep(30000);
+                }
+                else {
+                    Utilities.sleep(10000);
+                }
             }
         }).start();
     }
@@ -175,7 +183,10 @@ public class GDAPI {
     public static GDLevelExtra browseLevels(LevelBrowseMode mode, String query, LevelSearchFilter filter,
                                             int page) {
 
-        if(SettingsHandler.getSettings("waitForRequests").asBoolean()){
+        if (SettingsHandler.getSettings("strongAntiRateLimit").asBoolean()) {
+            Utilities.sleep(10000);
+        }
+        else if(SettingsHandler.getSettings("waitForRequests").asBoolean()){
             wait += 1000;
             Utilities.sleep(wait);
             wait -= 1000;
@@ -199,14 +210,13 @@ public class GDAPI {
         long accountID = 0;
         int length = 0;
 
-        if(searchString != null){
-
+        if (searchString != null){
 
             String infoString = searchString.split("#")[0];
 
             String[] splitByColon = infoString.split(":");
 
-            for(int i = 0; i < splitByColon.length; i+=2){
+            for (int i = 0; i < splitByColon.length; i+=2) {
 
                 if ((i + 1) >= splitByColon.length) {
                     break;
@@ -449,7 +459,12 @@ public class GDAPI {
             CommentSortMode commentSortMode = CommentSortMode.RECENT;
             if (mostLiked) commentSortMode = CommentSortMode.MOST_LIKED;
 
-            return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofSeconds(2));
+            if (SettingsHandler.getSettings("strongAntiRateLimit").asBoolean()) {
+                return null;
+            }
+            else {
+                return client.getCommentsForLevel(ID, commentSortMode, page, 20).collectList().block(Duration.ofSeconds(2));
+            }
         }
         catch (Exception e){
             return null;

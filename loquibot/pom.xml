@@ -19,6 +19,11 @@
     </repositories>
     <dependencies>
         <dependency>
+            <groupId>com.github.kwhat</groupId>
+            <artifactId>jnativehook</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.Webview</groupId>
             <artifactId>webview_java</artifactId>
             <version>1.3.0</version>
@@ -218,7 +223,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20230227</version>
+            <version>20240303</version>
         </dependency>
         <dependency>
             <groupId>javazoom</groupId>
